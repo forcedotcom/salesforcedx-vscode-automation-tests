@@ -98,10 +98,9 @@ export class ScratchOrg {
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
     // Select the "Standard" project type.
-    await this.prompt.selectQuickPick('Standard');
-    await utilities.pause(1);
+    await utilities.selectQuickPickWithText(this.prompt, 'Standard');
 
-    // Enter "TempProject" for project name.
+    // Enter the project's name.
     await this.prompt.setText(this.tempProjectName);
     await utilities.pause(1);
 

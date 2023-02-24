@@ -35,6 +35,19 @@ export async function runCommandFromCommandPrompt(workbench: Workbench, command:
   return prompt;
 }
 
+export async function selectQuickPickWithText(prompt: InputBox | QuickOpenBox, text: string) {
+  // Set the text in the command prompt.  Only selectQuickPick() needs to be called, but setting
+  // the text in the command prompt is a nice visual feedback to anyone watching the tests run.
+  await prompt.setText(text);
+  await pause(1);
+
+  await prompt.selectQuickPick(text);
+  await pause(1);
+  // After the text has ben entered and selectQuickPick() is called, you might see the last few characters
+  // in the input box be deleted.  This is b/c selectQuickPick() calls resetPosition(), which for some reason
+  // deletes the last few characters.  This doesn't seem to affect the outcome though.
+}
+
 export async function selectQuickPickItem(prompt: InputBox | QuickOpenBox, text: string): Promise<void> {
   const quickPicks = await prompt.getQuickPicks();
   for (const quickPick of quickPicks) {
