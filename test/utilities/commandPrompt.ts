@@ -43,9 +43,9 @@ export async function selectQuickPickWithText(prompt: InputBox | QuickOpenBox, t
 
   await prompt.selectQuickPick(text);
   await pause(1);
-  // After the text has ben entered and selectQuickPick() is called, you might see the last few characters
+  // After the text has been entered and selectQuickPick() is called, you might see the last few characters
   // in the input box be deleted.  This is b/c selectQuickPick() calls resetPosition(), which for some reason
-  // deletes the last few characters.  This doesn't seem to affect the outcome though.
+  // deletes the last two characters.  This doesn't seem to affect the outcome though.
 }
 
 export async function selectQuickPickItem(prompt: InputBox | QuickOpenBox, text: string): Promise<void> {

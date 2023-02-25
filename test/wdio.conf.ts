@@ -1,7 +1,9 @@
 
 import type { Options } from '@wdio/types'
-import { join } from 'path';
 import type { VSCodeCapabilities } from 'wdio-vscode-service/dist/types';
+import {
+  EnvironmentSettings
+} from './environmentSettings';
 
 const capabilities: VSCodeCapabilities = {
 
@@ -14,7 +16,7 @@ const capabilities: VSCodeCapabilities = {
   browserVersion: 'stable',
   'wdio:vscodeOptions': {
     // point to the root directory of your project
-    extensionPath: join(__dirname, '..', '..', 'packages') // TODO: need to change to the new dual-repo decision
+    extensionPath: EnvironmentSettings.getInstance().extensionPath
   },
 
   acceptInsecureCerts: true
@@ -84,9 +86,9 @@ export const config: Options.Testrunner = {
 
       // './test/specs/**/anInitialSuite.e2e.ts'
       // './test/specs/**/debugApexTests.e2e.ts',
-      // './test/specs/**/functions.e2e.ts'
       // './test/specs/**/orgBrowser.e2e.ts'
       // './test/specs/**/orgCreationAndAuthentication.e2e.ts'
+      // './test/specs/**/pullAndPush.e2e.ts'
       // './test/specs/**/templates.e2e.ts'
     ]
   ],
