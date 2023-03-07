@@ -15,7 +15,7 @@ const capabilities: VSCodeCapabilities = {
   browserName: 'vscode',
   browserVersion: 'stable',
   'wdio:vscodeOptions': {
-    // point to the root directory of your project
+    // Point to the root directory of your project.
     extensionPath: EnvironmentSettings.getInstance().extensionPath
   },
 
