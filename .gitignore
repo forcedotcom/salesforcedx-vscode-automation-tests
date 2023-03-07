@@ -92,13 +92,6 @@ jspm_packages/
 .sfdx/
 
 # Project test data
-packages/system-tests/project_*
-packages/system-tests/assets/sfdx-simple/.vscode/
-packages/system-tests/assets/sfdx-simple/force-app/main/default/lwc/.eslintrc.json
-packages/system-tests/assets/sfdx-simple/force-app/main/default/lwc/jsconfig.json
-packages/system-tests/assets/lwc-recipes/.vscode/
-packages/system-tests/assets/lwc-recipes/force-app/main/default/lwc/.eslintrc.json
-packages/system-tests/assets/lwc-recipes/force-app/main/default/lwc/jsconfig.json
 
 # Node lock files (actually causes issues with the symlinking that lerna does, so ignore)
 # package-lock.json
@@ -115,8 +108,8 @@ packages/dbaeumer*
 # Vscode History Extension
 .history
 
-# Extension build directory
-packages/**/extension
+# Backup files
+*.backup
 
 # WDIO VSCode Service artifacts directory
 .wdio-vscode-service
