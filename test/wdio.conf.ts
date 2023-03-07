@@ -80,8 +80,11 @@ export const config: Options.Testrunner = {
   specs: [
     // Place outside the array to run in parallel.
     // './test/specs/**/*.e2e.ts'
+    //
+    // -OR-
+    //
+    // Place inside the array to run sequentially.
     [
-      // Place inside the array to run sequentially.
       './test/specs/**/*.e2e.ts'
 
       // './test/specs/**/anInitialSuite.e2e.ts'
@@ -89,6 +92,7 @@ export const config: Options.Testrunner = {
       // './test/specs/**/orgBrowser.e2e.ts'
       // './test/specs/**/orgCreationAndAuthentication.e2e.ts'
       // './test/specs/**/pullAndPush.e2e.ts'
+      // './test/specs/**/runApexTests.e2e.ts'
       // './test/specs/**/templates.e2e.ts'
     ]
   ],

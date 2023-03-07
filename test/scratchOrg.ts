@@ -60,9 +60,19 @@ export class ScratchOrg {
       await exec(`sfdx force:org:delete -u ${this.scratchOrgAliasName} --noprompt`);
     }
 
-    if (this.projectFolderPath) {
-      await utilities.removeFolder(this.projectFolderPath);
-    }
+    // This used to work...
+    // if (this.projectFolderPath) {
+    //   await utilities.removeFolder(this.projectFolderPath);
+    // }
+    // ...but something recently changed and now, removing the folder while VS Code has the folder open
+    // causes VS Code to get into a funky state.  The next time a project is created, we get the
+    // following error:
+    //   07:45:19.65 Starting SFDX: Create Project
+    //   ENOENT: no such file or directory, uv_cwd
+    //
+    // Not deleting the folder that was created is OK, b/c it is deleted in setUpTestingEnvironment()
+    // the next time the test suite runs.  I'm going to leave this in for now in case this gets fixed
+    // and this code can be added back in.
   }
 
   public async setUpTestingEnvironment(): Promise<void> {

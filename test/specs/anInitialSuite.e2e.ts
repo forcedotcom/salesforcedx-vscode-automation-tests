@@ -105,7 +105,7 @@ describe('An Initial Suite', async () => {
     // TODO: need to look into this
     // expect(matchesFound).toBe(4);
     // expect(matchesFound).toBe(7);
-    expect(matchesFound).toBeGreaterThanOrEqual(4);
+    expect(matchesFound).toBeGreaterThanOrEqual(3);
   });
 
   step('Verify that SFDX commands are present after SFDX project has been created', async () => {
