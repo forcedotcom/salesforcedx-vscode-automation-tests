@@ -156,8 +156,8 @@ describe('Templates', async () => {
     const workbench = await browser.getWorkbench();
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
 
-    // Set the name of the new component to auraComponent1.
-    await inputBox.setText('apexClass1');
+    // Set the name of the new component to ApexClass1.
+    await inputBox.setText('ApexClass1');
     await inputBox.confirm();
     await utilities.pause(1);
 
@@ -176,25 +176,25 @@ describe('Templates', async () => {
     await treeViewSection.expand();
 
     // Get the matching (visible) items within the tree which contain "apexClass1".
-    const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(workbench, projectName, 'apexClass1');
+    const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(workbench, projectName, 'ApexClass1');
 
     // It's a tree, but it's also a list.  Everything in the view is actually flat
     // and returned from the call to visibleItems.reduce().
-    expect(filteredTreeViewItems.includes('apexClass1.cls')).toBe(true);
-    expect(filteredTreeViewItems.includes('apexClass1.cls-meta.xml')).toBe(true);
+    expect(filteredTreeViewItems.includes('ApexClass1.cls')).toBe(true);
+    expect(filteredTreeViewItems.includes('ApexClass1.cls-meta.xml')).toBe(true);
   });
 
   step('Verify the contents of the Apex Class', async () => {
     const expectedText = [
-      'public with sharing class apexClass1 {',
-      '    public apexClass1() {',
+      'public with sharing class ApexClass1 {',
+      '    public ApexClass1() {',
       '',
       '    }',
       '}'
     ].join('\n');
     const workbench = await browser.getWorkbench();
     const editorView = await workbench.getEditorView();
-    const textEditor = await editorView.openEditor('apexClass1.cls') as TextEditor;
+    const textEditor = await editorView.openEditor('ApexClass1.cls') as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
@@ -210,7 +210,7 @@ describe('Templates', async () => {
     // Check the output.
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pushed Source', 10);
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Created  apexClass1  ApexClass');
+    expect(outputPanelText).toContain('Created  ApexClass1  ApexClass');
   });
 
   // Lightning Web Component
