@@ -177,7 +177,7 @@ describe('Push and Pull', async () => {
 
   step('Detect conflict when pushing', async () => {
 
-    debugger;
+    // debugger;
 
     // go into settings
     // navigate to Extensions > Salesforce Core Configuration
