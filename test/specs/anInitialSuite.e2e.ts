@@ -21,6 +21,9 @@ and that the SFDX commands are present.
 
 Because of this requirement, this suite needs to run first before the other suites.  Since the
 suites run in alphabetical order, this suite has been named so it runs first.
+
+Please note that none of the other suites depend on this suite to run, it's just that if this
+suite does run, it needs to run first.
 */
 
 describe('An Initial Suite', async () => {
