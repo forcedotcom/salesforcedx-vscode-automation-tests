@@ -43,9 +43,9 @@ export class ScratchOrg {
     return 'TempProject-' + this.testSuiteSuffixName;
   }
 
-  public async setUp(): Promise<void> {
+  public async setUp(scratchOrgEdition: string = 'Developer'): Promise<void> {
     await this.setUpTestingEnvironment();
-    await this.createProject();
+    await this.createProject(scratchOrgEdition);
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
   }
@@ -99,7 +99,7 @@ export class ScratchOrg {
     utilities.log('');
   }
 
-  public async createProject(): Promise<void> {
+  public async createProject(scratchOrgEdition: string): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
 
@@ -142,6 +142,13 @@ export class ScratchOrg {
 
     // Yep, we need to wait a long time here.
     await utilities.pause(10);
+
+    if (scratchOrgEdition === 'Enterprise') {
+      const projectScratchDefPath = path.join(this.tempFolderPath!, this.tempProjectName, 'config', 'project-scratch-def.json');
+      let  projectScratchDef = fs.readFileSync(projectScratchDefPath, 'utf8');
+      projectScratchDef = projectScratchDef.replace(`"edition": "Developer"`, `"edition": "Enterprise"`);
+      fs.writeFileSync(projectScratchDefPath, projectScratchDef, 'utf8');
+    }
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
     utilities.log('');
@@ -217,6 +224,7 @@ export class ScratchOrg {
     const durationDays = 1;
 
     utilities.log(`${this.testSuiteSuffixName} - calling sfdx force:org:create...`);
+    // const sfdxForceOrgCreateResult = await exec(`sfdx force:org:create edition=Enterprise -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`);
     const sfdxForceOrgCreateResult = await exec(`sfdx force:org:create -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`);
     const json = this.removedEscapedCharacters(sfdxForceOrgCreateResult.stdout);
     const result = JSON.parse(json).result;
@@ -274,7 +282,7 @@ export class ScratchOrg {
       throw new Error('In createDefaultScratchOrg(), the notification of "SFDX: Set a Default Org successfully ran" was not found');
     }
 
-    // Look for this.scratchOrgAliasName in the list of status bar items
+    // Look for this.scratchOrgAliasName in the list of status bar items.
     const statusBar = await workbench.getStatusBar();
     const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(statusBar, this.scratchOrgAliasName);
     if (!scratchOrgStatusBarItem) {
