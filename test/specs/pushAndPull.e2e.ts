@@ -5,9 +5,13 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import child_process from 'child_process';
+import fs from 'fs';
 import {
   step
 } from 'mocha-steps';
+import path from 'path';
+import util from 'util';
 import {
   TextEditor
 } from 'wdio-vscode-service';
@@ -16,13 +20,17 @@ import {
 } from '../scratchOrg';
 import * as utilities from '../utilities';
 
+const exec = util.promisify(child_process.exec);
+
 describe('Push and Pull', async () => {
   let scratchOrg: ScratchOrg;
-  let projectName: string;
+  let projectName = '';
+  let adminName = '';
+  let adminEmailAddress = '';
 
   step('Set up the testing environment', async () => {
     scratchOrg = new ScratchOrg('PushAndPull', false);
-    await scratchOrg.setUp();
+    await scratchOrg.setUp('Enterprise');
     projectName = scratchOrg.tempProjectName.toUpperCase();
   });
 
@@ -121,7 +129,6 @@ describe('Push and Pull', async () => {
     // Now save the file.
     await textEditor.save();
 
-
     // An now push the changes.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org', 5);
 
@@ -137,107 +144,154 @@ describe('Push and Pull', async () => {
     expect(outputPanelText).toContain('/e2e-temp/TempProject-PushAndPull/force-app/main/default/classes/ExampleApexClass1.cls-meta.xml');
   });
 
+  step('Pull the Apex class', async () => {
+    // Clear the Output view first.
+    const outputView = await utilities.openOutputView();
+    await outputView.clearText();
 
-  /*
-  issue: conflict detection on push
-  I can only make changes in VS Code
-  If I...
-    create an Apex class
-    push
-    make a change
-    save
-    and then push
-      ...I don't get any errors or messages about conflicts
+    const workbench = await browser.getWorkbench();
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Scratch Org', 5);
 
-  On the other hand, if I...
-    (manually) open the scratch org (sfdx force:org:open)
-    make a change to the class
-    go back to VSC
-    make a (different) change to the class
-    save
-    and then push
-      ...I get messages about conflicts
-        ...but this involves leaving VSC in order to perform this
+    // At this point there should be no conflicts since there have been no changes.
 
+    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org', 10);
+    expect(successNotificationWasFound).toBe(true);
 
-
-  issue: conflict detection on pull
-  If I...
-    create an Apex class
-    push
-    make a change
-    save
-    and then pull
-      ...I don't get any errors or messages about conflicts
-
-  */
-
-
-
-
-  step('Detect conflict when pushing', async () => {
-
-    // debugger;
-
-    // go into settings
-    // navigate to Extensions > Salesforce Core Configuration
-    // "Detect Conflicts At Sync" should be off
-    // Turn the option on
-
-
-    // Make a change to the source
-    // Save
-    // Push
-    // should there be a conflict?
-    // I'm not getting a prompt to override
-// !!!
-
-
-    // * Set up the test so that conflicts exist locally and on the server (one file has been modified in both places)
-    // Make a modification to the class
-
-
-
-
-    // Run “SFDX: Push Source from Default Scratch Org”
-    //     * Verify that the operation failed due to conflicts
-
+    // Check the output.
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Retrieved Source', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('No results found');
+    expect(outputPanelText).toContain('ended with exit code 0');
   });
 
+  step('Modify the file (but don\'t save), then pull', async () => {
+    // Clear the Output view first.
+    const outputView = await utilities.openOutputView();
+    await outputView.clearText();
 
-  step('Push source to the default scratch org and override conflicts', async () => {
+    // Modify the file by adding a comment.
+    const workbench = await browser.getWorkbench();
+    const editorView = await workbench.getEditorView();
+    const textEditor = await editorView.openEditor('ExampleApexClass1.cls') as TextEditor;
+    await textEditor.setTextAtLine(3, '        // sample comment for the pull test');
+    // Don't save the file just yet.
 
-    // debugger;
+    // Pull the file.
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Scratch Org', 5);
 
-    // * Run  “SFDX: Push Source from Default Scratch Org and Override Conflicts”
-    //     * Verify that the operation succeeded by either:
-    //         * querying the org? (did the local change get deployed?)
-    //         * inspecting the deploy/retrieve result?
-    //         * Verifying the command execution output on the Output view on vscode?
+    let successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org successfully ran', 10);
+    expect(successNotificationWasFound).toBe(true);
 
+    // Check the output.
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Retrieved Source', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('No results found');
+    expect(outputPanelText).toContain('ended with exit code 0');
 
+    // TODO: Need to check with Ananya that this is expected
   });
 
+  step('Save the modified file, then pull', async () => {
+    // Clear the Output view first.
+    const outputView = await utilities.openOutputView();
+    await outputView.clearText();
 
+    // Now save the file.
+    const workbench = await browser.getWorkbench();
+    const editorView = await workbench.getEditorView();
+    const textEditor = await editorView.openEditor('ExampleApexClass1.cls') as TextEditor;
+    await textEditor.save();
 
-  step('Open command palette and run “SFDX: Pull Source from Default Scratch Org”', async () => {
-    // TODO: implement
-    expect(1).toBe(1);
+    // An now pull the changes.
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Scratch Org', 5);
+
+    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org successfully ran', 10);
+    expect(successNotificationWasFound).toBe(true);
+
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Retrieved Source', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('No results found');
+    expect(outputPanelText).toContain('ended with exit code 0');
+
+    // TODO: Need to check with Ananya that this is expected
   });
 
+  step('Create an additional system admin user', async () => {
+    // Org alias format: AdminUser_yyyy_mm_dd_username_ticks__PushAndPull
+    const currentDate = new Date();
+    const ticks = currentDate.getTime();
+    const day = ('0' + currentDate.getDate()).slice(-2);
+    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+    const year = currentDate.getFullYear();
+    const currentOsUserName = await utilities.currentOsUserName();
+    adminName = `AdminUser_${year}_${month}_${day}_${currentOsUserName}_${ticks}_PushAndPull`;
+    adminEmailAddress = `${adminName}@sfdx.org`;
+    utilities.log(`PushAndPull - admin alias is ${adminName}...`);
 
-  // SFDX: Push Source to Default Scratch Org and Override Conflicts
+    const systemAdminUserDef = {
+      'Email': adminEmailAddress,
+      'Username': adminEmailAddress,
+      'LastName': adminName,
+      'LocaleSidKey': 'en_US',
+      'EmailEncodingKey': 'UTF-8',
+      'LanguageLocaleKey': 'en_US',
+      'profileName': 'System Administrator',
+      'generatePassword': false
+    };
 
+    const systemAdminUserDefPath = path.join(scratchOrg.projectFolderPath!, 'config', 'system-admin-user-def.json');
+    fs.writeFileSync(systemAdminUserDefPath, JSON.stringify(systemAdminUserDef), 'utf8');
 
-
-  // SFDX: Pull Source to Default Scratch Org and Override Conflicts
-
-
-
-  step('Open command palette and run “SFDX: View Changes in Default Scratch Org”', async () => {
-    // TODO: implement
-    expect(1).toBe(1);
+    const sfdxForceOrgCreateResult = await exec(`sfdx force:user:create --definitionfile ${systemAdminUserDefPath}`);
+    expect(sfdxForceOrgCreateResult.stdout).toContain(`Successfully created user "${adminEmailAddress}"`);
   });
+
+  step('Set the 2nd user as the default user', async () => {
+    const workbench = await browser.getWorkbench();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 1);
+
+    // Select this.scratchOrgAliasName from the list.
+    let scratchOrgQuickPickItemWasFound = false;
+    const quickPicks = await inputBox.getQuickPicks();
+    for (const quickPick of quickPicks) {
+      const label = await quickPick.getLabel();
+      // Find the org that was created.
+      if (label.includes(adminEmailAddress)) {
+        await quickPick.select();
+        await utilities.pause(3);
+        scratchOrgQuickPickItemWasFound = true;
+        break;
+      }
+    }
+
+    if (!scratchOrgQuickPickItemWasFound) {
+      throw new Error(`${adminEmailAddress} was not found in the the scratch org pick list`);
+    }
+    // Warning! This only works if the item (the scratch org) is visible.
+    // If there are many scratch orgs, not all of them may be displayed.
+    // If lots of scratch orgs are created and aren't deleted, this can
+    // result in this list growing one not being able to find the org
+    // they are looking for.
+
+    // Look for the success notification.
+    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Set a Default Org successfully ran');
+    if (!successNotificationWasFound) {
+      throw new Error('In createDefaultScratchOrg(), the notification of "SFDX: Set a Default Org successfully ran" was not found');
+    }
+
+    // Look for adminEmailAddress in the list of status bar items.
+    const statusBar = await workbench.getStatusBar();
+    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(statusBar, adminEmailAddress);
+    if (!scratchOrgStatusBarItem) {
+      throw new Error('getStatusBarItemWhichIncludes() returned a scratchOrgStatusBarItem with a value of null (or undefined)');
+    }
+  });
+
+  // TODO: at this point write e2e tests for conflict detection
+  // but there's a bug - when the 2nd user is created the code thinks
+  // it's a source tracked org and push & pull are no longer available
+  // (yet deploy & retrieve are).  Spoke with Ken and we think this will
+  // be fixed with the check in of his PR this week.
 
 
   step('Tear down and clean up the testing environment', async () => {
