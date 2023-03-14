@@ -85,9 +85,10 @@ describe('An Initial Suite', async () => {
 
   step('Set up the testing environment', async () => {
     scratchOrg = new ScratchOrg('AnInitialSuite', false);
-    // Don't call scratchOrg.setUp(), just call setUpTestingEnvironment() and createProject().
+    // Don't call scratchOrg.setUp() b/c we don't need to authorize a scratch org,
+    // just call setUpTestingEnvironment() and createProject().
     await scratchOrg.setUpTestingEnvironment();
-    await scratchOrg.createProject();
+    await scratchOrg.createProject('Developer');
   });
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {

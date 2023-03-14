@@ -199,7 +199,7 @@ export class ScratchOrg {
           this.scratchOrgAliasName = alias;
 
           // Set the current scratch org.
-          await this.setDefaultOrg(workbench, this.scratchOrgAliasName);
+          await this.setDefaultOrg(workbench);
 
           utilities.log(`${this.testSuiteSuffixName} - found one: ${this.scratchOrgAliasName}`);
           utilities.log(`${this.testSuiteSuffixName} - ...finished createDefaultScratchOrg()`);
@@ -224,7 +224,6 @@ export class ScratchOrg {
     const durationDays = 1;
 
     utilities.log(`${this.testSuiteSuffixName} - calling sfdx force:org:create...`);
-    // const sfdxForceOrgCreateResult = await exec(`sfdx force:org:create edition=Enterprise -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`);
     const sfdxForceOrgCreateResult = await exec(`sfdx force:org:create -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`);
     const json = this.removedEscapedCharacters(sfdxForceOrgCreateResult.stdout);
     const result = JSON.parse(json).result;
@@ -293,7 +292,7 @@ export class ScratchOrg {
     utilities.log('');
   }
 
-  private async setDefaultOrg(workbench: Workbench, scratchOrgAliasName: string): Promise<void> {
+  private async setDefaultOrg(workbench: Workbench): Promise<void> {
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 2);
 
     let scratchOrgQuickPickItemWasFound = false;
@@ -306,9 +305,9 @@ export class ScratchOrg {
 
     for (const quickPick of quickPicks) {
       const label = await quickPick.getLabel();
-      if (scratchOrgAliasName) {
+      if (this.scratchOrgAliasName) {
         // Find the org that was created in the "Run SFDX: Create a Default Scratch Org" step.
-        if (label.includes(scratchOrgAliasName)) {
+        if (label.includes(this.scratchOrgAliasName)) {
           await quickPick.select();
           await utilities.pause(3);
           scratchOrgQuickPickItemWasFound = true;
@@ -320,7 +319,7 @@ export class ScratchOrg {
         // scratchOrgAliasName is undefined and as such, search for the first org
         // that starts with "TempScratchOrg_" and also has the current user's name.
         if (label.startsWith('TempScratchOrg_') && label.includes(currentOsUserName)) {
-          scratchOrgAliasName = label.split(' - ')[0];
+          this.scratchOrgAliasName = label.split(' - ')[0];
           await quickPick.select();
           await utilities.pause(3);
           scratchOrgQuickPickItemWasFound = true;
@@ -340,7 +339,7 @@ export class ScratchOrg {
 
     // Look for orgAliasName in the list of status bar items
     const statusBar = await workbench.getStatusBar();
-    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(statusBar, scratchOrgAliasName);
+    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(statusBar, this.scratchOrgAliasName!);
     if (!scratchOrgStatusBarItem) {
       throw new Error('In setDefaultOrg(), getStatusBarItemWhichIncludes() returned a scratchOrgStatusBarItem with a value of null (or undefined)');
     }

@@ -154,13 +154,14 @@ describe('Push and Pull', async () => {
 
     // At this point there should be no conflicts since there have been no changes.
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Retrieved Source', 10);
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('No results found');
+    // or Created Admin     Profile force-app/main/default/profiles/Admin.profile-meta.xml
     expect(outputPanelText).toContain('ended with exit code 0');
   });
 

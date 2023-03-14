@@ -95,8 +95,8 @@ describe('Org Creation and Authentication', async () => {
     await utilities.pause(1);
 
     // In the initial state, the org picker button should be set to "No Default Org Set".
-    const statusBar = workbench.getStatusBar();
-    const noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(statusBar, 'No Default Org Set');
+    let statusBar = workbench.getStatusBar();
+    let noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(statusBar, 'No Default Org Set');
     expect(noDefaultOrgSetItem).not.toBeUndefined();
 
     const authFilePath = path.join(projectFolderPath, 'authFile.json');
@@ -109,6 +109,11 @@ describe('Org Creation and Authentication', async () => {
 
     const terminalText = await utilities.getTerminalViewText(terminalView, 60);
     expect(terminalText).toContain(`Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID`);
+
+    // After a dev hub has been authorized, the org should still not be set.
+    statusBar = workbench.getStatusBar();
+    noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(statusBar, 'No Default Org Set');
+    expect(noDefaultOrgSetItem).not.toBeUndefined();
   });
 
   step('Run SFDX: Set a Default Org', async () => {
@@ -122,6 +127,30 @@ describe('Org Creation and Authentication', async () => {
     expect(changeDefaultOrgSetItem).not.toBeUndefined();
     await changeDefaultOrgSetItem.click();
     await utilities.pause(1);
+
+    // In the drop down menu that appears, verify the SFDX auth org commands are present...
+    const expectedSfdxCommands = [
+        ' SFDX: Authorize an Org',
+        ' SFDX: Authorize a Dev Hub',
+        ' SFDX: Create a Default Scratch Org...',
+        ' SFDX: Authorize an Org using Session ID',
+        ' SFDX: Remove Deleted and Expired Orgs'
+    ];
+    let foundSfdxCommands: string[] = [];
+    const quickPicks = await prompt.getQuickPicks();
+    for (const quickPick of quickPicks) {
+        const label = await quickPick.getLabel();
+        if (expectedSfdxCommands.includes(label)) {
+          foundSfdxCommands.push(label);
+        }
+    }
+
+    if (expectedSfdxCommands.length !== foundSfdxCommands.length) {
+      // Something is wrong - the count of matching menus isn't what we expected.
+      expectedSfdxCommands.forEach(expectedSfdxCommand => {
+        expect(foundSfdxCommands).toContain(expectedSfdxCommand);
+      })
+    }
 
     // In the drop down menu that appears, select "vscodeOrg - user_name".
     await utilities.selectQuickPickItem(prompt, `${EnvironmentSettings.getInstance().devHubAliasName} - ${EnvironmentSettings.getInstance().devHubUserName}`);
