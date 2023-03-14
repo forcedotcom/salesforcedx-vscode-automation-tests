@@ -151,7 +151,7 @@ describe('Org Creation and Authentication', async () => {
     const day = ("0" + currentDate.getDate()).slice(-2);
     const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
     const year = currentDate.getFullYear();
-    const currentOsUserName = utilities.currentOsUserName();
+    const currentOsUserName = utilities.transformedUserName();
     scratchOrgAliasName = `TempScratchOrg_${year}_${month}_${day}_${currentOsUserName}_${ticks}_OrgAuth`;
 
     await prompt.setText(scratchOrgAliasName);
@@ -202,7 +202,7 @@ describe('Org Creation and Authentication', async () => {
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 1);
 
     let scratchOrgQuickPickItemWasFound = false;
-    const currentOsUserName = await utilities.currentOsUserName();
+    const currentOsUserName = await utilities.transformedUserName();
     const quickPicks = await inputBox.getQuickPicks();
     for (const quickPick of quickPicks) {
       const label = await quickPick.getLabel();

@@ -183,7 +183,7 @@ export class ScratchOrg {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`);
 
-    const currentOsUserName = await utilities.currentOsUserName();
+    const currentOsUserName = await utilities.transformedUserName();
     const workbench = await browser.getWorkbench();
 
     if (this.reuseScratchOrg) {
@@ -298,7 +298,7 @@ export class ScratchOrg {
 
     let scratchOrgQuickPickItemWasFound = false;
 
-    const currentOsUserName = await utilities.currentOsUserName();
+    const currentOsUserName = await utilities.transformedUserName();
     await utilities.pause(1);
 
     const quickPicks = await inputBox.getQuickPicks();
