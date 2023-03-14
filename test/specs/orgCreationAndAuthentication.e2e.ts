@@ -46,7 +46,7 @@ describe('Org Creation and Authentication', async () => {
 
   step('Run SFDX: Create Project', async () => {
     const workbench = await browser.getWorkbench();
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 8);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
     // Select the "Standard" project type.
@@ -93,6 +93,11 @@ describe('Org Creation and Authentication', async () => {
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
     const workbench = await browser.getWorkbench();
     await utilities.pause(1);
+
+    // In the initial state, the org picker button should be set to "No Default Org Set".
+    const statusBar = workbench.getStatusBar();
+    const noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(statusBar, 'No Default Org Set');
+    expect(noDefaultOrgSetItem).not.toBeUndefined();
 
     const authFilePath = path.join(projectFolderPath, 'authFile.json');
     const terminalView = await utilities.executeCommand(workbench, `sfdx force:org:display -u ${EnvironmentSettings.getInstance().devHubAliasName} --verbose --json > ${authFilePath}`);
