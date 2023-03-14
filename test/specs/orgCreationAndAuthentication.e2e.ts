@@ -52,7 +52,6 @@ describe('Org Creation and Authentication', async () => {
     // Select the "Standard" project type.
     let quickPicks = await prompt.getQuickPicks();
     expect(quickPicks).not.toBeUndefined();
-    expect(quickPicks.length).toBeGreaterThanOrEqual(1);
     expect(quickPicks.length).toEqual(3);
     expect(await quickPicks[0].getLabel()).toEqual('Standard');
     expect(await quickPicks[1].getLabel()).toEqual('Empty');
