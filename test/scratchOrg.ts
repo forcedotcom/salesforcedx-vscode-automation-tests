@@ -89,7 +89,7 @@ export class ScratchOrg {
       await utilities.pause(1);
     }
 
-    // Now create the temp folder.  It should exists but create the folder if it is missing.
+    // Now create the temp folder.  It should exist but create the folder if it is missing.
     if (!fs.existsSync(this.tempFolderPath)) {
       await utilities.createFolder(this.tempFolderPath);
       await utilities.pause(1);

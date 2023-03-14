@@ -37,7 +37,7 @@ describe('Org Creation and Authentication', async () => {
       await utilities.pause(1);
     }
 
-    // Now create the temp folder.  It should exists but create the folder if it is missing.
+    // Now create the temp folder.  It should exist but create the folder if it is missing.
     if (!fs.existsSync(tempFolderPath)) {
       await utilities.createFolder(tempFolderPath);
       await utilities.pause(1);
