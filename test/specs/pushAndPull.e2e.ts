@@ -145,6 +145,8 @@ describe('Push and Pull', async () => {
   });
 
   step('Pull the Apex class', async () => {
+    // With this test, it's going to pull twice...
+
     // Clear the Output view first.
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
@@ -154,15 +156,36 @@ describe('Push and Pull', async () => {
 
     // At this point there should be no conflicts since there have been no changes.
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org successfully ran', 10);
+    let successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
-    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Retrieved Source', 10);
+    let outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Retrieved Source', 10);
+    expect(outputPanelText).not.toBeUndefined();
+
+    // The first time a pull is performed, force-app/main/default/profiles/Admin.profile-meta.xml is pulled down.
+    expect(outputPanelText).toContain('Created Admin');
+    expect(outputPanelText).toContain('Profile force-app/main/default/profiles/Admin.profile-meta.xml');
+    expect(outputPanelText).toContain('ended with exit code 0');
+    expect(outputPanelText).not.toContain('No results found');
+
+
+    // Second pull...
+    // Clear the output again.
+    await outputView.clearText();
+
+    // And pull again.
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Scratch Org', 5);
+
+    successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org successfully ran', 10);
+    expect(successNotificationWasFound).toBe(true);
+
+    // Check the output.
+    outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Retrieved Source', 10);
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('No results found');
-    // or Created Admin     Profile force-app/main/default/profiles/Admin.profile-meta.xml
     expect(outputPanelText).toContain('ended with exit code 0');
+    expect(outputPanelText).not.toContain('Created Admin');
   });
 
   step('Modify the file (but don\'t save), then pull', async () => {
@@ -293,7 +316,6 @@ describe('Push and Pull', async () => {
   // it's a source tracked org and push & pull are no longer available
   // (yet deploy & retrieve are).  Spoke with Ken and we think this will
   // be fixed with the check in of his PR this week.
-
 
   step('Tear down and clean up the testing environment', async () => {
     await scratchOrg.tearDown();
