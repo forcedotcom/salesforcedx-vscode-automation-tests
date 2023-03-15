@@ -20,8 +20,8 @@ import {
 } from '../environmentSettings';
 import * as utilities from '../utilities';
 
-describe('Org Creation and Authentication', async () => {
-  const tempProjectName = 'TempProject-OrgCreationAndAuth';
+describe('Authentication', async () => {
+  const tempProjectName = 'TempProject-Authentication';
   let tempFolderPath: string;
   let projectFolderPath: string;
   let prompt: QuickOpenBox | InputBox;
@@ -59,7 +59,7 @@ describe('Org Creation and Authentication', async () => {
     await prompt.selectQuickPick('Standard');
     await utilities.pause(1);
 
-    // Enter "TempProject-OrgCreationAndAuth" for the project name.
+    // Enter "TempProject-Authentication" for the project name.
     await prompt.setText(tempProjectName);
     await utilities.pause(1);
 
