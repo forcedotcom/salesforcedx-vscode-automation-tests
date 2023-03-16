@@ -211,8 +211,6 @@ describe('Push and Pull', async () => {
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('No results found');
     expect(outputPanelText).toContain('ended with exit code 0');
-
-    // TODO: Need to check with Ananya that this is expected
   });
 
   step('Save the modified file, then pull', async () => {
@@ -236,8 +234,6 @@ describe('Push and Pull', async () => {
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('No results found');
     expect(outputPanelText).toContain('ended with exit code 0');
-
-    // TODO: Need to check with Ananya that this is expected
   });
 
   step('Create an additional system admin user', async () => {
