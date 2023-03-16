@@ -235,25 +235,12 @@ describe('Authentication', async () => {
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 1);
 
     let scratchOrgQuickPickItemWasFound = false;
-    const currentOsUserName = await utilities.transformedUserName();
     const quickPicks = await inputBox.getQuickPicks();
     for (const quickPick of quickPicks) {
       const label = await quickPick.getLabel();
       if (scratchOrgAliasName) {
         // Find the org that was created in the "Run SFDX: Create a Default Scratch Org" step.
         if (label.includes(scratchOrgAliasName)) {
-          await quickPick.select();
-          await utilities.pause(3);
-          scratchOrgQuickPickItemWasFound = true;
-          break;
-        }
-      } else {
-        // If the scratch org was already created (and not deleted),
-        // and the "Run SFDX: Create a Default Scratch Org" step was skipped,
-        // scratchOrgAliasName is undefined and as such, search for the first org
-        // that starts with "TempScratchOrg_" and also has the current user's name.
-        if (label.startsWith('TempScratchOrg_') && label.includes(currentOsUserName)) {
-          scratchOrgAliasName = label.split(' - ')[0];
           await quickPick.select();
           await utilities.pause(3);
           scratchOrgQuickPickItemWasFound = true;

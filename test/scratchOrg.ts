@@ -313,18 +313,6 @@ export class ScratchOrg {
           scratchOrgQuickPickItemWasFound = true;
           break;
         }
-      } else {
-        // If the scratch org was already created (and not deleted),
-        // and the "Run SFDX: Create a Default Scratch Org" step was skipped,
-        // scratchOrgAliasName is undefined and as such, search for the first org
-        // that starts with "TempScratchOrg_" and also has the current user's name.
-        if (label.startsWith('TempScratchOrg_') && label.includes(currentOsUserName)) {
-          this.scratchOrgAliasName = label.split(' - ')[0];
-          await quickPick.select();
-          await utilities.pause(3);
-          scratchOrgQuickPickItemWasFound = true;
-          break;
-        }
       }
     }
 
