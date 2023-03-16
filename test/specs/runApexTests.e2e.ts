@@ -164,7 +164,18 @@ describe('Run Apex Tests', async () => {
 
     // Open an existing apex test and modify it
     const textEditor = await editorView.openEditor('ExampleApexClass1Test.cls') as TextEditor;
-    await textEditor.setText('@isTest\npublic class ExampleApexClass1Test {\n\t@isTest\n\tstatic void validateSayHello() {\n\t\tSystem.debug(\'Starting validate\');\n\t\tExampleApexClass1.SayHello(\'Andres\');\n\t\tSystem.assertEquals(1, 1, \'all good\');\n\t}\n}');
+    const testText = [
+      '@IsTest',
+      'public class ExampleApexClass1Test {',
+      '\t@IsTest',
+      '\tstatic void validateSayHello() {',
+      '\t\tSystem.debug(\'Starting validate\');',
+      '\t\tExampleApexClass1.SayHello(\'Andres\');',
+      '\t\tSystem.assertEquals(1, 1, \'all good\');',
+      '\t}',
+      '}'
+    ].join('\n');
+    await textEditor.setText(testText);
     await textEditor.save();
 
     // Open command palette and run "SFDX: Push Source to Default Scratch Org"
