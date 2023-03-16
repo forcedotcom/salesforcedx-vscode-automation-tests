@@ -52,21 +52,13 @@ describe('Debug Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) failed to run');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
+    expect(successNotificationWasFound).toBe(true);
 
-      // Continue with the debug session
-      await browser.keys(['F5']);
-      await utilities.pause(1);
-      await browser.keys(['F5']);
-      await utilities.pause(1);
-    }
-
+    // Continue with the debug session
+    await browser.keys(['F5']);
+    await utilities.pause(1);
+    await browser.keys(['F5']);
+    await utilities.pause(1);
   });
 
   step('Debug Single Test via Apex Class', async () => {
@@ -84,20 +76,13 @@ describe('Debug Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) failed to run');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
+    expect(successNotificationWasFound).toBe(true);
 
-      // Continue with the debug session
-      await browser.keys(['F5']);
-      await utilities.pause(1);
-      await browser.keys(['F5']);
-      await utilities.pause(1);
-    }
+    // Continue with the debug session
+    await browser.keys(['F5']);
+    await utilities.pause(1);
+    await browser.keys(['F5']);
+    await utilities.pause(1);
   });
 
   step('Debug all Apex Methods on a Class via the Test Sidebar', async () => {
@@ -124,20 +109,13 @@ describe('Debug Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) failed to run');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
+    expect(successNotificationWasFound).toBe(true);
 
-      // Continue with the debug session
-      await browser.keys(['F5']);
-      await utilities.pause(1);
-      await browser.keys(['F5']);
-      await utilities.pause(1);
-    }
+    // Continue with the debug session
+    await browser.keys(['F5']);
+    await utilities.pause(1);
+    await browser.keys(['F5']);
+    await utilities.pause(1);
   });
 
   step('Debug a Single Apex Test Method via the Test Sidebar', async () => {
@@ -164,20 +142,13 @@ describe('Debug Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) failed to run');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
+    expect(successNotificationWasFound).toBe(true);
 
-      // Continue with the debug session
-      await browser.keys(['F5']);
-      await utilities.pause(1);
-      await browser.keys(['F5']);
-      await utilities.pause(1);
-    }
+    // Continue with the debug session
+    await browser.keys(['F5']);
+    await utilities.pause(1);
+    await browser.keys(['F5']);
+    await utilities.pause(1);
   });
 
   step('Tear down and clean up the testing environment', async () => {
