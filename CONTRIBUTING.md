@@ -14,7 +14,7 @@
 
 ### Committing
 
-1. We enforce commit message format. We recommend using [commitizen](https://github.com/commitizen/cz-cli) by installing it with `npm install -g commitizen` and running `npm run commit-init`. When you commit, we recommend that you use `npm run commit`, which prompts you with a series of questions to format the commit message. Or you can use our VS Code Task `Commit`.
+1. We enforce commit message format. We recommend using [commitizen](https://github.com/commitizen/cz-cli) by installing it with `npm install -g commitizen` and running `npm run commit-init`. When you commit, we recommend that you use `npm run commit`, which prompts you with a series of questions to format the commit message.
 1. The commit message format that we expect is: `type: commit message`. Valid types are: feat, fix, improvement, docs, style, refactor, perf, test, build, ci, chore and revert.
 1. Before commit and push, Husky runs several hooks to ensure the commit message is in the correct format and that everything lints and compiles properly.
 
@@ -26,7 +26,6 @@ Agreement. You can do so by going to https://cla.salesforce.com/sign-cla.
 ## Branches
 
 - We work in `develop`.
-- Our released (aka. _production_) branch is `main`.
 - Our work happens in _topic_ branches (feature and/or bug-fix).
   - feature as well as bug-fix branches are based on `develop`
   - branches _should_ be kept up-to-date using `rebase`
@@ -45,19 +44,6 @@ Agreement. You can do so by going to https://cla.salesforce.com/sign-cla.
 
 - Hot-fix branches are an exception.
   - Instead we aim for faster cycles and a generally stable `develop` branch.
-
-### Merging `develop` into `main`
-
-- When a development cycle finishes, the content of the `develop` branch becomes the `main` branch.
-
-```
-$ git checkout main
-$ git reset --hard develop
-$
-$ # Using a custom commit message for the merge below
-$ git merge -m 'Merge -s our (where _ours_ is develop) releasing stream x.y.z.' -s ours origin/main
-$ git push origin main
-```
 
 ## Pull Requests
 

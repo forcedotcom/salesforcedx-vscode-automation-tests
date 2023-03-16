@@ -30,7 +30,7 @@ Default value: `svc_idee_bot@salesforce.com`
 #### EXTENSION_PATH
 Default value: `{cwd}/../../salesforcedx-vscode/packages`
 
-The default folder structure is `{location}/salesforcedx-vscode` and `{location}/salesforcedx-vscode-automation-tests`, and if both repos are at the same location no changes are needed for `EXTENSION_PATH`.
+The default folder structure is `{location}/salesforcedx-vscode` and `{location}/salesforcedx-vscode-automation-tests`, and if both repos are at the same location no changes are needed for `EXTENSION_PATH`.  If your folder structure does not match this, EXTENSION_PATH will need to be set to the relative path to 'salesforcedx-vscode/packages' .
 
 #### THROTTLE_FACTOR
 Default value: 1
