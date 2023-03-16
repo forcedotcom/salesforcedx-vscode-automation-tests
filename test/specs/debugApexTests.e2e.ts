@@ -18,12 +18,11 @@ import * as utilities from '../utilities';
 
 describe('Debug Apex Tests', async () => {
   let scratchOrg: ScratchOrg;
+  const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
     scratchOrg = new ScratchOrg('DebugApexTests', true); // TODO: Change back to false
     await scratchOrg.setUp();
-
-    const workbench = await browser.getWorkbench();
 
     // Create Apex class 1 and test
     await utilities.createApexClassWithTest('ExampleApexClass1');
@@ -34,23 +33,23 @@ describe('Debug Apex Tests', async () => {
     await utilities.pause(1);
 
     // Push source to scratch org
+    const workbench = await browser.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org and Override Conflicts', 5);
   });
 
   step('Debug All Tests via Apex Class', async () => {
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
-    let textEditor: TextEditor;
 
     // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
-    textEditor = await editorView.openEditor('ExampleApexClass1Test.cls') as TextEditor;
+    const textEditor = await editorView.openEditor('ExampleApexClass1Test.cls') as TextEditor;
 
     // Click the "Debug All Tests" code lens at the top of the class
     const codeLens = await textEditor.getCodeLens('Run All Tests') as CodeLens; // TODO: Change to Debug All Tests
     await (await codeLens.elem).click();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', 5 * 60);
+    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
     if (successNotificationWasFound !== true) {
@@ -73,17 +72,16 @@ describe('Debug Apex Tests', async () => {
   step('Debug Single Test via Apex Class', async () => {
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
-    let textEditor: TextEditor;
 
     // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
-    textEditor = await editorView.openEditor('ExampleApexClass2Test.cls') as TextEditor;
+    const textEditor = await editorView.openEditor('ExampleApexClass2Test.cls') as TextEditor;
 
     // Click the "Debug Test" code lens at the top of one of the test methods
     const codeLens = await textEditor.getCodeLens('Run Test') as CodeLens; // TODO: Change to Debug Test
     await (await codeLens.elem).click();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', 5 * 60);
+    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
     if (successNotificationWasFound !== true) {
@@ -123,7 +121,7 @@ describe('Debug Apex Tests', async () => {
     await utilities.pause(1);
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', 5 * 60);
+    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
     if (successNotificationWasFound !== true) {
@@ -163,7 +161,7 @@ describe('Debug Apex Tests', async () => {
     await utilities.pause(1);
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', 5 * 60);
+    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
     if (successNotificationWasFound !== true) {
