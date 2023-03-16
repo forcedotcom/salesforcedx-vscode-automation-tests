@@ -243,12 +243,9 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
-    let icon;
-    let iconStyle;
-
     for (const item of apexTestsItems){
-      icon = await (await item.elem).$('.custom-view-tree-node-item-icon');
-      iconStyle = await icon.getAttribute('style');
+      const icon = await (await item.elem).$('.custom-view-tree-node-item-icon');
+      const iconStyle = await icon.getAttribute('style');
       expect(iconStyle).toContain('testPass');
     }
   });
