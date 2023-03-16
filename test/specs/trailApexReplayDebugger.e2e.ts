@@ -46,20 +46,13 @@ describe('Find and Fix Bugs with Apex Replay Debugger', async () => {
     await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Processing test run', fiveMinutes, false);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests failed to run');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
+    expect(successNotificationWasFound).toBe(true);
 
-      // Verify test results are listed on vscode's Output section
-      const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
-      expect(outputPanelText).not.toBeUndefined();
-      expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
-      expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
-    }
+    // Verify test results are listed on vscode's Output section
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
+    expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
   });
 
   step('Set Breakpoints and Checkpoints', async () => {
@@ -109,20 +102,13 @@ describe('Find and Fix Bugs with Apex Replay Debugger', async () => {
     await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Processing test run', fiveMinutes, false);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests failed to run');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
+    expect(successNotificationWasFound).toBe(true);
 
-      // Verify test results are listed on vscode's Output section
-      const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
-      expect(outputPanelText).not.toBeUndefined();
-      expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
-      expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
-    }
+    // Verify test results are listed on vscode's Output section
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
+    expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
   });
 
   step('SFDX: Get Apex Debug Logs', async () => {
@@ -136,22 +122,17 @@ describe('Find and Fix Bugs with Apex Replay Debugger', async () => {
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(workbench, 'Getting Apex debug logs', fiveMinutes);
 
-    const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'No Apex debug logs were found');
-    if (failureNotificationWasFound !== true) {
-      // Select a log file
-      const quickPicks = await prompt.getQuickPicks();
-      expect(quickPicks).not.toBeUndefined();
-      expect(quickPicks.length).toBeGreaterThanOrEqual(1);
-      await prompt.selectQuickPick('User User - ApexTestHandler');
+    // Select a log file
+    const quickPicks = await prompt.getQuickPicks();
+    expect(quickPicks).not.toBeUndefined();
+    expect(quickPicks.length).toBeGreaterThanOrEqual(1);
+    await prompt.selectQuickPick('User User - ApexTestHandler');
 
-      // Wait for the command to execute
-      await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Get Apex Debug Logs', fiveMinutes);
+    // Wait for the command to execute
+    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Get Apex Debug Logs', fiveMinutes);
 
-      const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Get Apex Debug Logs successfully ran');
-      expect(successNotificationWasFound).toBe(true);
-    } else {
-      expect(failureNotificationWasFound).toBe(true);
-    }
+    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Get Apex Debug Logs successfully ran');
+    expect(successNotificationWasFound).toBe(true);
   });
 
   step('Replay an Apex Debug Log', async () => {
@@ -160,22 +141,15 @@ describe('Find and Fix Bugs with Apex Replay Debugger', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Launch Apex Replay Debugger with Current File', 1);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Launch Apex Replay Debugger with Current File successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'You can only run this command with Anonymous Apex files, Apex Test files, or Apex Debug Log files.');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      } else {
-        utilities.log('Warning - Launching Apex Replay Debugger with Current File failed, neither the success notification or the failure notification was found.');
-      }
-    } else {
-      // Continue with the debug session
-      await utilities.pause(5);
-      await browser.keys(['F5']);
-      await utilities.pause(1);
-      await browser.keys(['F5']);
-      await utilities.pause(1);
-      expect(successNotificationWasFound).toBe(true);
-    }
+
+    // Continue with the debug session
+    await utilities.pause(5);
+    await browser.keys(['F5']);
+    await utilities.pause(1);
+    await browser.keys(['F5']);
+    await utilities.pause(1);
+
+    expect(successNotificationWasFound).toBe(true);
   });
 
   step('Push Fixed Metadata to Scratch Org', async () => {
@@ -205,20 +179,13 @@ describe('Find and Fix Bugs with Apex Replay Debugger', async () => {
     await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Processing test run', fiveMinutes, false);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests failed to run');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
+    expect(successNotificationWasFound).toBe(true);
 
-      // Verify test results are listed on vscode's Output section
-      const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
-      expect(outputPanelText).not.toBeUndefined();
-      expect(outputPanelText).toContain('AccountServiceTest.should_create_account');
-      expect(outputPanelText).toContain('Pass');
-    }
+    // Verify test results are listed on vscode's Output section
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('AccountServiceTest.should_create_account');
+    expect(outputPanelText).toContain('Pass');
   });
 
   step('Tear down and clean up the testing environment', async () => {

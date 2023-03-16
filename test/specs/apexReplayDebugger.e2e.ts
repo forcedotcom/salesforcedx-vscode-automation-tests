@@ -82,22 +82,17 @@ describe('Apex Replay Debugger', async () => {
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(workbench, 'Getting Apex debug logs', fiveMinutes);
 
-    const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'No Apex debug logs were found');
-    if (failureNotificationWasFound !== true) {
-      // Select a log file
-      const quickPicks = await prompt.getQuickPicks();
-      expect(quickPicks).not.toBeUndefined();
-      expect(quickPicks.length).toBeGreaterThanOrEqual(1);
-      await prompt.selectQuickPick('User User - Api');
+    // Select a log file
+    const quickPicks = await prompt.getQuickPicks();
+    expect(quickPicks).not.toBeUndefined();
+    expect(quickPicks.length).toBeGreaterThanOrEqual(1);
+    await prompt.selectQuickPick('User User - Api');
 
-      // Wait for the command to execute
-      await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Get Apex Debug Logs', fiveMinutes);
+    // Wait for the command to execute
+    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Get Apex Debug Logs', fiveMinutes);
 
-      const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Get Apex Debug Logs successfully ran');
-      expect(successNotificationWasFound).toBe(true);
-    } else {
-      expect(failureNotificationWasFound).toBe(true);
-    }
+    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Get Apex Debug Logs successfully ran');
+    expect(successNotificationWasFound).toBe(true);
   });
 
   step('SFDX: Launch Apex Replay Debugger with Last Log File', async () => {
@@ -133,21 +128,14 @@ describe('Apex Replay Debugger', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Launch Apex Replay Debugger with Current File', 1);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Launch Apex Replay Debugger with Current File successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'You can only run this command with Anonymous Apex files, Apex Test files, or Apex Debug Log files.');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      } else {
-        utilities.log('Warning - Launching Apex Replay Debugger with Current File failed, neither the success notification or the failure notification was found.');
-      }
-    } else {
-      // Continue with the debug session
-      await browser.keys(['F5']);
-      await utilities.pause(1);
-      await browser.keys(['F5']);
-      await utilities.pause(1);
-      expect(successNotificationWasFound).toBe(true);
-    }
+
+    // Continue with the debug session
+    await browser.keys(['F5']);
+    await utilities.pause(1);
+    await browser.keys(['F5']);
+    await utilities.pause(1);
+
+    expect(successNotificationWasFound).toBe(true);
   });
 
   step('Run the Anonymous Apex Debugger using the Command Palette', async () => {

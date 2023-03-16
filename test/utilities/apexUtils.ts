@@ -34,9 +34,9 @@ export async function createApexClassWithTest(name: string): Promise<void> {
   const editorView = workbench.getEditorView();
   textEditor = await editorView.openEditor(name + '.cls') as TextEditor;
   const classText = [
-    'public with sharing class ' + name + ' {',
+    `public with sharing class ${name} {`,
     '\tpublic static void SayHello(string name){',
-    '\t\tSystem.debug(\'Hello, \' + name + \'!\');',
+    `\t\tSystem.debug(\'Hello, ${name}!\');`,
     '\t}',
     '}'
   ].join('\n');
@@ -60,12 +60,12 @@ export async function createApexClassWithTest(name: string): Promise<void> {
   textEditor = await editorView.openEditor(name + 'Test.cls') as TextEditor;
   const testText = [
     '@IsTest',
-    `public class ${name} Test {`,
+    `public class ${name}Test {`,
     '\t@IsTest',
     '\tstatic void validateSayHello() {',
-    '\t\tSystem.debug(\'Starting validate\');',
-    `\t\t${name}.SayHello(\'Cody\');`,
-    '\t\tSystem.assertEquals(1, 1, \'all good\');',
+    `\t\tSystem.debug('Starting validate');`,
+    `\t\t${name}.SayHello('Cody');`,
+    `\t\tSystem.assertEquals(1, 1, 'all good');`,
     '\t}',
     '}'
   ].join('\n');
