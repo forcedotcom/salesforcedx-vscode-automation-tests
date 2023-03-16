@@ -62,14 +62,7 @@ describe('Run Apex Tests', async () => {
 
   //   // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
   //   const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
-  //   if (successNotificationWasFound !== true) {
-  //     const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests failed to run');
-  //     if (failureNotificationWasFound === true) {
-  //       expect(successNotificationWasFound).toBe(false);
-  //     }
-  //   } else {
-  //     expect(successNotificationWasFound).toBe(true);
-  //   }
+  //   expect(successNotificationWasFound).toBe(true);
 
   //   // Verify test results are listed on vscode's Output section
   //   const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
@@ -98,14 +91,7 @@ describe('Run Apex Tests', async () => {
 
   //   // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
   //   const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
-  //   if (successNotificationWasFound !== true) {
-  //     const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests failed to run');
-  //     if (failureNotificationWasFound === true) {
-  //       expect(successNotificationWasFound).toBe(false);
-  //     }
-  //   } else {
-  //     expect(successNotificationWasFound).toBe(true);
-  //   }
+  //   expect(successNotificationWasFound).toBe(true);
 
   //   // Verify test results are listed on vscode's Output section
   //   const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
@@ -131,14 +117,7 @@ describe('Run Apex Tests', async () => {
 
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests failed to run');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
-    }
+    expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
@@ -183,11 +162,7 @@ describe('Run Apex Tests', async () => {
 
     // Once push is successful, open command palette and run "SFDX: Re-Run Last Run Apex Test Class"
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Push Source to Default Scratch Org and Override Conflicts successfully ran');
-    if (successNotificationWasFound) {
-      await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Re-Run Last Run Apex Test Class', 1);
-    } else {
-      expect(successNotificationWasFound).toBe(false);
-    }
+    expect(successNotificationWasFound).toBe(false);
   });
 
   step('Run all Apex tests via Test Sidebar', async () => {
@@ -223,14 +198,7 @@ describe('Run Apex Tests', async () => {
 
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests failed to run');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
-    }
+    expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
@@ -276,14 +244,7 @@ describe('Run Apex Tests', async () => {
 
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests failed to run');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
-    }
+    expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
@@ -325,14 +286,7 @@ describe('Run Apex Tests', async () => {
 
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests failed to run');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
-    }
+    expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
@@ -369,14 +323,7 @@ describe('Run Apex Tests', async () => {
 
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests failed to run');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
-    }
+    expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     let outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
@@ -406,20 +353,13 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Processing test run', fiveMinutes, false);
 
     const successNotification2WasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
-    if (successNotification2WasFound !== true) {
-      const failureNotification2WasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests failed to run');
-      if (failureNotification2WasFound === true) {
-        expect(successNotification2WasFound).toBe(false);
-      }
-    } else {
-      expect(successNotification2WasFound).toBe(true);
+    expect(successNotification2WasFound).toBe(true);
 
-      // Verify test results are listed on vscode's Output section
-      outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
-      expect(outputPanelText).not.toBeUndefined();
-      expect(outputPanelText).toContain('AccountServiceTest.should_create_account');
-      expect(outputPanelText).toContain('Pass');
-    }
+    // Verify test results are listed on vscode's Output section
+    outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('AccountServiceTest.should_create_account');
+    expect(outputPanelText).toContain('Pass');
   });
 
   step('Create Apex Test Suite', async () => {
@@ -442,14 +382,7 @@ describe('Run Apex Tests', async () => {
 
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Build Apex Test Suite successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Build Apex Test Suite failed to run');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
-    }
+    expect(successNotificationWasFound).toBe(true);
   });
 
   step('Add test to Apex Test Suite', async () => {
@@ -471,15 +404,8 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Build Apex Test Suite', fiveMinutes);
 
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX:  Build Apex Test Suite successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Build Apex Test Suite failed to run');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
-    }
+    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Build Apex Test Suite successfully ran');
+    expect(successNotificationWasFound).toBe(true);
   });
 
   step('Run Apex Test Suite', async () => {
@@ -498,21 +424,14 @@ describe('Run Apex Tests', async () => {
 
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests failed to run');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
+    expect(successNotificationWasFound).toBe(true);
 
-      // Verify test results are listed on vscode's Output section
-      const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
-      expect(outputPanelText).not.toBeUndefined();
-      expect(outputPanelText).toContain('=== Test Summary');
-      expect(outputPanelText).toContain('TEST NAME');
-      expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
-    }
+    // Verify test results are listed on vscode's Output section
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('=== Test Summary');
+    expect(outputPanelText).toContain('TEST NAME');
+    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
   });
 
   step('Tear down and clean up the testing environment', async () => {
