@@ -6,7 +6,6 @@
             "@wdio/mocha-framework",
             "expect-webdriverio",
             "node",
-            "webdriverio/async",
             "wdio-vscode-service"
         ],
         "target": "es2019",

@@ -43,9 +43,9 @@ export class ScratchOrg {
     return 'TempProject-' + this.testSuiteSuffixName;
   }
 
-  public async setUp(): Promise<void> {
+  public async setUp(scratchOrgEdition: string = 'Developer'): Promise<void> {
     await this.setUpTestingEnvironment();
-    await this.createProject();
+    await this.createProject(scratchOrgEdition);
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
   }
@@ -89,7 +89,7 @@ export class ScratchOrg {
       await utilities.pause(1);
     }
 
-    // Now create the temp folder.  It should exists but create the folder if it is missing.
+    // Now create the temp folder.  It should exist but create the folder if it is missing.
     if (!fs.existsSync(this.tempFolderPath)) {
       await utilities.createFolder(this.tempFolderPath);
       await utilities.pause(1);
@@ -99,7 +99,7 @@ export class ScratchOrg {
     utilities.log('');
   }
 
-  public async createProject(): Promise<void> {
+  public async createProject(scratchOrgEdition: string): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
 
@@ -143,6 +143,13 @@ export class ScratchOrg {
     // Yep, we need to wait a long time here.
     await utilities.pause(10);
 
+    if (scratchOrgEdition === 'Enterprise') {
+      const projectScratchDefPath = path.join(this.tempFolderPath!, this.tempProjectName, 'config', 'project-scratch-def.json');
+      let  projectScratchDef = fs.readFileSync(projectScratchDefPath, 'utf8');
+      projectScratchDef = projectScratchDef.replace(`"edition": "Developer"`, `"edition": "Enterprise"`);
+      fs.writeFileSync(projectScratchDefPath, projectScratchDef, 'utf8');
+    }
+
     utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
     utilities.log('');
   }
@@ -176,7 +183,7 @@ export class ScratchOrg {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`);
 
-    const currentOsUserName = await utilities.currentOsUserName();
+    const currentOsUserName = await utilities.transformedUserName();
     const workbench = await browser.getWorkbench();
 
     if (this.reuseScratchOrg) {
@@ -192,7 +199,7 @@ export class ScratchOrg {
           this.scratchOrgAliasName = alias;
 
           // Set the current scratch org.
-          await this.setDefaultOrg(workbench, this.scratchOrgAliasName);
+          await this.setDefaultOrg(workbench);
 
           utilities.log(`${this.testSuiteSuffixName} - found one: ${this.scratchOrgAliasName}`);
           utilities.log(`${this.testSuiteSuffixName} - ...finished createDefaultScratchOrg()`);
@@ -274,7 +281,7 @@ export class ScratchOrg {
       throw new Error('In createDefaultScratchOrg(), the notification of "SFDX: Set a Default Org successfully ran" was not found');
     }
 
-    // Look for this.scratchOrgAliasName in the list of status bar items
+    // Look for this.scratchOrgAliasName in the list of status bar items.
     const statusBar = await workbench.getStatusBar();
     const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(statusBar, this.scratchOrgAliasName);
     if (!scratchOrgStatusBarItem) {
@@ -285,12 +292,12 @@ export class ScratchOrg {
     utilities.log('');
   }
 
-  private async setDefaultOrg(workbench: Workbench, scratchOrgAliasName: string): Promise<void> {
+  private async setDefaultOrg(workbench: Workbench): Promise<void> {
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 2);
 
     let scratchOrgQuickPickItemWasFound = false;
 
-    const currentOsUserName = await utilities.currentOsUserName();
+    const currentOsUserName = await utilities.transformedUserName();
     await utilities.pause(1);
 
     const quickPicks = await inputBox.getQuickPicks();
@@ -298,21 +305,9 @@ export class ScratchOrg {
 
     for (const quickPick of quickPicks) {
       const label = await quickPick.getLabel();
-      if (scratchOrgAliasName) {
+      if (this.scratchOrgAliasName) {
         // Find the org that was created in the "Run SFDX: Create a Default Scratch Org" step.
-        if (label.includes(scratchOrgAliasName)) {
-          await quickPick.select();
-          await utilities.pause(3);
-          scratchOrgQuickPickItemWasFound = true;
-          break;
-        }
-      } else {
-        // If the scratch org was already created (and not deleted),
-        // and the "Run SFDX: Create a Default Scratch Org" step was skipped,
-        // scratchOrgAliasName is undefined and as such, search for the first org
-        // that starts with "TempScratchOrg_" and also has the current user's name.
-        if (label.startsWith('TempScratchOrg_') && label.includes(currentOsUserName)) {
-          scratchOrgAliasName = label.split(' - ')[0];
+        if (label.includes(this.scratchOrgAliasName)) {
           await quickPick.select();
           await utilities.pause(3);
           scratchOrgQuickPickItemWasFound = true;
@@ -332,7 +327,7 @@ export class ScratchOrg {
 
     // Look for orgAliasName in the list of status bar items
     const statusBar = await workbench.getStatusBar();
-    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(statusBar, scratchOrgAliasName);
+    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(statusBar, this.scratchOrgAliasName!);
     if (!scratchOrgStatusBarItem) {
       throw new Error('In setDefaultOrg(), getStatusBarItemWhichIncludes() returned a scratchOrgStatusBarItem with a value of null (or undefined)');
     }

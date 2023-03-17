@@ -20,8 +20,8 @@ import {
 } from '../environmentSettings';
 import * as utilities from '../utilities';
 
-describe('Org Creation and Authentication', async () => {
-  const tempProjectName = 'TempProject-OrgCreationAndAuth';
+describe('Authentication', async () => {
+  const tempProjectName = 'TempProject-Authentication';
   let tempFolderPath: string;
   let projectFolderPath: string;
   let prompt: QuickOpenBox | InputBox;
@@ -37,7 +37,7 @@ describe('Org Creation and Authentication', async () => {
       await utilities.pause(1);
     }
 
-    // Now create the temp folder.  It should exists but create the folder if it is missing.
+    // Now create the temp folder.  It should exist but create the folder if it is missing.
     if (!fs.existsSync(tempFolderPath)) {
       await utilities.createFolder(tempFolderPath);
       await utilities.pause(1);
@@ -46,13 +46,12 @@ describe('Org Creation and Authentication', async () => {
 
   step('Run SFDX: Create Project', async () => {
     const workbench = await browser.getWorkbench();
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 8);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
     // Select the "Standard" project type.
     let quickPicks = await prompt.getQuickPicks();
     expect(quickPicks).not.toBeUndefined();
-    expect(quickPicks.length).toBeGreaterThanOrEqual(1);
     expect(quickPicks.length).toEqual(3);
     expect(await quickPicks[0].getLabel()).toEqual('Standard');
     expect(await quickPicks[1].getLabel()).toEqual('Empty');
@@ -60,7 +59,7 @@ describe('Org Creation and Authentication', async () => {
     await prompt.selectQuickPick('Standard');
     await utilities.pause(1);
 
-    // Enter "TempProject-OrgCreationAndAuth" for the project name.
+    // Enter "TempProject-Authentication" for the project name.
     await prompt.setText(tempProjectName);
     await utilities.pause(1);
 
@@ -95,6 +94,11 @@ describe('Org Creation and Authentication', async () => {
     const workbench = await browser.getWorkbench();
     await utilities.pause(1);
 
+    // In the initial state, the org picker button should be set to "No Default Org Set".
+    let statusBar = workbench.getStatusBar();
+    let noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(statusBar, 'No Default Org Set');
+    expect(noDefaultOrgSetItem).not.toBeUndefined();
+
     const authFilePath = path.join(projectFolderPath, 'authFile.json');
     const terminalView = await utilities.executeCommand(workbench, `sfdx force:org:display -u ${EnvironmentSettings.getInstance().devHubAliasName} --verbose --json > ${authFilePath}`);
 
@@ -105,6 +109,11 @@ describe('Org Creation and Authentication', async () => {
 
     const terminalText = await utilities.getTerminalViewText(terminalView, 60);
     expect(terminalText).toContain(`Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID`);
+
+    // After a dev hub has been authorized, the org should still not be set.
+    statusBar = workbench.getStatusBar();
+    noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(statusBar, 'No Default Org Set');
+    expect(noDefaultOrgSetItem).not.toBeUndefined();
   });
 
   step('Run SFDX: Set a Default Org', async () => {
@@ -118,6 +127,30 @@ describe('Org Creation and Authentication', async () => {
     expect(changeDefaultOrgSetItem).not.toBeUndefined();
     await changeDefaultOrgSetItem.click();
     await utilities.pause(1);
+
+    // In the drop down menu that appears, verify the SFDX auth org commands are present...
+    const expectedSfdxCommands = [
+        ' SFDX: Authorize an Org',
+        ' SFDX: Authorize a Dev Hub',
+        ' SFDX: Create a Default Scratch Org...',
+        ' SFDX: Authorize an Org using Session ID',
+        ' SFDX: Remove Deleted and Expired Orgs'
+    ];
+    let foundSfdxCommands: string[] = [];
+    const quickPicks = await prompt.getQuickPicks();
+    for (const quickPick of quickPicks) {
+        const label = await quickPick.getLabel();
+        if (expectedSfdxCommands.includes(label)) {
+          foundSfdxCommands.push(label);
+        }
+    }
+
+    if (expectedSfdxCommands.length !== foundSfdxCommands.length) {
+      // Something is wrong - the count of matching menus isn't what we expected.
+      expectedSfdxCommands.forEach(expectedSfdxCommand => {
+        expect(foundSfdxCommands).toContain(expectedSfdxCommand);
+      })
+    }
 
     // In the drop down menu that appears, select "vscodeOrg - user_name".
     await utilities.selectQuickPickItem(prompt, `${EnvironmentSettings.getInstance().devHubAliasName} - ${EnvironmentSettings.getInstance().devHubUserName}`);
@@ -151,7 +184,7 @@ describe('Org Creation and Authentication', async () => {
     const day = ("0" + currentDate.getDate()).slice(-2);
     const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
     const year = currentDate.getFullYear();
-    const currentOsUserName = utilities.currentOsUserName();
+    const currentOsUserName = utilities.transformedUserName();
     scratchOrgAliasName = `TempScratchOrg_${year}_${month}_${day}_${currentOsUserName}_${ticks}_OrgAuth`;
 
     await prompt.setText(scratchOrgAliasName);
@@ -202,25 +235,12 @@ describe('Org Creation and Authentication', async () => {
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 1);
 
     let scratchOrgQuickPickItemWasFound = false;
-    const currentOsUserName = await utilities.currentOsUserName();
     const quickPicks = await inputBox.getQuickPicks();
     for (const quickPick of quickPicks) {
       const label = await quickPick.getLabel();
       if (scratchOrgAliasName) {
         // Find the org that was created in the "Run SFDX: Create a Default Scratch Org" step.
         if (label.includes(scratchOrgAliasName)) {
-          await quickPick.select();
-          await utilities.pause(3);
-          scratchOrgQuickPickItemWasFound = true;
-          break;
-        }
-      } else {
-        // If the scratch org was already created (and not deleted),
-        // and the "Run SFDX: Create a Default Scratch Org" step was skipped,
-        // scratchOrgAliasName is undefined and as such, search for the first org
-        // that starts with "TempScratchOrg_" and also has the current user's name.
-        if (label.startsWith('TempScratchOrg_') && label.includes(currentOsUserName)) {
-          scratchOrgAliasName = label.split(' - ')[0];
           await quickPick.select();
           await utilities.pause(3);
           scratchOrgQuickPickItemWasFound = true;

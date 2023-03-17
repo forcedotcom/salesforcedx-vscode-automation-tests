@@ -32,6 +32,8 @@ export async function getFilteredVisibleTreeViewItems(workbench: Workbench, proj
   return filteredItems;
 }
 
+// It's a tree, but it's also a list.  Everything in the view is actually flat
+// and returned from the call to visibleItems.reduce().
 export async function getFilteredVisibleTreeViewItemLabels(workbench: Workbench, projectName: string, searchString: string): Promise<string[]> {
   const sidebar = workbench.getSideBar();
   const treeViewSection = await sidebar.getContent().getSection(projectName);
