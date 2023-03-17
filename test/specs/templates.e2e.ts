@@ -119,8 +119,6 @@ describe('Templates', async () => {
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(workbench, projectName, 'auraEvent1');
     expect(filteredTreeViewItems.includes('auraEvent1')).toBe(true);
 
-    // It's a tree, but it's also a list.  Everything in the view is actually flat
-    // and returned from the call to visibleItems.reduce().
     expect(filteredTreeViewItems.includes('auraEvent1.evt')).toBe(true);
     expect(filteredTreeViewItems.includes('auraEvent1.evt-meta.xml')).toBe(true);
   });
@@ -178,8 +176,6 @@ describe('Templates', async () => {
     // Get the matching (visible) items within the tree which contain "apexClass1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(workbench, projectName, 'ApexClass1');
 
-    // It's a tree, but it's also a list.  Everything in the view is actually flat
-    // and returned from the call to visibleItems.reduce().
     expect(filteredTreeViewItems.includes('ApexClass1.cls')).toBe(true);
     expect(filteredTreeViewItems.includes('ApexClass1.cls-meta.xml')).toBe(true);
   });
@@ -242,8 +238,6 @@ describe('Templates', async () => {
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(workbench, projectName, 'lightningWebComponent1');
     expect(filteredTreeViewItems.includes('lightningWebComponent1')).toBe(true);
 
-    // It's a tree, but it's also a list.  Everything in the view is actually flat
-    // and returned from the call to visibleItems.reduce() above.
     expect(filteredTreeViewItems.includes('lightningWebComponent1.html')).toBe(true);
     expect(filteredTreeViewItems.includes('lightningWebComponent1.js')).toBe(true);
     expect(filteredTreeViewItems.includes('lightningWebComponent1.js-meta.xml')).toBe(true);

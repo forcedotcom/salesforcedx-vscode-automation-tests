@@ -23,12 +23,20 @@ export function log(message: string) {
 
 export function currentOsUserName(): string {
   const userName = os.userInfo().username ||
-    process.env.SUDO_USER! ||
-    process.env.C9_USER! ||
-    process.env.LOGNAME! ||
-    process.env.USER! ||
-    process.env.LNAME! ||
-    process.env.USERNAME!;
+    process.env.SUDO_USER ||
+    process.env.C9_USER ||
+    process.env.LOGNAME ||
+    process.env.USER ||
+    process.env.LNAME ||
+    process.env.USERNAME;
 
-  return userName;
+  return userName!;
+}
+
+// There is an issue with InputBox.setText().  When a
+// period is present, the string passed to the input box
+// becomes truncated.  An fix for this is to replace
+// the periods with an underscore.
+export function transformedUserName(): string {
+  return currentOsUserName().replace('.', '_');
 }

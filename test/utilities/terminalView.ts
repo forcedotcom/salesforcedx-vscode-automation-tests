@@ -31,7 +31,9 @@ export async function getTerminalViewText(terminalView: TerminalView, seconds: n
     await pause(1);
 
     // const terminalText = await terminalView.getText();
-    // terminalView.getText() no longer works
+    // terminalView.getText() no longer works and the code which follows
+    // is a workaround.  If getText() is fixed, remove the following code
+    // and just call await terminalView.getText().
 
     await browser.keys([CMD_KEY, 'a', 'c']);
     // Should be able to use Keys.Ctrl, but Keys is not exported from webdriverio

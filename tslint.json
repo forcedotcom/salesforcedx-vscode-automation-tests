@@ -9,7 +9,6 @@
     "interface-over-type-literal": false,
     "max-classes-per-file": false,
     "max-line-length": false,
-    //"no-any": true,
     "no-bitwise": false,
     "no-console": false,
     "no-empty": false,
@@ -21,22 +20,10 @@
     "object-literal-sort-keys": false,
     "only-arrow-functions": [true, "allow-named-functions"],
     "ordered-imports": true,
-    //"quotemark": [true, "single", "avoid-template", "avoid-escape"],
     "semicolon": [true, "always", "ignore-bound-class-methods"],
     "trailing-comma": [true, { "multiline": "never", "singleline": "never" }],
     "variable-name": [true, "allow-leading-underscore"],
     // -- Begin MS SDL https://github.com/Microsoft/tslint-microsoft-contrib/wiki/TSLint-and-the-Microsoft-Security-Development-Lifecycle
-    // "no-banned-terms": true,
-    // "no-delete-expression": true,
-    // "no-document-domain": true,
-    // "no-disable-auto-sanitization": true,
-    // "no-duplicate-parameter-names": true,
-    // "no-exec-script": true,
-    // "no-function-constructor-with-string-args": true,
-    // "no-octal-literal": true,
-    // "no-string-based-set-immediate": true,
-    // "no-string-based-set-interval": true,
-    //"no-string-based-set-timeout": true,
     "no-eval": true,
     // -- End MS SDL
     "no-reserved-keywords": false,
@@ -46,4 +33,3 @@
     "no-string-based-set-timeout": false
   }
 }
-s
