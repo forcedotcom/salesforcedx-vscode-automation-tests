@@ -14,6 +14,8 @@ After cloning this repo, you will also need to clone https://github.com/forcedot
 
 To install the dependencies, run `npm install`. You do not need to compile - when running the e2e automation tests the code is dynamically compiled.
 
+For the VSCode extension (`{location}/salesforcedx-vscode`), you will need to run `npm install` but you do not need to compile or perform any other steps.
+
 After the dependencies have been installed, open the folder in Visual Studio Code, then debug using the `Debug All Automation Tests` configuration (or run using the `Run All Automation Tests` configuration).
 
 ### Environment Variables
@@ -28,5 +30,10 @@ Default value: `svc_idee_bot@salesforce.com`
 #### EXTENSION_PATH
 Default value: `{cwd}/../../salesforcedx-vscode/packages`
 
+The default folder structure is `{location}/salesforcedx-vscode` and `{location}/salesforcedx-vscode-automation-tests`, and if both repos are at the same location no changes are needed for `EXTENSION_PATH`.  If your folder structure does not match this, EXTENSION_PATH will need to be set to the relative path to 'salesforcedx-vscode/packages' .
+
 #### THROTTLE_FACTOR
 Default value: 1
+
+### Dev Hub
+A requirement of this project is for a dev hub to have been enabled on the user's machine.  The default dev hub name is "vscodeOrg" and the default username is "svc_idee_bot@salesforce.com", though this can be configured with the `DEV_HUB_ALIAS_NAME` and `DEV_HUB_USER_NAME` environment variables.
