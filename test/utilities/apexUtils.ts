@@ -36,7 +36,7 @@ export async function createApexClassWithTest(name: string): Promise<void> {
   const classText = [
     `public with sharing class ${name} {`,
     '\tpublic static void SayHello(string name){',
-    `\t\tSystem.debug(\'Hello, ${name}!\');`,
+    '\t\tSystem.debug(\'Hello, \' + name + \'!\');',
     '\t}',
     '}'
   ].join('\n');
