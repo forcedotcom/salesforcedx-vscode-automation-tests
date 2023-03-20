@@ -106,10 +106,17 @@ describe('An Initial Suite', async () => {
       }
     }
 
-    // TODO: need to look into this
-    // expect(matchesFound).toBe(4);
-    // expect(matchesFound).toBe(7);
-    expect(matchesFound).toBeGreaterThanOrEqual(3);
+    expect(matchesFound).toBe(6);
+    // Visible:
+    // salesforce.salesforcedx-vscode-soql
+    // salesforce.salesforcedx-vscode-lightning
+    // salesforce.salesforcedx-vscode-core
+    // salesforce.salesforcedx-vscode-apex
+    // salesforce.salesforcedx-vscode-apex-replay-debugger
+    // salesforce.salesforcedx-vscode-apex-debugger
+
+    // Not visible (and thus, not returned from $$('div.name'))
+    // salesforce.salesforcedx-vscode-visualforce
   });
 
   step('Verify that SFDX commands are present after SFDX project has been created', async () => {
