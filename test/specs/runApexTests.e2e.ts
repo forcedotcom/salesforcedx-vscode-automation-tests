@@ -24,7 +24,7 @@ describe('Run Apex Tests', async () => {
   const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
-    scratchOrg = new ScratchOrg('RunApexTests', true); // TODO: Change back to false
+    scratchOrg = new ScratchOrg('RunApexTests', false);
     await scratchOrg.setUp();
 
     // Create Apex class 1 and test
