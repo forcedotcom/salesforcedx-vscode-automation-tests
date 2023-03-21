@@ -30,77 +30,78 @@ describe('Run Apex Tests', async () => {
     // Create Apex class 1 and test
     await utilities.createApexClassWithTest('ExampleApexClass1');
 
-    // Create Apex class 2 and test
-    await utilities.createApexClassWithTest('ExampleApexClass2');
+    // // Create Apex class 2 and test
+    // await utilities.createApexClassWithTest('ExampleApexClass2');
 
-    // Create Apex class 3 and test
-    await utilities.createApexClassWithTest('ExampleApexClass3');
+    // // Create Apex class 3 and test
+    // await utilities.createApexClassWithTest('ExampleApexClass3');
 
     // Push source to scratch org
     const workbench = await browser.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org and Override Conflicts', 6);
   });
 
-  // step('Run All Tests via Apex Class', async () => {
-  //   const workbench = await browser.getWorkbench();
-  //   const editorView = workbench.getEditorView();
+  step('Run All Tests via Apex Class', async () => {
+    const workbench = await browser.getWorkbench();
+    const editorView = workbench.getEditorView();
 
-  //   // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
-  //   const textEditor = await editorView.openEditor('ExampleApexClass1Test.cls') as TextEditor;
+    // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
+    const textEditor = await editorView.openEditor('ExampleApexClass1Test.cls') as TextEditor;
 
-  //   // Click the "Run All Tests" code lens at the top of the class
-  //   const codeLenses = await textEditor.getCodeLenses() as CodeLens[];
-  //   const opt1 = await codeLenses[0].getText();
-  //   const opt2 = await codeLenses[1].getText();
-  //   const codeLens = await textEditor.getCodeLens('Run All Tests') as CodeLens;
-  //   await (await codeLens.elem).click();
+    // Click the "Run All Tests" code lens at the top of the class
+    const codeLens = await textEditor.getCodeLens('Run All Tests');
+    const codeLensElem = await codeLens?.elem;
+    const runAllTestsOption = await codeLensElem?.$$('a');
+    await runAllTestsOption![0].click();
 
-  //   // Wait for the command to execute
-  //   await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests', fiveMinutes);
-  //   await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Listening for streaming state changes...', fiveMinutes);
-  //   await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Processing test run', fiveMinutes, false);
+    // Wait for the command to execute
+    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests', fiveMinutes);
+    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Listening for streaming state changes...', fiveMinutes);
+    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Processing test run', fiveMinutes, false);
 
-  //   // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
-  //   const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
-  //   expect(successNotificationWasFound).toBe(true);
+    // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
+    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
+    expect(successNotificationWasFound).toBe(true);
 
-  //   // Verify test results are listed on vscode's Output section
-  //   const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
-  //   expect(outputPanelText).not.toBeUndefined();
-  //   expect(outputPanelText).toContain('=== Test Summary');
-  //   expect(outputPanelText).toContain('TEST NAME');
-  //   expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello');
-  //   expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
-  // });
+    // Verify test results are listed on vscode's Output section
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('=== Test Summary');
+    expect(outputPanelText).toContain('TEST NAME');
+    expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello');
+    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
+  });
 
-  // step('Run Single Test via Apex Class', async () => {
-  //   const workbench = await browser.getWorkbench();
-  //   const editorView = workbench.getEditorView();
+  step('Run Single Test via Apex Class', async () => {
+    const workbench = await browser.getWorkbench();
+    const editorView = workbench.getEditorView();
 
-  //   // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
-  //   const textEditor = await editorView.openEditor('ExampleApexClass2Test.cls') as TextEditor;
+    // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
+    const textEditor = await editorView.openEditor('ExampleApexClass2Test.cls') as TextEditor;
 
-  //   // Click the "Run Test" code lens at the top of one of the test methods
-  //   const codeLens = await textEditor.getCodeLens('Run Test') as CodeLens;
-  //   await (await codeLens.elem).click();
+    // Click the "Run Test" code lens at the top of one of the test methods
+    const codeLens = await textEditor.getCodeLens('Run Test');
+    const codeLensElem = await codeLens?.elem;
+    const runAllTestsOption = await codeLensElem?.$$('a');
+    await runAllTestsOption![0].click();
 
-  //   // Wait for the command to execute
-  //   await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests', fiveMinutes);
-  //   await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Listening for streaming state changes...', fiveMinutes);
-  //   await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Processing test run', fiveMinutes, false);
+    // Wait for the command to execute
+    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests', fiveMinutes);
+    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Listening for streaming state changes...', fiveMinutes);
+    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Processing test run', fiveMinutes, false);
 
-  //   // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
-  //   const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
-  //   expect(successNotificationWasFound).toBe(true);
+    // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
+    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
+    expect(successNotificationWasFound).toBe(true);
 
-  //   // Verify test results are listed on vscode's Output section
-  //   const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
-  //   expect(outputPanelText).not.toBeUndefined();
-  //   expect(outputPanelText).toContain('=== Test Summary');
-  //   expect(outputPanelText).toContain('TEST NAME');
-  //   expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello');
-  //   expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
-  // });
+    // Verify test results are listed on vscode's Output section
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('=== Test Summary');
+    expect(outputPanelText).toContain('TEST NAME');
+    expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello');
+    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
+  });
 
   step('Run Tests via Command Palette', async () => {
     // Run SFDX: Run Apex tests.
