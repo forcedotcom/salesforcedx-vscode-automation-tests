@@ -82,8 +82,8 @@ describe('Run Apex Tests', async () => {
     // Click the "Run Test" code lens at the top of one of the test methods
     const codeLens = await textEditor.getCodeLens('Run Test');
     const codeLensElem = await codeLens?.elem;
-    const runAllTestsOption = await codeLensElem?.$$('a');
-    await runAllTestsOption![0].click();
+    const runTestOption = await codeLensElem?.$$('a');
+    await runTestOption![0].click();
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests', fiveMinutes);
