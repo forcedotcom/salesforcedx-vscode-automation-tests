@@ -45,8 +45,10 @@ describe('Debug Apex Tests', async () => {
     const textEditor = await editorView.openEditor('ExampleApexClass1Test.cls') as TextEditor;
 
     // Click the "Debug All Tests" code lens at the top of the class
-    const codeLens = await textEditor.getCodeLens('Run All Tests') as CodeLens; // TODO: Change to Debug All Tests
-    await (await codeLens.elem).click();
+    const codeLens = await textEditor.getCodeLens('Debug All Tests');
+    const codeLensElem = await codeLens?.elem;
+    const debugAllTestsOption = await codeLensElem?.$$('a');
+    await debugAllTestsOption![1].click();
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
@@ -69,8 +71,10 @@ describe('Debug Apex Tests', async () => {
     const textEditor = await editorView.openEditor('ExampleApexClass2Test.cls') as TextEditor;
 
     // Click the "Debug Test" code lens at the top of one of the test methods
-    const codeLens = await textEditor.getCodeLens('Run Test') as CodeLens; // TODO: Change to Debug Test
-    await (await codeLens.elem).click();
+    const codeLens = await textEditor.getCodeLens('Debug Test');
+    const codeLensElem = await codeLens?.elem;
+    const debugTestOption = await codeLensElem?.$$('a');
+    await debugTestOption![1].click();
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
