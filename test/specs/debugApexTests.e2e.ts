@@ -21,7 +21,7 @@ describe('Debug Apex Tests', async () => {
   const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
-    scratchOrg = new ScratchOrg('DebugApexTests', true); // TODO: Change back to false
+    scratchOrg = new ScratchOrg('DebugApexTests', false);
     await scratchOrg.setUp();
 
     // Create Apex class 1 and test
@@ -45,10 +45,10 @@ describe('Debug Apex Tests', async () => {
     const textEditor = await editorView.openEditor('ExampleApexClass1Test.cls') as TextEditor;
 
     // Click the "Debug All Tests" code lens at the top of the class
-    const codeLens = await textEditor.getCodeLens('Debug All Tests');
+    const codeLens = await textEditor.getCodeLens(0);
     const codeLensElem = await codeLens?.elem;
-    const debugAllTestsOption = await codeLensElem?.$$('a');
-    await debugAllTestsOption![1].click();
+    const debugAllTestsOption = await codeLensElem?.$('=Debug All Tests');
+    await debugAllTestsOption!.click();
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
@@ -71,10 +71,10 @@ describe('Debug Apex Tests', async () => {
     const textEditor = await editorView.openEditor('ExampleApexClass2Test.cls') as TextEditor;
 
     // Click the "Debug Test" code lens at the top of one of the test methods
-    const codeLens = await textEditor.getCodeLens('Debug Test');
+    const codeLens = await textEditor.getCodeLens(1);
     const codeLensElem = await codeLens?.elem;
-    const debugTestOption = await codeLensElem?.$$('a');
-    await debugTestOption![1].click();
+    const debugTestOption = await codeLensElem?.$('=Debug Test');
+    await debugTestOption!.click();
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
