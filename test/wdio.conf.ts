@@ -94,12 +94,14 @@ export const config: Options.Testrunner = {
       './test/specs/**/*.e2e.ts'
 
       // './test/specs/**/anInitialSuite.e2e.ts',
+      // './test/specs/**/apexReplayDebugger.e2e.ts',
       // './test/specs/**/authentication.e2e.ts',
       // './test/specs/**/debugApexTests.e2e.ts',
       // './test/specs/**/orgBrowser.e2e.ts',
       // './test/specs/**/pushAndPull.e2e.ts',
       // './test/specs/**/runApexTests.e2e.ts',
       // './test/specs/**/templates.e2e.ts',
+      // './test/specs/**/trailApexReplayDebugger.e2e.ts',
     ]
   ],
   // Patterns to exclude.
