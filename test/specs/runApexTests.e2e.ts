@@ -30,11 +30,11 @@ describe('Run Apex Tests', async () => {
     // Create Apex class 1 and test
     await utilities.createApexClassWithTest('ExampleApexClass1');
 
-    // // Create Apex class 2 and test
-    // await utilities.createApexClassWithTest('ExampleApexClass2');
+    // Create Apex class 2 and test
+    await utilities.createApexClassWithTest('ExampleApexClass2');
 
-    // // Create Apex class 3 and test
-    // await utilities.createApexClassWithTest('ExampleApexClass3');
+    // Create Apex class 3 and test
+    await utilities.createApexClassWithTest('ExampleApexClass3');
 
     // Push source to scratch org
     const workbench = await browser.getWorkbench();
@@ -51,8 +51,8 @@ describe('Run Apex Tests', async () => {
     // Click the "Run All Tests" code lens at the top of the class
     const codeLens = await textEditor.getCodeLens('Run All Tests');
     const codeLensElem = await codeLens?.elem;
-    const runAllTestsOption = await codeLensElem?.$$('a');
-    await runAllTestsOption![0].click();
+    const runAllTestsOption = await codeLensElem?.$('=Run All Tests');
+    await runAllTestsOption!.click();
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests', fiveMinutes);
@@ -82,8 +82,8 @@ describe('Run Apex Tests', async () => {
     // Click the "Run Test" code lens at the top of one of the test methods
     const codeLens = await textEditor.getCodeLens('Run Test');
     const codeLensElem = await codeLens?.elem;
-    const runTestOption = await codeLensElem?.$$('a');
-    await runTestOption![0].click();
+    const runTestOption = await codeLensElem?.$('=Run Test');
+    await runTestOption!.click();
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests', fiveMinutes);
