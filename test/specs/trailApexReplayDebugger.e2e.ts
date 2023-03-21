@@ -21,7 +21,7 @@ describe('Find and Fix Bugs with Apex Replay Debugger', async () => {
   const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
-    scratchOrg = new ScratchOrg('TrailApexReplayDebugger', true); // TODO: Change back to false
+    scratchOrg = new ScratchOrg('TrailApexReplayDebugger', false);
     await scratchOrg.setUp();
 
     // Create Apex class AccountService

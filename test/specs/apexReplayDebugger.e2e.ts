@@ -22,7 +22,7 @@ describe('Apex Replay Debugger', async () => {
   const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
-    scratchOrg = new ScratchOrg('ApexReplayDebugger', true); // TODO: Change back to false
+    scratchOrg = new ScratchOrg('ApexReplayDebugger', false);
     await scratchOrg.setUp();
 
     // Create Apex class file
@@ -110,7 +110,7 @@ describe('Apex Replay Debugger', async () => {
     }
     expect(activeTab).not.toBe(undefined);
     const title = await activeTab?.getTitle();
-    const logFilePath = path.join(path.delimiter, 'tools', 'debug', 'logs', title!).slice(1); // TODO: Verify that this works on windows
+    const logFilePath = path.join(path.delimiter, 'tools', 'debug', 'logs', title!).slice(1);
     await prompt.setText(logFilePath);
     await prompt.confirm();
     await utilities.pause(1);
