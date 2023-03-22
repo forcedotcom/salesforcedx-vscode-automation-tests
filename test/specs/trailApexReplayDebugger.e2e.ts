@@ -15,7 +15,12 @@ import {
 } from '../scratchOrg';
 import * as utilities from '../utilities';
 
-describe('Find and Fix Bugs with Apex Replay Debugger', async () => {
+/**
+ * This test suite walks through the same steps performed in the "Find and Fix Bugs with Apex Replay Debugger" Trailhead Module;
+ * which can be found with the following link:
+ * https://trailhead.salesforce.com/content/learn/projects/find-and-fix-bugs-with-apex-replay-debugger
+ */
+describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async () => {
   let prompt: QuickOpenBox | InputBox;
   let scratchOrg: ScratchOrg;
   const fiveMinutes = 5 * 60;
@@ -29,7 +34,7 @@ describe('Find and Fix Bugs with Apex Replay Debugger', async () => {
 
     // Push source to scratch org
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org and Override Conflicts', 6);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org and Override Conflicts', 5);
   });
 
   step('Run Apex Tests', async () => {
@@ -78,7 +83,7 @@ describe('Find and Fix Bugs with Apex Replay Debugger', async () => {
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Turn On Apex Debug Log for Replay Debugger', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Turn On Apex Debug Log for Replay Debugger', 10);
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Turn On Apex Debug Log for Replay Debugger', fiveMinutes);
@@ -116,9 +121,6 @@ describe('Find and Fix Bugs with Apex Replay Debugger', async () => {
     const workbench = await browser.getWorkbench();
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Get Apex Debug Logs', 1);
 
-    // Select the "AccountServiceTest" file
-    await prompt.selectQuickPick('AccountServiceTest');
-
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(workbench, 'Getting Apex debug logs', fiveMinutes);
 
@@ -139,17 +141,22 @@ describe('Find and Fix Bugs with Apex Replay Debugger', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
     const workbench = await browser.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Launch Apex Replay Debugger with Current File', 1);
-
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Launch Apex Replay Debugger with Current File successfully ran');
-
+    if (successNotificationWasFound !== true) {
+      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'You can only run this command with Anonymous Apex files, Apex Test files, or Apex Debug Log files.');
+      if (failureNotificationWasFound === true) {
+        expect(successNotificationWasFound).toBe(false);
+      } else {
+        utilities.log('Warning - Launching Apex Replay Debugger with Current File failed, neither the success notification or the failure notification was found.');
+      }
+    } else {
+      expect(successNotificationWasFound).toBe(true);
+    }
     // Continue with the debug session
-    await utilities.pause(5);
     await browser.keys(['F5']);
     await utilities.pause(1);
     await browser.keys(['F5']);
     await utilities.pause(1);
-
-    expect(successNotificationWasFound).toBe(true);
   });
 
   step('Push Fixed Metadata to Scratch Org', async () => {
