@@ -12,19 +12,19 @@ import {
   TextEditor
 } from 'wdio-vscode-service';
 import {
-  ScratchOrg
-} from '../scratchOrg';
+  TestSetup
+} from '../testSetup';
 import * as utilities from '../utilities';
 
 describe('Templates', async () => {
-  let scratchOrg: ScratchOrg;
+  let testSetup: TestSetup;
   let projectName: string;
 
   // Set up
   step('Set up the testing environment', async () => {
-    scratchOrg = new ScratchOrg('Templates', false);
-    await scratchOrg.setUp();
-    projectName = scratchOrg.tempProjectName.toUpperCase();
+    testSetup = new TestSetup('Templates', false);
+    await testSetup.setUp();
+    projectName = testSetup.tempProjectName.toUpperCase();
   });
 
   // Aura Component
@@ -272,6 +272,6 @@ describe('Templates', async () => {
 
   // Tear down
   step('Tear down and clean up the testing environment', async () => {
-    await scratchOrg.tearDown();
+    await testSetup.tearDown();
   });
 });

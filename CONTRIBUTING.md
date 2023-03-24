@@ -9,6 +9,7 @@
 1. Create a _topic_ branch in your fork based on the correct branch (usually the **develop** branch, see [Branches section](#branches) below). Note, this step is recommended but technically not required if contributing using a fork.
 1. Edit the code in your fork.
 1. Sign CLA (see [CLA](#cla) below)
+1. Verify your e2e test successfully runs against the `develop` branch of https://github.com/forcedotcom/salesforcedx-vscode.
 1. Send us a pull request when you are done. We'll review your code, suggest any
    needed changes, and merge it in.
 

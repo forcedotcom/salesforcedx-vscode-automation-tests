@@ -230,7 +230,7 @@ describe('Authentication', async () => {
     expect(scratchOrgStatusBarItem).not.toBeUndefined();
   });
 
-  step('Run SFDX: Set a Default Org', async () => {
+  step('Run SFDX: Set the Scratch Org As the Default Org', async () => {
     const workbench = await browser.getWorkbench();
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 1);
 

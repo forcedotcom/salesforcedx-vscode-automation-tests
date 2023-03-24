@@ -23,7 +23,7 @@ import * as utilities from './utilities';
 
 const exec = util.promisify(child_process.exec);
 
-export class ScratchOrg {
+export class TestSetup {
   private testSuiteSuffixName: string;
   private reuseScratchOrg = false;
   public tempFolderPath: string | undefined = undefined;
