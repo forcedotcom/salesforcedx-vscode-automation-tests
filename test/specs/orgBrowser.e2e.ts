@@ -8,15 +8,15 @@ import {
   step
 } from 'mocha-steps';
 import {
-  ScratchOrg
-} from '../scratchOrg';
+  TestSetup
+} from '../testSetup';
 
 describe('Org Browser', async () => {
-  let scratchOrg: ScratchOrg;
+  let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-    scratchOrg = new ScratchOrg('OrgBrowser', false);
-    await scratchOrg.setUp();
+    testSetup = new TestSetup('OrgBrowser', false);
+    await testSetup.setUp();
   });
 
   step('what?', async () => {
@@ -30,6 +30,6 @@ describe('Org Browser', async () => {
   });
 
   step('Tear down and clean up the testing environment', async () => {
-    await scratchOrg.tearDown();
+    await testSetup.tearDown();
   });
 });
