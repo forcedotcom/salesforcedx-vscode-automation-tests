@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "node",
+        "types": [
+            "@wdio/globals/types",
+            "@wdio/mocha-framework",
+            "expect-webdriverio",
+            "node",
+            "wdio-vscode-service"
+        ],
+        "target": "es2019",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "strict": true
+    }
+}
