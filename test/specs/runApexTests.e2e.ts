@@ -14,18 +14,18 @@ import {
   TreeItem
 } from 'wdio-vscode-service';
 import {
-  ScratchOrg
-} from '../scratchOrg';
+  TestSetup
+} from '../testSetup';
 import * as utilities from '../utilities';
 
 describe('Run Apex Tests', async () => {
   let prompt: QuickOpenBox | InputBox;
-  let scratchOrg: ScratchOrg;
+  let testSetup: TestSetup;
   const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
-    scratchOrg = new ScratchOrg('RunApexTests', false);
-    await scratchOrg.setUp();
+    testSetup = new TestSetup('RunApexTests', true);
+    await testSetup.setUp();
 
     // Create Apex class 1 and test
     await utilities.createApexClassWithTest('ExampleApexClass1');
@@ -436,6 +436,6 @@ describe('Run Apex Tests', async () => {
   });
 
   step('Tear down and clean up the testing environment', async () => {
-    await scratchOrg.tearDown();
+    await testSetup.tearDown();
   });
 });
