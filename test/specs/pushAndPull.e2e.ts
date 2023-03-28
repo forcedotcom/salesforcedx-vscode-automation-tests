@@ -16,22 +16,22 @@ import {
   TextEditor
 } from 'wdio-vscode-service';
 import {
-  ScratchOrg
-} from '../scratchOrg';
+  TestSetup
+} from '../testSetup';
 import * as utilities from '../utilities';
 
 const exec = util.promisify(child_process.exec);
 
 describe('Push and Pull', async () => {
-  let scratchOrg: ScratchOrg;
+  let testSetup: TestSetup;
   let projectName = '';
   let adminName = '';
   let adminEmailAddress = '';
 
   step('Set up the testing environment', async () => {
-    scratchOrg = new ScratchOrg('PushAndPull', false);
-    await scratchOrg.setUp('Enterprise');
-    projectName = scratchOrg.tempProjectName.toUpperCase();
+    testSetup = new TestSetup('PushAndPull', false);
+    await testSetup.setUp('Enterprise');
+    projectName = testSetup.tempProjectName.toUpperCase();
   });
 
   step('Create an Apex class', async () => {
@@ -203,7 +203,7 @@ describe('Push and Pull', async () => {
     // Pull the file.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Scratch Org', 5);
 
-    let successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
@@ -259,7 +259,7 @@ describe('Push and Pull', async () => {
       'generatePassword': false
     };
 
-    const systemAdminUserDefPath = path.join(scratchOrg.projectFolderPath!, 'config', 'system-admin-user-def.json');
+    const systemAdminUserDefPath = path.join(testSetup.projectFolderPath!, 'config', 'system-admin-user-def.json');
     fs.writeFileSync(systemAdminUserDefPath, JSON.stringify(systemAdminUserDef), 'utf8');
 
     const sfdxForceOrgCreateResult = await exec(`sfdx force:user:create --definitionfile ${systemAdminUserDefPath}`);
@@ -314,6 +314,6 @@ describe('Push and Pull', async () => {
   // be fixed with the check in of his PR this week.
 
   step('Tear down and clean up the testing environment', async () => {
-    await scratchOrg.tearDown();
+    await testSetup.tearDown();
   });
 });
