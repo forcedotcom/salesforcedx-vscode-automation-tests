@@ -6,23 +6,22 @@
  */
 import { step } from 'mocha-steps';
 import {
-  CodeLens,
   SideBarView,
   TextEditor,
   TreeItem
 } from 'wdio-vscode-service';
 import {
-  ScratchOrg
-} from '../scratchOrg';
+  TestSetup
+} from '../testSetup';
 import * as utilities from '../utilities';
 
 describe('Debug Apex Tests', async () => {
-  let scratchOrg: ScratchOrg;
+  let testSetup: TestSetup;
   const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
-    scratchOrg = new ScratchOrg('DebugApexTests', false);
-    await scratchOrg.setUp();
+    testSetup = new TestSetup('DebugApexTests', false);
+    await testSetup.setUp();
 
     // Create Apex class 1 and test
     await utilities.createApexClassWithTest('ExampleApexClass1');
@@ -156,6 +155,6 @@ describe('Debug Apex Tests', async () => {
   });
 
   step('Tear down and clean up the testing environment', async () => {
-    await scratchOrg.tearDown();
+    await testSetup.tearDown();
   });
 });
