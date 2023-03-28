@@ -24,7 +24,7 @@ describe('Run Apex Tests', async () => {
   const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('RunApexTests', true);
+    testSetup = new TestSetup('RunApexTests', false);
     await testSetup.setUp();
 
     // Create Apex class 1 and test
