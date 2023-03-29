@@ -6,7 +6,6 @@
  */
 import { step } from 'mocha-steps';
 import {
-  CodeLens,
   InputBox,
   QuickOpenBox,
   SideBarView,
