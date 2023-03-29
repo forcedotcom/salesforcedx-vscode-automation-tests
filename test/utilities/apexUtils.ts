@@ -17,7 +17,6 @@ import {
 
 export async function createApexClassWithTest(name: string): Promise<void> {
   const workbench = await browser.getWorkbench();
-  let textEditor: TextEditor;
 
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
   const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
@@ -32,11 +31,11 @@ export async function createApexClassWithTest(name: string): Promise<void> {
 
   // Modify class content
   const editorView = workbench.getEditorView();
-  textEditor = await editorView.openEditor(name + '.cls') as TextEditor;
+  let textEditor = await editorView.openEditor(name + '.cls') as TextEditor;
   const classText = [
     `public with sharing class ${name} {`,
     `\tpublic static void SayHello(string name){`,
-    `\t\tSystem.debug(\'Hello, \' + name + \'!\');`,
+    `\t\tSystem.debug('Hello, ' + name + '!');`,
     `\t}`,
     `}`
   ].join('\n');
