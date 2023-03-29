@@ -35,10 +35,10 @@ export async function createApexClassWithTest(name: string): Promise<void> {
   textEditor = await editorView.openEditor(name + '.cls') as TextEditor;
   const classText = [
     `public with sharing class ${name} {`,
-    '\tpublic static void SayHello(string name){',
-    '\t\tSystem.debug(\'Hello, \' + name + \'!\');',
-    '\t}',
-    '}'
+    `\tpublic static void SayHello(string name){`,
+    `\t\tSystem.debug(\'Hello, \' + name + \'!\');`,
+    `\t}`,
+    `}`
   ].join('\n');
   await textEditor.setText(classText);
   await textEditor.save();
@@ -59,15 +59,15 @@ export async function createApexClassWithTest(name: string): Promise<void> {
   // Modify class content
   textEditor = await editorView.openEditor(name + 'Test.cls') as TextEditor;
   const testText = [
-    '@IsTest',
+    `@IsTest`,
     `public class ${name}Test {`,
-    '\t@IsTest',
-    '\tstatic void validateSayHello() {',
+    `\t@IsTest`,
+    `\tstatic void validateSayHello() {`,
     `\t\tSystem.debug('Starting validate');`,
     `\t\t${name}.SayHello('Cody');`,
     `\t\tSystem.assertEquals(1, 1, 'all good');`,
-    '\t}',
-    '}'
+    `\t}`,
+    `}`
   ].join('\n');
   await textEditor.setText(testText);
   await textEditor.toggleBreakpoint(6);
@@ -79,16 +79,16 @@ export async function createApexClassWithBugs(): Promise<void> {
   const workbench = await browser.getWorkbench();
   let textEditor: TextEditor;
   const classText = [
-    'public with sharing class AccountService {',
-    '\tpublic Account createAccount(String accountName, String accountNumber, String tickerSymbol) {',
-    '\t\tAccount newAcct = new Account(',
-    '\t\t\tName = accountName,',
-    '\t\t\tAccountNumber = accountNumber,',
-    '\t\t\tTickerSymbol = accountNumber',
-    '\t\t);',
-    '\t\treturn newAcct;',
-    '\t}',
-    '}'
+    `public with sharing class AccountService {`,
+    `\tpublic Account createAccount(String accountName, String accountNumber, String tickerSymbol) {`,
+    `\t\tAccount newAcct = new Account(`,
+    `\t\t\tName = accountName,`,
+    `\t\t\tAccountNumber = accountNumber,`,
+    `\t\t\tTickerSymbol = accountNumber`,
+    `\t\t);`,
+    `\t\treturn newAcct;`,
+    `\t}`,
+    `}`
   ].join('\n');
 
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
@@ -121,25 +121,25 @@ export async function createApexClassWithBugs(): Promise<void> {
   await pause(1);
 
   const testText = [
-    '@IsTest',
-    'private class AccountServiceTest {',
-    '\t@IsTest',
-    '\tstatic void should_create_account() {',
+    `@IsTest`,
+    `private class AccountServiceTest {`,
+    `\t@IsTest`,
+    `\tstatic void should_create_account() {`,
     `\t\tString acctName = 'Salesforce';`,
     `\t\tString acctNumber = 'SFDC';`,
     `\t\tString tickerSymbol = 'CRM';`,
-    '\t\tTest.startTest();',
-    '\t\tAccountService service = new AccountService();',
-    '\t\tAccount newAcct = service.createAccount(acctName, acctNumber, tickerSymbol);',
-    '\t\tinsert newAcct;',
-    '\t\tTest.stopTest();',
-    '\t\tList<Account> accts = [ SELECT Id, Name, AccountNumber, TickerSymbol FROM Account WHERE Id = :newAcct.Id ];',
+    `\t\tTest.startTest();`,
+    `\t\tAccountService service = new AccountService();`,
+    `\t\tAccount newAcct = service.createAccount(acctName, acctNumber, tickerSymbol);`,
+    `\t\tinsert newAcct;`,
+    `\t\tTest.stopTest();`,
+    `\t\tList<Account> accts = [ SELECT Id, Name, AccountNumber, TickerSymbol FROM Account WHERE Id = :newAcct.Id ];`,
     `\t\tSystem.assertEquals(1, accts.size(), 'should have found new account');`,
     `\t\tSystem.assertEquals(acctName, accts[0].Name, 'incorrect name');`,
     `\t\tSystem.assertEquals(acctNumber, accts[0].AccountNumber, 'incorrect account number');`,
     `\t\tSystem.assertEquals(tickerSymbol, accts[0].TickerSymbol, 'incorrect ticker symbol');`,
-    '\t}',
-    '}'
+    `\t}`,
+    `}`
   ].join('\n');
 
   // Modify class content
@@ -151,7 +151,6 @@ export async function createApexClassWithBugs(): Promise<void> {
 
 export async function createAnonymousApexFile(): Promise<void> {
   const workbench = await browser.getWorkbench();
-  let textEditor: TextEditor;
   const editorView = workbench.getEditorView();
 
   // Using the Command palette, run File: New File...
@@ -161,7 +160,7 @@ export async function createAnonymousApexFile(): Promise<void> {
   await inputBox.setText('Anonymous.apex');
   await inputBox.confirm();
   await inputBox.confirm();
-  textEditor = await editorView.openEditor('Anonymous.apex') as TextEditor;
+  const textEditor = await editorView.openEditor('Anonymous.apex') as TextEditor;
 
   await textEditor.setText('System.debug(\'¡Hola mundo!\');');
   await textEditor.save();
