@@ -203,7 +203,7 @@ describe('Push and Pull', async () => {
     // Pull the file.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Scratch Org', 5);
 
-    let successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.

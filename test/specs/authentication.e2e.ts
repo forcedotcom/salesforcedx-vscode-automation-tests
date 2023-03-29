@@ -50,7 +50,7 @@ describe('Authentication', async () => {
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
     // Select the "Standard" project type.
-    let quickPicks = await prompt.getQuickPicks();
+    const quickPicks = await prompt.getQuickPicks();
     expect(quickPicks).not.toBeUndefined();
     expect(quickPicks.length).toEqual(3);
     expect(await quickPicks[0].getLabel()).toEqual('Standard');
@@ -136,7 +136,7 @@ describe('Authentication', async () => {
         ' SFDX: Authorize an Org using Session ID',
         ' SFDX: Remove Deleted and Expired Orgs'
     ];
-    let foundSfdxCommands: string[] = [];
+    const foundSfdxCommands: string[] = [];
     const quickPicks = await prompt.getQuickPicks();
     for (const quickPick of quickPicks) {
         const label = await quickPick.getLabel();
@@ -149,7 +149,7 @@ describe('Authentication', async () => {
       // Something is wrong - the count of matching menus isn't what we expected.
       expectedSfdxCommands.forEach(expectedSfdxCommand => {
         expect(foundSfdxCommands).toContain(expectedSfdxCommand);
-      })
+      });
     }
 
     // In the drop down menu that appears, select "vscodeOrg - user_name".
@@ -181,8 +181,8 @@ describe('Authentication', async () => {
     // Enter an org alias - yyyy-mm-dd-username-ticks
     const currentDate = new Date();
     const ticks = currentDate.getTime();
-    const day = ("0" + currentDate.getDate()).slice(-2);
-    const month = ("0" + (currentDate.getMonth() + 1)).slice(-2);
+    const day = ('0' + currentDate.getDate()).slice(-2);
+    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
     const year = currentDate.getFullYear();
     const currentOsUserName = utilities.transformedUserName();
     scratchOrgAliasName = `TempScratchOrg_${year}_${month}_${day}_${currentOsUserName}_${ticks}_OrgAuth`;
@@ -203,9 +203,9 @@ describe('Authentication', async () => {
     await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Create a Default Scratch Org...', 5 * 60);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Create a Default Scratch Org... successfully ran');
-    if (successNotificationWasFound != true) {
+    if (successNotificationWasFound !== true) {
       const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Create a Default Scratch Org... failed to run');
-      if (failureNotificationWasFound == true) {
+      if (failureNotificationWasFound === true) {
         if (await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'organization has reached its daily scratch org signup limit', 5)) {
           // This is a known issue...
           utilities.log('Warning - creating the scratch org failed, but the failure was due to the daily signup limit');

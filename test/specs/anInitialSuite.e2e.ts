@@ -58,7 +58,7 @@ describe('An Initial Suite', async () => {
     const workbench = await browser.getWorkbench();
     const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
 
-    let quickPicks = await prompt.getQuickPicks();
+    const quickPicks = await prompt.getQuickPicks();
     let unexpectedSfdxCommandWasFound = false;
     for (const quickPick of quickPicks) {
       const label = await quickPick.getLabel();
@@ -122,8 +122,8 @@ describe('An Initial Suite', async () => {
   step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
     const workbench = await browser.getWorkbench();
     const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
-    let quickPicks = await prompt.getQuickPicks();
-    let commands: string[] = [];
+    const quickPicks = await prompt.getQuickPicks();
+    const commands: string[] = [];
     for (const quickPick of quickPicks) {
       commands.push(await quickPick.getLabel());
     }
