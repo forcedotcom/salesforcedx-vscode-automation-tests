@@ -40,7 +40,7 @@ describe('Debug Apex Tests', async () => {
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
 
-    // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
+    // Open an existing apex test
     const textEditor = await editorView.openEditor('ExampleApexClass1Test.cls') as TextEditor;
 
     // Click the "Debug All Tests" code lens at the top of the class
@@ -66,7 +66,7 @@ describe('Debug Apex Tests', async () => {
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
 
-    // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
+    // Open an existing apex test
     const textEditor = await editorView.openEditor('ExampleApexClass2Test.cls') as TextEditor;
 
     // Click the "Debug Test" code lens at the top of one of the test methods
