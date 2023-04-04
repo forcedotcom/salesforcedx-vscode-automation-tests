@@ -5,14 +5,14 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import path from 'path';
+import { join } from 'path';
 
 export class EnvironmentSettings {
   private static _instance: EnvironmentSettings;
 
   private _devHubAliasName = 'vscodeOrg';
   private _devHubUserName = 'svc_idee_bot@salesforce.com';
-  private _extensionPath = path.join(__dirname, '..', '..', 'salesforcedx-vscode', 'packages');
+  private _extensionPath = join(__dirname, '..', '..', 'salesforcedx-vscode', 'packages');
   private _throttleFactor = 1;
 
   private constructor() {
