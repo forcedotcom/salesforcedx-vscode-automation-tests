@@ -7,26 +7,26 @@
 import { step } from 'mocha-steps';
 import { DefaultTreeItem, TreeItem } from 'wdio-vscode-service';
 import {
-  ScratchOrg
-} from '../scratchOrg';
+  TestSetup
+} from '../testSetup';
 import * as utilities from '../utilities';
 import * as fs from 'fs'; 
 import path from 'path';
 
 describe('SObjects Definitions', async () => {
-  let scratchOrg: ScratchOrg;
+  let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-    scratchOrg = new ScratchOrg('sObjectsDefinitions', false);
-    await scratchOrg.setUp();
-    const projectPath = scratchOrg.projectFolderPath;
-    const tempFolderPath = scratchOrg.tempFolderPath;
+    testSetup = new TestSetup('sObjectsDefinitions', false);
+    await testSetup.setUp();
+    const projectPath = testSetup.projectFolderPath;
+    const tempFolderPath = testSetup.tempFolderPath;
     const source = path.join(tempFolderPath!, '..', 'test', 'testData', 'CustomSObjects');
     const destination = path.join(projectPath!, 'force-app', 'main', 'default', 'objects');
 
     fs.cp(source, destination, { recursive: true }, async (error) => {
       if (error) {
-        await scratchOrg.tearDown();
+        await testSetup.tearDown();
         return error
       }
     });
@@ -37,7 +37,7 @@ describe('SObjects Definitions', async () => {
     const sidebar = workbench.getSideBar();
     const content = sidebar.getContent();
 
-    const treeViewSection = await content.getSection(scratchOrg.tempProjectName.toUpperCase());
+    const treeViewSection = await content.getSection(testSetup.tempProjectName.toUpperCase());
     expect(treeViewSection).not.toEqual(undefined);
 
     const objectTreeItem = await treeViewSection.findItem('objects') as DefaultTreeItem;
@@ -96,7 +96,7 @@ describe('SObjects Definitions', async () => {
 
     const sidebar = workbench.getSideBar();
     const content = sidebar.getContent();
-    const treeViewSection = await content.getSection(scratchOrg.tempProjectName.toUpperCase());
+    const treeViewSection = await content.getSection(testSetup.tempProjectName.toUpperCase());
     expect(treeViewSection).not.toEqual(undefined);
 
     // Verify if '.sfdx' folder is in side panel
@@ -108,6 +108,8 @@ describe('SObjects Definitions', async () => {
 
     // Verify if 'tools' folder is within '.sfdx'
     const toolsTreeItem = await sfdxTreeItem.findChildItem('tools') as TreeItem;
+    const children = await toolsTreeItem.getChildren();
+    debugger;
     expect(toolsTreeItem).not.toEqual(undefined);
     await toolsTreeItem.expand();
     expect(await toolsTreeItem.isExpanded()).toBe(true);
@@ -157,7 +159,7 @@ describe('SObjects Definitions', async () => {
 
     const sidebar = workbench.getSideBar();
     const content = sidebar.getContent();
-    const treeViewSection = await content.getSection(scratchOrg.tempProjectName.toUpperCase());
+    const treeViewSection = await content.getSection(testSetup.tempProjectName.toUpperCase());
     expect(treeViewSection).not.toEqual(undefined);
 
     // Verify if 'standardObjects' folder is in side panel
@@ -211,6 +213,6 @@ describe('SObjects Definitions', async () => {
   });
 
   step('Tear down and clean up the testing environment', async () => {
-    await scratchOrg.tearDown();
+    await testSetup.tearDown();
   });
 });
