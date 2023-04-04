@@ -11,8 +11,8 @@ import {
   TextEditor
 } from 'wdio-vscode-service';
 import {
-  ScratchOrg
-} from '../scratchOrg';
+  TestSetup
+} from '../testSetup';
 import * as utilities from '../utilities';
 
 /**
@@ -22,12 +22,12 @@ import * as utilities from '../utilities';
  */
 describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async () => {
   let prompt: QuickOpenBox | InputBox;
-  let scratchOrg: ScratchOrg;
+  let testSetup: TestSetup;
   const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
-    scratchOrg = new ScratchOrg('TrailApexReplayDebugger', false);
-    await scratchOrg.setUp();
+    testSetup = new TestSetup('TrailApexReplayDebugger', false);
+    await testSetup.setUp();
 
     // Create Apex class AccountService
     await utilities.createApexClassWithBugs();
@@ -150,13 +150,13 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
         utilities.log('Warning - Launching Apex Replay Debugger with Current File failed, neither the success notification or the failure notification was found.');
       }
     } else {
+      // Continue with the debug session
+      await browser.keys(['F5']);
+      await utilities.pause(1);
+      await browser.keys(['F5']);
+      await utilities.pause(1);
       expect(successNotificationWasFound).toBe(true);
     }
-    // Continue with the debug session
-    await browser.keys(['F5']);
-    await utilities.pause(1);
-    await browser.keys(['F5']);
-    await utilities.pause(1);
   });
 
   step('Push Fixed Metadata to Scratch Org', async () => {
@@ -196,6 +196,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   });
 
   step('Tear down and clean up the testing environment', async () => {
-    await scratchOrg.tearDown();
+    await testSetup.tearDown();
   });
 });
