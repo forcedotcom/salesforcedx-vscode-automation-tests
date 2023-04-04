@@ -8,8 +8,8 @@ import {
   step
 } from 'mocha-steps';
 import {
-  ScratchOrg
-} from '../scratchOrg';
+  TestSetup
+} from '../testSetup';
 import * as utilities from '../utilities';
 
 /*
@@ -27,7 +27,7 @@ suite does run, it needs to run first.
 */
 
 describe('An Initial Suite', async () => {
-  let scratchOrg: ScratchOrg;
+  let testSetup: TestSetup;
 
   step('Verify our extensions are not initially loaded', async () => {
     const workbench = await browser.getWorkbench();
@@ -58,7 +58,7 @@ describe('An Initial Suite', async () => {
     const workbench = await browser.getWorkbench();
     const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
 
-    let quickPicks = await prompt.getQuickPicks();
+    const quickPicks = await prompt.getQuickPicks();
     let unexpectedSfdxCommandWasFound = false;
     for (const quickPick of quickPicks) {
       const label = await quickPick.getLabel();
@@ -84,11 +84,11 @@ describe('An Initial Suite', async () => {
   });
 
   step('Set up the testing environment', async () => {
-    scratchOrg = new ScratchOrg('AnInitialSuite', false);
-    // Don't call scratchOrg.setUp() b/c we don't need to authorize a scratch org,
+    testSetup = new TestSetup('AnInitialSuite', false);
+    // Don't call testSetup.setUp() b/c we don't need to authorize a scratch org,
     // just call setUpTestingEnvironment() and createProject().
-    await scratchOrg.setUpTestingEnvironment();
-    await scratchOrg.createProject('Developer');
+    await testSetup.setUpTestingEnvironment();
+    await testSetup.createProject('Developer');
   });
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {
@@ -119,11 +119,11 @@ describe('An Initial Suite', async () => {
     // salesforce.salesforcedx-vscode-visualforce
   });
 
-  step('Verify that SFDX commands are present after SFDX project has been created', async () => {
+  step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
     const workbench = await browser.getWorkbench();
     const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
-    let quickPicks = await prompt.getQuickPicks();
-    let commands: string[] = [];
+    const quickPicks = await prompt.getQuickPicks();
+    const commands: string[] = [];
     for (const quickPick of quickPicks) {
       commands.push(await quickPick.getLabel());
     }
@@ -146,6 +146,6 @@ describe('An Initial Suite', async () => {
   });
 
   step('Tear down and clean up the testing environment', async () => {
-    await scratchOrg.tearDown();
+    await testSetup.tearDown();
   });
 });
