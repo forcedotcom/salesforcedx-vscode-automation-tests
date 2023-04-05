@@ -10,15 +10,18 @@ import {
   TestSetup
 } from '../testSetup';
 import * as utilities from '../utilities';
-import * as fs from 'fs'; 
+import * as fs from 'fs';
 import path from 'path';
 
 describe('SObjects Definitions', async () => {
   let testSetup: TestSetup;
+  let projectName: string;
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('sObjectsDefinitions', false);
     await testSetup.setUp();
+    projectName = testSetup.tempProjectName.toUpperCase();
+
     const projectPath = testSetup.projectFolderPath;
     const tempFolderPath = testSetup.tempFolderPath;
     const source = path.join(tempFolderPath!, '..', 'test', 'testData', 'CustomSObjects');
@@ -37,13 +40,13 @@ describe('SObjects Definitions', async () => {
     const sidebar = workbench.getSideBar();
     const content = sidebar.getContent();
 
-    const treeViewSection = await content.getSection(testSetup.tempProjectName.toUpperCase());
+    const treeViewSection = await content.getSection(projectName);
     expect(treeViewSection).not.toEqual(undefined);
 
     const objectTreeItem = await treeViewSection.findItem('objects') as DefaultTreeItem;
     expect(objectTreeItem).not.toEqual(undefined);
     await objectTreeItem.select();
-  
+
     const customerObjectFolder = await objectTreeItem.findChildItem('Customer__c');
     expect(customerObjectFolder).not.toEqual(undefined);
     await customerObjectFolder?.expand();
@@ -58,7 +61,7 @@ describe('SObjects Definitions', async () => {
     const productCustomObject = await productObjectFolder?.findChildItem('Product__c.object-meta.xml');
     expect(productCustomObject).not.toEqual(undefined);
   });
-    
+
   step('Push Source to Org', async () => {
     const workbench = await browser.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org', 5);
@@ -96,7 +99,7 @@ describe('SObjects Definitions', async () => {
 
     const sidebar = workbench.getSideBar();
     const content = sidebar.getContent();
-    const treeViewSection = await content.getSection(testSetup.tempProjectName.toUpperCase());
+    const treeViewSection = await content.getSection(projectName);
     expect(treeViewSection).not.toEqual(undefined);
 
     // Verify if '.sfdx' folder is in side panel
@@ -108,23 +111,25 @@ describe('SObjects Definitions', async () => {
 
     // Verify if 'tools' folder is within '.sfdx'
     const toolsTreeItem = await sfdxTreeItem.findChildItem('tools') as TreeItem;
-    const children = await toolsTreeItem.getChildren();
-    debugger;
     expect(toolsTreeItem).not.toEqual(undefined);
     await toolsTreeItem.expand();
     expect(await toolsTreeItem.isExpanded()).toBe(true);
     await utilities.pause(1);
 
     // Verify if 'sobjects' folder is within 'tools'
-    const sobjectsTreeItem = await toolsTreeItem.findChildItem('sobjects') as TreeItem;
+    let sobjectsTreeItem = await utilities.getVisibleChild(sfdxTreeItem, 'sobjects');
     expect(sobjectsTreeItem).not.toEqual(undefined);
+    sobjectsTreeItem = sobjectsTreeItem!;
+
     await sobjectsTreeItem.expand();
     expect(await sobjectsTreeItem.isExpanded()).toBe(true);
     await utilities.pause(1);
 
     // Verify if 'customObjects' folder is within 'sobjects'
-    const customObjectsTreeItem = await sobjectsTreeItem.findChildItem('customObjects') as TreeItem;
+    let customObjectsTreeItem = await utilities.getVisibleChild(sfdxTreeItem, 'customObjects');
     expect(customObjectsTreeItem).not.toEqual(undefined);
+    customObjectsTreeItem = customObjectsTreeItem!;
+
     await customObjectsTreeItem.expand();
     expect(await customObjectsTreeItem.isExpanded()).toBe(true);
     await utilities.pause(1);
@@ -159,7 +164,7 @@ describe('SObjects Definitions', async () => {
 
     const sidebar = workbench.getSideBar();
     const content = sidebar.getContent();
-    const treeViewSection = await content.getSection(testSetup.tempProjectName.toUpperCase());
+    const treeViewSection = await content.getSection(projectName);
     expect(treeViewSection).not.toEqual(undefined);
 
     // Verify if 'standardObjects' folder is in side panel
