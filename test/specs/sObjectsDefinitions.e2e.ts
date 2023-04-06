@@ -29,8 +29,9 @@ describe('SObjects Definitions', async () => {
 
     fs.copy(source, destination, { recursive: true }, async (error) => {
       if (error) {
+        utilities.log(error.message);
         await testSetup.tearDown();
-        return error
+        throw error;
       }
     });
   });
