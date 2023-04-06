@@ -10,7 +10,7 @@ import {
   TestSetup
 } from '../testSetup';
 import * as utilities from '../utilities';
-import * as fs from 'fs'; 
+import * as fs from 'fs-extra';
 import path from 'path';
 
 describe('SObjects Definitions', async () => {
@@ -24,7 +24,7 @@ describe('SObjects Definitions', async () => {
     const source = path.join(tempFolderPath!, '..', 'test', 'testData', 'CustomSObjects');
     const destination = path.join(projectPath!, 'force-app', 'main', 'default', 'objects');
 
-    fs.cp(source, destination, { recursive: true }, async (error) => {
+    fs.copy(source, destination, { recursive: true }, async (error) => {
       if (error) {
         await testSetup.tearDown();
         return error
