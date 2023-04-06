@@ -99,6 +99,7 @@ export const config: Options.Testrunner = {
       // './test/specs/**/orgBrowser.e2e.ts',
       // './test/specs/**/pushAndPull.e2e.ts',
       // './test/specs/**/runApexTests.e2e.ts',
+      // './test/specs/**/sObjectsDefinitions.e2e.ts'
       // './test/specs/**/templates.e2e.ts',
     ]
   ],
