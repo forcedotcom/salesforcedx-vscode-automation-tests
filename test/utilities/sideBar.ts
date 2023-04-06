@@ -12,22 +12,22 @@ import {
   Workbench
 } from 'wdio-vscode-service';
 
-export async function getFilteredVisibleTreeViewItems(workbench: Workbench, projectName: string, searchString: string): Promise<ViewItem[]> {
+export async function getFilteredVisibleTreeViewItems(workbench: Workbench, projectName: string, searchString: string): Promise<DefaultTreeItem[]> {
   const sidebar = workbench.getSideBar();
   const treeViewSection = await sidebar.getContent().getSection(projectName);
   await treeViewSection.expand();
 
   // Warning, we can only retrieve the items which are visible.
   const visibleItems = (await treeViewSection.getVisibleItems()) as DefaultTreeItem[];
-  const filteredItems = (await visibleItems.reduce(async (previousPromise: Promise<ViewItem[]>, currentItem: ViewItem) => {
+  const filteredItems = await visibleItems.reduce(async (previousPromise: Promise<DefaultTreeItem[]>, currentItem: DefaultTreeItem) => {
     const results = await previousPromise;
-    const label = await (currentItem as TreeItem).getLabel();
+    const label = await currentItem.getLabel();
     if (label.startsWith(searchString)) {
       results.push(currentItem);
     }
 
     return results;
-  }, Promise.resolve([])) as ViewItem[]);
+  }, Promise.resolve([]));
 
   return filteredItems;
 }
@@ -52,4 +52,50 @@ export async function getFilteredVisibleTreeViewItemLabels(workbench: Workbench,
   }, Promise.resolve([])) as string[]);
 
   return filteredItems;
+}
+
+// There is a bug in DefaultTreeItem.findChildItem().
+// When possible, use DefaultTreeItem.findChildItem() but if this doesn't work on
+// everyone's machine, use getVisibleChild() instead.
+export async function getVisibleChild(defaultTreeItem: DefaultTreeItem, name: string): Promise<TreeItem | undefined> {
+  const children = await getVisibleChildren(defaultTreeItem);
+  for(let i=0; i<children.length; i++) {
+    const child = children[i];
+    const label = await child.getLabel();
+    if (label === name) {
+      return child;
+    }
+  }
+
+  return undefined;
+}
+
+// Replicate DefaultTreeItem.getChildren()
+// getVisibleChildren() is very much like DefaultTreeItem.getChildren(), except it calls
+// getVisibleItems().
+export async function getVisibleChildren(defaultTreeItem: DefaultTreeItem): Promise<TreeItem[]> {
+  const rows = await getVisibleItems(defaultTreeItem, defaultTreeItem.locatorMap.DefaultTreeSection.itemRow as string);
+
+  const items = await Promise.all(
+      rows.map(async (row) => (
+          new DefaultTreeItem(
+            defaultTreeItem.locatorMap,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            row as any,
+            defaultTreeItem.viewPart
+          ).wait()
+      ))
+  );
+
+  return items;
+}
+
+// Replicate TreeItem.getChildItems()
+// This function returns a list of all visible items within the tree, and not just the children of a node.
+export async function getVisibleItems(treeItem: TreeItem, locator: string): Promise<WebdriverIO.Element[]> {
+  const items: WebdriverIO.Element[] = [];
+  await treeItem.expand();
+  const rows = await treeItem.parent.$$(locator);
+
+  return rows;
 }
