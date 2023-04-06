@@ -29,7 +29,7 @@ describe('SObjects Definitions', async () => {
 
     fs.copy(source, destination, { recursive: true }, async (error) => {
       if (error) {
-        utilities.log(error.message);
+        utilities.log(`Failed in copying custom objects ${error.message}`);
         await testSetup.tearDown();
         throw error;
       }
