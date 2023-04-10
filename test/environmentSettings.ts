@@ -25,6 +25,8 @@ export class EnvironmentSettings {
       EnvironmentSettings._instance._devHubAliasName = process.env.DEV_HUB_ALIAS_NAME || EnvironmentSettings._instance._devHubAliasName;
       EnvironmentSettings._instance._devHubUserName = process.env.DEV_HUB_USER_NAME || EnvironmentSettings._instance._devHubUserName;
       EnvironmentSettings._instance._extensionPath = process.env.EXTENSION_PATH || EnvironmentSettings._instance._extensionPath;
+      console.log('The extension path used: ');
+      console.log(EnvironmentSettings._instance._extensionPath);
       EnvironmentSettings._instance._throttleFactor = parseInt(process.env.THROTTLE_FACTOR!) || EnvironmentSettings._instance._throttleFactor;
     }
 
