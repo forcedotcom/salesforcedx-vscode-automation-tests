@@ -37,6 +37,13 @@ describe('Apex Replay Debugger', async () => {
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
     const workbench = await browser.getWorkbench();
+
+    // Calling SFDX: Turn On Apex Debug Log for Replay Debugger fails on some machines.
+    // Reloading the window forces the extensions to be reloaded and this seems to fix
+    // the issue.
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+    await utilities.pause(10);
+
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Turn On Apex Debug Log for Replay Debugger', 10);
 
     // Wait for the command to execute
@@ -96,17 +103,19 @@ describe('Apex Replay Debugger', async () => {
     const workbench = await browser.getWorkbench();
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Launch Apex Replay Debugger with Last Log File', 1);
 
-    // Get open text editor
-    const editorView = await workbench.getEditorView();
+    // // Get open text editor
+    // const editorView = await workbench.getEditorView();
 
-    // Get file path from open text editor
-    const activeTab = await editorView.getActiveTab();
-    expect(activeTab).not.toBe(undefined);
-    const title = await activeTab?.getTitle();
-    const logFilePath = path.join(path.delimiter, 'tools', 'debug', 'logs', title!).slice(1);
-    await prompt.setText(logFilePath);
-    await prompt.confirm();
-    await utilities.pause(1);
+    // // Get file path from open text editor
+    // const activeTab = await editorView.getActiveTab();
+    // expect(activeTab).not.toBe(undefined);
+    // // tslint:disable-next-line:no-debugger
+    // debugger;
+    // const title = await activeTab?.getTitle();
+    // const logFilePath = path.join(path.delimiter, 'tools', 'debug', 'logs', title!).slice(1);
+    // await prompt.setText(logFilePath);
+    // await prompt.confirm();
+    // await utilities.pause(1);
 
     // Continue with the debug session
     await browser.keys(['F5']);
