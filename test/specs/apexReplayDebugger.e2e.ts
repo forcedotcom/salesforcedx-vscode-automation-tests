@@ -28,9 +28,9 @@ describe('Apex Replay Debugger', async () => {
     // Create Apex class file
     await utilities.createApexClassWithTest('ExampleApexClass');
 
-    // Push source to scratch org
+    // Push source to org
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org and Override Conflicts', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 5);
 
   });
 

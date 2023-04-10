@@ -32,9 +32,9 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Create Apex class AccountService
     await utilities.createApexClassWithBugs();
 
-    // Push source to scratch org
+    // Push source to org
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org and Override Conflicts', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 5);
   });
 
   step('Run Apex Tests', async () => {
@@ -168,8 +168,8 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await textEditor.save();
     await utilities.pause(1);
 
-    // Push source to scratch org
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org and Override Conflicts', 6);
+    // Push source to org
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 6);
   });
 
   step('Run Apex Tests to Verify Fix', async () => {

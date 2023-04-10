@@ -31,9 +31,9 @@ describe('Debug Apex Tests', async () => {
     await utilities.createApexClassWithTest('ExampleApexClass2');
     await utilities.pause(1);
 
-    // Push source to scratch org
+    // Push source to org
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org and Override Conflicts', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 5);
   });
 
   step('Debug All Tests via Apex Class', async () => {
