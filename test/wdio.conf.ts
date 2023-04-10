@@ -101,7 +101,7 @@ export const config: Options.Testrunner = {
       // './test/specs/**/pushAndPull.e2e.ts',
       // './test/specs/**/runApexTests.e2e.ts',
       // './test/specs/**/templates.e2e.ts',
-      // './test/specs/**/trailApexReplayDebugger.e2e.ts',
+      // './test/specs/**/trailApexReplayDebugger.e2e.ts'
     ]
   ],
   // Patterns to exclude.
