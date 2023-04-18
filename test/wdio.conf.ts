@@ -91,9 +91,9 @@ export const config: Options.Testrunner = {
     //
     // Place inside the array to run sequentially.
     [
-      './test/specs/**/*.e2e.ts'
+      //'./test/specs/**/*.e2e.ts'
 
-      // './test/specs/**/anInitialSuite.e2e.ts',
+      './test/specs/**/anInitialSuite.e2e.ts',
       // './test/specs/**/authentication.e2e.ts',
       // './test/specs/**/debugApexTests.e2e.ts',
       // './test/specs/**/orgBrowser.e2e.ts',
