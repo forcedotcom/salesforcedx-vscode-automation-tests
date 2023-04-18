@@ -70,9 +70,14 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Run SFDX: Toggle Checkpoint.
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Toggle Checkpoint', 1);
 
-    // Run SFDX: Update Checkpoints in Org.
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Update Checkpoints in Org', 1);
+    // Calling SFDX: Update Checkpoints in Org fails if the org has been recently created, 
+    // it does not complete the 6 steps but only 4.
+    // Reloading the window forces the extensions to be reloaded and this seems to fix the issue.
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+    await utilities.pause(10);
 
+    // Run SFDX: Update Checkpoints in Org.
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Update Checkpoints in Org', 2);
     // // Verify checkpoints updating results are listed on vscode's Output section
     // const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex Replay Debugger', 'Starting SFDX: Update Checkpoints in Org', 10);
     // expect(outputPanelText).not.toBeUndefined();
@@ -83,13 +88,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
     const workbench = await browser.getWorkbench();
-
-    // Calling SFDX: Turn On Apex Debug Log for Replay Debugger fails on some machines.
-    // Reloading the window forces the extensions to be reloaded and this seems to fix
-    // the issue.
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
-    await utilities.pause(10);
-
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Turn On Apex Debug Log for Replay Debugger', 10);
 
     // Wait for the command to execute
@@ -147,7 +145,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('Replay an Apex Debug Log', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Launch Apex Replay Debugger with Current File', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Launch Apex Replay Debugger with Current File', 5);
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Launch Apex Replay Debugger with Current File successfully ran');
     if (successNotificationWasFound !== true) {
       const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'You can only run this command with Anonymous Apex files, Apex Test files, or Apex Debug Log files.');
@@ -157,13 +155,13 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
         utilities.log('Warning - Launching Apex Replay Debugger with Current File failed, neither the success notification or the failure notification was found.');
       }
     } else {
-      // Continue with the debug session
-      await browser.keys(['F5']);
-      await utilities.pause(1);
-      await browser.keys(['F5']);
-      await utilities.pause(1);
       expect(successNotificationWasFound).toBe(true);
     }
+    // Continue with the debug session
+    await browser.keys(['F5']);
+    await utilities.pause(1);
+    await browser.keys(['F5']);
+    await utilities.pause(1);
   });
 
   step('Push Fixed Metadata to Scratch Org', async () => {
