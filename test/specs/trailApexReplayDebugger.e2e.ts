@@ -40,6 +40,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('Run Apex Tests', async () => {
     // Run SFDX: Run Apex tests.
     const workbench = await browser.getWorkbench();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
     // Select the "AccountServiceTest" file
@@ -101,6 +102,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('Run Apex Tests', async () => {
     // Run SFDX: Run Apex tests.
     const workbench = await browser.getWorkbench();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
     // Select the "AccountServiceTest" file
@@ -180,6 +182,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('Run Apex Tests to Verify Fix', async () => {
     // Run SFDX: Run Apex tests.
     const workbench = await browser.getWorkbench();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
     // Select the "AccountServiceTest" file
