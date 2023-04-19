@@ -80,9 +80,13 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Reloading the window forces the extensions to be reloaded and this seems to fix the issue.
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
     await utilities.pause(10);
+    
+    // Verify checkpoint is present
+    const breakpoints = await $$('.codicon-debug-breakpoint-conditional');
+    expect(breakpoints.length).toEqual(1);
 
     // Run SFDX: Update Checkpoints in Org.
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Update Checkpoints in Org', 2);
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Update Checkpoints in Org', 5);
     // // Verify checkpoints updating results are listed on vscode's Output section
     // const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex Replay Debugger', 'Starting SFDX: Update Checkpoints in Org', 10);
     // expect(outputPanelText).not.toBeUndefined();
@@ -146,6 +150,23 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Get Apex Debug Logs successfully ran');
     expect(successNotificationWasFound).toBe(true);
+
+    // Verify content on vscode's Output section
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', 'Starting SFDX: Get Apex Debug Logs', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('|EXECUTION_STARTED');
+    expect(outputPanelText).toContain('|EXECUTION_FINISHED');
+    expect(outputPanelText).toContain('ended SFDX: Get Apex Debug Logs');
+
+    // Verify content on log file
+    const editorView = workbench.getEditorView();
+    const activeTab = await editorView.getActiveTab();
+    const title = await activeTab?.getTitle();
+    const textEditor = await editorView.openEditor(title!) as TextEditor;
+    const executionStarted = await textEditor.getLineOfText('|EXECUTION_STARTED');
+    const executionFinished = await textEditor.getLineOfText('|EXECUTION_FINISHED');
+    expect(executionStarted).toBeGreaterThanOrEqual(1);
+    expect(executionFinished).toBeGreaterThanOrEqual(1);
   });
 
   step('Replay an Apex Debug Log', async () => {
