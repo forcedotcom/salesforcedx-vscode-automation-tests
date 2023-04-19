@@ -34,7 +34,11 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     // Push source to org
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 1);
+    // Wait for the command to execute
+    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Push Source to Default Org and Override Conflicts', fiveMinutes);
+    const successPushNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Push Source to Default Org and Override Conflicts successfully ran');
+    expect(successPushNotificationWasFound).toBe(true);
   });
 
   step('Run Apex Tests', async () => {
@@ -176,7 +180,11 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.pause(1);
 
     // Push source to org
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 6);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 1);
+    // Wait for the command to execute
+    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Push Source to Default Org and Override Conflicts', fiveMinutes);
+    const successPushNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Push Source to Default Org and Override Conflicts successfully ran');
+    expect(successPushNotificationWasFound).toBe(true);
   });
 
   step('Run Apex Tests to Verify Fix', async () => {

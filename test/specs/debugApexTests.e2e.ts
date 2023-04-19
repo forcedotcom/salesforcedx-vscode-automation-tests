@@ -33,7 +33,11 @@ describe('Debug Apex Tests', async () => {
 
     // Push source to org
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 1);
+    // Wait for the command to execute
+    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Push Source to Default Org and Override Conflicts', fiveMinutes);
+    const successPushNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Push Source to Default Org and Override Conflicts successfully ran');
+    expect(successPushNotificationWasFound).toBe(true);
   });
 
   step('Debug All Tests via Apex Class', async () => {
