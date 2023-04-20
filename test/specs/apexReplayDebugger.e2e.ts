@@ -129,7 +129,7 @@ describe('Apex Replay Debugger', async () => {
   step('SFDX: Launch Apex Replay Debugger with Current File', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Open Previous Editor')
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Open Previous Editor');
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Launch Apex Replay Debugger with Current File', 1);
 
     // Continue with the debug session
