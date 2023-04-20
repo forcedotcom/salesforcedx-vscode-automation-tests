@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import type { Options } from '@wdio/types'
+import type { Options } from '@wdio/types';
 import type { VSCodeCapabilities } from 'wdio-vscode-service/dist/types';
 import {
   EnvironmentSettings
@@ -94,6 +94,7 @@ export const config: Options.Testrunner = {
       './test/specs/**/*.e2e.ts'
 
       // './test/specs/**/anInitialSuite.e2e.ts',
+      // './test/specs/**/apexReplayDebugger.e2e.ts',
       // './test/specs/**/authentication.e2e.ts',
       // './test/specs/**/debugApexTests.e2e.ts',
       // './test/specs/**/orgBrowser.e2e.ts',
@@ -101,6 +102,7 @@ export const config: Options.Testrunner = {
       // './test/specs/**/runApexTests.e2e.ts',
       // './test/specs/**/sObjectsDefinitions.e2e.ts'
       // './test/specs/**/templates.e2e.ts',
+      // './test/specs/**/trailApexReplayDebugger.e2e.ts'
     ]
   ],
   // Patterns to exclude.
@@ -354,10 +356,10 @@ export const config: Options.Testrunner = {
   // onComplete: function(exitCode, config, capabilities, results) {
   // },
   /**
-  * Gets executed when a refresh happens.
-  * @param {String} oldSessionId session ID of the old session
-  * @param {String} newSessionId session ID of the new session
-  */
+   * Gets executed when a refresh happens.
+   * @param {String} oldSessionId session ID of the old session
+   * @param {String} newSessionId session ID of the new session
+   */
   // onReload: function(oldSessionId, newSessionId) {
   // }
-}
+};

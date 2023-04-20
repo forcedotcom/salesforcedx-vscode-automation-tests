@@ -77,11 +77,11 @@ describe('Templates', async () => {
   });
 
   step('Push the Aura Component', async () => {
-    // Run "SFDX: Push Source to Default Scratch Org".
+    // Run "SFDX: Push Source to Default Org".
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Scratch Org successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
@@ -135,11 +135,11 @@ describe('Templates', async () => {
   });
 
   step('Push the Aura Event', async () => {
-    // Run "SFDX: Push Source to Default Scratch Org".
+    // Run "SFDX: Push Source to Default Org".
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Scratch Org successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
@@ -196,11 +196,11 @@ describe('Templates', async () => {
   });
 
   step('Push the Apex Class', async () => {
-    // Run "SFDX: Push Source to Default Scratch Org".
+    // Run "SFDX: Push Source to Default Org".
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Scratch Org successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
@@ -257,11 +257,11 @@ describe('Templates', async () => {
   });
 
   step('Push the Lightning Web Component', async () => {
-    // Run "SFDX: Push Source to Default Scratch Org".
+    // Run "SFDX: Push Source to Default Org".
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Scratch Org successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
