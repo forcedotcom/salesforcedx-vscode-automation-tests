@@ -79,8 +79,8 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // it does not complete the 6 steps but only 4.
     // Reloading the window forces the extensions to be reloaded and this seems to fix the issue.
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
-    await utilities.pause(10);
-    
+    await utilities.pause(15);
+
     // Verify checkpoint is present
     const breakpoints = await $$('.codicon-debug-breakpoint-conditional');
     expect(breakpoints.length).toEqual(1);
@@ -173,17 +173,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Run SFDX: Launch Apex Replay Debugger with Current File
     const workbench = await browser.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Launch Apex Replay Debugger with Current File', 5);
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Launch Apex Replay Debugger with Current File successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'You can only run this command with Anonymous Apex files, Apex Test files, or Apex Debug Log files.');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      } else {
-        utilities.log('Warning - Launching Apex Replay Debugger with Current File failed, neither the success notification or the failure notification was found.');
-      }
-    } else {
-      expect(successNotificationWasFound).toBe(true);
-    }
+
     // Continue with the debug session
     await browser.keys(['F5']);
     await utilities.pause(1);

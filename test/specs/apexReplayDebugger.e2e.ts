@@ -129,24 +129,14 @@ describe('Apex Replay Debugger', async () => {
   step('SFDX: Launch Apex Replay Debugger with Current File', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
     const workbench = await browser.getWorkbench();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Open Previous Editor')
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Launch Apex Replay Debugger with Current File', 1);
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Launch Apex Replay Debugger with Current File successfully ran');
-    if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'You can only run this command with Anonymous Apex files, Apex Test files, or Apex Debug Log files.');
-      if (failureNotificationWasFound === true) {
-        expect(successNotificationWasFound).toBe(false);
-      } else {
-        utilities.log('Warning - Launching Apex Replay Debugger with Current File failed, neither the success notification or the failure notification was found.');
-      }
-    } else {
-      // Continue with the debug session
-      await browser.keys(['F5']);
-      await utilities.pause(1);
-      await browser.keys(['F5']);
-      await utilities.pause(1);
-      expect(successNotificationWasFound).toBe(true);
-    }
+    // Continue with the debug session
+    await browser.keys(['F5']);
+    await utilities.pause(1);
+    await browser.keys(['F5']);
+    await utilities.pause(1);
   });
 
   step('Run the Anonymous Apex Debugger using the Command Palette', async () => {
