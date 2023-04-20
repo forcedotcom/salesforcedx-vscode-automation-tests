@@ -87,11 +87,11 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     // Run SFDX: Update Checkpoints in Org.
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Update Checkpoints in Org', 5);
-    // // Verify checkpoints updating results are listed on vscode's Output section
-    // const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex Replay Debugger', 'Starting SFDX: Update Checkpoints in Org', 10);
-    // expect(outputPanelText).not.toBeUndefined();
-    // expect(outputPanelText).toContain('SFDX: Update Checkpoints in Org, Step 6 of 6: Confirming successful checkpoint creation');
-    // expect(outputPanelText).toContain('Ending SFDX: Update Checkpoints in Org');
+    // Verify checkpoints updating results are listed on vscode's Output section
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex Replay Debugger', 'Starting SFDX: Update Checkpoints in Org', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('SFDX: Update Checkpoints in Org, Step 6 of 6: Confirming successful checkpoint creation');
+    expect(outputPanelText).toContain('Ending SFDX: Update Checkpoints in Org');
   });
 
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
