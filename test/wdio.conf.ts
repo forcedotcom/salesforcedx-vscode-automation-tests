@@ -83,28 +83,37 @@ export const config: Options.Testrunner = {
   // then the current working directory is where your `package.json` resides, so `wdio`
   // will be called from there.
   //
-  specs: [
+  // specs: [
     // Place outside the array to run in parallel.
     // './test/specs/**/*.e2e.ts'
     //
     // -OR-
     //
     // Place inside the array to run sequentially.
-    [
-      './test/specs/**/*.e2e.ts'
+    // [
+      // './test/specs/**/*.e2e.ts'
 
       // './test/specs/**/anInitialSuite.e2e.ts',
+      // './test/specs/**/apexLsp.e2e.ts',
       // './test/specs/**/apexReplayDebugger.e2e.ts',
+      // './test/specs/**/auraLsp.e2e.ts',
       // './test/specs/**/authentication.e2e.ts',
       // './test/specs/**/debugApexTests.e2e.ts',
+      // './test/specs/**/deployAndRetrieve.e2e.ts',
+      // './test/specs/**/lwcLsp.e2e.ts',
       // './test/specs/**/orgBrowser.e2e.ts',
       // './test/specs/**/pushAndPull.e2e.ts',
       // './test/specs/**/runApexTests.e2e.ts',
       // './test/specs/**/sObjectsDefinitions.e2e.ts'
       // './test/specs/**/templates.e2e.ts',
-      // './test/specs/**/trailApexReplayDebugger.e2e.ts'
-    ]
+      // './test/specs/**/trailApexReplayDebugger.e2e.ts',
+      // './test/specs/**/visualForceLsp.e2e.ts',
+    // ]
+  // ],
+  specs: [
+    EnvironmentSettings.getInstance().specFiles
   ],
+
   // Patterns to exclude.
   exclude: [
     // 'path/to/excluded/files'
