@@ -35,7 +35,6 @@ describe('Apex Replay Debugger', async () => {
     await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Push Source to Default Org and Override Conflicts', fiveMinutes);
     const successPushNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Push Source to Default Org and Override Conflicts successfully ran');
     expect(successPushNotificationWasFound).toBe(true);
-
   });
 
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
@@ -48,6 +47,8 @@ describe('Apex Replay Debugger', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
     await utilities.pause(10);
 
+    // Clear output before running the command
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Turn On Apex Debug Log for Replay Debugger', 10);
 
     // Wait for the command to execute
@@ -56,6 +57,13 @@ describe('Apex Replay Debugger', async () => {
     // Look for the success notification that appears which says, "SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran');
     expect(successNotificationWasFound).toBe(true);
+
+    // Verify content on vscode's Output section
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'Starting SFDX: Turn On Apex Debug Log for Replay Debugger', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('Starting sfdx force:data:record:update --sobjecttype DebugLevel --sobjectid');
+    expect(outputPanelText).toContain('SFDX: Turn On Apex Debug Log for Replay Debugger ');
+    expect(outputPanelText).toContain('ended with exit code 0');
   });
 
   step('Run the Anonymous Apex Debugger with Currently Selected Text', async () => {
@@ -70,6 +78,9 @@ describe('Apex Replay Debugger', async () => {
     await textEditor.selectText('ExampleApexClass.SayHello(\'Cody\');');
     await utilities.pause(1);
 
+    // Clear output before running the command
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+
     // Run SFDX: Launch Apex Replay Debugger with Currently Selected Text.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Execute Anonymous Apex with Currently Selected Text', 1);
 
@@ -78,12 +89,21 @@ describe('Apex Replay Debugger', async () => {
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Execute Anonymous Apex successfully ran');
     expect(successNotificationWasFound).toBe(true);
-    await utilities.pause(1);
+
+    // Verify content on vscode's Output section
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', 'Starting Execute Anonymous Apex', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('Compiled successfully.');
+    expect(outputPanelText).toContain('Executed successfully.');
+    expect(outputPanelText).toContain('|EXECUTION_STARTED');
+    expect(outputPanelText).toContain('|EXECUTION_FINISHED');
+    expect(outputPanelText).toContain('ended Execute Anonymous Apex');
   });
 
   step('SFDX: Get Apex Debug Logs', async () => {
     // Run SFDX: Get Apex Debug Logs
     const workbench = await browser.getWorkbench();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Get Apex Debug Logs', 1);
 
     // Wait for the command to execute
@@ -100,6 +120,23 @@ describe('Apex Replay Debugger', async () => {
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Get Apex Debug Logs successfully ran');
     expect(successNotificationWasFound).toBe(true);
+
+    // Verify content on vscode's Output section
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', 'Starting SFDX: Get Apex Debug Logs', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('|EXECUTION_STARTED');
+    expect(outputPanelText).toContain('|EXECUTION_FINISHED');
+    expect(outputPanelText).toContain('ended SFDX: Get Apex Debug Logs');
+
+    // Verify content on log file
+    const editorView = workbench.getEditorView();
+    const activeTab = await editorView.getActiveTab();
+    const title = await activeTab?.getTitle();
+    const textEditor = await editorView.openEditor(title!) as TextEditor;
+    const executionStarted = await textEditor.getLineOfText('|EXECUTION_STARTED');
+    const executionFinished = await textEditor.getLineOfText('|EXECUTION_FINISHED');
+    expect(executionStarted).toBeGreaterThanOrEqual(1);
+    expect(executionFinished).toBeGreaterThanOrEqual(1);
   });
 
   step('SFDX: Launch Apex Replay Debugger with Last Log File', async () => {
@@ -145,18 +182,31 @@ describe('Apex Replay Debugger', async () => {
     // Create anonymous apex file
     await utilities.createAnonymousApexFile();
 
+    // Clear output before running the command
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+
     // Run SFDX: Launch Apex Replay Debugger with Editor Contents", using the Command Palette.
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Execute Anonymous Apex with Editor Contents', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Execute Anonymous Apex with Editor Contents', 10);
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(workbench, 'Running Execute Anonymous Apex', fiveMinutes);
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Execute Anonymous Apex successfully ran');
     expect(successNotificationWasFound).toBe(true);
+
+    // Verify content on vscode's Output section
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', 'Starting Execute Anonymous Apex', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('Compiled successfully.');
+    expect(outputPanelText).toContain('Executed successfully.');
+    expect(outputPanelText).toContain('|EXECUTION_STARTED');
+    expect(outputPanelText).toContain('|EXECUTION_FINISHED');
+    expect(outputPanelText).toContain('ended Execute Anonymous Apex');
   });
 
   step('SFDX: Turn Off Apex Debug Log for Replay Debugger', async () => {
     // Run SFDX: Turn Off Apex Debug Log for Replay Debugger
     const workbench = await browser.getWorkbench();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Turn Off Apex Debug Log for Replay Debugger', 1);
 
     // Wait for the command to execute
@@ -165,6 +215,15 @@ describe('Apex Replay Debugger', async () => {
     // Look for the success notification that appears which says, "SFDX: Turn Off Apex Debug Log for Replay Debugger successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Turn Off Apex Debug Log for Replay Debugger successfully ran');
     expect(successNotificationWasFound).toBe(true);
+
+    // Verify content on vscode's Output section
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'Starting SFDX: Turn Off Apex Debug Log for Replay Debugger', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('sfdx force:data:record:delete --sobjecttype TraceFlag --sobjectid');
+    expect(outputPanelText).toContain('Deleting Record...');
+    expect(outputPanelText).toContain('Success');
+    expect(outputPanelText).toContain('Successfully deleted record:');
+    expect(outputPanelText).toContain('ended with exit code 0');
   });
 
   step('Tear down and clean up the testing environment', async () => {

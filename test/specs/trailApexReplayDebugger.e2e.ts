@@ -97,6 +97,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
     const workbench = await browser.getWorkbench();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Turn On Apex Debug Log for Replay Debugger', 10);
 
     // Wait for the command to execute
@@ -105,6 +106,13 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Look for the success notification that appears which says, "SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran');
     expect(successNotificationWasFound).toBe(true);
+
+    // Verify content on vscode's Output section
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'Starting SFDX: Turn On Apex Debug Log for Replay Debugger', 10);
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('Starting sfdx force:data:record:update --sobjecttype DebugLevel --sobjectid');
+    expect(outputPanelText).toContain('SFDX: Turn On Apex Debug Log for Replay Debugger ');
+    expect(outputPanelText).toContain('ended with exit code 0');
   });
 
   step('Run Apex Tests', async () => {
