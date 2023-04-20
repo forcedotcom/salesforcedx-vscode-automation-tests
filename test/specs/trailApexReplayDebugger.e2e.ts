@@ -79,14 +79,14 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // it does not complete the 6 steps but only 4.
     // Reloading the window forces the extensions to be reloaded and this seems to fix the issue.
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
-    await utilities.pause(15);
+    await utilities.pause(20);
 
     // Verify checkpoint is present
     const breakpoints = await $$('.codicon-debug-breakpoint-conditional');
     expect(breakpoints.length).toEqual(1);
 
     // Run SFDX: Update Checkpoints in Org.
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Update Checkpoints in Org', 5);
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Update Checkpoints in Org', 10);
     // Verify checkpoints updating results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex Replay Debugger', 'Starting SFDX: Update Checkpoints in Org', 10);
     expect(outputPanelText).not.toBeUndefined();
@@ -188,7 +188,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     const textEditor = await editorView.openEditor('AccountService.cls') as TextEditor;
     await textEditor.setTextAtLine(6, '\t\t\tTickerSymbol = tickerSymbol');
     await textEditor.save();
-    await utilities.pause(1);
+    await utilities.pause(2);
 
     // Push source to org
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 1);
