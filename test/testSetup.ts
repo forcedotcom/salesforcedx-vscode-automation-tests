@@ -26,6 +26,7 @@ const exec = util.promisify(child_process.exec);
 export class TestSetup {
   private testSuiteSuffixName: string;
   private reuseScratchOrg = false;
+  private static aliasAndUserNameWereVerified = false;
   public tempFolderPath: string | undefined = undefined;
   public projectFolderPath: string | undefined = undefined;
   private prompt: QuickOpenBox | InputBox | undefined;
@@ -158,6 +159,12 @@ export class TestSetup {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting authorizeDevHub()...`);
 
+    // Only need to check this once.
+    if (!TestSetup.aliasAndUserNameWereVerified) {
+      await this.verifyAliasAndUserName();
+      TestSetup.aliasAndUserNameWereVerified = true;
+    }
+
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
     const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
     utilities.log(`${this.testSuiteSuffixName} - calling sfdx force:org:display...`);
@@ -177,6 +184,36 @@ export class TestSetup {
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished authorizeDevHub()`);
     utilities.log('');
+  }
+
+  // verifyAliasAndUserName() verifies that the alias and user name are set,
+  // and also verifies there is a corresponding match in the org list.
+  private async verifyAliasAndUserName() {
+    const environmentSettings = EnvironmentSettings.getInstance();
+
+    const devHubAliasName = environmentSettings.devHubAliasName;
+    if (!devHubAliasName) {
+      throw new Error('Error: devHubAliasName was not set.');
+    }
+
+    const devHubUserName = environmentSettings.devHubUserName;
+    if (!devHubUserName) {
+      throw new Error('Error: devHubUserName was not set.');
+    }
+
+    const execResult = await exec('sfdx org list --json');
+    const sfdxForceOrgListJson = this.removedEscapedCharacters(execResult.stdout);
+    const sfdxForceOrgListResult = JSON.parse(sfdxForceOrgListJson).result;
+    const nonScratchOrgs = sfdxForceOrgListResult.nonScratchOrgs as any[];
+
+    for (let i=0; i<nonScratchOrgs.length; i++) {
+      const nonScratchOrg = nonScratchOrgs[i];
+      if (nonScratchOrg.alias === devHubAliasName && nonScratchOrg.username === devHubUserName) {
+        return;
+      }
+    }
+
+    throw new Error(`Error: matching devHub alias '${devHubAliasName}' and devHub user name '${devHubUserName}' was not found.  Please consult README.md and make sure DEV_HUB_ALIAS_NAME and DEV_HUB_USER_NAME are set correctly.`)
   }
 
   private async createDefaultScratchOrg(): Promise<void> {
