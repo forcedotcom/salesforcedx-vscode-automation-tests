@@ -158,13 +158,6 @@ export class TestSetup {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting authorizeDevHub()...`);
 
-    // jab
-    // harden this
-    // run sfdx force:org:list --json
-    // convert the JSON into an object
-    // parse the object for devHubAliasName and devHubUserName
-    // make sure there's a match
-
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
     const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
     utilities.log(`${this.testSuiteSuffixName} - calling sfdx force:org:display...`);
