@@ -109,12 +109,19 @@ export class TestSetup {
 
     // Select the "Standard" project type.
     await utilities.pause(30);
-    await this.prompt.setText('SFDX: Create Project');
-    await utilities.pause(1);
     const quickPicks = await this.prompt.getQuickPicks();
-    utilities.log(`quickPicks length: ${quickPicks.length}`);
+    utilities.log(`quickPicks length without text prompt: ${quickPicks.length}`);
     for (let i=0; i<quickPicks.length; i++) {
       const quickPick = quickPicks[i];
+      const text = await quickPick.getLabel();
+      utilities.log(`quickPick[${i}]: ${text}`);
+    }
+    await this.prompt.setText('Standard');
+    await utilities.pause(1);
+    const quickPicks2 = await this.prompt.getQuickPicks();
+    utilities.log(`quickPicks length with Standard prompt: ${quickPicks2.length}`);
+    for (let i=0; i<quickPicks2.length; i++) {
+      const quickPick = quickPicks2[i];
       const text = await quickPick.getLabel();
       utilities.log(`quickPick[${i}]: ${text}`);
     }
