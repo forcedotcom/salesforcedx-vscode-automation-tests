@@ -106,6 +106,7 @@ export class TestSetup {
     const workbench = await browser.getWorkbench();
     this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 10);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
+    utilities.log('Created project!');
 
     // Select the "Standard" project type.
     await utilities.pause(30);
