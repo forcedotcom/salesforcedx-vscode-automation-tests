@@ -108,6 +108,7 @@ export class TestSetup {
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
     // Select the "Standard" project type.
+    await utilities.pause(30);
     await utilities.selectQuickPickWithText(this.prompt, 'Standard');
 
     // Enter the project's name.
