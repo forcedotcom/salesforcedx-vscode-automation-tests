@@ -77,8 +77,8 @@ describe('An Initial Suite', async () => {
           break;
       }
     }
-    // TODO: add this back in once this bug has been fixed
-    // expect(unexpectedSfdxCommandWasFound).toBe(false);
+
+    expect(unexpectedSfdxCommandWasFound).toBe(false);
 
     // Escape out of the pick list.
     await prompt.cancel();
