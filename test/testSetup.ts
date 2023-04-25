@@ -109,6 +109,15 @@ export class TestSetup {
 
     // Select the "Standard" project type.
     await utilities.pause(30);
+    await this.prompt.setText('SFDX: Create Project');
+    await utilities.pause(1);
+    const quickPicks = await this.prompt.getQuickPicks();
+    utilities.log(`quickPicks length: ${quickPicks.length}`);
+    for (let i=0; i<quickPicks.length; i++) {
+      const quickPick = quickPicks[i];
+      const text = await quickPick.getLabel();
+      utilities.log(`quickPick[${i}]: ${text}`);
+    }
     await utilities.selectQuickPickWithText(this.prompt, 'Standard');
 
     // Enter the project's name.
