@@ -11,7 +11,8 @@ import {
   Workbench
 } from 'wdio-vscode-service';
 import {
-  pause
+  pause,
+  log
 } from './miscellaneous';
 
 export async function openCommandPromptWithCommand(workbench: Workbench, command: string): Promise<InputBox | QuickOpenBox> {
@@ -52,8 +53,11 @@ export async function selectQuickPickItem(prompt: InputBox | QuickOpenBox, text:
   const quickPicks = await prompt.getQuickPicks();
   for (const quickPick of quickPicks) {
       const label = await quickPick.getLabel();
+      log(`Is this my item? ${label}`);
       if (label === text) {
+          log(`Winner winner`);
           await quickPick.select();
+          log(`HAVE SELECTED`);
           return;
       }
   }
