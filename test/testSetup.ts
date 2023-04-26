@@ -105,12 +105,24 @@ export class TestSetup {
 
     const workbench = await browser.getWorkbench();
     this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 10);
+    const promptText = await this.prompt.getText();
+    utilities.log(`Prompt text after creating project: ${promptText}`);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
 
     utilities.log('TEST-Created project!');
 
-    await utilities.pause(10);
+    await utilities.pause(60);
+
+    const monacoList = await $$('.monaco-highlighted-label');
+    utilities.log(`Monaco List is : ${monacoList.length}`);
+    for (let i=0; i<monacoList.length; i++) {
+      const monacoItem = monacoList[i];
+      const htmlText = await monacoItem.getHTML(true);
+      utilities.log(`Inner HTML of item ${i} is ${htmlText}`);
+      const itemText = await monacoItem.getText();
+      utilities.log(`Item text of item ${i} is ${itemText}`);
+    }
 
     // Select the "Standard" project type.
     // await utilities.selectQuickPickWithText(this.prompt, 'Standard');

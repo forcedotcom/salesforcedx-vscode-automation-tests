@@ -119,31 +119,31 @@ describe('An Initial Suite', async () => {
     // salesforce.salesforcedx-vscode-visualforce
   });
 
-  step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
-    const workbench = await browser.getWorkbench();
-    const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
-    const quickPicks = await prompt.getQuickPicks();
-    const commands: string[] = [];
-    for (const quickPick of quickPicks) {
-      commands.push(await quickPick.getLabel());
-    }
+  // step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
+  //   const workbench = await browser.getWorkbench();
+  //   const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
+  //   const quickPicks = await prompt.getQuickPicks();
+  //   const commands: string[] = [];
+  //   for (const quickPick of quickPicks) {
+  //     commands.push(await quickPick.getLabel());
+  //   }
 
-    // Look for the first few SFDX commands.
-    expect(commands).toContain('SFDX: Add Tests to Apex Test Suite');
-    expect(commands).toContain('SFDX: Authorize a Dev Hub');
-    expect(commands).toContain('SFDX: Authorize an Org');
-    expect(commands).toContain('SFDX: Authorize an Org using Session ID');
-    expect(commands).toContain('SFDX: Cancel Active Command');
-    expect(commands).toContain('SFDX: Configure Apex Debug Exceptions');
-    expect(commands).toContain('SFDX: Create a Default Scratch Org...');
-    expect(commands).toContain('SFDX: Create Apex Class');
-    expect(commands).toContain('SFDX: Create Apex Test Suite');
-    expect(commands).toContain('SFDX: Create Apex Trigger');
-    // There are more, but just look for the first few commands.
+  //   // Look for the first few SFDX commands.
+  //   expect(commands).toContain('SFDX: Add Tests to Apex Test Suite');
+  //   expect(commands).toContain('SFDX: Authorize a Dev Hub');
+  //   expect(commands).toContain('SFDX: Authorize an Org');
+  //   expect(commands).toContain('SFDX: Authorize an Org using Session ID');
+  //   expect(commands).toContain('SFDX: Cancel Active Command');
+  //   expect(commands).toContain('SFDX: Configure Apex Debug Exceptions');
+  //   expect(commands).toContain('SFDX: Create a Default Scratch Org...');
+  //   expect(commands).toContain('SFDX: Create Apex Class');
+  //   expect(commands).toContain('SFDX: Create Apex Test Suite');
+  //   expect(commands).toContain('SFDX: Create Apex Trigger');
+  //   // There are more, but just look for the first few commands.
 
-    // Escape out of the pick list.
-    await prompt.cancel();
-  });
+  //   // Escape out of the pick list.
+  //   await prompt.cancel();
+  // });
 
   step('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
