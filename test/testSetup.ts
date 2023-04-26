@@ -107,8 +107,44 @@ export class TestSetup {
     this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 10);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
+
+    utilities.log('TEST-Created project!');
+
+    await utilities.pause(10);
+
     // Select the "Standard" project type.
-    await utilities.selectQuickPickWithText(this.prompt, 'Standard');
+    // await utilities.selectQuickPickWithText(this.prompt, 'Standard');
+
+    const quickPicks = await this.prompt.getQuickPicks();
+    utilities.log(`quickPicks length without text prompt: ${quickPicks.length}`);
+    for (let i=0; i<quickPicks.length; i++) {
+      const quickPick = quickPicks[i];
+      const text = await quickPick.getLabel();
+      utilities.log(`quickPick[${i}]: ${text}`);
+    }
+    expect(quickPicks.length).toBe(3);
+
+    // first half of selectQuickPickWithText()
+    await this.prompt.setText('Standard');
+    await utilities.pause(1);
+
+    const quickPicks2 = await this.prompt.getQuickPicks();
+    utilities.log(`quickPicks length with Standard prompt: ${quickPicks2.length}`);
+    for (let i=0; i<quickPicks2.length; i++) {
+      const quickPick = quickPicks2[i];
+      const text = await quickPick.getLabel();
+      utilities.log(`quickPick[${i}]: ${text}`);
+    }
+    expect(quickPicks2.length).toBe(1);
+
+    // second half of selectQuickPickWithText()
+    await this.prompt.selectQuickPick('Standard');
+    await utilities.pause(1);
+
+
+    utilities.log('TEST2-selectQuickPick(standard) finished');
+
+
 
     // Enter the project's name.
     await this.prompt.setText(this.tempProjectName);
@@ -117,6 +153,9 @@ export class TestSetup {
     // Press Enter/Return.
     await this.prompt.confirm();
 
+    utilities.log('TEST3-just pressed Enter/Return');
+
+
     // Set the location of the project.
     const input = await this.prompt.input$;
     await input.setValue(this.tempFolderPath!);
@@ -124,6 +163,10 @@ export class TestSetup {
 
     // Click the OK button.
     await utilities.clickFilePathOkButton();
+
+
+    utilities.log('TEST4-just clicked OK to accept the path');
+
 
     // Verify the project was created and was loaded.
     const sidebar = await workbench.getSideBar();
@@ -140,6 +183,8 @@ export class TestSetup {
 
     await forceAppTreeItem.expand();
 
+    utilities.log('TEST6-the tree was expanded');
+
     // Yep, we need to wait a long time here.
     await utilities.pause(10);
 
@@ -149,6 +194,8 @@ export class TestSetup {
       projectScratchDef = projectScratchDef.replace(`"edition": "Developer"`, `"edition": "Enterprise"`);
       fs.writeFileSync(projectScratchDefPath, projectScratchDef, 'utf8');
     }
+
+    utilities.log('TEST7-WOO-HOO!!');
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
     utilities.log('');
