@@ -104,9 +104,10 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
 
     const workbench = await browser.getWorkbench();
-    this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 10);
-    const promptText = await this.prompt.getText();
-    utilities.log(`Prompt text after creating project: ${promptText}`);
+    //this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 10);
+    this.prompt = await workbench.executeQuickPick('SFDX: Create Project');
+    //const promptText = await this.prompt.getText();
+    //utilities.log(`Prompt text after creating project: ${promptText}`);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
 
