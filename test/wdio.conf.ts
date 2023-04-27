@@ -91,10 +91,13 @@ export const config: Options.Testrunner = {
     //
     // Place inside the array to run sequentially.
     [
+      // Either define the test suites to run in EnvironmentSettings...
       ...EnvironmentSettings.getInstance().specFiles
       //
+      // ...or use *.e2e.ts here...
       // './test/specs/**/*.e2e.ts'
       //
+      // ...or use individual e2e tests here:
       // './test/specs/**/anInitialSuite.e2e.ts',
       // './test/specs/**/apexLsp.e2e.ts',
       // './test/specs/**/apexReplayDebugger.e2e.ts',
