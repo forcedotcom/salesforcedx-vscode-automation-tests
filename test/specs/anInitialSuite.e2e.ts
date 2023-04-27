@@ -59,7 +59,7 @@ describe('An Initial Suite', async () => {
     const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
 
     const quickPicks = await prompt.getQuickPicks();
-    let expectedSfdxCommandFound = 0;
+    let expectedSfdxCommandsFound = 0;
     let unexpectedSfdxCommandWasFound = false;
     for (const quickPick of quickPicks) {
       const label = await quickPick.getLabel();
@@ -69,7 +69,7 @@ describe('An Initial Suite', async () => {
         case 'SFDX: Create and Set Up Project for ISV Debugging':
         case 'SFDX: Create Project':
         case 'SFDX: Create Project with Manifest':
-          expectedSfdxCommandFound++;
+          expectedSfdxCommandsFound++;
           break;
 
         default:
@@ -80,7 +80,7 @@ describe('An Initial Suite', async () => {
       }
     }
 
-    expect(expectedSfdxCommandFound).toBe(3);
+    expect(expectedSfdxCommandsFound).toBe(3);
     expect(unexpectedSfdxCommandWasFound).toBe(false);
 
     // Escape out of the pick list.
