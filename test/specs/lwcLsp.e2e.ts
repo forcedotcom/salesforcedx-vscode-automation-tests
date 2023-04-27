@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step } from 'mocha-steps';
-import { InputBox, QuickOpenBox, TextEditor } from 'wdio-vscode-service';
+import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
@@ -44,16 +44,6 @@ describe('LWC LSP', async () => {
     expect(extensionWasFound).toBe(false);
   });
 
-  step('Go to Definition (HTML)', async () => {
-    // Get open text editor
-    const workbench = await browser.getWorkbench();
-    const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
-    await textEditor.moveCursor(3, 40);
-    // TODO: implement
-    expect(1).toBe(1);
-  });
-
   step('Go to Definition (Javascript)', async () => {
     // Get open text editor
     const workbench = await browser.getWorkbench();
@@ -71,8 +61,34 @@ describe('LWC LSP', async () => {
     expect(title).toBe('engine.d.ts');
   });
 
+  step('Go to Definition (HTML)', async () => {
+    // Get open text editor
+    const workbench = await browser.getWorkbench();
+    const editorView = workbench.getEditorView();
+    const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
+    await textEditor.moveCursor(3, 57);
+
+    // TODO: Extension is actually not loading
+
+    // // Go to definition through F12
+    // await browser.keys(['F12']);
+    // await utilities.pause(1);
+
+    // //Verify 'Go to definition' took us to the definition file
+    // const activeTab = await editorView.getActiveTab();
+    // const title = await activeTab?.getTitle();
+    // expect(title).toBe('lwc1.js');
+  });
+
   step('On hover', async () => {
-    // TODO: implement
+    // Get open text editor
+    const workbench = await browser.getWorkbench();
+    const editorView = workbench.getEditorView();
+    const textEditor = (await editorView.openEditor('lwc1.js')) as TextEditor;
+    await textEditor.moveCursor(3, 40);
+    await utilities.pause(5);
+
+    // TODO: Verify info on hover
     expect(1).toBe(1);
   });
 
@@ -81,10 +97,10 @@ describe('LWC LSP', async () => {
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
-    await textEditor.moveCursor(3, 8);
-    await textEditor.setText(' ');
-    await textEditor.moveCursor(3, 8);
-    await textEditor.setText('lwc');
+    await textEditor.typeTextAt(3, 11, ' lwc');
+    await utilities.pause(5);
+
+    // TODO: Verify autocompletion options
     expect(1).toBe(1);
   });
 
