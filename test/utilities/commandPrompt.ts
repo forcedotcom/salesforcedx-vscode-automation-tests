@@ -49,6 +49,11 @@ export async function selectQuickPickWithText(prompt: InputBox | QuickOpenBox, t
 }
 
 export async function selectQuickPickItem(prompt: InputBox | QuickOpenBox, text: string): Promise<void> {
+  // Type the quick pick item to find into the filter.  Do this incase the
+  // pick list item is not visible (and one needs to scroll down to see it).
+  // await prompt.setText(text);
+  // pause(1);
+
   const quickPicks = await prompt.getQuickPicks();
   for (const quickPick of quickPicks) {
       const label = await quickPick.getLabel();

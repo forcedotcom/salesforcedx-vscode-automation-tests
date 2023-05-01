@@ -36,7 +36,7 @@ describe('Push and Pull', async () => {
 
   step('Create an Apex class', async () => {
     // Create an Apex Class.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
 
     // Set the name of the new component to ExampleApexClass1.
@@ -70,7 +70,7 @@ describe('Push and Pull', async () => {
   });
 
   step('Push the Apex class', async () => {
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
     // At this point there should be no conflicts since this is a new class.
@@ -89,7 +89,7 @@ describe('Push and Pull', async () => {
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
 
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
     const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
@@ -107,7 +107,7 @@ describe('Push and Pull', async () => {
     await outputView.clearText();
 
     // Modify the file by adding a comment.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = await editorView.openEditor('ExampleApexClass1.cls') as TextEditor;
     await textEditor.setTextAtLine(3, '        // sample comment');
@@ -131,8 +131,25 @@ describe('Push and Pull', async () => {
 
     // An now push the changes.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
-
+    utilities.pause(1);
     successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
+
+    // TODOx:
+    if (!successNotificationWasFound) {
+
+      utilities.log('Error!')
+      utilities.log('Dumping notifications...')
+      const notifications = await workbench.getNotifications();
+      for (const notification of notifications) {
+        const message = await notification.getMessage();
+        utilities.log('Notification: ' + message);
+      }
+
+      debugger;
+      successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
+      debugger;
+    }
+
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
@@ -151,7 +168,7 @@ describe('Push and Pull', async () => {
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
 
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
 
     // At this point there should be no conflicts since there have been no changes.
@@ -194,7 +211,7 @@ describe('Push and Pull', async () => {
     await outputView.clearText();
 
     // Modify the file by adding a comment.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = await editorView.openEditor('ExampleApexClass1.cls') as TextEditor;
     await textEditor.setTextAtLine(3, '        // sample comment for the pull test');
@@ -219,7 +236,7 @@ describe('Push and Pull', async () => {
     await outputView.clearText();
 
     // Now save the file.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = await editorView.openEditor('ExampleApexClass1.cls') as TextEditor;
     await textEditor.save();
@@ -267,8 +284,12 @@ describe('Push and Pull', async () => {
   });
 
   step('Set the 2nd user as the default user', async () => {
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 1);
+
+    // TODOx: - pre filter
+    await inputBox.setText(adminEmailAddress);
+    await utilities.pause(1);
 
     // Select this.scratchOrgAliasName from the list.
     let scratchOrgQuickPickItemWasFound = false;
@@ -285,6 +306,10 @@ describe('Push and Pull', async () => {
     }
 
     if (!scratchOrgQuickPickItemWasFound) {
+
+      // TODOx: - if hit this error again, add in debug logging
+      debugger;
+
       throw new Error(`${adminEmailAddress} was not found in the the scratch org pick list`);
     }
     // Warning! This only works if the item (the scratch org) is visible.

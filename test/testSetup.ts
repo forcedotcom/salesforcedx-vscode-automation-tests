@@ -24,7 +24,7 @@ import * as utilities from './utilities';
 const exec = util.promisify(child_process.exec);
 
 export class TestSetup {
-  private testSuiteSuffixName: string;
+  public testSuiteSuffixName: string;
   private reuseScratchOrg = false;
   public tempFolderPath: string | undefined = undefined;
   public projectFolderPath: string | undefined = undefined;
@@ -103,7 +103,7 @@ export class TestSetup {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
 
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 10);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
@@ -183,8 +183,27 @@ export class TestSetup {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`);
 
+    utilities.log('Calling transformedUserName()');
     const currentOsUserName = await utilities.transformedUserName();
-    const workbench = await browser.getWorkbench();
+    expect(currentOsUserName).not.toBeUndefined();
+    expect(currentOsUserName.length).toBeGreaterThanOrEqual(1);
+
+    utilities.log('Calling getWorkbench()');
+    // const workbench = await (await browser.getWorkbench()).wait();
+    let workbench: Workbench;
+    try {
+      workbench = await (await browser.getWorkbench()).wait();
+    } catch(err) {
+      debugger;
+
+      try {
+        workbench = await (await browser.getWorkbench()).wait();
+      } catch(err2) {
+        debugger;
+        // game over man, game over
+      }
+    }
+    utilities.log('Finished calling getWorkbench()');
 
     if (this.reuseScratchOrg) {
       utilities.log(`${this.testSuiteSuffixName} - looking for a scratch org to reuse...`);
@@ -209,6 +228,8 @@ export class TestSetup {
       }
     }
 
+    utilities.log('Calling path.join()');
+
     const definitionFile = path.join(this.projectFolderPath!, 'config', 'project-scratch-def.json');
 
     // Org alias format: TempScratchOrg_yyyy_mm_dd_username_ticks_testSuiteSuffixName
@@ -224,7 +245,20 @@ export class TestSetup {
     const durationDays = 1;
 
     utilities.log(`${this.testSuiteSuffixName} - calling sfdx force:org:create...`);
-    const sfdxForceOrgCreateResult = await exec(`sfdx force:org:create -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`);
+
+    // TODOx: error 1
+    let sfdxForceOrgCreateResult: {
+      stdout: string;
+      stderr: string;
+    };
+    try {
+      sfdxForceOrgCreateResult = await exec(`sfdx force:org:create -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`);
+    } catch (err) {
+      debugger;
+
+      // OK, try again
+      sfdxForceOrgCreateResult = await exec(`sfdx force:org:create -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`);
+    }
     const json = this.removedEscapedCharacters(sfdxForceOrgCreateResult.stdout);
     const result = JSON.parse(json).result;
 
@@ -251,6 +285,11 @@ export class TestSetup {
     // Run SFDX: Set a Default Org
     utilities.log(`${this.testSuiteSuffixName} - selecting SFDX: Set a Default Org...`);
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 1);
+
+    // Type the scratch org's alias name into the filter.  Do this incase the
+    // pick list item is not visible (and one needs to scroll down to see it).
+    await inputBox.setText(this.scratchOrgAliasName);
+    await utilities.pause(1);
 
     // Select this.scratchOrgAliasName from the list.
     let scratchOrgQuickPickItemWasFound = false;

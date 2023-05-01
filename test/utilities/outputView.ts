@@ -23,6 +23,9 @@ export async function selectOutputChannel(outputView: OutputView, name: string):
   // Wait for all notifications to go away.  If there is a notification that is overlapping and hiding the Output channel's
   // dropdown menu, calling select.click() doesn't work, so dismiss all notifications first before clicking the dropdown
   // menu and opening it.
+  // TODOx: pause(1) didn't fix this issue, let's see if calling browser.getWorkbench().wait() fixes the issue.
+  const workbench = await (await browser.getWorkbench()).wait();
+  await pause(1);
   await dismissAllNotifications();
 
   // Find the channel the Output view is current set to.
@@ -55,7 +58,7 @@ export async function selectOutputChannel(outputView: OutputView, name: string):
 }
 
 export async function openOutputView(): Promise<OutputView> {
-  const workbench = await browser.getWorkbench();
+  const workbench = await (await browser.getWorkbench()).wait();
   const bottomBar = await workbench.getBottomBar(); // selector is 'div[id="workbench.parts.panel"]'
   const outputView = await bottomBar.openOutputView(); // selector is 'div[id="workbench.panel.output"]'
   await pause(2);

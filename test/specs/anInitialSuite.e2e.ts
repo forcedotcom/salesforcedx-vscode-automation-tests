@@ -30,7 +30,15 @@ describe('An Initial Suite', async () => {
   let testSetup: TestSetup;
 
   step('Verify our extensions are not initially loaded', async () => {
-    const workbench = await browser.getWorkbench();
+    utilities.log('AnInitialSuite - Verify our extensions are not initially loaded');
+
+    utilities.log('Counting down...');
+    for (let i = 10; i >= 1; i--) {
+      utilities.log(`${i}...`);
+      await utilities.pause(1);
+    }
+
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 2);
 
     const extensionNameDivs = await $$('div.name');
@@ -55,7 +63,9 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify the default SFDX commands are present when no project is loaded', async () => {
-    const workbench = await browser.getWorkbench();
+    utilities.log('AnInitialSuite - Verify the default SFDX commands are present when no project is loaded');
+
+    const workbench = await (await browser.getWorkbench()).wait();
     const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
 
     const quickPicks = await prompt.getQuickPicks();
@@ -84,6 +94,8 @@ describe('An Initial Suite', async () => {
   });
 
   step('Set up the testing environment', async () => {
+    utilities.log('AnInitialSuite - Set up the testing environment');
+
     testSetup = new TestSetup('AnInitialSuite', false);
     // Don't call testSetup.setUp() b/c we don't need to authorize a scratch org,
     // just call setUpTestingEnvironment() and createProject().
@@ -92,7 +104,9 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {
-    const workbench = await browser.getWorkbench();
+    utilities.log(`${testSetup.testSuiteSuffixName} - Verify our extensions are loaded after creating an SFDX project`);
+
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 2);
 
     let matchesFound = 0;
@@ -120,7 +134,9 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
-    const workbench = await browser.getWorkbench();
+    utilities.log(`${testSetup.testSuiteSuffixName} - Verify that SFDX commands are present after an SFDX project has been created`);
+
+    const workbench = await (await browser.getWorkbench()).wait();
     const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
     const quickPicks = await prompt.getQuickPicks();
     const commands: string[] = [];
@@ -146,6 +162,7 @@ describe('An Initial Suite', async () => {
   });
 
   step('Tear down and clean up the testing environment', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`);
     await testSetup.tearDown();
   });
 });

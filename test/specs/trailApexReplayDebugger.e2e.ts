@@ -26,24 +26,50 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
+    // utilities.log(`${testSetup.testSuiteSuffixName} - Set up the testing environment`);
+    utilities.log('TrailApexReplayDebugger - Set up the testing environment');
+
     testSetup = new TestSetup('TrailApexReplayDebugger', false);
     await testSetup.setUp();
+
+    utilities.log('TrailApexReplayDebugger - finished calling testSetup.setUp()');
+    utilities.log('TrailApexReplayDebugger - calling utilities.createApexClassWithBugs()');
 
     // Create Apex class AccountService
     await utilities.createApexClassWithBugs();
 
+    utilities.log('TrailApexReplayDebugger - finished calling utilities.createApexClassWithBugs()');
+    utilities.log('TrailApexReplayDebugger - calling browser.getWorkbench()');
+
     // Push source to org
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
+
+    utilities.log('TrailApexReplayDebugger - finished calling browser.getWorkbench()');
+    utilities.log('TrailApexReplayDebugger - calling runCommandFromCommandPrompt()');
+
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 1);
+
+    utilities.log('TrailApexReplayDebugger - finished calling runCommandFromCommandPrompt()');
+    utilities.log('TrailApexReplayDebugger - calling waitForNotificationToGoAway()');
+
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Push Source to Default Org and Override Conflicts', fiveMinutes);
+
+    utilities.log('TrailApexReplayDebugger - finished calling waitForNotificationToGoAway()');
+    utilities.log('TrailApexReplayDebugger - calling notificationIsPresent()');
+
     const successPushNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Push Source to Default Org and Override Conflicts successfully ran');
+
+    utilities.log('TrailApexReplayDebugger - finished calling notificationIsPresent()');
+
     expect(successPushNotificationWasFound).toBe(true);
+
+    utilities.log('TrailApexReplayDebugger - "Set up the testing environment" has completed');
   });
 
   step('Run Apex Tests', async () => {
     // Run SFDX: Run Apex tests.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
@@ -67,7 +93,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Set Breakpoints and Checkpoints', async () => {
     // Get open text editor
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = workbench.getEditorView();
     const textEditor = await editorView.openEditor('AccountService.cls') as TextEditor;
     await textEditor.moveCursor(8, 5);
@@ -75,7 +101,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Run SFDX: Toggle Checkpoint.
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Toggle Checkpoint', 1);
 
-    // Calling SFDX: Update Checkpoints in Org fails if the org has been recently created, 
+    // Calling SFDX: Update Checkpoints in Org fails if the org has been recently created,
     // it does not complete the 6 steps but only 4.
     // Reloading the window forces the extensions to be reloaded and this seems to fix the issue.
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
@@ -96,7 +122,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Turn On Apex Debug Log for Replay Debugger', 10);
 
@@ -117,7 +143,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Run Apex Tests', async () => {
     // Run SFDX: Run Apex tests.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
@@ -141,7 +167,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('SFDX: Get Apex Debug Logs', async () => {
     // Run SFDX: Get Apex Debug Logs
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Get Apex Debug Logs', 1);
 
     // Wait for the command to execute
@@ -179,7 +205,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Replay an Apex Debug Log', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Launch Apex Replay Debugger with Current File', 5);
 
     // Continue with the debug session
@@ -191,7 +217,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Push Fixed Metadata to Scratch Org', async () => {
     // Get open text editor
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = workbench.getEditorView();
     const textEditor = await editorView.openEditor('AccountService.cls') as TextEditor;
     await textEditor.setTextAtLine(6, '\t\t\tTickerSymbol = tickerSymbol');
@@ -208,7 +234,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Run Apex Tests to Verify Fix', async () => {
     // Run SFDX: Run Apex tests.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 

@@ -64,7 +64,8 @@ export async function attemptToFindNotification(workbench: Workbench, notificati
 }
 
 export async function dismissAllNotifications(): Promise<void> {
-  const workbench = await browser.getWorkbench();
+  /*
+  const workbench = await (await browser.getWorkbench()).wait();
   await browser.waitUntil(async () => {
     const notifications = await workbench.getNotifications();
     for (const notification of notifications) {
@@ -73,4 +74,57 @@ export async function dismissAllNotifications(): Promise<void> {
 
     return !(await workbench.hasNotifications());
   });
+  */
+
+
+  // Can't call $ on element with selector ".notification-toast-container" because element wasn't found
+  const notificationToastContainer = await $('.notification-toast-container');
+  if (!notificationToastContainer) {
+    debugger;
+    // one more time
+    const notificationToastContainer2 = await $('.notification-toast-container');
+    debugger;
+  }
+
+
+  /*
+  // what the wdio library has:
+  const workbench = await browser.getWorkbench();
+  await browser.waitUntil(async () => {
+      const notifications = await workbench.getNotifications();
+      for (const notification of notifications) {
+          await notification.dismiss();
+      }
+
+      return !(await workbench.hasNotifications());
+  });
+  */
+
+  // still getting the "Can't call $ on element with selector ".notification-toast-container" because element wasn't found" error
+
+  const workbench = await (await browser.getWorkbench()).wait();
+  let hasNotifications = await workbench.hasNotifications();
+  while (hasNotifications) {
+    const notifications = await workbench.getNotifications();
+    for (const notification of notifications) {
+      // await notification.dismiss();
+      // TODOx: - extra guard
+      const notificationToastContainer3 = await $('.notification-toast-container');
+      if (notificationToastContainer3) {
+        await notification.dismiss();
+      } else {
+        debugger;
+        const notificationToastContainer4 = await $('.notification-toast-container');
+        debugger;
+        await notification.dismiss();
+        debugger;
+      }
+
+      pause(1);
+    }
+
+    hasNotifications = await workbench.hasNotifications();
+  }
+
+
 }

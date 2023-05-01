@@ -28,6 +28,8 @@ describe('Authentication', async () => {
   let scratchOrgAliasName: string;
 
   step('Set up the testing environment', async () => {
+    utilities.log('Authentication - Set up the testing environment');
+
     tempFolderPath = getTempFolderPath();
     projectFolderPath = path.join(tempFolderPath, tempProjectName);
 
@@ -45,7 +47,9 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Create Project', async () => {
-    const workbench = await browser.getWorkbench();
+    utilities.log('Authentication - Run SFDX: Create Project');
+
+    const workbench = await (await browser.getWorkbench()).wait();
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 8);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
@@ -90,8 +94,10 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Authorize a Dev Hub', async () => {
+    utilities.log('Authentication - Run SFDX: Authorize a Dev Hub');
+
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.pause(1);
 
     // In the initial state, the org picker button should be set to "No Default Org Set".
@@ -117,11 +123,13 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Set a Default Org', async () => {
+    utilities.log('Authentication - Run SFDX: Set a Default Org');
+
     // This is "SFDX: Set a Default Org", using the button in the status bar.
     // Could also run the command, "SFDX: Set a Default Org" but this exercises more UI elements.
 
     // Click on "No default Org Set" (in the bottom bar).
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const statusBar = workbench.getStatusBar();
     const changeDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(statusBar, 'Change Default Org');
     expect(changeDefaultOrgSetItem).not.toBeUndefined();
@@ -152,8 +160,22 @@ describe('Authentication', async () => {
       });
     }
 
+
+    // TODOx:
     // In the drop down menu that appears, select "vscodeOrg - user_name".
-    await utilities.selectQuickPickItem(prompt, `${EnvironmentSettings.getInstance().devHubAliasName} - ${EnvironmentSettings.getInstance().devHubUserName}`);
+    // await utilities.selectQuickPickItem(prompt, `${EnvironmentSettings.getInstance().devHubAliasName} - ${EnvironmentSettings.getInstance().devHubUserName}`);
+
+
+    const quickPickText = `${EnvironmentSettings.getInstance().devHubAliasName} - ${EnvironmentSettings.getInstance().devHubUserName}`;
+    // Type the quick pick item to find into the filter.  Do this incase the
+    // pick list item is not visible (and one needs to scroll down to see it).
+    await prompt.setText(quickPickText);
+    await utilities.pause(1);
+
+    // In the drop down menu that appears, select "vscodeOrg - user_name".
+    await utilities.selectQuickPickItem(prompt, quickPickText);
+
+
 
     // Need to pause here for the "set a default org" command to finish.
     await utilities.pause(5);
@@ -171,7 +193,9 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Create a Default Scratch Org', async () => {
-    const workbench = await browser.getWorkbench();
+    utilities.log('Authentication - Run SFDX: Create a Default Scratch Org');
+
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create a Default Scratch Org...', 1);
 
     // Select a project scratch definition file (config/project-scratch-def.json)
@@ -231,8 +255,14 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Set the Scratch Org As the Default Org', async () => {
-    const workbench = await browser.getWorkbench();
+    utilities.log('Authentication - Run SFDX: Set the Scratch Org As the Default Org');
+
+    const workbench = await (await browser.getWorkbench()).wait();
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 1);
+
+    // TODOx:
+    await inputBox.setText(scratchOrgAliasName);
+    await utilities.pause(1);
 
     let scratchOrgQuickPickItemWasFound = false;
     const quickPicks = await inputBox.getQuickPicks();
@@ -260,8 +290,10 @@ describe('Authentication', async () => {
   });
 
   step('Tear down', async () => {
+    utilities.log('Authentication - Tear down');
+
     if (scratchOrgAliasName) {
-      const workbench = await browser.getWorkbench();
+      const workbench = await (await browser.getWorkbench()).wait();
       await utilities.executeCommand(workbench, `sfdx force:org:delete -u ${scratchOrgAliasName} --noprompt`);
     }
 

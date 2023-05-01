@@ -16,7 +16,7 @@ import {
 } from './miscellaneous';
 
 export async function createApexClassWithTest(name: string): Promise<void> {
-  const workbench = await browser.getWorkbench();
+  const workbench = await (await browser.getWorkbench()).wait();
 
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
   const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
@@ -75,7 +75,7 @@ export async function createApexClassWithTest(name: string): Promise<void> {
 }
 
 export async function createApexClassWithBugs(): Promise<void> {
-  const workbench = await browser.getWorkbench();
+  const workbench = await (await browser.getWorkbench()).wait();
   let textEditor: TextEditor;
   const classText = [
     `public with sharing class AccountService {`,
@@ -149,7 +149,7 @@ export async function createApexClassWithBugs(): Promise<void> {
 }
 
 export async function createAnonymousApexFile(): Promise<void> {
-  const workbench = await browser.getWorkbench();
+  const workbench = await (await browser.getWorkbench()).wait();
   const editorView = workbench.getEditorView();
 
   // Using the Command palette, run File: New File...
