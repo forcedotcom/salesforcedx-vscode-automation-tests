@@ -317,7 +317,8 @@ export const config: Options.Testrunner = {
       if (!existsSync(screenshotDir)) {
         mkdirSync(screenshotDir, { recursive: true });
       }
-      await browser.saveScreenshot(join(screenshotDir, `${test.parent} - ${test.title}.png`))
+      const sanitizedTestTitle = test.title.replace(/[^a-zA-Z0-9 ]/g, "");
+      await browser.saveScreenshot(join(screenshotDir, `${test.parent} - ${sanitizedTestTitle}.png`))
     }
   },
 
