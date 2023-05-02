@@ -10,6 +10,8 @@ import type { VSCodeCapabilities } from 'wdio-vscode-service/dist/types';
 import {
   EnvironmentSettings
 } from './environmentSettings';
+import { join } from 'path';
+import { existsSync, mkdir, mkdirSync } from 'fs';
 
 const capabilities: VSCodeCapabilities = {
 
@@ -307,8 +309,17 @@ export const config: Options.Testrunner = {
    * @param {Boolean} result.passed    true if test has passed, otherwise false
    * @param {Object}  result.retries   informations to spec related retries, e.g. `{ attempts: 0, limit: 0 }`
    */
-  // afterTest: function(test, context, { error, result, duration, passed, retries }) {
-  // },
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  afterTest: async (test, __, { passed }) => {
+    if (!passed) {
+      const screenshotDir = join(__dirname, 'screenshots');
+      console.log(`Test run failed. Saving a screenshot of the failure here: ${screenshotDir}`);
+      if (!existsSync(screenshotDir)) {
+        mkdirSync(screenshotDir, { recursive: true });
+      }
+      await browser.saveScreenshot(join(screenshotDir, `${test.parent} - ${test.title}.png`))
+    }
+  },
 
 
   /**
