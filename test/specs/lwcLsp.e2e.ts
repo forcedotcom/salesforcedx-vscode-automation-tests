@@ -30,6 +30,27 @@ describe('LWC LSP', async () => {
       'Developer: Show Running Extensions',
       1
     );
+    let buttons = await $$('a.monaco-button.monaco-text-button');
+    for (const item of buttons) {
+      const text = await item.getText();
+      if (text.includes('Install and Reload')) {
+        await item.click();
+      }
+    }
+    await utilities.pause(10);
+    buttons = await $$('a.monaco-button.monaco-text-button');
+    for (const item of buttons) {
+      const text = await item.getText();
+      if (text.includes('Reload and Enable Extensions')) {
+        await item.click();
+      }
+    }
+    await utilities.pause(5);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Developer: Reload Window',
+      10
+    );
 
     // Verify Lightning Web Components extension is present and running
     const extensionNameDivs = await $$('div.name');
@@ -40,8 +61,7 @@ describe('LWC LSP', async () => {
         extensionWasFound = true;
       }
     }
-    // TODO: Extension is actually not loading
-    expect(extensionWasFound).toBe(false);
+    expect(extensionWasFound).toBe(true);
   });
 
   step('Go to Definition (Javascript)', async () => {
@@ -68,16 +88,14 @@ describe('LWC LSP', async () => {
     const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
     await textEditor.moveCursor(3, 57);
 
-    // TODO: Extension is actually not loading
+    // Go to definition through F12
+    await browser.keys(['F12']);
+    await utilities.pause(1);
 
-    // // Go to definition through F12
-    // await browser.keys(['F12']);
-    // await utilities.pause(1);
-
-    // //Verify 'Go to definition' took us to the definition file
-    // const activeTab = await editorView.getActiveTab();
-    // const title = await activeTab?.getTitle();
-    // expect(title).toBe('lwc1.js');
+    //Verify 'Go to definition' took us to the definition file
+    const activeTab = await editorView.getActiveTab();
+    const title = await activeTab?.getTitle();
+    expect(title).toBe('lwc1.js');
   });
 
   step('On hover', async () => {
