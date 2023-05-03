@@ -209,7 +209,16 @@ export class TestSetup {
     utilities.log(`Calling 'expect(currentOsUserName.length).toBeGreaterThanOrEqual(1)'`);
     expect(currentOsUserName.length).toBeGreaterThanOrEqual(1);
 
+    await utilities.pause(1);
     const workbench = await utilities.getWorkbench();
+    // for Cristi
+    if (!workbench) {
+      debugger;
+      // let's try again
+      const workbench2 = await utilities.getWorkbench();
+      debugger;
+    }
+    expect(workbench).not.toBeUndefined();
 
     if (this.reuseScratchOrg) {
       utilities.log(`${this.testSuiteSuffixName} - looking for a scratch org to reuse...`);

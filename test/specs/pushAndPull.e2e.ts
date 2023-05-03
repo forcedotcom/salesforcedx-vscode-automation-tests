@@ -35,7 +35,11 @@ describe('Push and Pull', async () => {
   });
 
   step('Create an Apex class', async () => {
-    // Create an Apex Class.
+    // Clear the text in the Output view.
+    const outputView = await utilities.openOutputView();
+    await outputView.clearText();
+
+    // Create the Apex class
     const workbench = await utilities.getWorkbench();
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
 
@@ -52,6 +56,15 @@ describe('Push and Pull', async () => {
 
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'Finished SFDX: Create Apex Class', 10);
     expect(outputPanelText).not.toBeUndefined();
+
+    // jab
+    if (!outputPanelText?.includes('create force-app/main/default/classes/ExampleApexClass1.cls')) {
+      debugger;
+      utilities.log('jab: outputPanelText doesn\'t contain the correct text');
+      utilities.log('actual text:');
+      utilities.log(outputPanelText!);
+      debugger;
+    }
     expect(outputPanelText).toContain('create force-app/main/default/classes/ExampleApexClass1.cls');
     expect(outputPanelText).toContain('create force-app/main/default/classes/ExampleApexClass1.cls-meta.xml');
 

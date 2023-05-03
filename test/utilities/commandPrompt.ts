@@ -16,6 +16,10 @@ import {
 } from './miscellaneous';
 
 export async function openCommandPromptWithCommand(workbench: Workbench, command: string): Promise<InputBox | QuickOpenBox> {
+  // for Cristi
+  if (!workbench) {
+    debugger;
+  }
   const prompt = await workbench.openCommandPrompt();
   await pause(5);
 
