@@ -266,8 +266,10 @@ export class TestSetup {
       stderr: string;
     };
     try {
-      // Pause for a little bit
-      await utilities.pause(2);
+      // This failed, but running it a second time passed.  Try adding a pause here.
+      // await utilities.pause(2);
+      // Pausing for 2 seconds didn't work, try pausing for 4 seconds.
+      await utilities.pause(4);
       sfdxForceOrgCreateResult = await exec(`sfdx force:org:create -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`);
     } catch (err) {
       debugger;

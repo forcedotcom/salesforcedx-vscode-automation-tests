@@ -58,6 +58,8 @@ export async function executeCommand(workbench: Workbench, command: string): Pro
 
   // await terminalView.executeCommand(command);
   try {
+    // This failed, but running it a second time passed.  Try adding a pause here.
+    await pause(1);
     await terminalView.executeCommand(command);
   } catch(err) {
     debugger;

@@ -128,7 +128,26 @@ export async function getMessage(notification: Notification): Promise<string> {
     return '';
   }
 
-  const message = await notification.getMessage();
+  let message;
+  try {
+    await pause(1);
+    message = await notification.getMessage();
+  } catch(err1) {
+
+    // Attempt to get the message again
+    try {
+      await pause(1);
+      message = await notification.getMessage();
+    } catch(err2) {
+
+      // Attempt to get the message again
+      debugger;
+      await pause(1);
+      message = await notification.getMessage();
+      debugger;
+    }
+  }
+
   return message;
 }
 
