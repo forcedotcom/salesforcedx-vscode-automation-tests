@@ -16,6 +16,7 @@ import path from 'path';
 describe('SObjects Definitions', async () => {
   let testSetup: TestSetup;
   let projectName: string;
+  const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('sObjectsDefinitions', false);
@@ -37,9 +38,9 @@ describe('SObjects Definitions', async () => {
   });
 
   step('Check Custom Objects Customer and Product are within objects folder', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
-    const sidebar = workbench.getSideBar();
-    const content = sidebar.getContent();
+    const workbench = await utilities.getWorkbench();
+    const sidebar = await workbench.getSideBar();
+    const content = await sidebar.getContent();
 
     const treeViewSection = await content.getSection(projectName);
     expect(treeViewSection).not.toEqual(undefined);
@@ -49,7 +50,16 @@ describe('SObjects Definitions', async () => {
     await objectTreeItem.select();
 
     const customerObjectFolder = await objectTreeItem.findChildItem('Customer__c');
+
+    // jab - this flapped once
+    if (!customerObjectFolder) {
+      debugger;
+      const customerObjectFolder2 = await objectTreeItem.findChildItem('Customer__c');
+      debugger;
+    }
     expect(customerObjectFolder).not.toEqual(undefined);
+
+
     await customerObjectFolder?.expand();
     expect(await customerObjectFolder?.isExpanded()).toBe(true);
     const customerCustomObject = await customerObjectFolder?.findChildItem('Customer__c.object-meta.xml');
@@ -64,7 +74,7 @@ describe('SObjects Definitions', async () => {
   });
 
   step('Push Source to Org', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
     await utilities.pause(1);
 
@@ -77,13 +87,13 @@ describe('SObjects Definitions', async () => {
   });
 
   step('Refresh SObject Definitions for Custom SObjects', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Refresh SObject Definitions', 2);
     await prompt.setText('Custom SObjects');
     await prompt.selectQuickPick('Custom SObjects');
     await utilities.pause(1);
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Refresh SObject Definitions successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Refresh SObject Definitions successfully ran', fiveMinutes);
     expect(successNotificationWasFound).toBe(true);
 
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'sObjects', 10);
@@ -143,7 +153,7 @@ describe('SObjects Definitions', async () => {
   });
 
   step('Refresh SObject Definitions for Standard SObjects', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Refresh SObject Definitions', 5);
     await prompt.setText('Standard SObjects');
     await prompt.selectQuickPick('Standard SObjects');
@@ -155,9 +165,9 @@ describe('SObjects Definitions', async () => {
     if (!successNotificationWasFound) {
       utilities.log('Error!')
       utilities.log('Dumping notifications...')
-      const notifications = await workbench.getNotifications();
+      const notifications = await utilities.getNotifications(workbench);
       for (const notification of notifications) {
-        const message = await notification.getMessage();
+        const message = await utilities.getMessage(notification);
         utilities.log('Notification: ' + message);
       }
 
@@ -206,7 +216,7 @@ describe('SObjects Definitions', async () => {
     const outputView = await utilities.openOutputView();
     outputView.clearText();
 
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Refresh SObject Definitions', 5);
     await prompt.setText('All SObjects');
     await prompt.selectQuickPick('All SObjects');

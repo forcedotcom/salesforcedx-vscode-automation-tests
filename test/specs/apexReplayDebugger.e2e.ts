@@ -31,7 +31,7 @@ describe('Apex Replay Debugger', async () => {
     await utilities.createApexClassWithTest('ExampleApexClass');
 
     // Push source to org
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 1);
 
     // Wait for the command to execute
@@ -44,7 +44,7 @@ describe('Apex Replay Debugger', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - SFDX: Turn On Apex Debug Log for Replay Debugger`);
 
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     // Calling SFDX: Turn On Apex Debug Log for Replay Debugger fails on some machines.
     // Reloading the window forces the extensions to be reloaded and this seems to fix
@@ -75,7 +75,7 @@ describe('Apex Replay Debugger', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Run the Anonymous Apex Debugger with Currently Selected Text`);
 
     // Get open text editor
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const editorView = workbench.getEditorView();
 
     // Open test file
@@ -111,7 +111,7 @@ describe('Apex Replay Debugger', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - SFDX: Get Apex Debug Logs`);
 
     // Run SFDX: Get Apex Debug Logs
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Get Apex Debug Logs', 1);
 
@@ -152,7 +152,7 @@ describe('Apex Replay Debugger', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - SFDX: Launch Apex Replay Debugger with Last Log File`);
 
     // Run SFDX: Launch Apex Replay Debugger with Last Log File
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Launch Apex Replay Debugger with Last Log File', 1);
 
     // Get open text editor
@@ -178,7 +178,7 @@ describe('Apex Replay Debugger', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - SFDX: Launch Apex Replay Debugger with Current File`);
 
     // Run SFDX: Launch Apex Replay Debugger with Current File
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Open Previous Editor');
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Launch Apex Replay Debugger with Current File', 1);
 
@@ -192,7 +192,7 @@ describe('Apex Replay Debugger', async () => {
   step('Run the Anonymous Apex Debugger using the Command Palette', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Run the Anonymous Apex Debugger using the Command Palette`);
 
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     // Create anonymous apex file
     await utilities.createAnonymousApexFile();
@@ -222,7 +222,7 @@ describe('Apex Replay Debugger', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - SFDX: Turn Off Apex Debug Log for Replay Debugger`);
 
     // Run SFDX: Turn Off Apex Debug Log for Replay Debugger
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Turn Off Apex Debug Log for Replay Debugger', 1);
 

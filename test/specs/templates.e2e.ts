@@ -30,7 +30,7 @@ describe('Templates', async () => {
   // Aura Component
   step('Create an Aura Component', async () => {
     // Using the Command palette, run SFDX: Create Aura Component.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Aura Component', 1);
 
     // Set the name of the new component to auraComponent1.
@@ -69,7 +69,7 @@ describe('Templates', async () => {
       '',
       '</aura:component>'
     ].join('\n');
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const editorView = await workbench.getEditorView();
     const textEditor = await editorView.openEditor('auraComponent1.cmp') as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
@@ -78,19 +78,19 @@ describe('Templates', async () => {
 
   step('Push the Aura Component', async () => {
     // Run "SFDX: Push Source to Default Org".
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
-    utilities.pause(1);
+    await utilities.pause(1);
     const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
 
     // TODOx:
     if (!successNotificationWasFound) {
 
       utilities.log('Error!')
-      utilities.log('Dumping notifications...')
-      const notifications = await workbench.getNotifications();
+      utilities.log('Dumping notifications...');
+      const notifications = await utilities.getNotifications(workbench);
       for (const notification of notifications) {
-        const message = await notification.getMessage();
+        const message = await utilities.getMessage(notification);
         utilities.log('Notification: ' + message);
       }
 
@@ -111,7 +111,7 @@ describe('Templates', async () => {
   // Aura Event
   step('Create an Aura Event', async () => {
     // Using the Command palette, run SFDX: Create Aura Component.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Aura Event', 1);
 
     // Set the name of the new component to auraComponent1.
@@ -145,7 +145,7 @@ describe('Templates', async () => {
     const expectedText = [
       '<aura:event type="APPLICATION" description="Event template"/>'
     ].join('\n');
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const editorView = await workbench.getEditorView();
     const textEditor = await editorView.openEditor('auraEvent1.evt') as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
@@ -154,7 +154,7 @@ describe('Templates', async () => {
 
   step('Push the Aura Event', async () => {
     // Run "SFDX: Push Source to Default Org".
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
     const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
@@ -169,7 +169,7 @@ describe('Templates', async () => {
   // Apex Class
   step('Create an Apex Class', async () => {
     // Using the Command palette, run SFDX: Create Apex Class.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
 
     // Set the name of the new component to ApexClass1.
@@ -206,7 +206,7 @@ describe('Templates', async () => {
       '    }',
       '}'
     ].join('\n');
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const editorView = await workbench.getEditorView();
     const textEditor = await editorView.openEditor('ApexClass1.cls') as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
@@ -215,7 +215,7 @@ describe('Templates', async () => {
 
   step('Push the Apex Class', async () => {
     // Run "SFDX: Push Source to Default Org".
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
     const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
@@ -230,7 +230,7 @@ describe('Templates', async () => {
   // Lightning Web Component
   step('Create Lightning Web Component', async () => {
     // Using the Command palette, run SFDX: Create Apex Class.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Lightning Web Component', 1);
 
     // Set the name of the new component to auraComponent1.
@@ -267,7 +267,7 @@ describe('Templates', async () => {
       '',
       'export default class LightningWebComponent1 extends LightningElement {}'
     ].join('\n');
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const editorView = await workbench.getEditorView();
     const textEditor = await editorView.openEditor('lightningWebComponent1.js') as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
@@ -276,7 +276,7 @@ describe('Templates', async () => {
 
   step('Push the Lightning Web Component', async () => {
     // Run "SFDX: Push Source to Default Org".
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
     const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);

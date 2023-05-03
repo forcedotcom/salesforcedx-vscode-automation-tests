@@ -14,7 +14,7 @@ import {
 } from './miscellaneous';
 
 export async function getStatusBarItemWhichIncludes(statusBar: StatusBar, title: string): Promise<WebdriverIO.Element> {
-  await pause(1);
+  await pause(2);
 
   const items = await statusBar.item$$;
   for (const item of items) {

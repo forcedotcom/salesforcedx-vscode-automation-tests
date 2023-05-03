@@ -11,6 +11,7 @@ import {
   Workbench
 } from 'wdio-vscode-service';
 import {
+  log,
   pause
 } from './miscellaneous';
 
@@ -62,6 +63,14 @@ export async function selectQuickPickItem(prompt: InputBox | QuickOpenBox, text:
           return;
       }
   }
+
+  log(`Target QuickPick item '${text}' was not found.  Now dumping pick pick items...`);
+  for (const quickPick of quickPicks) {
+    const label = await quickPick.getLabel();
+    log(`QuickPick item: '${label}'`);
+  }
+
+  debugger;
 
   throw new Error(`Quick pick item ${text} was not found`);
 }

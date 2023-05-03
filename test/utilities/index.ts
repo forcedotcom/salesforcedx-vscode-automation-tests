@@ -14,3 +14,4 @@ export * from './outputView';
 export * from './sideBar';
 export * from './statusBar';
 export * from './terminalView';
+export * from './workbench';

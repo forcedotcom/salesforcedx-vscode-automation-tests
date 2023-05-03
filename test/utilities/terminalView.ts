@@ -56,7 +56,14 @@ export async function executeCommand(workbench: Workbench, command: string): Pro
     throw new Error('In executeCommand(), the terminal view returned from getTerminalView() was null (or undefined)');
   }
 
-  await terminalView.executeCommand(command);
+  // await terminalView.executeCommand(command);
+  try {
+    await terminalView.executeCommand(command);
+  } catch(err) {
+    debugger;
+    await terminalView.executeCommand(command);
+    debugger;
+  }
 
   return terminalView;
 }

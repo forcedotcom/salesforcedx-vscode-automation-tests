@@ -36,7 +36,7 @@ describe('Run Apex Tests', async () => {
     await utilities.createApexClassWithTest('ExampleApexClass3');
 
     // Push source to scratch org
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 1);
 
     // Wait for the command to execute
@@ -46,7 +46,7 @@ describe('Run Apex Tests', async () => {
   });
 
   step('Run All Tests via Apex Class', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const editorView = workbench.getEditorView();
 
     // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
@@ -77,7 +77,7 @@ describe('Run Apex Tests', async () => {
   });
 
   step('Run Single Test via Apex Class', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const editorView = workbench.getEditorView();
 
     // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
@@ -109,7 +109,7 @@ describe('Run Apex Tests', async () => {
 
   step('Run Tests via Command Palette', async () => {
     // Run SFDX: Run Apex tests.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
     // Select the "ExampleApexClass1Test" file
@@ -133,7 +133,7 @@ describe('Run Apex Tests', async () => {
   });
 
   step('Re-run Last Apex Test Class', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
     const editorView = await workbench.getEditorView();
 
@@ -171,7 +171,7 @@ describe('Run Apex Tests', async () => {
   });
 
   step('Run all Apex tests via Test Sidebar', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
     // Open the Test Sidebar
@@ -224,7 +224,7 @@ describe('Run Apex Tests', async () => {
   });
 
   step('Run all Apex Tests on a Class via the Test Sidebar', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
     // Open the Test Sidebar
@@ -266,7 +266,7 @@ describe('Run Apex Tests', async () => {
   });
 
   step('Run a Single Apex Test via the Test Sidebar', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
     // Open the Test Sidebar
@@ -302,7 +302,8 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
-    const icon = await (await apexTestItem.elem).$('.custom-view-tree-node-item-icon');
+    const elem = await apexTestItem.elem;
+    const icon = await elem.$('.custom-view-tree-node-item-icon');
     const iconStyle = await icon.getAttribute('style');
     expect(iconStyle).toContain('testPass');
   });
@@ -312,7 +313,7 @@ describe('Run Apex Tests', async () => {
     await utilities.createApexClassWithBugs();
 
     // Push source to scratch org
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 1);
 
     // Wait for the command to execute
@@ -378,7 +379,7 @@ describe('Run Apex Tests', async () => {
 
   step('Create Apex Test Suite', async () => {
     // Run SFDX: Create Apex Test Suite.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Test Suite', 1);
 
     // Set the name of the new Apex Test Suite
@@ -401,7 +402,7 @@ describe('Run Apex Tests', async () => {
 
   step('Add test to Apex Test Suite', async () => {
     // Run SFDX: Add Tests to Apex Test Suite.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Add Tests to Apex Test Suite', 1);
 
     // Select the suite recently created called ApexTestSuite
@@ -423,7 +424,7 @@ describe('Run Apex Tests', async () => {
   });
 
   step('Run Apex Test Suite', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     // Run SFDX: Run Apex Test Suite.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Test Suite', 1);

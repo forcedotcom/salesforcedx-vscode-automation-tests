@@ -32,7 +32,7 @@ describe('Debug Apex Tests', async () => {
     await utilities.pause(1);
 
     // Push source to org
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 1);
 
     // Wait for the command to execute
@@ -42,7 +42,7 @@ describe('Debug Apex Tests', async () => {
   });
 
   step('Debug All Tests via Apex Class', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const editorView = workbench.getEditorView();
 
     // Open an existing apex test
@@ -68,7 +68,7 @@ describe('Debug Apex Tests', async () => {
   });
 
   step('Debug Single Test via Apex Class', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const editorView = workbench.getEditorView();
 
     // Open an existing apex test
@@ -94,7 +94,7 @@ describe('Debug Apex Tests', async () => {
   });
 
   step('Debug all Apex Methods on a Class via the Test Sidebar', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
     // Open the Test Sidebar
@@ -127,7 +127,7 @@ describe('Debug Apex Tests', async () => {
   });
 
   step('Debug a Single Apex Test Method via the Test Sidebar', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
     // Open the Test Sidebar
