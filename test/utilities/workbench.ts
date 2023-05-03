@@ -14,7 +14,7 @@ import {
 
 export async function getWorkbench(): Promise<Workbench> {
   // const workbench = await (await browser.getWorkbench()).wait();
-  pause(1);
+  await pause(1);
   const workbench = await browser.getWorkbench();
   const theWaitingIsTheHardestPart = await workbench.wait();
 

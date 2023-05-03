@@ -68,154 +68,7 @@ export async function attemptToFindNotification(workbench: Workbench, notificati
   return false;
 }
 
-export async function dismissAllNotifications0(): Promise<void> {
-  /*
-  const workbench = await (await browser.getWorkbench()).wait();
-  await browser.waitUntil(async () => {
-    const notifications = await workbench.getNotifications();
-    for (const notification of notifications) {
-        await notification.dismiss();
-    }
-
-    return !(await workbench.hasNotifications());
-  });
-  */
-
-
-  // Can't call $ on element with selector ".notification-toast-container" because element wasn't found
-  const notificationToastContainer = await $('.notification-toast-container');
-  if (!notificationToastContainer) {
-    debugger;
-    // one more time
-    const notificationToastContainer2 = await $('.notification-toast-container');
-    debugger;
-  }
-
-
-  /*
-  // what the wdio library has:
-  const workbench = await browser.getWorkbench();
-  await browser.waitUntil(async () => {
-      const notifications = await workbench.getNotifications();
-      for (const notification of notifications) {
-          await notification.dismiss();
-      }
-
-      return !(await workbench.hasNotifications());
-  });
-  */
-
-  // still getting the "Can't call $ on element with selector ".notification-toast-container" because element wasn't found" error
-
-  log('now calling browser.getWorkbench()...');
-  const workbench = await (await browser.getWorkbench()).wait();
-  log('...finished calling browser.getWorkbench()');
-
-  log('now calling workbench.hasNotifications()...');
-  let hasNotifications = await workbench.hasNotifications();
-  log('...finished calling workbench.hasNotifications()');
-
-  while (hasNotifications) {
-    log('notifications were found, now dismissing them...');
-
-    log('now calling workbench.getNotifications()...');
-    const notifications = await getNotifications(workbench);
-    log('...finished calling workbench.getNotifications()');
-
-
-    /*
-    take 1:
-    for (const notification of notifications) {
-      // await notification.dismiss();
-      // TODOx: - extra guard
-      const notificationToastContainer3 = await $('.notification-toast-container');
-      if (notificationToastContainer3) {
-        await notification.dismiss();
-      } else {
-        debugger;
-        const notificationToastContainer4 = await $('.notification-toast-container');
-        debugger;
-        await notification.dismiss();
-        debugger;
-      }
-
-      pause(1);
-    }
-    */
-
-    // comments...
-    /*
-    OK, we have:
-    const notificationToastContainer3 = await $('.notification-toast-container');
-    if (notificationToastContainer3) {
-      await notification.dismiss();
-
-    ...yet I just go this error:
-[0-0] Error in "Run Apex Tests.Run All Tests via Apex Class"
-Error: Can't call $ on element with selector ".notification-toast-container" because element wasn't found
-    at async StandaloneNotification.dismiss (/Users/jbeeghly/src/github.com/forcedotcom/salesforcedx-vscode-automation-tests/node_modules/wdio-vscode-service/src/pageobjects/workbench/Notification.ts:97:21)
-    at async dismissAllNotifications (/Users/jbeeghly/src/github.com/forcedotcom/salesforcedx-vscode-automation-tests/test/utilities/notifications.ts:114:9)
-    at async selectOutputChannel (/Users/jbeeghly/src/github.com/forcedotcom/salesforcedx-vscode-automation-tests/test/utilities/outputView.ts:29:3)
-    at async Object.attemptToFindOutputPanelText (/Users/jbeeghly/src/github.com/forcedotcom/salesforcedx-vscode-automation-tests/test/utilities/outputView.ts:94:3)
-    at async Context.<anonymous> (/Users/jbeeghly/src/github.com/forcedotcom/salesforcedx-vscode-automation-tests/test/specs/runApexTests.e2e.ts:71:29)
-      ...wtf?
-    */
-
-    // for (const notification of notifications) {
-    for(let i=0; i<notifications.length; i++) {
-      try {
-        const notification = notifications[i];
-        if (!notification) {
-          debugger;
-          log(`notifications[${i}] is undefined`);
-        }
-
-        const notificationToastContainer3 = await $('.notification-toast-container');
-        if (!notificationToastContainer3) {
-          debugger;
-          log('notificationToastContainer3 was not found');
-        }
-
-        const message = await getMessage(notification);
-        log(`Notification: '${message}'`);
-
-        const notificationToastContainer4 = await $('.notification-toast-container');
-        if (!notificationToastContainer4) {
-          debugger;
-          log('notificationToastContainer4 was not found');
-        }
-
-        log('now calling notification.dismiss()...');
-        await notification.dismiss();
-        log('...finished calling notification.dismiss()');
-
-        pause(1);
-      } catch(err) {
-        debugger;
-      }
-    }
-
-    pause(1);
-    log('now calling workbench.hasNotifications()...');
-    hasNotifications = await workbench.hasNotifications();
-    log('...finished calling workbench.hasNotifications()');
-  }
-}
-
 export async function dismissAllNotifications(): Promise<void> {
-  /*
-  const workbench = await (await browser.getWorkbench()).wait();
-  await browser.waitUntil(async () => {
-    const notifications = await workbench.getNotifications();
-    for (const notification of notifications) {
-        await notification.dismiss();
-    }
-
-    return !(await workbench.hasNotifications());
-  });
-  */
-
-
   await pause(1);
   const workbench = await getWorkbench();
 
@@ -238,13 +91,13 @@ export async function dismissAllNotifications(): Promise<void> {
         await dismiss(notification);
         log('...finished calling notification.dismiss()');
 
-        pause(1);
+        await pause(1);
       } catch(err) {
         debugger;
       }
     }
 
-    pause(1);
+    await pause(1);
     notificationsAreAvailable = await hasNotifications(workbench);
   }
 }

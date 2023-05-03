@@ -38,30 +38,13 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Create Apex class AccountService
     await utilities.createApexClassWithBugs();
 
-    utilities.log('TrailApexReplayDebugger - finished calling utilities.createApexClassWithBugs()');
-    utilities.log('TrailApexReplayDebugger - calling browser.getWorkbench()');
-
     // Push source to org
     const workbench = await utilities.getWorkbench();
-
-    utilities.log('TrailApexReplayDebugger - finished calling browser.getWorkbench()');
-    utilities.log('TrailApexReplayDebugger - calling runCommandFromCommandPrompt()');
-
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 1);
-
-    utilities.log('TrailApexReplayDebugger - finished calling runCommandFromCommandPrompt()');
-    utilities.log('TrailApexReplayDebugger - calling waitForNotificationToGoAway()');
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Push Source to Default Org and Override Conflicts', fiveMinutes);
-
-    utilities.log('TrailApexReplayDebugger - finished calling waitForNotificationToGoAway()');
-    utilities.log('TrailApexReplayDebugger - calling notificationIsPresent()');
-
     const successPushNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Push Source to Default Org and Override Conflicts successfully ran');
-
-    utilities.log('TrailApexReplayDebugger - finished calling notificationIsPresent()');
-
     expect(successPushNotificationWasFound).toBe(true);
 
     utilities.log('TrailApexReplayDebugger - "Set up the testing environment" has completed');

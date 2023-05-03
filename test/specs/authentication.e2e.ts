@@ -104,7 +104,6 @@ describe('Authentication', async () => {
     utilities.log('Authentication - Run SFDX: Authorize a Dev Hub');
 
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
-    utilities.log('calling browser.getWorkbench()');
     const workbench = await utilities.getWorkbench();
     await utilities.pause(1);
 

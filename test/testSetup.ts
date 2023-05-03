@@ -53,7 +53,7 @@ export class TestSetup {
   public async tearDown(): Promise<void> {
     if (this.scratchOrgAliasName && !this.reuseScratchOrg) {
       // To use VS Code's Terminal view to delete the scratch org, use:
-      // const workbench = await (await browser.getWorkbench()).wait();
+      // const workbench = await utilities.getWorkbench();
       // await utilities.executeCommand(workbench, `sfdx force:org:delete -u ${this.scratchOrgAliasName} --noprompt`);
 
       // The Terminal view can be a bit unreliable, so directly call exec() instead:
@@ -104,8 +104,7 @@ export class TestSetup {
       utilities.log('');
       utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
 
-      utilities.log('calling browser.getWorkbench()');
-      utilities.pause(1);
+      await utilities.pause(1);
       const workbench = await utilities.getWorkbench();
 
       utilities.log('calling runCommandFromCommandPrompt()');
@@ -150,12 +149,15 @@ export class TestSetup {
       }
 
       utilities.log('calling forceAppTreeItem.expand()');
+      await utilities.pause(1);
       await forceAppTreeItem.expand();
 
       // Yep, we need to wait a long time here.
       await utilities.pause(10);
 
       if (scratchOrgEdition === 'Enterprise') {
+        utilities.log('scratch org edition is Enterprise');
+
         const projectScratchDefPath = path.join(this.tempFolderPath!, this.tempProjectName, 'config', 'project-scratch-def.json');
         let  projectScratchDef = await fs.readFileSync(projectScratchDefPath, 'utf8');
         projectScratchDef = await projectScratchDef.replace(`"edition": "Developer"`, `"edition": "Enterprise"`);
@@ -207,23 +209,7 @@ export class TestSetup {
     utilities.log(`Calling 'expect(currentOsUserName.length).toBeGreaterThanOrEqual(1)'`);
     expect(currentOsUserName.length).toBeGreaterThanOrEqual(1);
 
-    utilities.log('Calling getWorkbench()');
-    // const workbench = await (await browser.getWorkbench()).wait();
-    let workbench: Workbench;
-    try {
-      await utilities.pause(1);
-      workbench = await utilities.getWorkbench();
-    } catch(err) {
-      debugger;
-
-      try {
-        workbench = await utilities.getWorkbench();
-      } catch(err2) {
-        debugger;
-        // game over man, game over
-      }
-    }
-    utilities.log('Finished calling getWorkbench()');
+    const workbench = await utilities.getWorkbench();
 
     if (this.reuseScratchOrg) {
       utilities.log(`${this.testSuiteSuffixName} - looking for a scratch org to reuse...`);
@@ -272,7 +258,7 @@ export class TestSetup {
     };
     try {
       // Pause for a little bit
-      utilities.pause(2);
+      await utilities.pause(2);
       sfdxForceOrgCreateResult = await exec(`sfdx force:org:create -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`);
     } catch (err) {
       debugger;
