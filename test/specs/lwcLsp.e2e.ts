@@ -103,11 +103,17 @@ describe('LWC LSP', async () => {
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.js')) as TextEditor;
-    await textEditor.moveCursor(3, 40);
-    await utilities.pause(5);
 
-    // TODO: Verify info on hover
-    expect(1).toBe(1);
+    // // TODO: Verify info on hover is present
+    // debugger;
+    // await textEditor.selectText('LightningEl', 1);
+    // await utilities.pause(1);
+    // const onHoverInfo = await $$('div.monaco-hover-content');
+    // const style = await onHoverInfo[0].getAttribute(
+    //   'monaco-visible-content-widget'
+    // );
+    // expect(style).toBe('true');
+    // debugger;
   });
 
   step('Autocompletion', async () => {
@@ -116,10 +122,18 @@ describe('LWC LSP', async () => {
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
     await textEditor.typeTextAt(3, 11, ' lwc');
-    await utilities.pause(5);
+    await utilities.pause(1);
 
-    // TODO: Verify autocompletion options
-    expect(1).toBe(1);
+    // Verify autocompletion options are present
+    const autocompletionOptions = await $$(
+      'textarea.inputarea.monaco-mouse-cursor-text'
+    );
+    expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe(
+      'true'
+    );
+    expect(
+      await autocompletionOptions[0].getAttribute('aria-autocomplete')
+    ).toBe('list');
   });
 
   step('Tear down and clean up the testing environment', async () => {
