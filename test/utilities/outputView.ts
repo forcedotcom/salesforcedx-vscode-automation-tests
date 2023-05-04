@@ -13,6 +13,7 @@ import {
   CMD_KEY
 } from 'wdio-vscode-service/dist/constants';
 import {
+  log,
   pause
 } from './miscellaneous';
 import {
@@ -58,11 +59,17 @@ export async function selectOutputChannel(outputView: OutputView, name: string):
 }
 
 export async function openOutputView(): Promise<OutputView> {
+  log('openOutputView() - calling getWorkbench()');
   const workbench = await getWorkbench();
+
+  log('openOutputView() - calling workbench.getBottomBar()');
   const bottomBar = await workbench.getBottomBar(); // selector is 'div[id="workbench.parts.panel"]'
+
+  log('openOutputView() - calling bottomBar.openOutputView()');
   const outputView = await bottomBar.openOutputView(); // selector is 'div[id="workbench.panel.output"]'
   await pause(2);
 
+  log('openOutputView() - returning outputView');
   return outputView;
 }
 

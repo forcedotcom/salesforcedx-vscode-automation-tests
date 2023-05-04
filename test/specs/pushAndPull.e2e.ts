@@ -29,28 +29,40 @@ describe('Push and Pull', async () => {
   let adminEmailAddress = '';
 
   step('Set up the testing environment', async () => {
+    utilities.log(`PushAndPull - Set up the testing environment`);
+
     testSetup = new TestSetup('PushAndPull', false);
     await testSetup.setUp('Enterprise');
     projectName = testSetup.tempProjectName.toUpperCase();
   });
 
   step('Create an Apex class', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Create an Apex class`);
+
     // Clear the text in the Output view.
+    utilities.log(`${testSetup.testSuiteSuffixName} - Clear the text in the Output view`);
+    utilities.log(`${testSetup.testSuiteSuffixName} - calling utilities.openOutputView()`);
     const outputView = await utilities.openOutputView();
+    utilities.log(`${testSetup.testSuiteSuffixName} - calling outputView.clearText()`);
     await outputView.clearText();
 
-    // Create the Apex class
+    // Create the Apex class.
+    utilities.log('Create the Apex class');
     const workbench = await utilities.getWorkbench();
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
 
     // Set the name of the new component to ExampleApexClass1.
+    utilities.log('Set the name of the new component to ExampleApexClass1');
     await inputBox.setText('ExampleApexClass1');
     await inputBox.confirm();
     await utilities.pause(1);
 
     // Select the default directory (press Enter/Return).
+    utilities.log('Select the default directory (press Enter/Return)');
     await inputBox.confirm();
 
+    // Check for notifications.
+    utilities.log('Check for notifications');
     const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Create Apex Class successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
@@ -83,6 +95,8 @@ describe('Push and Pull', async () => {
   });
 
   step('Push the Apex class', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Push the Apex class`);
+
     const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
@@ -98,6 +112,8 @@ describe('Push and Pull', async () => {
   });
 
   step('Push again (with no changes)', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Push again (with no changes)`);
+
     // Clear the Output view first.
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
@@ -115,6 +131,8 @@ describe('Push and Pull', async () => {
   });
 
   step('Modify the file and push the changes', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Modify the file and push the changes`);
+
     // Clear the Output view first.
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
@@ -155,7 +173,7 @@ describe('Push and Pull', async () => {
       const notifications = await utilities.getNotifications(workbench);
       for (const notification of notifications) {
         const message = await utilities.getMessage(notification);
-        utilities.log('Notification: ' + message);
+        utilities.log('pushAndPull - Notification message from: utilities.getMessage()' + message);
       }
 
       debugger;
@@ -175,6 +193,8 @@ describe('Push and Pull', async () => {
   });
 
   step('Pull the Apex class', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Pull the Apex class`);
+
     // With this test, it's going to pull twice...
 
     // Clear the Output view first.
@@ -219,6 +239,8 @@ describe('Push and Pull', async () => {
   });
 
   step('Modify the file (but don\'t save), then pull', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Modify the file (but don't save), then pull`);
+
     // Clear the Output view first.
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
@@ -244,6 +266,8 @@ describe('Push and Pull', async () => {
   });
 
   step('Save the modified file, then pull', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Save the modified file, then pull`);
+
     // Clear the Output view first.
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
@@ -267,6 +291,8 @@ describe('Push and Pull', async () => {
   });
 
   step('Create an additional system admin user', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Create an additional system admin user`);
+
     // Org alias format: AdminUser_yyyy_mm_dd_username_ticks__PushAndPull
     const currentDate = new Date();
     const ticks = currentDate.getTime();
@@ -297,6 +323,8 @@ describe('Push and Pull', async () => {
   });
 
   step('Set the 2nd user as the default user', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Set the 2nd user as the default user`);
+
     const workbench = await utilities.getWorkbench();
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 1);
 
@@ -352,6 +380,7 @@ describe('Push and Pull', async () => {
   // be fixed with the check in of his PR this week.
 
   step('Tear down and clean up the testing environment', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`);
     await testSetup.tearDown();
   });
 });

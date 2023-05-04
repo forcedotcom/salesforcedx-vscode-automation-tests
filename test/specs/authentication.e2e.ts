@@ -76,27 +76,28 @@ describe('Authentication', async () => {
     await utilities.pause(1);
 
     // Click the OK button.
-    utilities.log('calling clickFilePathOkButton()');
+    utilities.log('Authentication - calling clickFilePathOkButton()');
     await utilities.clickFilePathOkButton();
 
     // Verify the project was created and was loaded.
-    utilities.log('calling workbench.getSideBar()');
+    utilities.log('Authentication - calling workbench.getSideBar()');
     const sidebar = await workbench.getSideBar();
-    utilities.log('calling sidebar.getContent()');
+    utilities.log('Authentication - calling sidebar.getContent()');
     const content = await sidebar.getContent();
-    utilities.log('content.getSection');
+    utilities.log('Authentication - content.getSection');
     const treeViewSection = await content.getSection(tempProjectName.toUpperCase());
     expect(treeViewSection).not.toEqual(undefined);
 
-    utilities.log('calling treeViewSection.findItem()');
+    utilities.log('Authentication - calling treeViewSection.findItem()');
     const forceAppTreeItem = await treeViewSection.findItem('force-app') as DefaultTreeItem;
     expect(forceAppTreeItem).not.toEqual(undefined);
 
-    utilities.log('forceAppTreeItem.expand()');
+    utilities.log('Authentication - alling forceAppTreeItem.expand()');
     await forceAppTreeItem.expand();
 
     // Yep, we need to wait a long time here.
-    utilities.log('all finished, calling utilities.pause(10)');
+    utilities.log('Authentication - all finished, calling utilities.pause(10)');
+    utilities.log('');
     await utilities.pause(10);
   });
 

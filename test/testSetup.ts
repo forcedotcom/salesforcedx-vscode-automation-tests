@@ -107,21 +107,21 @@ export class TestSetup {
       await utilities.pause(1);
       const workbench = await utilities.getWorkbench();
 
-      utilities.log('calling runCommandFromCommandPrompt()');
+      utilities.log(`${this.testSuiteSuffixName} - calling runCommandFromCommandPrompt()`);
       this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 10);
       // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
       // Select the "Standard" project type.
-      utilities.log('calling selectQuickPickWithText()');
+      utilities.log(`${this.testSuiteSuffixName} - calling selectQuickPickWithText()`);
       await utilities.selectQuickPickWithText(this.prompt, 'Standard');
 
       // Enter the project's name.
-      utilities.log('calling prompt.setText()');
+      utilities.log(`${this.testSuiteSuffixName} - calling prompt.setText()`);
       await this.prompt.setText(this.tempProjectName);
       await utilities.pause(1);
 
       // Press Enter/Return.
-      utilities.log('calling prompt.confirm()');
+      utilities.log(`${this.testSuiteSuffixName} - calling prompt.confirm()`);
       await this.prompt.confirm();
 
       // Set the location of the project.
@@ -130,11 +130,11 @@ export class TestSetup {
       await utilities.pause(1);
 
       // Click the OK button.
-      utilities.log('calling clickFilePathOkButton()');
+      utilities.log(`${this.testSuiteSuffixName} - calling clickFilePathOkButton()`);
       await utilities.clickFilePathOkButton();
 
       // Verify the project was created and was loaded.
-      utilities.log('calling getSideBar()');
+      utilities.log(`${this.testSuiteSuffixName} - calling getSideBar()`);
       const sidebar = await workbench.getSideBar();
       const content = await sidebar.getContent();
       const treeViewSection = await content.getSection(this.tempProjectName.toUpperCase());
@@ -142,13 +142,13 @@ export class TestSetup {
         throw new Error('In createProject(), getSection() returned a treeViewSection with a value of null (or undefined)');
       }
 
-      utilities.log('calling treeViewSection.findItem()');
+      utilities.log(`${this.testSuiteSuffixName} - calling treeViewSection.findItem()`);
       const forceAppTreeItem = await treeViewSection.findItem('force-app') as DefaultTreeItem;
       if (!forceAppTreeItem) {
         throw new Error('In createProject(), findItem() returned a forceAppTreeItem with a value of null (or undefined)');
       }
 
-      utilities.log('calling forceAppTreeItem.expand()');
+      utilities.log(`${this.testSuiteSuffixName} - calling forceAppTreeItem.expand()`);
       await utilities.pause(1);
       await forceAppTreeItem.expand();
 
@@ -156,7 +156,7 @@ export class TestSetup {
       await utilities.pause(10);
 
       if (scratchOrgEdition === 'Enterprise') {
-        utilities.log('scratch org edition is Enterprise');
+        utilities.log(`${this.testSuiteSuffixName} - scratch org edition is Enterprise`);
 
         const projectScratchDefPath = path.join(this.tempFolderPath!, this.tempProjectName, 'config', 'project-scratch-def.json');
         let  projectScratchDef = await fs.readFileSync(projectScratchDefPath, 'utf8');
@@ -206,10 +206,16 @@ export class TestSetup {
     const currentOsUserName = await utilities.transformedUserName();
     expect(currentOsUserName).not.toBeUndefined();
 
-    utilities.log(`Calling 'expect(currentOsUserName.length).toBeGreaterThanOrEqual(1)'`);
+    utilities.log('Calling expect(currentOsUserName.length).toBeGreaterThanOrEqual(1)');
+    if (!currentOsUserName || currentOsUserName.length < 1) {
+      debugger;
+      // what happened?
+    }
     expect(currentOsUserName.length).toBeGreaterThanOrEqual(1);
 
+    utilities.log('pausing...');
     await utilities.pause(1);
+    utilities.log('calling utilities.getWorkbench()...');
     const workbench = await utilities.getWorkbench();
     // for Cristi
     if (!workbench) {

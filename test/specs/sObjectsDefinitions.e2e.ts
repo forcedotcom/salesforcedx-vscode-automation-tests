@@ -223,6 +223,15 @@ describe('SObjects Definitions', async () => {
     await utilities.pause(1);
 
     const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Refresh SObject Definitions successfully ran', 10);
+    // jab
+    if (!successNotificationWasFound) {
+      await utilities.pause(1);
+      const successNotificationWasFound2 = await utilities.attemptToFindNotification(workbench, 'SFDX: Refresh SObject Definitions successfully ran', 10);
+      debugger;
+      // Did calling attemptToFindNotification() a second time work?
+      // If so, add a longer wait time?
+    }
+
     expect(successNotificationWasFound).toBe(true);
 
     // Search for 'sObjects' to obtain the whole text in output panel'

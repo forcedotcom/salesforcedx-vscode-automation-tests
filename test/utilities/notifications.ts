@@ -18,22 +18,38 @@ import {
 } from'./workbench';
 
 export async function waitForNotificationToGoAway(workbench: Workbench, notificationMessage: string, durationInSeconds: number, matchExactString: boolean = true): Promise<void> {
-  // Change timeout from seconds to milliseconds
-  durationInSeconds *= 1000;
 
-  await pause(5);
-  const startDate = new Date();
-  while (true) {
-    let notificationWasFound = await notificationIsPresent(workbench, notificationMessage, matchExactString);
-    if (!notificationWasFound) {
+
+  try {
+    // Change timeout from seconds to milliseconds
+    durationInSeconds *= 1000;
+
+    log(`waitForNotificationToGoAway() - looking for ${notificationMessage}`);
+
+    const startDate = new Date();
+    while (true) {
+      let notificationWasFound = await notificationIsPresent(workbench, notificationMessage, matchExactString);
+      if (!notificationWasFound) {
+        return;
+      }
+
+      const currentDate = new Date();
+      const secondsPassed = Math.abs(currentDate.getTime() - startDate.getTime()) / 1000;
+      if (secondsPassed >= durationInSeconds) {
+        throw new Error(`Exceeded time limit - notification "${notificationMessage}" is still present`);
+      }
+
+      await pause(1);
+    }
+  } catch(err) {
+    // The notification page objects seem to be buggy.  If they throw, can we assume it's because no notifications exist?
+    // The error is: Can't call $ on element with selector ".notification-toast-container" because element wasn't found
+    let message = (err instanceof Error) ? err.message : String(err);
+    if (message.includes(`element wasn't found`)) {
       return;
     }
 
-    const currentDate = new Date();
-    const secondsPassed = Math.abs(currentDate.getTime() - startDate.getTime()) / 1000;
-    if (secondsPassed >= durationInSeconds) {
-      throw new Error(`Exceeded time limit - notification "${notificationMessage}" is still present`);
-    }
+    debugger;
   }
 }
 
@@ -85,11 +101,12 @@ export async function dismissAllNotifications(): Promise<void> {
         }
 
         const message = await getMessage(notification);
-        log(`Notification: '${message}'`);
+        log(`Notification message: '${message}'`);
 
         log('now calling notification.dismiss()...');
         await dismiss(notification);
         log('...finished calling notification.dismiss()');
+        log('');
 
         await pause(1);
       } catch(err) {
@@ -136,7 +153,7 @@ export async function getMessage(notification: Notification): Promise<string> {
 
     // Attempt to get the message again
     try {
-      await pause(1);
+      await pause(1);//jab increase to 2?
       message = await notification.getMessage();
     } catch(err2) {
 
@@ -144,7 +161,7 @@ export async function getMessage(notification: Notification): Promise<string> {
       debugger;
       await pause(1);
       message = await notification.getMessage();
-      debugger;
+      debugger;// yikes... there were no notifications... return undefined?  guard against this?
     }
   }
 

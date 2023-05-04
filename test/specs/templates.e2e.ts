@@ -91,7 +91,7 @@ describe('Templates', async () => {
       const notifications = await utilities.getNotifications(workbench);
       for (const notification of notifications) {
         const message = await utilities.getMessage(notification);
-        utilities.log('Notification: ' + message);
+        utilities.log('templates - Notification message from: utilities.getMessage()' + message);
       }
 
       debugger;
