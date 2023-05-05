@@ -14,7 +14,7 @@ describe('LWC LSP', async () => {
   let projectName: string;
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('LwcLsp', true);
+    testSetup = new TestSetup('LwcLsp', false);
     await testSetup.setUp();
     projectName = testSetup.tempProjectName.toUpperCase();
 
@@ -96,24 +96,6 @@ describe('LWC LSP', async () => {
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
     expect(title).toBe('lwc1.js');
-  });
-
-  step('On hover', async () => {
-    // Get open text editor
-    const workbench = await browser.getWorkbench();
-    const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('lwc1.js')) as TextEditor;
-
-    // // TODO: Verify info on hover is present
-    // debugger;
-    // await textEditor.selectText('LightningEl', 1);
-    // await utilities.pause(1);
-    // const onHoverInfo = await $$('div.monaco-hover-content');
-    // const style = await onHoverInfo[0].getAttribute(
-    //   'monaco-visible-content-widget'
-    // );
-    // expect(style).toBe('true');
-    // debugger;
   });
 
   step('Autocompletion', async () => {

@@ -19,8 +19,7 @@ const capabilities: VSCodeCapabilities = {
   // maxInstances: 5,
 
   browserName: 'vscode',
-  // browserVersion: 'stable', // 1.77.3
-  browserVersion: '1.77.1',
+  browserVersion: 'stable', 
   'wdio:vscodeOptions': {
     // Point to the root directory of your project.
     extensionPath: EnvironmentSettings.getInstance().extensionPath
@@ -92,13 +91,12 @@ export const config: Options.Testrunner = {
     //
     // Place inside the array to run sequentially.
     [
-      // './test/specs/**/*.e2e.ts'
+      './test/specs/**/*.e2e.ts'
 
       // './test/specs/**/anInitialSuite.e2e.ts',
       // './test/specs/**/apexReplayDebugger.e2e.ts',
       // './test/specs/**/authentication.e2e.ts',
       // './test/specs/**/debugApexTests.e2e.ts',
-      './test/specs/**/lwcLsp.e2e.ts',
       // './test/specs/**/orgBrowser.e2e.ts',
       // './test/specs/**/pushAndPull.e2e.ts',
       // './test/specs/**/runApexTests.e2e.ts',
