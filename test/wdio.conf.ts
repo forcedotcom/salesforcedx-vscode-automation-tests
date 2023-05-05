@@ -19,7 +19,7 @@ const capabilities: VSCodeCapabilities = {
   // maxInstances: 5,
 
   browserName: 'vscode',
-  browserVersion: 'stable', 
+  browserVersion: 'stable',
   'wdio:vscodeOptions': {
     // Point to the root directory of your project.
     extensionPath: EnvironmentSettings.getInstance().extensionPath
