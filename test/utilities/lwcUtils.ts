@@ -85,6 +85,7 @@ export async function createAura(name: string): Promise<void> {
   let textEditor = (await editorView.openEditor(name + '.cmp')) as TextEditor;
   const htmlText = [
     '<aura:component>',
+    ' ',
     ' <aura:attribute name="simpleNewContact" type="Object"/>',
     ' <div class="slds-page-header" role="banner">',
     '   <h1 class="slds-m-right_small">Create New Contact</h1>',
