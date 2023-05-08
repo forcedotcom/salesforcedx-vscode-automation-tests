@@ -108,6 +108,8 @@ describe('LWC LSP', async () => {
     expect(
       await autocompletionOptions[0].getAttribute('aria-autocomplete')
     ).toBe('list');
+
+    // Verify autocompletion options can be selected and therefore automatically inserted into the file
     await browser.keys(['Enter']);
     await textEditor.save();
     await utilities.pause(1);
