@@ -34,7 +34,6 @@ describe('LWC LSP', async () => {
       'Developer: Show Running Extensions',
       1
     );
-
     utilities.log(
       `${testSetup.testSuiteSuffixName} - calling utilities.enableLWCExtension()`
     );
@@ -47,7 +46,6 @@ describe('LWC LSP', async () => {
       const text = await extensionNameDiv.getText();
       if (text.includes('salesforce.salesforcedx-vscode-lwc')) {
         extensionWasFound = true;
-        return;
       }
     }
     expect(extensionWasFound).toBe(true);
@@ -98,7 +96,7 @@ describe('LWC LSP', async () => {
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
     await textEditor.typeTextAt(3, 11, ' lwc');
-    await utilities.pause(1);
+    await utilities.pause(2);
 
     // Verify autocompletion options are present
     const autocompletionOptions = await $$(
@@ -110,6 +108,11 @@ describe('LWC LSP', async () => {
     expect(
       await autocompletionOptions[0].getAttribute('aria-autocomplete')
     ).toBe('list');
+    await browser.keys(['Enter']);
+    await textEditor.save();
+    await utilities.pause(1);
+    const line3Text = await textEditor.getTextAtLine(3);
+    expect(line3Text).toContain('lwc:else');
   });
 
   step('Tear down and clean up the testing environment', async () => {

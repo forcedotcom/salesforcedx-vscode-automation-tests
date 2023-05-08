@@ -5,16 +5,13 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import {
-  InputBox,
-  QuickOpenBox,
-  Workbench
-} from 'wdio-vscode-service';
-import {
-  pause
-} from './miscellaneous';
+import { InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
+import { pause } from './miscellaneous';
 
-export async function openCommandPromptWithCommand(workbench: Workbench, command: string): Promise<InputBox | QuickOpenBox> {
+export async function openCommandPromptWithCommand(
+  workbench: Workbench,
+  command: string
+): Promise<InputBox | QuickOpenBox> {
   const prompt = await workbench.openCommandPrompt();
   await pause(5);
 
@@ -24,7 +21,11 @@ export async function openCommandPromptWithCommand(workbench: Workbench, command
   return prompt;
 }
 
-export async function runCommandFromCommandPrompt(workbench: Workbench, command: string, durationInSeconds: number = 0): Promise<InputBox | QuickOpenBox> {
+export async function runCommandFromCommandPrompt(
+  workbench: Workbench,
+  command: string,
+  durationInSeconds: number = 0
+): Promise<InputBox | QuickOpenBox> {
   const prompt = await openCommandPromptWithCommand(workbench, command);
   await selectQuickPickItem(prompt, command);
 
@@ -35,7 +36,10 @@ export async function runCommandFromCommandPrompt(workbench: Workbench, command:
   return prompt;
 }
 
-export async function selectQuickPickWithText(prompt: InputBox | QuickOpenBox, text: string) {
+export async function selectQuickPickWithText(
+  prompt: InputBox | QuickOpenBox,
+  text: string
+) {
   // Set the text in the command prompt.  Only selectQuickPick() needs to be called, but setting
   // the text in the command prompt is a nice visual feedback to anyone watching the tests run.
   await prompt.setText(text);
@@ -48,21 +52,26 @@ export async function selectQuickPickWithText(prompt: InputBox | QuickOpenBox, t
   // deletes the last two characters.  This doesn't seem to affect the outcome though.
 }
 
-export async function selectQuickPickItem(prompt: InputBox | QuickOpenBox, text: string): Promise<void> {
+export async function selectQuickPickItem(
+  prompt: InputBox | QuickOpenBox,
+  text: string
+): Promise<void> {
   const quickPicks = await prompt.getQuickPicks();
   for (const quickPick of quickPicks) {
-      const label = await quickPick.getLabel();
-      if (label === text) {
-          await quickPick.select();
-          return;
-      }
+    const label = await quickPick.getLabel();
+    if (label === text) {
+      await quickPick.select();
+      return;
+    }
   }
 
   throw new Error(`Quick pick item ${text} was not found`);
 }
 
 export async function clickFilePathOkButton(): Promise<void> {
-  const okButton = await $('*:not([style*="display: none"]).quick-input-action .monaco-button');
+  const okButton = await $(
+    '*:not([style*="display: none"]).quick-input-action .monaco-button'
+  );
   await okButton.click();
   await pause(1);
 }
