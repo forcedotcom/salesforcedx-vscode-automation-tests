@@ -13,6 +13,7 @@ export async function enableLWCExtension(): Promise<void> {
   // salesforce.salesforcedx-vscode-lwc extension is actually not loading automatically
   // because it depends on ESLint and it's not installed by default, so we need to
   // Install it, reload and enable extensions to get them both running
+  log('');
   log('enableLWCExtension() - calling browser.getWorkbench()');
   const workbench = await browser.getWorkbench();
 
@@ -23,7 +24,6 @@ export async function enableLWCExtension(): Promise<void> {
     if (text.includes('Install and Reload')) {
       log('enableLWCExtension() - Install and Reload');
       await item.click();
-      return;
     }
   }
   await pause(10);
@@ -35,12 +35,12 @@ export async function enableLWCExtension(): Promise<void> {
     if (text.includes('Reload and Enable Extensions')) {
       log('enableLWCExtension() - Reload and Enable Extensions');
       await item.click();
-      return;
     }
   }
   await pause(5);
 
   log('enableLWCExtension() - Running Developer: Reload Window');
+  log('');
   await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
 }
 
@@ -83,6 +83,7 @@ export async function createLWC(name: string): Promise<void> {
   await pause(1);
 
   log(`createLWC() - Modify html content`);
+  log('');
   // Modify html content
   inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
   await inputBox.setText(name + '.html');

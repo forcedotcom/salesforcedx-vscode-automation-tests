@@ -47,7 +47,6 @@ describe('Aura LSP', async () => {
       const text = await extensionNameDiv.getText();
       if (text.includes('salesforce.salesforcedx-vscode-lightning')) {
         extensionWasFound = true;
-        return;
       }
     }
     expect(extensionWasFound).toBe(true);
@@ -77,7 +76,7 @@ describe('Aura LSP', async () => {
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('aura1.cmp')) as TextEditor;
-    await textEditor.typeTextAt(2, 1, '<aura');
+    await textEditor.typeTextAt(2, 1, ' <aura');
     await utilities.pause(1);
 
     // Verify autocompletion options are present
@@ -90,6 +89,14 @@ describe('Aura LSP', async () => {
     expect(
       await autocompletionOptions[0].getAttribute('aria-autocomplete')
     ).toBe('list');
+
+    // Verify autocompletion options can be selected and therefore automatically inserted into the file
+    await browser.keys(['Enter']);
+    await textEditor.typeText('>');
+    await textEditor.save();
+    await utilities.pause(1);
+    const line3Text = await textEditor.getTextAtLine(2);
+    expect(line3Text).toContain('aura:application');
   });
 
   step('Tear down and clean up the testing environment', async () => {
