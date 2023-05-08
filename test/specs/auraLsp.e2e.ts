@@ -14,6 +14,7 @@ describe('Aura LSP', async () => {
   let projectName: string;
 
   step('Set up the testing environment', async () => {
+    utilities.log(`AuraLsp - Set up the testing environment`);
     testSetup = new TestSetup('AuraLsp', false);
     await testSetup.setUp();
     projectName = testSetup.tempProjectName.toUpperCase();
@@ -23,6 +24,9 @@ describe('Aura LSP', async () => {
   });
 
   step('Verify Extension is Running', async () => {
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - Verify Extension is Running`
+    );
     // Using the Command palette, run Developer: Show Running Extensions
     const workbench = await browser.getWorkbench();
     await utilities.runCommandFromCommandPrompt(
@@ -30,27 +34,11 @@ describe('Aura LSP', async () => {
       'Developer: Show Running Extensions',
       1
     );
-    let buttons = await $$('a.monaco-button.monaco-text-button');
-    for (const item of buttons) {
-      const text = await item.getText();
-      if (text.includes('Install and Reload')) {
-        await item.click();
-      }
-    }
-    await utilities.pause(10);
-    buttons = await $$('a.monaco-button.monaco-text-button');
-    for (const item of buttons) {
-      const text = await item.getText();
-      if (text.includes('Reload and Enable Extensions')) {
-        await item.click();
-      }
-    }
-    await utilities.pause(5);
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Developer: Reload Window',
-      10
+
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - calling utilities.enableLWCExtension()`
     );
+    await utilities.enableLWCExtension();
 
     // Verify Aura Components extension is present and running
     const extensionNameDivs = await $$('div.name');
@@ -59,13 +47,14 @@ describe('Aura LSP', async () => {
       const text = await extensionNameDiv.getText();
       if (text.includes('salesforce.salesforcedx-vscode-lightning')) {
         extensionWasFound = true;
+        return;
       }
     }
     expect(extensionWasFound).toBe(true);
   });
 
   step('Go to Definition', async () => {
-    debugger;
+    utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
@@ -83,6 +72,7 @@ describe('Aura LSP', async () => {
   });
 
   step('Autocompletion', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
@@ -103,6 +93,9 @@ describe('Aura LSP', async () => {
   });
 
   step('Tear down and clean up the testing environment', async () => {
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`
+    );
     await testSetup.tearDown();
   });
 });
