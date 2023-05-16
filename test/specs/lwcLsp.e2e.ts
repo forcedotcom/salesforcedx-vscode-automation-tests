@@ -77,7 +77,7 @@ describe('LWC LSP', async () => {
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
-    await textEditor.moveCursor(3, 57);
+    await textEditor.moveCursor(3, 52);
 
     // Go to definition through F12
     await browser.keys(['F12']);
@@ -95,7 +95,7 @@ describe('LWC LSP', async () => {
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
-    await textEditor.typeTextAt(3, 11, ' lwc');
+    await textEditor.typeTextAt(3, 7, ' lwc');
     await utilities.pause(2);
 
     // Verify autocompletion options are present
