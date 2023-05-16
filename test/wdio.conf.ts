@@ -19,7 +19,7 @@ const capabilities: VSCodeCapabilities = {
   // maxInstances: 5,
 
   browserName: 'vscode',
-  browserVersion: 'stable',
+  browserVersion: EnvironmentSettings.getInstance().vscodeVersion,
   'wdio:vscodeOptions': {
     // Point to the root directory of your project.
     extensionPath: EnvironmentSettings.getInstance().extensionPath
@@ -91,21 +91,31 @@ export const config: Options.Testrunner = {
     //
     // Place inside the array to run sequentially.
     [
-      './test/specs/**/*.e2e.ts'
-
+      // Either define the test suites to run in EnvironmentSettings...
+      ...EnvironmentSettings.getInstance().specFiles
+      //
+      // ...or use *.e2e.ts here...
+      // './test/specs/**/*.e2e.ts'
+      //
+      // ...or use individual e2e tests here:
       // './test/specs/**/anInitialSuite.e2e.ts',
+      // './test/specs/**/apexLsp.e2e.ts',
       // './test/specs/**/apexReplayDebugger.e2e.ts',
+      // './test/specs/**/auraLsp.e2e.ts',
       // './test/specs/**/authentication.e2e.ts',
       // './test/specs/**/debugApexTests.e2e.ts',
+      // './test/specs/**/deployAndRetrieve.e2e.ts',
+      // './test/specs/**/lwcLsp.e2e.ts',
       // './test/specs/**/orgBrowser.e2e.ts',
       // './test/specs/**/pushAndPull.e2e.ts',
       // './test/specs/**/runApexTests.e2e.ts',
-      // './test/specs/**/sObjectsDefinitions.e2e.ts'
+      // './test/specs/**/sObjectsDefinitions.e2e.ts',
       // './test/specs/**/templates.e2e.ts',
       // './test/specs/**/trailApexReplayDebugger.e2e.ts',
       // './test/specs/**/visualforceLsp.e2e.ts'
     ]
   ],
+
   // Patterns to exclude.
   exclude: [
     // 'path/to/excluded/files'

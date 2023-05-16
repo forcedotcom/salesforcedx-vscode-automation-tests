@@ -68,6 +68,7 @@ describe('An Initial Suite', async () => {
       );
 
       const quickPicks = await prompt.getQuickPicks();
+      let expectedSfdxCommandsFound = 0;
       let unexpectedSfdxCommandWasFound = false;
       for (const quickPick of quickPicks) {
         const label = await quickPick.getLabel();
@@ -77,6 +78,7 @@ describe('An Initial Suite', async () => {
           case 'SFDX: Create and Set Up Project for ISV Debugging':
           case 'SFDX: Create Project':
           case 'SFDX: Create Project with Manifest':
+            expectedSfdxCommandsFound++;
             break;
 
           default:
@@ -88,6 +90,8 @@ describe('An Initial Suite', async () => {
             break;
         }
       }
+
+      expect(expectedSfdxCommandsFound).toBe(3);
       expect(unexpectedSfdxCommandWasFound).toBe(false);
 
       // Escape out of the pick list.
