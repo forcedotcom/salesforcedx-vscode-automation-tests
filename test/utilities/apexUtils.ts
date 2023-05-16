@@ -5,21 +5,19 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import {
-  TextEditor
-} from 'wdio-vscode-service';
-import {
-  runCommandFromCommandPrompt
-} from './commandPrompt';
-import {
-  pause
-} from './miscellaneous';
+import { TextEditor } from 'wdio-vscode-service';
+import { runCommandFromCommandPrompt } from './commandPrompt';
+import { pause } from './miscellaneous';
 
 export async function createApexClassWithTest(name: string): Promise<void> {
   const workbench = await browser.getWorkbench();
 
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
+  const inputBox = await runCommandFromCommandPrompt(
+    workbench,
+    'SFDX: Create Apex Class',
+    1
+  );
 
   // Set the name of the new Apex Class
   await inputBox.setText(name);
@@ -31,7 +29,7 @@ export async function createApexClassWithTest(name: string): Promise<void> {
 
   // Modify class content
   const editorView = workbench.getEditorView();
-  let textEditor = await editorView.openEditor(name + '.cls') as TextEditor;
+  let textEditor = (await editorView.openEditor(name + '.cls')) as TextEditor;
   const classText = [
     `public with sharing class ${name} {`,
     `\tpublic static void SayHello(string name){`,
@@ -56,7 +54,7 @@ export async function createApexClassWithTest(name: string): Promise<void> {
   await pause(1);
 
   // Modify class content
-  textEditor = await editorView.openEditor(name + 'Test.cls') as TextEditor;
+  textEditor = (await editorView.openEditor(name + 'Test.cls')) as TextEditor;
   const testText = [
     `@IsTest`,
     `public class ${name}Test {`,
@@ -64,6 +62,7 @@ export async function createApexClassWithTest(name: string): Promise<void> {
     `\tstatic void validateSayHello() {`,
     `\t\tSystem.debug('Starting validate');`,
     `\t\t${name}.SayHello('Cody');`,
+    ``,
     `\t\tSystem.assertEquals(1, 1, 'all good');`,
     `\t}`,
     `}`
@@ -91,7 +90,11 @@ export async function createApexClassWithBugs(): Promise<void> {
   ].join('\n');
 
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
+  const inputBox = await runCommandFromCommandPrompt(
+    workbench,
+    'SFDX: Create Apex Class',
+    1
+  );
 
   // Set the name of the new Apex Class
   await inputBox.setText('AccountService');
@@ -103,7 +106,9 @@ export async function createApexClassWithBugs(): Promise<void> {
 
   // Modify class content
   const editorView = workbench.getEditorView();
-  textEditor = await editorView.openEditor('AccountService.cls') as TextEditor;
+  textEditor = (await editorView.openEditor(
+    'AccountService.cls'
+  )) as TextEditor;
   await textEditor.setText(classText);
   await textEditor.save();
   await pause(1);
@@ -142,7 +147,9 @@ export async function createApexClassWithBugs(): Promise<void> {
   ].join('\n');
 
   // Modify class content
-  textEditor = await editorView.openEditor('AccountServiceTest.cls') as TextEditor;
+  textEditor = (await editorView.openEditor(
+    'AccountServiceTest.cls'
+  )) as TextEditor;
   await textEditor.setText(testText);
   await textEditor.save();
   await pause(1);
@@ -153,15 +160,21 @@ export async function createAnonymousApexFile(): Promise<void> {
   const editorView = workbench.getEditorView();
 
   // Using the Command palette, run File: New File...
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'Create: New File...', 1);
+  const inputBox = await runCommandFromCommandPrompt(
+    workbench,
+    'Create: New File...',
+    1
+  );
 
   // Set the name of the new Anonymous Apex file
   await inputBox.setText('Anonymous.apex');
   await inputBox.confirm();
   await inputBox.confirm();
-  const textEditor = await editorView.openEditor('Anonymous.apex') as TextEditor;
+  const textEditor = (await editorView.openEditor(
+    'Anonymous.apex'
+  )) as TextEditor;
 
-  await textEditor.setText('System.debug(\'¡Hola mundo!\');');
+  await textEditor.setText("System.debug('¡Hola mundo!');");
   await textEditor.save();
   await pause(1);
 }

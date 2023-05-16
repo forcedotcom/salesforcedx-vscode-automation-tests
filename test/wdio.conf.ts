@@ -94,6 +94,7 @@ export const config: Options.Testrunner = {
       './test/specs/**/*.e2e.ts'
 
       // './test/specs/**/anInitialSuite.e2e.ts',
+      // './test/specs/**/apexLsp.e2e.ts',
       // './test/specs/**/apexReplayDebugger.e2e.ts',
       // './test/specs/**/authentication.e2e.ts',
       // './test/specs/**/debugApexTests.e2e.ts',
