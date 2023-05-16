@@ -67,7 +67,7 @@ describe('Aura LSP', async () => {
     //Verify 'Go to definition'
     const definition = await textEditor.getCoordinates();
     expect(definition[0]).toBe(3);
-    expect(definition[1]).toBe(24);
+    expect(definition[1]).toBe(27);
   });
 
   step('Autocompletion', async () => {
@@ -76,7 +76,7 @@ describe('Aura LSP', async () => {
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('aura1.cmp')) as TextEditor;
-    await textEditor.typeTextAt(2, 1, ' <aura');
+    await textEditor.typeTextAt(2, 1, '<aura');
     await utilities.pause(1);
 
     // Verify autocompletion options are present

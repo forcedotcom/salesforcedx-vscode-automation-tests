@@ -75,7 +75,7 @@ export async function createLWC(name: string): Promise<void> {
     `import { LightningElement } from 'lwc';`,
     ``,
     `export default class ${name} extends LightningElement {`,
-    ` greeting = 'World';`,
+    `\tgreeting = 'World';`,
     `}`
   ].join('\n');
   await textEditor.setText(jsText);
@@ -92,12 +92,12 @@ export async function createLWC(name: string): Promise<void> {
 
   const htmlText = [
     `<template>`,
-    ` <lightning-card title="${name}" icon-name="custom:custom14">`,
-    `   <div class="slds-var-m-around_medium">Hello, {greeting}!</div>`,
-    `   <c-view-source source="lwc/hello" slot="footer">`,
-    `     Bind an HTML element to a component property.`,
-    `   </c-view-source>`,
-    ` </lightning-card>`,
+    `\t<lightning-card title="${name}" icon-name="custom:custom14">`,
+    `\t\t<div class="slds-var-m-around_medium">Hello, {greeting}!</div>`,
+    `\t\t<c-view-source source="lwc/hello" slot="footer">`,
+    `\t\t\tBind an HTML element to a component property.`,
+    `\t\t</c-view-source>`,
+    `\t</lightning-card>`,
     `</template>`
   ].join('\n');
   await textEditor.setText(htmlText);
@@ -133,14 +133,14 @@ export async function createAura(name: string): Promise<void> {
   let textEditor = (await editorView.openEditor(name + '.cmp')) as TextEditor;
   const htmlText = [
     '<aura:component>',
-    ' ',
-    ' <aura:attribute name="simpleNewContact" type="Object"/>',
-    ' <div class="slds-page-header" role="banner">',
-    '   <h1 class="slds-m-right_small">Create New Contact</h1>',
-    ' </div>',
-    ' <aura:if isTrue="{!not(empty(v.simpleNewContact))}">',
-    '   {!v.simpleNewContact}',
-    ' </aura:if>',
+    '\t',
+    '\t<aura:attribute name="simpleNewContact" type="Object"/>',
+    '\t<div class="slds-page-header" role="banner">',
+    '\t\t<h1 class="slds-m-right_small">Create New Contact</h1>',
+    '\t</div>',
+    '\t<aura:if isTrue="{!not(empty(v.simpleNewContact))}">',
+    '\t\t{!v.simpleNewContact}',
+    '\t</aura:if>',
     '</aura:component>'
   ].join('\n');
   await textEditor.setText(htmlText);
