@@ -65,7 +65,7 @@ describe('LWC LSP', async () => {
     await browser.keys(['F12']);
     await utilities.pause(1);
 
-    //Verify 'Go to definition' took us to the definition file
+    // Verify 'Go to definition' took us to the definition file
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
     expect(title).toBe('engine.d.ts');
@@ -83,7 +83,7 @@ describe('LWC LSP', async () => {
     await browser.keys(['F12']);
     await utilities.pause(1);
 
-    //Verify 'Go to definition' took us to the definition file
+    // Verify 'Go to definition' took us to the definition file
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
     expect(title).toBe('lwc1.js');
