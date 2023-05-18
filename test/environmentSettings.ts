@@ -10,9 +10,9 @@ import { join } from 'path';
 export class EnvironmentSettings {
   private static _instance: EnvironmentSettings;
 
-  private _vscodeVersion = '1.77.3'; //  or 'insiders' or '1.77.3'
+  private _vscodeVersion = 'stable'; //  or 'insiders' or '1.77.3'
   private _specFiles = [
-    // './test/specs/**/*.e2e.ts'
+    './test/specs/**/*.e2e.ts'
     // OR
     // './test/specs/**/anInitialSuite.e2e.ts',
     // './test/specs/**/apexLsp.e2e.ts',
@@ -22,7 +22,7 @@ export class EnvironmentSettings {
     // './test/specs/**/debugApexTests.e2e.ts',
     // './test/specs/**/deployAndRetrieve.e2e.ts',
     // './test/specs/**/lwcLsp.e2e.ts',
-    './test/specs/**/manifestBuilder.e2e.ts'
+    // './test/specs/**/manifestBuilder.e2e.ts'
     // './test/specs/**/orgBrowser.e2e.ts',
     // './test/specs/**/pushAndPull.e2e.ts',
     // './test/specs/**/runApexTests.e2e.ts',

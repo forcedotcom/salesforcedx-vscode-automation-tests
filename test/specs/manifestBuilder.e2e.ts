@@ -17,7 +17,7 @@ describe('Manifest Builder', async () => {
 
   step('Set up the testing environment', async () => {
     utilities.log(`ManifestBuilder - Set up the testing environment`);
-    testSetup = new TestSetup('ManifestBuilder', true);
+    testSetup = new TestSetup('ManifestBuilder', false);
     await testSetup.setUp();
     projectName = testSetup.tempProjectName.toUpperCase();
 
