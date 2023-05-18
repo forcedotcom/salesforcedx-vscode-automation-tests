@@ -256,18 +256,25 @@ export class TestSetup {
     }
 
     const execResult = await exec('sfdx org list --json');
-    const sfdxForceOrgListJson = this.removedEscapedCharacters(execResult.stdout);
+    const sfdxForceOrgListJson = this.removedEscapedCharacters(
+      execResult.stdout
+    );
     const sfdxForceOrgListResult = JSON.parse(sfdxForceOrgListJson).result;
     const nonScratchOrgs = sfdxForceOrgListResult.nonScratchOrgs as any[];
 
-    for (let i=0; i<nonScratchOrgs.length; i++) {
+    for (let i = 0; i < nonScratchOrgs.length; i++) {
       const nonScratchOrg = nonScratchOrgs[i];
-      if (nonScratchOrg.alias === devHubAliasName && nonScratchOrg.username === devHubUserName) {
+      if (
+        nonScratchOrg.alias === devHubAliasName &&
+        nonScratchOrg.username === devHubUserName
+      ) {
         return;
       }
     }
 
-    throw new Error(`Error: matching devHub alias '${devHubAliasName}' and devHub user name '${devHubUserName}' was not found.  Please consult README.md and make sure DEV_HUB_ALIAS_NAME and DEV_HUB_USER_NAME are set correctly.`)
+    throw new Error(
+      `Error: matching devHub alias '${devHubAliasName}' and devHub user name '${devHubUserName}' was not found.  Please consult README.md and make sure DEV_HUB_ALIAS_NAME and DEV_HUB_USER_NAME are set correctly.`
+    );
   }
 
   private async createDefaultScratchOrg(): Promise<void> {
