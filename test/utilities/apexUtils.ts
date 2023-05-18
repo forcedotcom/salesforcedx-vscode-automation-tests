@@ -62,6 +62,7 @@ export async function createApexClassWithTest(name: string): Promise<void> {
     `\tstatic void validateSayHello() {`,
     `\t\tSystem.debug('Starting validate');`,
     `\t\t${name}.SayHello('Cody');`,
+    ``,
     `\t\tSystem.assertEquals(1, 1, 'all good');`,
     `\t}`,
     `}`
