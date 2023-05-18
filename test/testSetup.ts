@@ -15,16 +15,13 @@ import {
   QuickOpenBox,
   Workbench
 } from 'wdio-vscode-service';
-import {
-  EnvironmentSettings
-} from './environmentSettings';
+import { EnvironmentSettings } from './environmentSettings';
 import * as utilities from './utilities';
-
 
 const exec = util.promisify(child_process.exec);
 
 export class TestSetup {
-  private testSuiteSuffixName: string;
+  public testSuiteSuffixName: string;
   private reuseScratchOrg = false;
   private static aliasAndUserNameWereVerified = false;
   public tempFolderPath: string | undefined = undefined;
@@ -58,7 +55,9 @@ export class TestSetup {
       // await utilities.executeCommand(workbench, `sfdx force:org:delete -u ${this.scratchOrgAliasName} --noprompt`);
 
       // The Terminal view can be a bit unreliable, so directly call exec() instead:
-      await exec(`sfdx force:org:delete -u ${this.scratchOrgAliasName} --noprompt`);
+      await exec(
+        `sfdx force:org:delete -u ${this.scratchOrgAliasName} --noprompt`
+      );
     }
 
     // This used to work...
@@ -78,11 +77,18 @@ export class TestSetup {
 
   public async setUpTestingEnvironment(): Promise<void> {
     utilities.log('');
-    utilities.log(`${this.testSuiteSuffixName} - Starting setUpTestingEnvironment()...`);
+    utilities.log(
+      `${this.testSuiteSuffixName} - Starting setUpTestingEnvironment()...`
+    );
 
     this.tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
-    this.projectFolderPath = path.join(this.tempFolderPath, this.tempProjectName);
-    utilities.log(`${this.testSuiteSuffixName} - creating project files in ${this.projectFolderPath}`);
+    this.projectFolderPath = path.join(
+      this.tempFolderPath,
+      this.tempProjectName
+    );
+    utilities.log(
+      `${this.testSuiteSuffixName} - creating project files in ${this.projectFolderPath}`
+    );
 
     // Remove the project folder, just in case there are stale files there.
     if (fs.existsSync(this.projectFolderPath)) {
@@ -96,7 +102,9 @@ export class TestSetup {
       await utilities.pause(1);
     }
 
-    utilities.log(`${this.testSuiteSuffixName} - ...finished setUpTestingEnvironment()`);
+    utilities.log(
+      `${this.testSuiteSuffixName} - ...finished setUpTestingEnvironment()`
+    );
     utilities.log('');
   }
 
@@ -105,7 +113,11 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
 
     const workbench = await browser.getWorkbench();
-    this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 10);
+    this.prompt = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Create Project',
+      10
+    );
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
     // Select the "Standard" project type.
@@ -129,14 +141,22 @@ export class TestSetup {
     // Verify the project was created and was loaded.
     const sidebar = await workbench.getSideBar();
     const content = await sidebar.getContent();
-    const treeViewSection = await content.getSection(this.tempProjectName.toUpperCase());
+    const treeViewSection = await content.getSection(
+      this.tempProjectName.toUpperCase()
+    );
     if (!treeViewSection) {
-      throw new Error('In createProject(), getSection() returned a treeViewSection with a value of null (or undefined)');
+      throw new Error(
+        'In createProject(), getSection() returned a treeViewSection with a value of null (or undefined)'
+      );
     }
 
-    const forceAppTreeItem = await treeViewSection.findItem('force-app') as DefaultTreeItem;
+    const forceAppTreeItem = (await treeViewSection.findItem(
+      'force-app'
+    )) as DefaultTreeItem;
     if (!forceAppTreeItem) {
-      throw new Error('In createProject(), findItem() returned a forceAppTreeItem with a value of null (or undefined)');
+      throw new Error(
+        'In createProject(), findItem() returned a forceAppTreeItem with a value of null (or undefined)'
+      );
     }
 
     await forceAppTreeItem.expand();
@@ -145,9 +165,17 @@ export class TestSetup {
     await utilities.pause(10);
 
     if (scratchOrgEdition === 'Enterprise') {
-      const projectScratchDefPath = path.join(this.tempFolderPath!, this.tempProjectName, 'config', 'project-scratch-def.json');
-      let  projectScratchDef = fs.readFileSync(projectScratchDefPath, 'utf8');
-      projectScratchDef = projectScratchDef.replace(`"edition": "Developer"`, `"edition": "Enterprise"`);
+      const projectScratchDefPath = path.join(
+        this.tempFolderPath!,
+        this.tempProjectName,
+        'config',
+        'project-scratch-def.json'
+      );
+      let projectScratchDef = fs.readFileSync(projectScratchDefPath, 'utf8');
+      projectScratchDef = projectScratchDef.replace(
+        `"edition": "Developer"`,
+        `"edition": "Enterprise"`
+      );
       fs.writeFileSync(projectScratchDefPath, projectScratchDef, 'utf8');
     }
 
@@ -157,7 +185,9 @@ export class TestSetup {
 
   private async authorizeDevHub(): Promise<void> {
     utilities.log('');
-    utilities.log(`${this.testSuiteSuffixName} - Starting authorizeDevHub()...`);
+    utilities.log(
+      `${this.testSuiteSuffixName} - Starting authorizeDevHub()...`
+    );
 
     // Only need to check this once.
     if (!TestSetup.aliasAndUserNameWereVerified) {
@@ -167,22 +197,46 @@ export class TestSetup {
 
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
     const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
-    utilities.log(`${this.testSuiteSuffixName} - calling sfdx force:org:display...`);
-    const sfdxForceOrgDisplayResult = await exec(`sfdx force:org:display -u ${EnvironmentSettings.getInstance().devHubAliasName} --verbose --json`);
-    const json = this.removedEscapedCharacters(sfdxForceOrgDisplayResult.stdout);
+    utilities.log(
+      `${this.testSuiteSuffixName} - calling sfdx force:org:display...`
+    );
+    const sfdxForceOrgDisplayResult = await exec(
+      `sfdx force:org:display -u ${
+        EnvironmentSettings.getInstance().devHubAliasName
+      } --verbose --json`
+    );
+    const json = this.removedEscapedCharacters(
+      sfdxForceOrgDisplayResult.stdout
+    );
 
     // Now write the file.
     fs.writeFileSync(authFilePath, json);
     utilities.log(`${this.testSuiteSuffixName} - finished writing the file...`);
 
     // Call auth:sfdxurl:store and read in the JSON that was just created.
-    utilities.log(`${this.testSuiteSuffixName} - calling sfdx auth:sfdxurl:store...`);
-    const sfdxSfdxUrlStoreResult = await exec(`sfdx auth:sfdxurl:store -d -f ${authFilePath}`);
-    if (!sfdxSfdxUrlStoreResult.stdout.includes(`Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID`)) {
-      throw new Error(`In authorizeDevHub(), sfdxSfdxUrlStoreResult does not contain "Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID"`);
+    utilities.log(
+      `${this.testSuiteSuffixName} - calling sfdx auth:sfdxurl:store...`
+    );
+    const sfdxSfdxUrlStoreResult = await exec(
+      `sfdx auth:sfdxurl:store -d -f ${authFilePath}`
+    );
+    if (
+      !sfdxSfdxUrlStoreResult.stdout.includes(
+        `Successfully authorized ${
+          EnvironmentSettings.getInstance().devHubUserName
+        } with org ID`
+      )
+    ) {
+      throw new Error(
+        `In authorizeDevHub(), sfdxSfdxUrlStoreResult does not contain "Successfully authorized ${
+          EnvironmentSettings.getInstance().devHubUserName
+        } with org ID"`
+      );
     }
 
-    utilities.log(`${this.testSuiteSuffixName} - ...finished authorizeDevHub()`);
+    utilities.log(
+      `${this.testSuiteSuffixName} - ...finished authorizeDevHub()`
+    );
     utilities.log('');
   }
 
@@ -202,51 +256,77 @@ export class TestSetup {
     }
 
     const execResult = await exec('sfdx org list --json');
-    const sfdxForceOrgListJson = this.removedEscapedCharacters(execResult.stdout);
+    const sfdxForceOrgListJson = this.removedEscapedCharacters(
+      execResult.stdout
+    );
     const sfdxForceOrgListResult = JSON.parse(sfdxForceOrgListJson).result;
     const nonScratchOrgs = sfdxForceOrgListResult.nonScratchOrgs as any[];
 
-    for (let i=0; i<nonScratchOrgs.length; i++) {
+    for (let i = 0; i < nonScratchOrgs.length; i++) {
       const nonScratchOrg = nonScratchOrgs[i];
-      if (nonScratchOrg.alias === devHubAliasName && nonScratchOrg.username === devHubUserName) {
+      if (
+        nonScratchOrg.alias === devHubAliasName &&
+        nonScratchOrg.username === devHubUserName
+      ) {
         return;
       }
     }
 
-    throw new Error(`Error: matching devHub alias '${devHubAliasName}' and devHub user name '${devHubUserName}' was not found.  Please consult README.md and make sure DEV_HUB_ALIAS_NAME and DEV_HUB_USER_NAME are set correctly.`)
+    throw new Error(
+      `Error: matching devHub alias '${devHubAliasName}' and devHub user name '${devHubUserName}' was not found.  Please consult README.md and make sure DEV_HUB_ALIAS_NAME and DEV_HUB_USER_NAME are set correctly.`
+    );
   }
 
   private async createDefaultScratchOrg(): Promise<void> {
     utilities.log('');
-    utilities.log(`${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`);
+    utilities.log(
+      `${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`
+    );
 
     const currentOsUserName = await utilities.transformedUserName();
     const workbench = await browser.getWorkbench();
 
     if (this.reuseScratchOrg) {
-      utilities.log(`${this.testSuiteSuffixName} - looking for a scratch org to reuse...`);
+      utilities.log(
+        `${this.testSuiteSuffixName} - looking for a scratch org to reuse...`
+      );
 
       const sfdxForceOrgListResult = await exec('sfdx force:org:list --json');
-      const resultJson = sfdxForceOrgListResult.stdout.replace(/\u001B\[\d\dm/g, '').replace(/\\n/g, '');
+      const resultJson = sfdxForceOrgListResult.stdout
+        .replace(/\u001B\[\d\dm/g, '')
+        .replace(/\\n/g, '');
       const scratchOrgs = JSON.parse(resultJson).result.scratchOrgs;
 
       for (const scratchOrg of scratchOrgs) {
         const alias = scratchOrg.alias as string;
-        if (alias && alias.includes('TempScratchOrg_') && alias.includes(currentOsUserName) && alias.includes(this.testSuiteSuffixName)) {
+        if (
+          alias &&
+          alias.includes('TempScratchOrg_') &&
+          alias.includes(currentOsUserName) &&
+          alias.includes(this.testSuiteSuffixName)
+        ) {
           this.scratchOrgAliasName = alias;
 
           // Set the current scratch org.
           await this.setDefaultOrg(workbench);
 
-          utilities.log(`${this.testSuiteSuffixName} - found one: ${this.scratchOrgAliasName}`);
-          utilities.log(`${this.testSuiteSuffixName} - ...finished createDefaultScratchOrg()`);
+          utilities.log(
+            `${this.testSuiteSuffixName} - found one: ${this.scratchOrgAliasName}`
+          );
+          utilities.log(
+            `${this.testSuiteSuffixName} - ...finished createDefaultScratchOrg()`
+          );
           utilities.log('');
           return;
         }
       }
     }
 
-    const definitionFile = path.join(this.projectFolderPath!, 'config', 'project-scratch-def.json');
+    const definitionFile = path.join(
+      this.projectFolderPath!,
+      'config',
+      'project-scratch-def.json'
+    );
 
     // Org alias format: TempScratchOrg_yyyy_mm_dd_username_ticks_testSuiteSuffixName
     const currentDate = new Date();
@@ -255,39 +335,62 @@ export class TestSetup {
     const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
     const year = currentDate.getFullYear();
     this.scratchOrgAliasName = `TempScratchOrg_${year}_${month}_${day}_${currentOsUserName}_${ticks}_${this.testSuiteSuffixName}`;
-    utilities.log(`${this.testSuiteSuffixName} - temporary scratch org name is ${this.scratchOrgAliasName}...`);
+    utilities.log(
+      `${this.testSuiteSuffixName} - temporary scratch org name is ${this.scratchOrgAliasName}...`
+    );
 
     const startDate = Date.now();
     const durationDays = 1;
 
-    utilities.log(`${this.testSuiteSuffixName} - calling sfdx force:org:create...`);
-    const sfdxForceOrgCreateResult = await exec(`sfdx force:org:create -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`);
+    utilities.log(
+      `${this.testSuiteSuffixName} - calling sfdx force:org:create...`
+    );
+    const sfdxForceOrgCreateResult = await exec(
+      `sfdx force:org:create -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`
+    );
     const json = this.removedEscapedCharacters(sfdxForceOrgCreateResult.stdout);
     const result = JSON.parse(json).result;
 
     const endDate = Date.now();
     const time = endDate - startDate;
-    utilities.log(`Creating ${this.scratchOrgAliasName} took ${time} ticks (${time/1000.0} seconds)`);
+    utilities.log(
+      `Creating ${this.scratchOrgAliasName} took ${time} ticks (${time /
+        1000.0} seconds)`
+    );
 
     if (!result.authFields) {
-      throw new Error('In createDefaultScratchOrg(), result.authFields is null (or undefined)');
+      throw new Error(
+        'In createDefaultScratchOrg(), result.authFields is null (or undefined)'
+      );
     }
 
     if (!result.authFields.accessToken) {
-      throw new Error('In createDefaultScratchOrg(), result.authFields.accessToken is null (or undefined)');
+      throw new Error(
+        'In createDefaultScratchOrg(), result.authFields.accessToken is null (or undefined)'
+      );
     }
 
     if (!result.orgId) {
-      throw new Error('In createDefaultScratchOrg(), result.orgId is null (or undefined)');
+      throw new Error(
+        'In createDefaultScratchOrg(), result.orgId is null (or undefined)'
+      );
     }
 
     if (!result.scratchOrgInfo.SignupEmail) {
-      throw new Error('In createDefaultScratchOrg(), result.scratchOrgInfo.SignupEmail is null (or undefined)');
+      throw new Error(
+        'In createDefaultScratchOrg(), result.scratchOrgInfo.SignupEmail is null (or undefined)'
+      );
     }
 
     // Run SFDX: Set a Default Org
-    utilities.log(`${this.testSuiteSuffixName} - selecting SFDX: Set a Default Org...`);
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 1);
+    utilities.log(
+      `${this.testSuiteSuffixName} - selecting SFDX: Set a Default Org...`
+    );
+    const inputBox = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Set a Default Org',
+      1
+    );
 
     // Type the scratch org's name into the filter. Do this in case the
     // org's name is not visible (and one needs to scroll down to see it)
@@ -309,7 +412,9 @@ export class TestSetup {
     }
 
     if (!scratchOrgQuickPickItemWasFound) {
-      throw new Error(`In createDefaultScratchOrg(), the scratch org's pick list item was not found`);
+      throw new Error(
+        `In createDefaultScratchOrg(), the scratch org's pick list item was not found`
+      );
     }
     // Warning! This only works if the item (the scratch org) is visible.
     // If there are many scratch orgs, not all of them may be displayed.
@@ -318,24 +423,40 @@ export class TestSetup {
     // they are looking for.
 
     // Look for the success notification.
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Set a Default Org successfully ran');
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Set a Default Org successfully ran'
+    );
     if (!successNotificationWasFound) {
-      throw new Error('In createDefaultScratchOrg(), the notification of "SFDX: Set a Default Org successfully ran" was not found');
+      throw new Error(
+        'In createDefaultScratchOrg(), the notification of "SFDX: Set a Default Org successfully ran" was not found'
+      );
     }
 
     // Look for this.scratchOrgAliasName in the list of status bar items.
     const statusBar = await workbench.getStatusBar();
-    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(statusBar, this.scratchOrgAliasName);
+    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(
+      statusBar,
+      this.scratchOrgAliasName
+    );
     if (!scratchOrgStatusBarItem) {
-      throw new Error('In createDefaultScratchOrg(), getStatusBarItemWhichIncludes() returned a scratchOrgStatusBarItem with a value of null (or undefined)');
+      throw new Error(
+        'In createDefaultScratchOrg(), getStatusBarItemWhichIncludes() returned a scratchOrgStatusBarItem with a value of null (or undefined)'
+      );
     }
 
-    utilities.log(`${this.testSuiteSuffixName} - ...finished createDefaultScratchOrg()`);
+    utilities.log(
+      `${this.testSuiteSuffixName} - ...finished createDefaultScratchOrg()`
+    );
     utilities.log('');
   }
 
   private async setDefaultOrg(workbench: Workbench): Promise<void> {
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 2);
+    const inputBox = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Set a Default Org',
+      2
+    );
 
     let scratchOrgQuickPickItemWasFound = false;
 
@@ -359,19 +480,31 @@ export class TestSetup {
     }
 
     if (!scratchOrgQuickPickItemWasFound) {
-      throw new Error(`In setDefaultOrg(), the scratch org's quick pick item was not found`);
+      throw new Error(
+        `In setDefaultOrg(), the scratch org's quick pick item was not found`
+      );
     }
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Set a Default Org successfully ran');
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Set a Default Org successfully ran'
+    );
     if (!successNotificationWasFound) {
-      throw new Error('In setDefaultOrg(), the notification of "SFDX: Set a Default Org successfully ran" was not found');
+      throw new Error(
+        'In setDefaultOrg(), the notification of "SFDX: Set a Default Org successfully ran" was not found'
+      );
     }
 
     // Look for orgAliasName in the list of status bar items
     const statusBar = await workbench.getStatusBar();
-    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(statusBar, this.scratchOrgAliasName!);
+    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(
+      statusBar,
+      this.scratchOrgAliasName!
+    );
     if (!scratchOrgStatusBarItem) {
-      throw new Error('In setDefaultOrg(), getStatusBarItemWhichIncludes() returned a scratchOrgStatusBarItem with a value of null (or undefined)');
+      throw new Error(
+        'In setDefaultOrg(), getStatusBarItemWhichIncludes() returned a scratchOrgStatusBarItem with a value of null (or undefined)'
+      );
     }
   }
 
