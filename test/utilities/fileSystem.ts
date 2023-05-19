@@ -6,12 +6,10 @@
  */
 
 import { ChildProcess, exec } from 'child_process';
-import { runCommandFromCommandPrompt } from './commandPrompt';
-import { log, pause } from './miscellaneous';
+import { log } from './miscellaneous';
 import * as fs from 'fs-extra';
 import path from 'path';
 import { TestSetup } from '../testSetup';
-import { TextEditor } from 'wdio-vscode-service';
 
 export function createFolder(folderPath: string): ChildProcess {
   const childProcess = exec(`mkdir "${folderPath}"`);
