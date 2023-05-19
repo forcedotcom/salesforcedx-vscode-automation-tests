@@ -5,21 +5,16 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import clipboard from 'clipboardy'
-import {
-  OutputView
-} from 'wdio-vscode-service';
-import {
-  CMD_KEY
-} from 'wdio-vscode-service/dist/constants';
-import {
-  pause
-} from './miscellaneous';
-import {
-  dismissAllNotifications
-} from './notifications';
+import clipboard from 'clipboardy';
+import { OutputView } from 'wdio-vscode-service';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
+import { pause } from './miscellaneous';
+import { dismissAllNotifications } from './notifications';
 
-export async function selectOutputChannel(outputView: OutputView, name: string): Promise<void> {
+export async function selectOutputChannel(
+  outputView: OutputView,
+  name: string
+): Promise<void> {
   // Wait for all notifications to go away.  If there is a notification that is overlapping and hiding the Output channel's
   // dropdown menu, calling select.click() doesn't work, so dismiss all notifications first before clicking the dropdown
   // menu and opening it.
@@ -41,13 +36,13 @@ export async function selectOutputChannel(outputView: OutputView, name: string):
   for (const channel of channels) {
     const val = await channel.getValue();
     if (val === name) {
-        await channel.click();
+      await channel.click();
 
-        // eslint-disable-next-line wdio/no-pause
-        await browser.pause(200);
-        await browser.keys(['Escape']);
-        await pause(1);
-        return;
+      // eslint-disable-next-line wdio/no-pause
+      await browser.pause(200);
+      await browser.keys(['Escape']);
+      await pause(1);
+      return;
     }
   }
 
@@ -63,7 +58,9 @@ export async function openOutputView(): Promise<OutputView> {
   return outputView;
 }
 
-export async function getOutputViewText(outputChannelName: string = ''): Promise<string> {
+export async function getOutputViewText(
+  outputChannelName: string = ''
+): Promise<string> {
   const outputView = await openOutputView();
 
   // Set the output channel, but only if the value is passed in.
@@ -86,7 +83,11 @@ export async function getOutputViewText(outputChannelName: string = ''): Promise
 }
 
 // If found, this function returns the entire text that's in the Output panel.
-export async function attemptToFindOutputPanelText(outputChannelName: string, searchString: string, attempts: number) : Promise<string | undefined> {
+export async function attemptToFindOutputPanelText(
+  outputChannelName: string,
+  searchString: string,
+  attempts: number
+): Promise<string | undefined> {
   const outputView = await openOutputView();
   await selectOutputChannel(outputView, outputChannelName);
 
