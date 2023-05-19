@@ -9,6 +9,7 @@ import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import * as fs from 'fs-extra';
 import path from 'path';
+import { TextEditor } from 'wdio-vscode-service';
 
 describe('Manifest Builder', async () => {
   let testSetup: TestSetup;
@@ -26,10 +27,45 @@ describe('Manifest Builder', async () => {
     );
     utilities.createCustomObjects(testSetup);
 
-    utilities.log(
-      `${testSetup.testSuiteSuffixName} - calling createManifestFile()`
+    utilities.log(`${testSetup.testSuiteSuffixName} - creating manifest file`);
+
+    const workbench = await browser.getWorkbench();
+
+    // Using the Command palette, run File: New File...
+    const inputBox = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Create: New File...',
+      1
     );
-    utilities.createManifestFile(testSetup);
+
+    // Set the name of the new manifest file
+    const filePath = path.join('/manifest/manifest.xml');
+    await inputBox.setText(filePath);
+    await inputBox.confirm();
+    await inputBox.confirm();
+    await inputBox.confirm();
+    const editorView = workbench.getEditorView();
+    const textEditor = (await editorView.openEditor(
+      'manifest.xml'
+    )) as TextEditor;
+    const content = [
+      `<?xml version="1.0" encoding="UTF-8"?>`,
+      `<Package xmlns="http://soap.sforce.com/2006/04/metadata">`,
+      `\t<types>`,
+      `\t\t<members>Customer__c</members>`,
+      `\t\t<members>Product__c</members>`,
+      `\t\t<name>CustomObject</name>`,
+      `\t</types>`,
+      `\t<version>57.0</version>`,
+      `</Package>`
+    ].join('\n');
+
+    await textEditor.setText(content);
+    await textEditor.save();
+    await utilities.pause(1);
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - finished creating manifest file`
+    );
   });
 
   // TODO: Select components and magically generate manifest file without the context menu :clown_face:
@@ -80,6 +116,12 @@ describe('Manifest Builder', async () => {
     );
     // Using the Command palette, run SFDX: Deploy Source in Manifest to Org
     const workbench = await browser.getWorkbench();
+    // Clear output before running the command
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'View: Clear Output',
+      1
+    );
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Deploy Source in Manifest to Org',
@@ -103,7 +145,7 @@ describe('Manifest Builder', async () => {
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      'Starting SFDX: Deploy Source in Manifest to Org',
+      'Starting SFDX: Deploy Source to Org',
       10
     );
     expect(outputPanelText).not.toBeUndefined();
@@ -116,11 +158,9 @@ describe('Manifest Builder', async () => {
     expect(outputPanelText).toContain('Product__c');
     expect(outputPanelText).toContain('CustomObject');
     expect(outputPanelText).toContain(
-      'force-app/main/default/objects/CustomSObjects/Customer__c/Customer__c.object-meta.xml'
+      'force-app/main/default/objects/Customer__c/Customer__c.object-meta.xml'
     );
-    expect(outputPanelText).toContain(
-      'ended SFDX: Deploy Source in Manifest to Org'
-    );
+    expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
 
   step('SFDX: Retrieve Source in Manifest from Org', async () => {
@@ -129,6 +169,16 @@ describe('Manifest Builder', async () => {
     );
     // Using the Command palette, run SFDX: Retrieve Source in Manifest from Org
     const workbench = await browser.getWorkbench();
+    const editorView = workbench.getEditorView();
+    const textEditor = (await editorView.openEditor(
+      'manifest.xml'
+    )) as TextEditor;
+    // Clear output before running the command
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'View: Clear Output',
+      1
+    );
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Retrieve Source in Manifest from Org',
@@ -152,7 +202,7 @@ describe('Manifest Builder', async () => {
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      'Starting SFDX: Retrieve Source in Manifest from Org',
+      'Starting SFDX: Retrieve Source from Org',
       10
     );
     expect(outputPanelText).not.toBeUndefined();
@@ -164,11 +214,9 @@ describe('Manifest Builder', async () => {
     expect(outputPanelText).toContain('Product__c');
     expect(outputPanelText).toContain('CustomObject');
     expect(outputPanelText).toContain(
-      'force-app/main/default/objects/CustomSObjects/Customer__c/Customer__c.object-meta.xml'
+      'force-app/main/default/objects/Customer__c/Customer__c.object-meta.xml'
     );
-    expect(outputPanelText).toContain(
-      'ended SFDX: Retrieve Source in Manifest from Org'
-    );
+    expect(outputPanelText).toContain('ended SFDX: Retrieve Source from Org');
   });
 
   step('Tear down and clean up the testing environment', async () => {
