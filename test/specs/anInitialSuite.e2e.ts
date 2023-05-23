@@ -97,7 +97,10 @@ describe('An Initial Suite', async () => {
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 3);
+
+    // Close panel so all extensions can be seen
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
 
     let matchesFound = 0;
     const extensionNameDivs = await $$('div.name');
@@ -110,17 +113,7 @@ describe('An Initial Suite', async () => {
       }
     }
 
-    expect(matchesFound).toBe(6);
-    // Visible:
-    // salesforce.salesforcedx-vscode-soql
-    // salesforce.salesforcedx-vscode-lightning
-    // salesforce.salesforcedx-vscode-core
-    // salesforce.salesforcedx-vscode-apex
-    // salesforce.salesforcedx-vscode-apex-replay-debugger
-    // salesforce.salesforcedx-vscode-apex-debugger
-
-    // Not visible (and thus, not returned from $$('div.name'))
-    // salesforce.salesforcedx-vscode-visualforce
+    expect(matchesFound).toBe(7);
   });
 
   step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
