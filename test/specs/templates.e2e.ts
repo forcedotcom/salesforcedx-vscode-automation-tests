@@ -211,11 +211,11 @@ describe('Templates', async () => {
 
   // Lightning Web Component
   step('Create Lightning Web Component', async () => {
-    // Using the Command palette, run SFDX: Create Apex Class.
+    // Using the Command palette, run SFDX: Create Lightning Web Component.
     const workbench = await browser.getWorkbench();
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Lightning Web Component', 1);
 
-    // Set the name of the new component to auraComponent1.
+    // Set the name of the new component to lightningWebComponent1.
     await inputBox.setText('lightningWebComponent1');
     await inputBox.confirm();
     await utilities.pause(1);
