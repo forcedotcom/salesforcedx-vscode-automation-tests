@@ -166,14 +166,16 @@ describe('Manifest Builder', async () => {
     utilities.log(
       `${testSetup.testSuiteSuffixName} - SFDX: Retrieve Source in Manifest from Org`
     );
-    // Clear output before running the command
+    // Using the Command palette, run SFDX: Retrieve Source in Manifest from Org
     const workbench = await browser.getWorkbench();
+    const editorView = workbench.getEditorView();
+    (await editorView.openEditor('manifest.xml')) as TextEditor;
+    // Clear output before running the command
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'View: Clear Output',
       1
     );
-    // Using the Command palette, run SFDX: Retrieve Source in Manifest from Org
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Retrieve Source in Manifest from Org',
