@@ -169,7 +169,7 @@ describe('Manifest Builder', async () => {
     // Using the Command palette, run SFDX: Retrieve Source in Manifest from Org
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
-    (await editorView.openEditor('manifest.xml')) as TextEditor;
+    await editorView.openEditor('manifest.xml');
     // Clear output before running the command
     await utilities.runCommandFromCommandPrompt(
       workbench,
