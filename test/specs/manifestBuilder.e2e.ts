@@ -36,7 +36,7 @@ describe('Manifest Builder', async () => {
     );
 
     // Set the name of the new manifest file
-    const filePath = path.join('/manifest/manifest.xml');
+    const filePath = path.join('manifest', 'manifest.xml');
     await inputBox.setText(filePath);
 
     // The following 3 confirms are just confirming the file creation and the folder it will belong to
