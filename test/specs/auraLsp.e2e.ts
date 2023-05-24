@@ -11,13 +11,11 @@ import * as utilities from '../utilities';
 
 describe('Aura LSP', async () => {
   let testSetup: TestSetup;
-  let projectName: string;
 
   step('Set up the testing environment', async () => {
     utilities.log(`AuraLsp - Set up the testing environment`);
     testSetup = new TestSetup('AuraLsp', false);
     await testSetup.setUp();
-    projectName = testSetup.tempProjectName.toUpperCase();
 
     // Create Aura Component
     await utilities.createAura('aura1');

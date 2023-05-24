@@ -4,22 +4,20 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import path from 'path';
 import { step } from 'mocha-steps';
-import { TestSetup } from '../testSetup';
+import path from 'path';
 import { TextEditor } from 'wdio-vscode-service';
+import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
 describe('Manifest Builder', async () => {
   let testSetup: TestSetup;
-  let projectName: string;
   const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
     utilities.log(`ManifestBuilder - Set up the testing environment`);
     testSetup = new TestSetup('ManifestBuilder', false);
     await testSetup.setUp();
-    projectName = testSetup.tempProjectName.toUpperCase();
 
     utilities.log(
       `${testSetup.testSuiteSuffixName} - calling createCustomObjects()`
@@ -40,6 +38,8 @@ describe('Manifest Builder', async () => {
     // Set the name of the new manifest file
     const filePath = path.join('/manifest/manifest.xml');
     await inputBox.setText(filePath);
+
+    // The following 3 confirms are just confirming the file creation and the folder it will belong to
     await inputBox.confirm();
     await inputBox.confirm();
     await inputBox.confirm();
@@ -166,18 +166,14 @@ describe('Manifest Builder', async () => {
     utilities.log(
       `${testSetup.testSuiteSuffixName} - SFDX: Retrieve Source in Manifest from Org`
     );
-    // Using the Command palette, run SFDX: Retrieve Source in Manifest from Org
-    const workbench = await browser.getWorkbench();
-    const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor(
-      'manifest.xml'
-    )) as TextEditor;
     // Clear output before running the command
+    const workbench = await browser.getWorkbench();
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'View: Clear Output',
       1
     );
+    // Using the Command palette, run SFDX: Retrieve Source in Manifest from Org
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Retrieve Source in Manifest from Org',

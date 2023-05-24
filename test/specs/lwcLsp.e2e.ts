@@ -11,13 +11,11 @@ import * as utilities from '../utilities';
 
 describe('LWC LSP', async () => {
   let testSetup: TestSetup;
-  let projectName: string;
 
   step('Set up the testing environment', async () => {
     utilities.log(`LwcLsp - Set up the testing environment`);
     testSetup = new TestSetup('LwcLsp', false);
     await testSetup.setUp();
-    projectName = testSetup.tempProjectName.toUpperCase();
 
     // Create Lightning Web Component
     await utilities.createLWC('lwc1');
