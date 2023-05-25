@@ -180,7 +180,6 @@ export async function createAnonymousApexFile(): Promise<void> {
 
 export async function createVisualforcePage(): Promise<void> {
   const workbench = await browser.getWorkbench();
-  let textEditor: TextEditor;
 
   // Using the Command palette, run SFDX: Create Apex Class to create the controller
   const inputBox = await runCommandFromCommandPrompt(
@@ -199,7 +198,9 @@ export async function createVisualforcePage(): Promise<void> {
 
   // Modify class content
   const editorView = workbench.getEditorView();
-  textEditor = (await editorView.openEditor('MyController.cls')) as TextEditor;
+  let textEditor = (await editorView.openEditor(
+    'MyController.cls'
+  )) as TextEditor;
   const classText = [
     `public class MyController {`,
     `\tprivate final Account account;`,
