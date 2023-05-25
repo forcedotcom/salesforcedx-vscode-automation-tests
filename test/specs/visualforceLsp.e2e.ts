@@ -5,13 +5,13 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step } from 'mocha-steps';
+import path from 'path';
 import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
 describe('Visualforce LSP', async () => {
   let testSetup: TestSetup;
-  const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
     utilities.log('VisualforceLsp - Set up the testing environment');
@@ -30,24 +30,43 @@ describe('Visualforce LSP', async () => {
     // Create Visualforce Page
     await utilities.createVisualforcePage();
 
-    // Push source to org
+    // Check output panel to validate file was created...
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      'Starting SFDX: Create Visualforce Page',
+      10
+    );
+    expect(outputPanelText).not.toBeUndefined();
+    const pathToPagesFolder = path.join(
+      testSetup.projectFolderPath!,
+      'force-app',
+      'main',
+      'default',
+      'pages'
+    );
+    expect(outputPanelText).toContain(`target dir = ${pathToPagesFolder}`);
+    const pathToPage = path.join(
+      'force-app',
+      'main',
+      'default',
+      'pages',
+      'FooPage.page'
+    );
+    expect(outputPanelText).toContain(`create ${pathToPage}`);
+    expect(outputPanelText).toContain(`create ${pathToPage}-meta.xml`);
+    expect(outputPanelText).toContain('Finished SFDX: Create Visualforce Page');
+
+    // Get open text editor and verify file content
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Push Source to Default Org and Override Conflicts',
-      1
+    const editorView = workbench.getEditorView();
+    const textEditor = (await editorView.openEditor(
+      'FooPage.page'
+    )) as TextEditor;
+    const fileContent = await textEditor.getText();
+    expect(fileContent).toContain(
+      '<apex:page controller="myController" tabStyle="Account">'
     );
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Push Source to Default Org and Override Conflicts',
-      fiveMinutes
-    );
-    const successPushNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Push Source to Default Org and Override Conflicts successfully ran'
-    );
-    expect(successPushNotificationWasFound).toBe(true);
+    expect(fileContent).toContain('</apex:page>');
   });
 
   step('Verify Extension is Running', async () => {
