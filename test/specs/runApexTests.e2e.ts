@@ -229,15 +229,15 @@ describe('Run Apex Tests', async () => {
       'ExampleApexClass1Test.cls'
     )) as TextEditor;
     const testText = [
-      '@IsTest',
-      'public class ExampleApexClass1Test {',
-      '\t@IsTest',
-      '\tstatic void validateSayHello() {',
-      "\t\tSystem.debug('Starting validate');",
-      "\t\tExampleApexClass1.SayHello('Andres');",
-      "\t\tSystem.assertEquals(1, 1, 'all good');",
-      '\t}',
-      '}'
+      `@IsTest`,
+      `public class ExampleApexClass1Test {`,
+      `\t@IsTest`,
+      `\tstatic void validateSayHello() {`,
+      `\t\tSystem.debug('Starting validate');`,
+      `\t\tExampleApexClass1.SayHello('Andres');`,
+      `\t\tSystem.assertEquals(1, 1, 'all good');`,
+      `\t}`,
+      `}`
     ].join('\n');
     await textEditor.setText(testText);
     await textEditor.save();

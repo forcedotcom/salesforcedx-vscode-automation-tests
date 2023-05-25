@@ -11,14 +11,12 @@ import * as utilities from '../utilities';
 
 describe('Visualforce LSP', async () => {
   let testSetup: TestSetup;
-  let projectName: string;
   const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
-    utilities.log(`VisualforceLsp - Set up the testing environment`);
+    utilities.log('VisualforceLsp - Set up the testing environment');
     testSetup = new TestSetup('VisualforceLsp', false);
     await testSetup.setUp();
-    projectName = testSetup.tempProjectName.toUpperCase();
 
     // Create Visualforce Page
     await utilities.createVisualforcePage();
@@ -104,19 +102,22 @@ describe('Visualforce LSP', async () => {
     const textEditor = (await editorView.openEditor(
       'FooPage.page'
     )) as TextEditor;
-    await textEditor.typeTextAt(3, 1, '\t<apex:pageM');
+    await textEditor.typeTextAt(3, 1, '\t\t<apex:pageM');
     await utilities.pause(1);
 
     // Verify autocompletion options are present
     const autocompletionOptions = await $$(
       'textarea.inputarea.monaco-mouse-cursor-text'
     );
-    expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe(
-      'true'
+    const ariaHasPopupAttribute = await autocompletionOptions[0].getAttribute(
+      'aria-haspopup'
     );
-    expect(
-      await autocompletionOptions[0].getAttribute('aria-autocomplete')
-    ).toBe('list');
+    expect(ariaHasPopupAttribute).toBe('true');
+
+    const ariaAutocompleteAttribute = await autocompletionOptions[0].getAttribute(
+      'aria-autocomplete'
+    );
+    expect(ariaAutocompleteAttribute).toBe('list');
 
     // Verify autocompletion options can be selected and therefore automatically inserted into the file
     await browser.keys(['Enter']);

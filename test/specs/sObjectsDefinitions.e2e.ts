@@ -4,12 +4,12 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import * as fs from 'fs-extra';
 import { step } from 'mocha-steps';
+import path from 'path';
 import { DefaultTreeItem, TreeItem } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
-import * as fs from 'fs-extra';
-import path from 'path';
 
 describe('SObjects Definitions', async () => {
   let testSetup: TestSetup;
