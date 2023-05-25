@@ -178,7 +178,7 @@ export async function createAnonymousApexFile(): Promise<void> {
   await pause(1);
 }
 
-export async function createVisualforcePage(): Promise<void> {
+export async function createApexController(): Promise<void> {
   const workbench = await browser.getWorkbench();
 
   // Using the Command palette, run SFDX: Create Apex Class to create the controller
@@ -198,7 +198,7 @@ export async function createVisualforcePage(): Promise<void> {
 
   // Modify class content
   const editorView = workbench.getEditorView();
-  let textEditor = (await editorView.openEditor(
+  const textEditor = (await editorView.openEditor(
     'MyController.cls'
   )) as TextEditor;
   const classText = [
@@ -218,38 +218,6 @@ export async function createVisualforcePage(): Promise<void> {
     `}`
   ].join('\n');
   await textEditor.setText(classText);
-  await textEditor.save();
-  await pause(1);
-
-  // Using the Command palette, run SFDX: Create Visualforce Page
-  await runCommandFromCommandPrompt(
-    workbench,
-    'SFDX: Create Visualforce Page',
-    1
-  );
-
-  // Set the name of the new Visualforce Page
-  await inputBox.setText('FooPage');
-  await inputBox.confirm();
-
-  // Select the default directory (press Enter/Return).
-  await inputBox.confirm();
-  await pause(1);
-
-  // Modify page content
-  textEditor = (await editorView.openEditor('FooPage.page')) as TextEditor;
-  const pageText = [
-    `<apex:page controller="myController" tabStyle="Account">`,
-    `\t<apex:form>`,
-    `\t`,
-    `\t\t<apex:pageBlock title="Congratulations {!$User.FirstName}">`,
-    `\t\t\tYou belong to Account Name: <apex:inputField value="{!account.name}"/>`,
-    `\t\t\t<apex:commandButton action="{!save}" value="save"/>`,
-    `\t\t</apex:pageBlock>`,
-    `\t</apex:form>`,
-    `</apex:page>`
-  ].join('\n');
-  await textEditor.setText(pageText);
   await textEditor.save();
   await pause(1);
 }

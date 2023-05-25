@@ -18,6 +18,15 @@ describe('Visualforce LSP', async () => {
     testSetup = new TestSetup('VisualforceLsp', false);
     await testSetup.setUp();
 
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - calling createApexController()`
+    );
+    // Create Apex controller for the Visualforce Page
+    await utilities.createApexController();
+
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - calling createVisualforcePage()`
+    );
     // Create Visualforce Page
     await utilities.createVisualforcePage();
 
