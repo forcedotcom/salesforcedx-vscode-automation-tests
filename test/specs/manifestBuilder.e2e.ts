@@ -18,6 +18,12 @@ describe('Manifest Builder', async () => {
     utilities.log(`ManifestBuilder - Set up the testing environment`);
     testSetup = new TestSetup('ManifestBuilder', false);
     await testSetup.setUp();
+  });
+
+  step('Generate Manifest File', async () => {
+    // Normally we would want to run the 'SFDX: Generate Manifest File' command here, but it is only
+    // accessible via a context menu, and wdio-vscode-service isn't able to interact with
+    // context menus, so instead the manifest file is manually created:
 
     utilities.log(
       `${testSetup.testSuiteSuffixName} - calling createCustomObjects()`
@@ -43,6 +49,7 @@ describe('Manifest Builder', async () => {
     await inputBox.confirm();
     await inputBox.confirm();
     await inputBox.confirm();
+
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor(
       'manifest.xml'
@@ -66,48 +73,6 @@ describe('Manifest Builder', async () => {
       `${testSetup.testSuiteSuffixName} - finished creating manifest file`
     );
   });
-
-  // TODO: Select components and magically generate manifest file without the context menu :clown_face:
-  // step('SFDX: Generate Manifest File', async () => {
-  //   utilities.log(
-  //     `${testSetup.testSuiteSuffixName} - SFDX: Generate Manifest File`
-  //   );
-  //   // TODO: Find a way to use SFDX: Generate Manifest File
-
-  //   // // Set the name of the new manifest file
-  //   // await inputBox.setText('manifest');
-  //   // await inputBox.confirm();
-
-  //   // // Wait for the command to execute
-  //   // const workbench = await browser.getWorkbench();
-  //   // await utilities.waitForNotificationToGoAway(
-  //   //   workbench,
-  //   //   'Running SFDX: Generate Manifest File',
-  //   //   fiveMinutes
-  //   // );
-
-  //   // // Look for the success notification that appears which says, "SFDX: Generate Manifest File successfully ran".
-  //   // const successNotificationWasFound = await utilities.notificationIsPresent(
-  //   //   workbench,
-  //   //   'SFDX: Generate Manifest File successfully ran'
-  //   // );
-  //   // expect(successNotificationWasFound).toBe(true);
-
-  //   // // Verify manifest file was created
-  //   // const editorView = workbench.getEditorView();
-  //   // const activeTab = await editorView.getActiveTab();
-  //   // const title = await activeTab?.getTitle();
-  //   // expect(title).toBe('manifest.xml');
-
-  //   // // Verify Output tab
-  //   // const outputPanelText = await utilities.attemptToFindOutputPanelText(
-  //   //   'Salesforce CLI',
-  //   //   'Starting SFDX: Generate Manifest File',
-  //   //   10
-  //   // );
-  //   // expect(outputPanelText).not.toBeUndefined();
-  //   // expect(outputPanelText).toContain('ended SFDX: Generate Manifest File');
-  // });
 
   step('SFDX: Deploy Source in Manifest to Org', async () => {
     utilities.log(
@@ -148,16 +113,12 @@ describe('Manifest Builder', async () => {
       10
     );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('=== Deployed Source');
-    expect(outputPanelText).toContain('STATE');
-    expect(outputPanelText).toContain('FULL NAME');
-    expect(outputPanelText).toContain('TYPE');
-    expect(outputPanelText).toContain('PROJECT PATH');
-    expect(outputPanelText).toContain('Customer__c');
-    expect(outputPanelText).toContain('Product__c');
-    expect(outputPanelText).toContain('CustomObject');
+    expect(outputPanelText).toContain('Deployed Source');
     expect(outputPanelText).toContain(
-      'force-app/main/default/objects/Customer__c/Customer__c.object-meta.xml'
+      'Customer__c  CustomObject  force-app/main/default/objects/Customer__c/Customer__c.object-meta.xml'
+    );
+    expect(outputPanelText).toContain(
+      'Product__c   CustomObject  force-app/main/default/objects/Product__c/Product__c.object-meta.xml'
     );
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
@@ -203,15 +164,12 @@ describe('Manifest Builder', async () => {
       10
     );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('=== Retrieved Source');
-    expect(outputPanelText).toContain('FULL NAME');
-    expect(outputPanelText).toContain('TYPE');
-    expect(outputPanelText).toContain('PROJECT PATH');
-    expect(outputPanelText).toContain('Customer__c');
-    expect(outputPanelText).toContain('Product__c');
-    expect(outputPanelText).toContain('CustomObject');
+    expect(outputPanelText).toContain('Retrieved Source');
     expect(outputPanelText).toContain(
-      'force-app/main/default/objects/Customer__c/Customer__c.object-meta.xml'
+      'Customer__c  CustomObject  force-app/main/default/objects/Customer__c/Customer__c.object-meta.xml'
+    );
+    expect(outputPanelText).toContain(
+      'Product__c   CustomObject  force-app/main/default/objects/Product__c/Product__c.object-meta.xml'
     );
     expect(outputPanelText).toContain('ended SFDX: Retrieve Source from Org');
   });

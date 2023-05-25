@@ -6,10 +6,10 @@
  */
 
 import { ChildProcess, exec } from 'child_process';
-import { log } from './miscellaneous';
 import * as fs from 'fs-extra';
 import path from 'path';
 import { TestSetup } from '../testSetup';
+import { log } from './miscellaneous';
 
 export function createFolder(folderPath: string): ChildProcess {
   const childProcess = exec(`mkdir "${folderPath}"`);
@@ -43,6 +43,8 @@ export async function createCustomObjects(testSetup: TestSetup): Promise<void> {
   fs.copy(source, destination, { recursive: true }, async error => {
     if (error) {
       log(`Failed in copying custom objects ${error.message}`);
+      log(`source was: '${source}'`);
+      log(`destination was: '${destination}'`);
       await testSetup.tearDown();
       throw error;
     }
