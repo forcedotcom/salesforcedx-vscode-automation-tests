@@ -71,11 +71,11 @@ describe('Push and Pull', async () => {
 
   step('Push the Apex class', async () => {
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
     // At this point there should be no conflicts since this is a new class.
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Scratch Org successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
@@ -90,9 +90,9 @@ describe('Push and Pull', async () => {
     await outputView.clearText();
 
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Scratch Org successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
@@ -113,9 +113,9 @@ describe('Push and Pull', async () => {
     await textEditor.setTextAtLine(3, '        // sample comment');
 
     // Push the file.
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    let successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Scratch Org successfully ran', 10);
+    let successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
@@ -130,9 +130,9 @@ describe('Push and Pull', async () => {
     await textEditor.save();
 
     // An now push the changes.
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Scratch Org', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Scratch Org successfully ran', 10);
+    successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
@@ -152,11 +152,11 @@ describe('Push and Pull', async () => {
     await outputView.clearText();
 
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Scratch Org', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
 
     // At this point there should be no conflicts since there have been no changes.
 
-    let successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org successfully ran', 10);
+    let successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
@@ -175,9 +175,9 @@ describe('Push and Pull', async () => {
     await outputView.clearText();
 
     // And pull again.
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Scratch Org', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
 
-    successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org successfully ran', 10);
+    successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
@@ -201,9 +201,9 @@ describe('Push and Pull', async () => {
     // Don't save the file just yet.
 
     // Pull the file.
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Scratch Org', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
@@ -225,9 +225,9 @@ describe('Push and Pull', async () => {
     await textEditor.save();
 
     // An now pull the changes.
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Scratch Org', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Scratch Org successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Retrieved Source', 10);
