@@ -28,7 +28,7 @@ describe('Manifest Builder', async () => {
     utilities.log(
       `${testSetup.testSuiteSuffixName} - calling createCustomObjects()`
     );
-    utilities.createCustomObjects(testSetup);
+    await utilities.createCustomObjects(testSetup);
 
     utilities.log(`${testSetup.testSuiteSuffixName} - creating manifest file`);
 
