@@ -8,8 +8,6 @@ import { step } from 'mocha-steps';
 import { DefaultTreeItem, TreeItem } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
-import * as fs from 'fs-extra';
-import path from 'path';
 
 describe('SObjects Definitions', async () => {
   let testSetup: TestSetup;
@@ -23,7 +21,7 @@ describe('SObjects Definitions', async () => {
     utilities.log(
       `${testSetup.testSuiteSuffixName} - calling createCustomObjects()`
     );
-    utilities.createCustomObjects(testSetup);
+    await utilities.createCustomObjects(testSetup);
   });
 
   step(

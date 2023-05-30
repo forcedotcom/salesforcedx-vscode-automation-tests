@@ -29,7 +29,7 @@ export class EnvironmentSettings {
     // './test/specs/**/sObjectsDefinitions.e2e.ts'
     // './test/specs/**/templates.e2e.ts',
     // './test/specs/**/trailApexReplayDebugger.e2e.ts',
-    // './test/specs/**/visualForceLsp.e2e.ts',
+    // './test/specs/**/visualforceLsp.e2e.ts'
   ];
   private _devHubAliasName = 'vscodeOrg';
   private _devHubUserName = 'svc_idee_bot@salesforce.com';

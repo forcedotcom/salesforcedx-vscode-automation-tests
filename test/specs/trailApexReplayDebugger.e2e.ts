@@ -5,14 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step } from 'mocha-steps';
-import {
-  InputBox,
-  QuickOpenBox,
-  TextEditor
-} from 'wdio-vscode-service';
-import {
-  TestSetup
-} from '../testSetup';
+import { InputBox, QuickOpenBox, TextEditor } from 'wdio-vscode-service';
+import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
 /**
@@ -34,34 +28,75 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     // Push source to org
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 1);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Push Source to Default Org and Override Conflicts',
+      1
+    );
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Push Source to Default Org and Override Conflicts', fiveMinutes);
-    const successPushNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Push Source to Default Org and Override Conflicts successfully ran');
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Push Source to Default Org and Override Conflicts',
+      fiveMinutes
+    );
+    const successPushNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Push Source to Default Org and Override Conflicts successfully ran'
+    );
     expect(successPushNotificationWasFound).toBe(true);
   });
 
   step('Run Apex Tests', async () => {
     // Run SFDX: Run Apex tests.
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'View: Clear Output',
+      1
+    );
+    prompt = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Run Apex Tests',
+      1
+    );
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests', fiveMinutes);
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Listening for streaming state changes...', fiveMinutes);
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Processing test run', fiveMinutes, false);
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Run Apex Tests',
+      fiveMinutes
+    );
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+      fiveMinutes
+    );
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Run Apex Tests: Processing test run',
+      fiveMinutes,
+      false
+    );
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Run Apex Tests successfully ran'
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
-    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Apex',
+      '=== Test Results',
+      10
+    );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
+    expect(outputPanelText).toContain(
+      'Assertion Failed: incorrect ticker symbol'
+    );
     expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
   });
 
@@ -69,16 +104,26 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Get open text editor
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
-    const textEditor = await editorView.openEditor('AccountService.cls') as TextEditor;
+    const textEditor = (await editorView.openEditor(
+      'AccountService.cls'
+    )) as TextEditor;
     await textEditor.moveCursor(8, 5);
 
     // Run SFDX: Toggle Checkpoint.
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Toggle Checkpoint', 1);
+    prompt = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Toggle Checkpoint',
+      1
+    );
 
-    // Calling SFDX: Update Checkpoints in Org fails if the org has been recently created, 
+    // Calling SFDX: Update Checkpoints in Org fails if the org has been recently created,
     // it does not complete the 6 steps but only 4.
     // Reloading the window forces the extensions to be reloaded and this seems to fix the issue.
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Developer: Reload Window',
+      10
+    );
     await utilities.pause(20);
 
     // Verify checkpoint is present
@@ -86,66 +131,137 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     expect(breakpoints.length).toEqual(1);
 
     // Run SFDX: Update Checkpoints in Org.
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Update Checkpoints in Org', 10);
+    prompt = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Update Checkpoints in Org',
+      10
+    );
     // Verify checkpoints updating results are listed on vscode's Output section
-    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex Replay Debugger', 'Starting SFDX: Update Checkpoints in Org', 10);
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Apex Replay Debugger',
+      'Starting SFDX: Update Checkpoints in Org',
+      10
+    );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('SFDX: Update Checkpoints in Org, Step 6 of 6: Confirming successful checkpoint creation');
+    expect(outputPanelText).toContain(
+      'SFDX: Update Checkpoints in Org, Step 6 of 6: Confirming successful checkpoint creation'
+    );
     expect(outputPanelText).toContain('Ending SFDX: Update Checkpoints in Org');
   });
 
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Turn On Apex Debug Log for Replay Debugger', 10);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'View: Clear Output',
+      1
+    );
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Turn On Apex Debug Log for Replay Debugger',
+      10
+    );
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Turn On Apex Debug Log for Replay Debugger', fiveMinutes);
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Turn On Apex Debug Log for Replay Debugger',
+      fiveMinutes
+    );
 
     // Look for the success notification that appears which says, "SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran');
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran'
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Verify content on vscode's Output section
-    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'Starting SFDX: Turn On Apex Debug Log for Replay Debugger', 10);
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      'Starting SFDX: Turn On Apex Debug Log for Replay Debugger',
+      10
+    );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Starting sfdx force:data:record:update --sobjecttype DebugLevel --sobjectid');
-    expect(outputPanelText).toContain('SFDX: Turn On Apex Debug Log for Replay Debugger ');
+    expect(outputPanelText).toContain(
+      'Starting sfdx force:data:record:update --sobjecttype DebugLevel --sobjectid'
+    );
+    expect(outputPanelText).toContain(
+      'SFDX: Turn On Apex Debug Log for Replay Debugger '
+    );
     expect(outputPanelText).toContain('ended with exit code 0');
   });
 
   step('Run Apex Tests', async () => {
     // Run SFDX: Run Apex tests.
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'View: Clear Output',
+      1
+    );
+    prompt = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Run Apex Tests',
+      1
+    );
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests', fiveMinutes);
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Listening for streaming state changes...', fiveMinutes);
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Processing test run', fiveMinutes, false);
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Run Apex Tests',
+      fiveMinutes
+    );
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+      fiveMinutes
+    );
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Run Apex Tests: Processing test run',
+      fiveMinutes,
+      false
+    );
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Run Apex Tests successfully ran'
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
-    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Apex',
+      '=== Test Results',
+      10
+    );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
+    expect(outputPanelText).toContain(
+      'Assertion Failed: incorrect ticker symbol'
+    );
     expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
   });
 
   step('SFDX: Get Apex Debug Logs', async () => {
     // Run SFDX: Get Apex Debug Logs
     const workbench = await browser.getWorkbench();
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Get Apex Debug Logs', 1);
+    prompt = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Get Apex Debug Logs',
+      1
+    );
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Getting Apex debug logs', fiveMinutes);
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Getting Apex debug logs',
+      fiveMinutes
+    );
 
     // Select a log file
     const quickPicks = await prompt.getQuickPicks();
@@ -154,13 +270,24 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await prompt.selectQuickPick('User User - ApexTestHandler');
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Get Apex Debug Logs', fiveMinutes);
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Get Apex Debug Logs',
+      fiveMinutes
+    );
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Get Apex Debug Logs successfully ran');
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Get Apex Debug Logs successfully ran'
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Verify content on vscode's Output section
-    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', 'Starting SFDX: Get Apex Debug Logs', 10);
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Apex',
+      'Starting SFDX: Get Apex Debug Logs',
+      10
+    );
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('|EXECUTION_STARTED');
     expect(outputPanelText).toContain('|EXECUTION_FINISHED');
@@ -170,9 +297,13 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     const editorView = workbench.getEditorView();
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
-    const textEditor = await editorView.openEditor(title!) as TextEditor;
-    const executionStarted = await textEditor.getLineOfText('|EXECUTION_STARTED');
-    const executionFinished = await textEditor.getLineOfText('|EXECUTION_FINISHED');
+    const textEditor = (await editorView.openEditor(title!)) as TextEditor;
+    const executionStarted = await textEditor.getLineOfText(
+      '|EXECUTION_STARTED'
+    );
+    const executionFinished = await textEditor.getLineOfText(
+      '|EXECUTION_FINISHED'
+    );
     expect(executionStarted).toBeGreaterThanOrEqual(1);
     expect(executionFinished).toBeGreaterThanOrEqual(1);
   });
@@ -180,7 +311,11 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('Replay an Apex Debug Log', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Launch Apex Replay Debugger with Current File', 5);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Launch Apex Replay Debugger with Current File',
+      5
+    );
 
     // Continue with the debug session
     await browser.keys(['F5']);
@@ -189,44 +324,87 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.pause(1);
   });
 
-  step('Push Fixed Metadata to Scratch Org', async () => {
+  step('Push Fixed Metadata to Org', async () => {
     // Get open text editor
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
-    const textEditor = await editorView.openEditor('AccountService.cls') as TextEditor;
+    const textEditor = (await editorView.openEditor(
+      'AccountService.cls'
+    )) as TextEditor;
     await textEditor.setTextAtLine(6, '\t\t\tTickerSymbol = tickerSymbol');
     await textEditor.save();
     await utilities.pause(2);
 
     // Push source to org
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 1);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Push Source to Default Org and Override Conflicts',
+      1
+    );
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Push Source to Default Org and Override Conflicts', fiveMinutes);
-    const successPushNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Push Source to Default Org and Override Conflicts successfully ran');
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Push Source to Default Org and Override Conflicts',
+      fiveMinutes
+    );
+    const successPushNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Push Source to Default Org and Override Conflicts successfully ran'
+    );
     expect(successPushNotificationWasFound).toBe(true);
   });
 
   step('Run Apex Tests to Verify Fix', async () => {
     // Run SFDX: Run Apex tests.
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'View: Clear Output',
+      1
+    );
+    prompt = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Run Apex Tests',
+      1
+    );
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests', fiveMinutes);
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Listening for streaming state changes...', fiveMinutes);
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Run Apex Tests: Processing test run', fiveMinutes, false);
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Run Apex Tests',
+      fiveMinutes
+    );
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+      fiveMinutes
+    );
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Run Apex Tests: Processing test run',
+      fiveMinutes,
+      false
+    );
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Run Apex Tests successfully ran');
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Run Apex Tests successfully ran'
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
-    const outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Apex',
+      '=== Test Results',
+      10
+    );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('AccountServiceTest.should_create_account');
+    expect(outputPanelText).toContain(
+      'AccountServiceTest.should_create_account'
+    );
     expect(outputPanelText).toContain('Pass');
   });
 

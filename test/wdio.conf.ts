@@ -114,7 +114,7 @@ export const config: Options.Testrunner = {
       // './test/specs/**/sObjectsDefinitions.e2e.ts',
       // './test/specs/**/templates.e2e.ts',
       // './test/specs/**/trailApexReplayDebugger.e2e.ts',
-      // './test/specs/**/visualforceLsp.e2e.ts',
+      // './test/specs/**/visualforceLsp.e2e.ts'
     ]
   ],
 
