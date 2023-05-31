@@ -10,8 +10,7 @@ import type { VSCodeCapabilities } from 'wdio-vscode-service/dist/types';
 import {
   EnvironmentSettings
 } from './environmentSettings';
-import { join } from 'path';
-import { existsSync, mkdir, mkdirSync } from 'fs';
+import { saveFailedTestScreenshot } from './utilities/screenshot';
 
 const capabilities: VSCodeCapabilities = {
 
@@ -321,21 +320,16 @@ export const config: Options.Testrunner = {
    * @param {Any}     result.result    return object of test function
    * @param {Number}  result.duration  duration of test
    * @param {Boolean} result.passed    true if test has passed, otherwise false
-   * @param {Object}  result.retries   informations to spec related retries, e.g. `{ attempts: 0, limit: 0 }`
+   * @param {Object}  result.retries   information to spec related retries, e.g. `{ attempts: 0, limit: 0 }`
    */
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  afterTest: async (test, __, { passed }) => {
-    if (!passed) {
-      const screenshotDir = join(__dirname, 'screenshots');
-      console.log(`Test run failed. Saving a screenshot of the failure here: ${screenshotDir}`);
-      if (!existsSync(screenshotDir)) {
-        mkdirSync(screenshotDir, { recursive: true });
-      }
-      const sanitizedTestTitle = test.title.replace(/[^a-zA-Z0-9 ]/g, "");
-      await browser.saveScreenshot(join(screenshotDir, `${test.parent} - ${sanitizedTestTitle}.png`))
+  afterTest: async (test, __, { passed, error }) => {
+    if (passed) {
+      return;
     }
-  },
 
+    await saveFailedTestScreenshot(test.parent, test.title, error);
+  },
 
   /**
    * Hook that gets executed after the suite has ended
