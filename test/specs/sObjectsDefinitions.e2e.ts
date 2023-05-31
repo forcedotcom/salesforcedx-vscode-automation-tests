@@ -4,9 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import * as fs from 'fs-extra';
 import { step } from 'mocha-steps';
-import path from 'path';
 import { DefaultTreeItem, TreeItem } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
@@ -20,30 +18,10 @@ describe('SObjects Definitions', async () => {
     await testSetup.setUp();
     projectName = testSetup.tempProjectName.toUpperCase();
 
-    const projectPath = testSetup.projectFolderPath;
-    const tempFolderPath = testSetup.tempFolderPath;
-    const source = path.join(
-      tempFolderPath!,
-      '..',
-      'test',
-      'testData',
-      'CustomSObjects'
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - calling createCustomObjects()`
     );
-    const destination = path.join(
-      projectPath!,
-      'force-app',
-      'main',
-      'default',
-      'objects'
-    );
-
-    fs.copy(source, destination, { recursive: true }, async error => {
-      if (error) {
-        utilities.log(`Failed in copying custom objects ${error.message}`);
-        await testSetup.tearDown();
-        throw error;
-      }
-    });
+    await utilities.createCustomObjects(testSetup);
   });
 
   step(
@@ -90,7 +68,7 @@ describe('SObjects Definitions', async () => {
     const workbench = await browser.getWorkbench();
     await utilities.runCommandFromCommandPrompt(
       workbench,
-      'SFDX: Push Source to Defaults Org',
+      'SFDX: Push Source to Default Org',
       5
     );
     await utilities.pause(1);
