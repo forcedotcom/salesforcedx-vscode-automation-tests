@@ -241,9 +241,6 @@ export class TestSetup {
   }
 
   private async createDefaultScratchOrg(): Promise<void> {
-    // jab this flapped once
-    // jab-flapper
-
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`);
 
@@ -374,15 +371,6 @@ export class TestSetup {
       true
     );
     if (!scratchOrgQuickPickItemWasFound) {
-      // jab
-      debugger;
-      const scratchOrgQuickPickItemWasFound2 = await utilities.findQuickPickItem(
-        inputBox,
-        this.scratchOrgAliasName,
-        false,
-        true
-      );
-
       throw new Error(
         `In createDefaultScratchOrg(), the scratch org's pick list item was not found`
       );
