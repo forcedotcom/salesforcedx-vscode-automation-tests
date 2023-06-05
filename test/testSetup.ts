@@ -344,25 +344,6 @@ export class TestSetup {
       1
     );
 
-    // // Type the scratch org's name into the filter. Do this in case the
-    // // org's name is not visible (and one needs to scroll down to see it)
-    // await inputBox.setText(this.scratchOrgAliasName);
-    // await utilities.pause(1);
-
-    // // Select this.scratchOrgAliasName from the list.
-    // let scratchOrgQuickPickItemWasFound = false;
-    // const quickPicks = await inputBox.getQuickPicks();
-    // for (const quickPick of quickPicks) {
-    //   const label = await quickPick.getLabel();
-    //   // Find the org that was created.
-    //   if (label.includes(this.scratchOrgAliasName)) {
-    //     await quickPick.select();
-    //     await utilities.pause(3);
-    //     scratchOrgQuickPickItemWasFound = true;
-    //     break;
-    //   }
-    // }
-
     utilities.log(`${this.testSuiteSuffixName} - calling findQuickPickItem()...`);
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
       inputBox,
@@ -416,27 +397,6 @@ export class TestSetup {
       'SFDX: Set a Default Org',
       2
     );
-
-    // let scratchOrgQuickPickItemWasFound = false;
-
-    // const currentOsUserName = await utilities.transformedUserName();
-    // await utilities.pause(1);
-
-    // const quickPicks = await inputBox.getQuickPicks();
-    // await utilities.pause(1);
-
-    // for (const quickPick of quickPicks) {
-    //   const label = await quickPick.getLabel();
-    //   if (this.scratchOrgAliasName) {
-    //     // Find the org that was created in the "Run SFDX: Create a Default Scratch Org" step.
-    //     if (label.includes(this.scratchOrgAliasName)) {
-    //       await quickPick.select();
-    //       await utilities.pause(3);
-    //       scratchOrgQuickPickItemWasFound = true;
-    //       break;
-    //     }
-    //   }
-    // }
 
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
       inputBox,
