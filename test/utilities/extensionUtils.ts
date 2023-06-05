@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) 2023, salesforce.com, inc.
+ * All rights reserved.
+ * Licensed under the BSD 3-Clause license.
+ * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+
+import { Workbench } from 'wdio-vscode-service';
+import { runCommandFromCommandPrompt } from './commandPrompt';
+import { pause } from './miscellaneous';
+
+export async function showRunningExtensions(workbench: Workbench): Promise<void> {
+  await runCommandFromCommandPrompt(
+    workbench,
+    'Developer: Show Running Extensions',
+    2
+  );
+}
+
+export async function findExtensionInRunningExtensionsList(workbench: Workbench, extensionName: string): Promise<boolean> {
+  // Close the panel so we can see as many of the running extensions as we can.
+  const inputBox = await runCommandFromCommandPrompt(
+    workbench,
+    'View: Close Panel',
+    1
+  );
+
+  const extensionNameDivs = await $$('div.name');
+  let extensionWasFound = false;
+  for (const extensionNameDiv of extensionNameDivs) {
+    const text = await extensionNameDiv.getText();
+    if (text.includes(extensionName)) {
+      extensionWasFound = true;
+    }
+  }
+
+  // Open the panel back up.
+  // First run the command, "View: Open View"...
+  await runCommandFromCommandPrompt(
+    workbench,
+    'View: Open View',
+    1
+  );
+
+  // Next, select "Output"...
+  await inputBox.setText(' Output');
+  await pause(1);
+  await inputBox.confirm();
+  await pause(1);
+
+  return extensionWasFound;
+}

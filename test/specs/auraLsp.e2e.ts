@@ -25,29 +25,14 @@ describe('Aura LSP', async () => {
     utilities.log(
       `${testSetup.testSuiteSuffixName} - Verify Extension is Running`
     );
+
     // Using the Command palette, run Developer: Show Running Extensions
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Developer: Show Running Extensions',
-      1
-    );
+    await utilities.showRunningExtensions(workbench);
+    await utilities.enableLwcExtension();
 
-    utilities.log(
-      `${testSetup.testSuiteSuffixName} - calling utilities.enableLWCExtension()`
-    );
-    await utilities.enableLWCExtension();
-
-    // Verify Aura Components extension is present and running
-    const extensionNameDivs = await $$('div.name');
-    let extensionWasFound = false;
-    for (const extensionNameDiv of extensionNameDivs) {
-      const text = await extensionNameDiv.getText();
-      if (text.includes('salesforce.salesforcedx-vscode-lightning')) {
-        extensionWasFound = true;
-      }
-    }
-    expect(extensionWasFound).toBe(true);
+    // Verify Aura Components extension is present and running.
+    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforce.salesforcedx-vscode-lightning');
   });
 
   step('Go to Definition', async () => {

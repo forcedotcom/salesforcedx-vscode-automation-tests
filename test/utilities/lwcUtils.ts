@@ -9,46 +9,48 @@ import { TextEditor } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 import { log, pause } from './miscellaneous';
 
-export async function enableLWCExtension(): Promise<void> {
+export async function enableLwcExtension(): Promise<void> {
   // salesforce.salesforcedx-vscode-lwc extension is actually not loading automatically
   // because it depends on ESLint and it's not installed by default, so we need to
-  // Install it, reload and enable extensions to get them both running
+  // Install it, reload and enable extensions to get them both running.
+
   log('');
-  log('enableLWCExtension() - calling browser.getWorkbench()');
+  log('utilities.enableLwcExtension()');
+  log('enableLwcExtension() - calling browser.getWorkbench()');
   const workbench = await browser.getWorkbench();
 
-  log('enableLWCExtension() - getting buttons with selector');
+  log('enableLwcExtension() - getting buttons with selector');
   let buttons = await $$('a.monaco-button.monaco-text-button');
   for (const item of buttons) {
     const text = await item.getText();
     if (text.includes('Install and Reload')) {
-      log('enableLWCExtension() - Install and Reload');
+      log('enableLwcExtension() - Install and Reload');
       await item.click();
     }
   }
   await pause(10);
 
-  log('enableLWCExtension() - getting buttons after reloading with selector');
+  log('enableLwcExtension() - getting buttons after reloading with selector');
   buttons = await $$('a.monaco-button.monaco-text-button');
   for (const item of buttons) {
     const text = await item.getText();
     if (text.includes('Reload and Enable Extensions')) {
-      log('enableLWCExtension() - Reload and Enable Extensions');
+      log('enableLwcExtension() - Reload and Enable Extensions');
       await item.click();
     }
   }
   await pause(5);
 
-  log('enableLWCExtension() - Running Developer: Reload Window');
+  log('enableLwcExtension() - Running Developer: Reload Window');
   log('');
   await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
 }
 
-export async function createLWC(name: string): Promise<void> {
-  log('createLWC() - calling browser.getWorkbench()');
+export async function createLwc(name: string): Promise<void> {
+  log('createLwc() - calling browser.getWorkbench()');
   const workbench = await browser.getWorkbench();
 
-  log(`createLWC() - Running SFDX: Create Lightning Web Component`);
+  log(`createLwc() - Running SFDX: Create Lightning Web Component`);
   // Using the Command palette, run SFDX: Create Lightning Web Component.
   let inputBox = await runCommandFromCommandPrompt(
     workbench,
@@ -56,18 +58,18 @@ export async function createLWC(name: string): Promise<void> {
     1
   );
 
-  log(`createLWC() - Set the name of the new component`);
+  log(`createLwc() - Set the name of the new component`);
   // Set the name of the new component
   await inputBox.setText(name);
   await inputBox.confirm();
   await pause(1);
 
-  log(`createLWC() - Select the default directory`);
+  log(`createLwc() - Select the default directory`);
   // Select the default directory (press Enter/Return).
   await inputBox.confirm();
   await pause(3);
 
-  log(`createLWC() - Modify js content`);
+  log(`createLwc() - Modify js content`);
   // Modify js content
   const editorView = workbench.getEditorView();
   let textEditor = (await editorView.openEditor(name + '.js')) as TextEditor;
@@ -82,7 +84,7 @@ export async function createLWC(name: string): Promise<void> {
   await textEditor.save();
   await pause(1);
 
-  log(`createLWC() - Modify html content`);
+  log(`createLwc() - Modify html content`);
   log('');
   // Modify html content
   inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);

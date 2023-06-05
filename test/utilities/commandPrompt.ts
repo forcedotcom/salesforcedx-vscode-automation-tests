@@ -36,10 +36,7 @@ export async function runCommandFromCommandPrompt(
   return prompt;
 }
 
-export async function selectQuickPickWithText(
-  prompt: InputBox | QuickOpenBox,
-  text: string
-) {
+export async function selectQuickPickWithText(prompt: InputBox | QuickOpenBox, text: string) {
   // Set the text in the command prompt.  Only selectQuickPick() needs to be called, but setting
   // the text in the command prompt is a nice visual feedback to anyone watching the tests run.
   await prompt.setText(text);
@@ -68,10 +65,47 @@ export async function selectQuickPickItem(
   throw new Error(`Quick pick item ${text} was not found`);
 }
 
+export async function findQuickPickItem(
+  inputBox: InputBox | QuickOpenBox,
+  quickPickItemTitle: string,
+  useExactMatch: boolean,
+  selectTheQuickPickItem: boolean
+): Promise<boolean> {
+  findQuickPickItem;
+  // Type the text into the filter.  Do this in case the pick list is long and
+  // the target item is not visible (and one needs to scroll down to see it).
+  await inputBox.setText(quickPickItemTitle);
+  await pause(1);
+
+  let itemWasFound = false;
+  const quickPicks = await inputBox.getQuickPicks();
+  for (const quickPick of quickPicks) {
+    const label = await quickPick.getLabel();
+    if (useExactMatch) {
+      if (label === quickPickItemTitle) {
+        itemWasFound = true;
+      }
+    } else {
+      if (label.includes(quickPickItemTitle)) {
+        itemWasFound = true;
+      }
+    }
+
+    if (itemWasFound) {
+      if (selectTheQuickPickItem) {
+        await quickPick.select();
+        await pause(1);
+      }
+
+      return true;
+    }
+  }
+
+  return false;
+}
+
 export async function clickFilePathOkButton(): Promise<void> {
-  const okButton = await $(
-    '*:not([style*="display: none"]).quick-input-action .monaco-button'
-  );
+  const okButton = await $('*:not([style*="display: none"]).quick-input-action .monaco-button');
   await okButton.click();
   await pause(1);
 }

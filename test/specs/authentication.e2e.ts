@@ -95,8 +95,7 @@ describe('Authentication', async () => {
     await utilities.pause(1);
 
     // In the initial state, the org picker button should be set to "No Default Org Set".
-    let statusBar = workbench.getStatusBar();
-    let noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(statusBar, 'No Default Org Set');
+    let noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(workbench, 'No Default Org Set');
     expect(noDefaultOrgSetItem).not.toBeUndefined();
 
     const authFilePath = path.join(projectFolderPath, 'authFile.json');
@@ -111,8 +110,7 @@ describe('Authentication', async () => {
     expect(terminalText).toContain(`Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID`);
 
     // After a dev hub has been authorized, the org should still not be set.
-    statusBar = workbench.getStatusBar();
-    noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(statusBar, 'No Default Org Set');
+    noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(workbench, 'No Default Org Set');
     expect(noDefaultOrgSetItem).not.toBeUndefined();
   });
 
@@ -122,8 +120,7 @@ describe('Authentication', async () => {
 
     // Click on "No default Org Set" (in the bottom bar).
     const workbench = await browser.getWorkbench();
-    const statusBar = workbench.getStatusBar();
-    const changeDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(statusBar, 'Change Default Org');
+    const changeDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(workbench, 'Change Default Org');
     expect(changeDefaultOrgSetItem).not.toBeUndefined();
     await changeDefaultOrgSetItem.click();
     await utilities.pause(1);
@@ -166,6 +163,7 @@ describe('Authentication', async () => {
     expect(expectedOutputWasFound).not.toBeUndefined();
 
     // Look for "vscodeOrg" in the status bar.
+    const statusBar = workbench.getStatusBar();
     const vscodeOrgItem = await statusBar.getItem(`plug  ${EnvironmentSettings.getInstance().devHubAliasName}, Change Default Org`);
     expect(vscodeOrgItem).not.toBeUndefined();
   });
@@ -224,38 +222,30 @@ describe('Authentication', async () => {
     }
     expect(successNotificationWasFound).toBe(true);
 
-    // Look for orgAliasName in the list of status bar items.
-    const statusBar = await workbench.getStatusBar();
-    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(statusBar, scratchOrgAliasName);
+    // Look for the org's alias name in the list of status bar items.
+    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(workbench, scratchOrgAliasName);
     expect(scratchOrgStatusBarItem).not.toBeUndefined();
   });
 
   step('Run SFDX: Set the Scratch Org As the Default Org', async () => {
     const workbench = await browser.getWorkbench();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 1);
+    const inputBox = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Set a Default Org',
+      1
+    );
 
-    let scratchOrgQuickPickItemWasFound = false;
-    const quickPicks = await inputBox.getQuickPicks();
-    for (const quickPick of quickPicks) {
-      const label = await quickPick.getLabel();
-      if (scratchOrgAliasName) {
-        // Find the org that was created in the "Run SFDX: Create a Default Scratch Org" step.
-        if (label.includes(scratchOrgAliasName)) {
-          await quickPick.select();
-          await utilities.pause(3);
-          scratchOrgQuickPickItemWasFound = true;
-          break;
-        }
-      }
-    }
+
+    const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(inputBox, scratchOrgAliasName, false, true);
     expect(scratchOrgQuickPickItemWasFound).toBe(true);
+
+    await utilities.pause(3);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Set a Default Org successfully ran');
     expect(successNotificationWasFound).toBe(true);
 
-    // Look for orgAliasName in the list of status bar items.
-    const statusBar = await workbench.getStatusBar();
-    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(statusBar, scratchOrgAliasName);
+    // Look for the org's alias name in the list of status bar items.
+    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(workbench, scratchOrgAliasName);
     expect(scratchOrgStatusBarItem).not.toBeUndefined();
   });
 
