@@ -11,13 +11,11 @@ import * as utilities from '../utilities';
 
 describe('Apex LSP', async () => {
   let testSetup: TestSetup;
-  let projectName: string;
 
   step('Set up the testing environment', async () => {
     utilities.log(`ApexLsp - Set up the testing environment`);
     testSetup = new TestSetup('ApexLsp', false);
     await testSetup.setUp();
-    projectName = testSetup.tempProjectName.toUpperCase();
 
     // Create Apex Class
     await utilities.createApexClassWithTest('ExampleClass');

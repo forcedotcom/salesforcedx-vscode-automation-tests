@@ -22,27 +22,35 @@ export class EnvironmentSettings {
     // './test/specs/**/debugApexTests.e2e.ts',
     // './test/specs/**/deployAndRetrieve.e2e.ts',
     // './test/specs/**/lwcLsp.e2e.ts',
+    // './test/specs/**/manifestBuilder.e2e.ts'
     // './test/specs/**/orgBrowser.e2e.ts',
     // './test/specs/**/pushAndPull.e2e.ts',
     // './test/specs/**/runApexTests.e2e.ts',
     // './test/specs/**/sObjectsDefinitions.e2e.ts'
     // './test/specs/**/templates.e2e.ts',
     // './test/specs/**/trailApexReplayDebugger.e2e.ts',
-    // './test/specs/**/visualForceLsp.e2e.ts',
+    // './test/specs/**/visualforceLsp.e2e.ts'
   ];
   private _devHubAliasName = 'vscodeOrg';
   private _devHubUserName = 'svc_idee_bot@salesforce.com';
-  private _extensionPath = join(__dirname, '..', '..', 'salesforcedx-vscode', 'packages');
+  private _extensionPath = join(
+    __dirname,
+    '..',
+    '..',
+    'salesforcedx-vscode',
+    'packages'
+  );
   private _throttleFactor = 1;
 
-  private constructor() {
-  }
+  private constructor() {}
 
   public static getInstance(): EnvironmentSettings {
     if (!EnvironmentSettings._instance) {
       EnvironmentSettings._instance = new EnvironmentSettings();
 
-      EnvironmentSettings._instance._vscodeVersion = process.env.VSCODE_VERSION || EnvironmentSettings._instance._vscodeVersion;
+      EnvironmentSettings._instance._vscodeVersion =
+        process.env.VSCODE_VERSION ||
+        EnvironmentSettings._instance._vscodeVersion;
 
       if (process.env.SPEC_FILES) {
         EnvironmentSettings._instance._specFiles = [
@@ -50,10 +58,18 @@ export class EnvironmentSettings {
         ];
       }
 
-      EnvironmentSettings._instance._devHubAliasName = process.env.DEV_HUB_ALIAS_NAME || EnvironmentSettings._instance._devHubAliasName;
-      EnvironmentSettings._instance._devHubUserName = process.env.DEV_HUB_USER_NAME || EnvironmentSettings._instance._devHubUserName;
-      EnvironmentSettings._instance._extensionPath = process.env.EXTENSION_PATH || EnvironmentSettings._instance._extensionPath;
-      EnvironmentSettings._instance._throttleFactor = parseInt(process.env.THROTTLE_FACTOR!) || EnvironmentSettings._instance._throttleFactor;
+      EnvironmentSettings._instance._devHubAliasName =
+        process.env.DEV_HUB_ALIAS_NAME ||
+        EnvironmentSettings._instance._devHubAliasName;
+      EnvironmentSettings._instance._devHubUserName =
+        process.env.DEV_HUB_USER_NAME ||
+        EnvironmentSettings._instance._devHubUserName;
+      EnvironmentSettings._instance._extensionPath =
+        process.env.EXTENSION_PATH ||
+        EnvironmentSettings._instance._extensionPath;
+      EnvironmentSettings._instance._throttleFactor =
+        parseInt(process.env.THROTTLE_FACTOR!) ||
+        EnvironmentSettings._instance._throttleFactor;
     }
 
     return EnvironmentSettings._instance;
