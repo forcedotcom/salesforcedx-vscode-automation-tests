@@ -324,12 +324,12 @@ export const config: Options.Testrunner = {
    * @param {Object}  result.retries   information to spec related retries, e.g. `{ attempts: 0, limit: 0 }`
    */
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  afterTest: async (test, __, { passed, error }) => {
+  afterTest: async (test, __, { passed }) => {
     if (passed) {
       return;
     }
 
-    await saveFailedTestScreenshot(test.parent, test.title, error);
+    await saveFailedTestScreenshot(test.parent, test.title);
   },
 
   /**

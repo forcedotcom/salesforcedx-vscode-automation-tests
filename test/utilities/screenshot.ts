@@ -9,10 +9,9 @@ import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { EnvironmentSettings } from '../environmentSettings';
 
-export async function saveFailedTestScreenshot(specTitle: string, testTitle: string, error: Error): Promise<void> {
+export async function saveFailedTestScreenshot(specTitle: string, testTitle: string): Promise<void> {
   const saveDir = join(__dirname, '..', '..', 'screenshots', specTitle);
-  console.log(`Test run failed! Failure: ${error?.message}`);
-  console.log(`Saving a screenshot of the failure here: ${saveDir}`);
+  console.log(`Test run failed! Saving a screenshot of the failure here: ${saveDir}`);
   if (!existsSync(saveDir)) {
     mkdirSync(saveDir, { recursive: true });
   }
