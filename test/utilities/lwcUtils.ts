@@ -104,3 +104,46 @@ export async function createLWC(name: string): Promise<void> {
   await textEditor.save();
   await pause(1);
 }
+
+export async function createAura(name: string): Promise<void> {
+  log('createAura() - calling browser.getWorkbench()');
+  const workbench = await browser.getWorkbench();
+
+  log(`createAura() - Running SFDX: Create Aura Component`);
+  let inputBox = await runCommandFromCommandPrompt(
+    workbench,
+    'SFDX: Create Aura Component',
+    1
+  );
+
+  log(`createAura() - Set the name of the new component`);
+  // Set the name of the new component
+  await inputBox.setText(name);
+  await inputBox.confirm();
+  await pause(1);
+
+  log(`createAura() - Select the default directory`);
+  // Select the default directory (press Enter/Return).
+  await inputBox.confirm();
+  await pause(3);
+
+  log(`createAura() - Modify html content`);
+  // Modify html content
+  const editorView = workbench.getEditorView();
+  let textEditor = (await editorView.openEditor(name + '.cmp')) as TextEditor;
+  const htmlText = [
+    '<aura:component>',
+    '\t',
+    '\t<aura:attribute name="simpleNewContact" type="Object"/>',
+    '\t<div class="slds-page-header" role="banner">',
+    '\t\t<h1 class="slds-m-right_small">Create New Contact</h1>',
+    '\t</div>',
+    '\t<aura:if isTrue="{!not(empty(v.simpleNewContact))}">',
+    '\t\t{!v.simpleNewContact}',
+    '\t</aura:if>',
+    '</aura:component>'
+  ].join('\n');
+  await textEditor.setText(htmlText);
+  await textEditor.save();
+  await pause(1);
+}
