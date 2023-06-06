@@ -222,7 +222,7 @@ describe('Authentication', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Create a Default Scratch Org...',
-      5 * 60
+      utilities.FIVE_MINUTES
     );
 
     const successNotificationWasFound = await utilities.notificationIsPresent(

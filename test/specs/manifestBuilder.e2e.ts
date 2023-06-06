@@ -12,7 +12,6 @@ import * as utilities from '../utilities';
 
 describe('Manifest Builder', async () => {
   let testSetup: TestSetup;
-  const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('ManifestBuilder', false);
@@ -82,7 +81,7 @@ describe('Manifest Builder', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Deploy Source to Org',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
 
     // Look for the success notification that appears which says, "SFDX: Deploy Source to Org successfully ran".
@@ -127,7 +126,7 @@ describe('Manifest Builder', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Retrieve Source from Org',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
 
     // Look for the success notification that appears which says, "SFDX: Retrieve Source from Org successfully ran".

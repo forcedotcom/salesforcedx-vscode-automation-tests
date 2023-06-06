@@ -17,7 +17,6 @@ import * as utilities from '../utilities';
 describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async () => {
   let prompt: QuickOpenBox | InputBox;
   let testSetup: TestSetup;
-  const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('TrailApexReplayDebugger', false);
@@ -37,7 +36,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Push Source to Default Org and Override Conflicts',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     const successPushNotificationWasFound = await utilities.notificationIsPresent(
       workbench,
@@ -67,17 +66,17 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
-      fiveMinutes,
+      utilities.FIVE_MINUTES,
       false
     );
 
@@ -167,7 +166,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Turn On Apex Debug Log for Replay Debugger',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
 
     // Look for the success notification that appears which says, "SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran".
@@ -214,17 +213,17 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
-      fiveMinutes,
+      utilities.FIVE_MINUTES,
       false
     );
 
@@ -260,7 +259,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Getting Apex debug logs',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
 
     // Select a log file
@@ -273,7 +272,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Get Apex Debug Logs',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
 
     const successNotificationWasFound = await utilities.notificationIsPresent(
@@ -345,7 +344,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Push Source to Default Org and Override Conflicts',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     const successPushNotificationWasFound = await utilities.notificationIsPresent(
       workbench,
@@ -375,17 +374,17 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
-      fiveMinutes,
+      utilities.FIVE_MINUTES,
       false
     );
 

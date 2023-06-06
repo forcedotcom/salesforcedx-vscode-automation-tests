@@ -19,7 +19,6 @@ import * as utilities from '../utilities';
 describe('Apex Replay Debugger', async () => {
   let prompt: QuickOpenBox | InputBox;
   let testSetup: TestSetup;
-  const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('ApexReplayDebugger', false);
