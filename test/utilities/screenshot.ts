@@ -10,7 +10,7 @@ import { join } from 'path';
 import { EnvironmentSettings } from '../environmentSettings';
 
 export async function saveFailedTestScreenshot(specTitle: string, testTitle: string): Promise<void> {
-  const saveDir = join(__dirname, '..', '..', 'screenshots', specTitle);
+  const saveDir = join(__dirname, '..', '..', 'screenshots', sanitizePath(specTitle));
   console.log(`Test run failed! Saving a screenshot of the failure here: ${saveDir}`);
   if (!existsSync(saveDir)) {
     mkdirSync(saveDir, { recursive: true });
@@ -19,9 +19,13 @@ export async function saveFailedTestScreenshot(specTitle: string, testTitle: str
   await browser.saveScreenshot(screenshotPath);
 }
 
-function getScreenshotSavePath(saveDir: string, testTitle: String): string {
-  //GHA does not allow for file uploads with: ", :, <, >, |, *, ?, \r, \n
-  const sanitizedTestTitle = testTitle.replace(/[^a-zA-Z0-9 ]/g, "");
+function getScreenshotSavePath(saveDir: string, testTitle: string): string {
+  const sanitizedTestTitle = sanitizePath(testTitle);
   const sanitizedTestRunStartTime = EnvironmentSettings.getInstance().startTime.replace(':', '.');
   return join(saveDir, `${sanitizedTestRunStartTime} - ${sanitizedTestTitle}.png`);
+}
+
+function sanitizePath(dir: string): string {
+  //GHA does not allow for file uploads with: ", :, <, >, |, *, ?, \r, \n
+  return dir.replace(/[^a-zA-Z0-9 ]/g, "");
 }
