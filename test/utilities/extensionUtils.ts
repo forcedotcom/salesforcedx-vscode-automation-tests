@@ -20,7 +20,7 @@ export async function findExtensionInRunningExtensionsList(
   // This function assumes the Extensions list was opened.
 
   // Close the panel so we can see as many of the running extensions as we can.
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
+  await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
 
   const extensionNameDivs = await $$('div.name');
   let extensionWasFound = false;
@@ -33,7 +33,7 @@ export async function findExtensionInRunningExtensionsList(
 
   // Open the panel back up.
   // First run the command, "View: Open View"...
-  await runCommandFromCommandPrompt(workbench, 'View: Open View', 1);
+  const inputBox = await runCommandFromCommandPrompt(workbench, 'View: Open View', 1);
 
   // Next, select "Output"...
   await inputBox.setText(' Output');
