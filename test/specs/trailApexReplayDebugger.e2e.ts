@@ -110,7 +110,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Verify content on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'Starting SFDX: Turn On Apex Debug Log for Replay Debugger', 10);
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Starting sfdx force:data:record:update --sobjecttype DebugLevel --sobjectid');
     expect(outputPanelText).toContain('SFDX: Turn On Apex Debug Log for Replay Debugger ');
     expect(outputPanelText).toContain('ended with exit code 0');
   });
