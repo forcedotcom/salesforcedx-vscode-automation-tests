@@ -18,7 +18,6 @@ import * as utilities from '../utilities';
 describe('Run Apex Tests', async () => {
   let prompt: QuickOpenBox | InputBox;
   let testSetup: TestSetup;
-  const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('RunApexTests', false);
@@ -44,7 +43,7 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Push Source to Default Org and Override Conflicts',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     const successPushNotificationWasFound = await utilities.notificationIsPresent(
       workbench,
@@ -72,17 +71,17 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
-      fiveMinutes,
+      utilities.FIVE_MINUTES,
       false
     );
 
@@ -125,17 +124,17 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
-      fiveMinutes,
+      utilities.FIVE_MINUTES,
       false
     );
 
@@ -175,17 +174,17 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
-      fiveMinutes,
+      utilities.FIVE_MINUTES,
       false
     );
 
@@ -252,7 +251,7 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Push Source to Default Org and Override Conflicts',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     const successPushNotificationWasFound = await utilities.notificationIsPresent(
       workbench,
@@ -299,17 +298,17 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
-      fiveMinutes,
+      utilities.FIVE_MINUTES,
       false
     );
 
@@ -371,17 +370,17 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
-      fiveMinutes,
+      utilities.FIVE_MINUTES,
       false
     );
 
@@ -439,17 +438,17 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
-      fiveMinutes,
+      utilities.FIVE_MINUTES,
       false
     );
 
@@ -495,7 +494,7 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Push Source to Default Org and Override Conflicts',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     const successPushNotificationWasFound = await utilities.notificationIsPresent(
       workbench,
@@ -517,17 +516,17 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
-      fiveMinutes,
+      utilities.FIVE_MINUTES,
       false
     );
 
@@ -569,7 +568,7 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Push Source to Default Org and Override Conflicts',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     const successPushNotification2WasFound = await utilities.notificationIsPresent(
       workbench,
@@ -591,17 +590,17 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
-      fiveMinutes,
+      utilities.FIVE_MINUTES,
       false
     );
 
@@ -647,7 +646,7 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Build Apex Test Suite',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
 
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
@@ -681,7 +680,7 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Build Apex Test Suite',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
 
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
@@ -709,17 +708,17 @@ describe('Run Apex Tests', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      fiveMinutes
+      utilities.FIVE_MINUTES
     );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
-      fiveMinutes,
+      utilities.FIVE_MINUTES,
       false
     );
 
