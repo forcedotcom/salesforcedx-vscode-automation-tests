@@ -40,6 +40,9 @@ export class EnvironmentSettings {
     'salesforcedx-vscode',
     'packages'
   );
+  private _startTime = new Date(Date.now()).toLocaleTimeString([],
+    { timeStyle: "short" }
+  );
   private _throttleFactor = 1;
 
   private constructor() {}
@@ -97,5 +100,9 @@ export class EnvironmentSettings {
 
   public get throttleFactor(): number {
     return this._throttleFactor;
+  }
+
+  public get startTime(): string {
+    return this._startTime;
   }
 }
