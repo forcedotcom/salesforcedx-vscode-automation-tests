@@ -81,14 +81,10 @@ export async function findQuickPickItem(
   const quickPicks = await inputBox.getQuickPicks();
   for (const quickPick of quickPicks) {
     const label = await quickPick.getLabel();
-    if (useExactMatch) {
-      if (label === quickPickItemTitle) {
-        itemWasFound = true;
-      }
-    } else {
-      if (label.includes(quickPickItemTitle)) {
-        itemWasFound = true;
-      }
+    if (useExactMatch && label === quickPickItemTitle) {
+      itemWasFound = true;
+    } else if (!useExactMatch && label.includes(quickPickItemTitle)) {
+      itemWasFound = true;
     }
 
     if (itemWasFound) {
