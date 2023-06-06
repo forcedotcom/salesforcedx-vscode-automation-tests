@@ -93,12 +93,11 @@ describe('Authentication', async () => {
     );
     expect(noDefaultOrgSetItem).not.toBeUndefined();
 
+    const environmentSettings = EnvironmentSettings.getInstance();
     const authFilePath = path.join(projectFolderPath, 'authFile.json');
     const terminalView = await utilities.executeCommand(
       workbench,
-      `sfdx force:org:display -u ${
-        EnvironmentSettings.getInstance().devHubAliasName
-      } --verbose --json > ${authFilePath}`
+      `sfdx force:org:display -u ${environmentSettings.devHubAliasName} --verbose --json > ${authFilePath}`
     );
 
     const authFilePathFileExists = fs.existsSync(authFilePath);
@@ -108,7 +107,7 @@ describe('Authentication', async () => {
 
     const terminalText = await utilities.getTerminalViewText(terminalView, 60);
     expect(terminalText).toContain(
-      `Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID`
+      `Successfully authorized ${environmentSettings.devHubUserName} with org ID`
     );
 
     // After a dev hub has been authorized, the org should still not be set.
@@ -158,12 +157,10 @@ describe('Authentication', async () => {
     }
 
     // In the drop down menu that appears, select "vscodeOrg - user_name".
-    await utilities.selectQuickPickItem(
-      prompt,
-      `${EnvironmentSettings.getInstance().devHubAliasName} - ${
-        EnvironmentSettings.getInstance().devHubUserName
-      }`
-    );
+    const environmentSettings = EnvironmentSettings.getInstance();
+    const devHubAliasName = environmentSettings.devHubAliasName;
+    const devHubUserName = environmentSettings.devHubUserName;
+    await utilities.selectQuickPickItem(prompt, `${devHubAliasName} - ${devHubUserName}`);
 
     // Need to pause here for the "set a default org" command to finish.
     await utilities.pause(5);
@@ -177,16 +174,14 @@ describe('Authentication', async () => {
 
     const expectedOutputWasFound = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      `defaultusername  ${EnvironmentSettings.getInstance().devHubAliasName}  true`,
+      `defaultusername  ${devHubAliasName}  true`,
       5
     );
     expect(expectedOutputWasFound).not.toBeUndefined();
 
     // Look for "vscodeOrg" in the status bar.
     const statusBar = workbench.getStatusBar();
-    const vscodeOrgItem = await statusBar.getItem(
-      `plug  ${EnvironmentSettings.getInstance().devHubAliasName}, Change Default Org`
-    );
+    const vscodeOrgItem = await statusBar.getItem(`plug  ${devHubAliasName}, Change Default Org`);
     expect(vscodeOrgItem).not.toBeUndefined();
   });
 
