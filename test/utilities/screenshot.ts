@@ -15,11 +15,11 @@ export async function saveFailedTestScreenshot(specTitle: string, testTitle: str
   if (!existsSync(saveDir)) {
     mkdirSync(saveDir, { recursive: true });
   }
-  const screenshotPath = getScreenshotTitle(saveDir, testTitle);
+  const screenshotPath = getScreenshotSavePath(saveDir, testTitle);
   await browser.saveScreenshot(screenshotPath);
 }
 
-function getScreenshotTitle(saveDir: string, testTitle: String): string {
+function getScreenshotSavePath(saveDir: string, testTitle: String): string {
   //GHA does not allow for file uploads with: ", :, <, >, |, *, ?, \r, \n
   const sanitizedTestTitle = testTitle.replace(/[^a-zA-Z0-9 ]/g, "");
   const sanitizedTestRunStartTime = EnvironmentSettings.getInstance().startTime.replace(':', '.');
