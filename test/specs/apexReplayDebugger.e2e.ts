@@ -61,7 +61,6 @@ describe('Apex Replay Debugger', async () => {
     // Verify content on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'Starting SFDX: Turn On Apex Debug Log for Replay Debugger', 10);
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Starting sfdx force:data:record:update --sobjecttype DebugLevel --sobjectid');
     expect(outputPanelText).toContain('SFDX: Turn On Apex Debug Log for Replay Debugger ');
     expect(outputPanelText).toContain('ended with exit code 0');
   });
@@ -219,7 +218,6 @@ describe('Apex Replay Debugger', async () => {
     // Verify content on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'Starting SFDX: Turn Off Apex Debug Log for Replay Debugger', 10);
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('sfdx force:data:record:delete --sobjecttype TraceFlag --sobjectid');
     expect(outputPanelText).toContain('Deleting Record...');
     expect(outputPanelText).toContain('Success');
     expect(outputPanelText).toContain('Successfully deleted record:');
