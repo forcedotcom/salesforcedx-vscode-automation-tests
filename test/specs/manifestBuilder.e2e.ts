@@ -15,7 +15,6 @@ describe('Manifest Builder', async () => {
   const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
-    utilities.log(`ManifestBuilder - Set up the testing environment`);
     testSetup = new TestSetup('ManifestBuilder', false);
     await testSetup.setUp();
   });
@@ -25,9 +24,7 @@ describe('Manifest Builder', async () => {
     // accessible via a context menu, and wdio-vscode-service isn't able to interact with
     // context menus, so instead the manifest file is manually created:
 
-    utilities.log(
-      `${testSetup.testSuiteSuffixName} - calling createCustomObjects()`
-    );
+    utilities.log(`${testSetup.testSuiteSuffixName} - calling createCustomObjects()`);
     await utilities.createCustomObjects(testSetup);
 
     utilities.log(`${testSetup.testSuiteSuffixName} - creating manifest file`);
@@ -51,9 +48,7 @@ describe('Manifest Builder', async () => {
     await inputBox.confirm();
 
     const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor(
-      'manifest.xml'
-    )) as TextEditor;
+    const textEditor = (await editorView.openEditor('manifest.xml')) as TextEditor;
     const content = [
       `<?xml version="1.0" encoding="UTF-8"?>`,
       `<Package xmlns="http://soap.sforce.com/2006/04/metadata">`,
@@ -68,23 +63,15 @@ describe('Manifest Builder', async () => {
     await textEditor.setText(content);
     await textEditor.save();
     await utilities.pause(1);
-    utilities.log(
-      `${testSetup.testSuiteSuffixName} - finished creating manifest file`
-    );
+    utilities.log(`${testSetup.testSuiteSuffixName} - finished creating manifest file`);
   });
 
   step('SFDX: Deploy Source in Manifest to Org', async () => {
-    utilities.log(
-      `${testSetup.testSuiteSuffixName} - SFDX: Deploy Source in Manifest to Org`
-    );
+    utilities.log(`${testSetup.testSuiteSuffixName} - SFDX: Deploy Source in Manifest to Org`);
     // Using the Command palette, run SFDX: Deploy Source in Manifest to Org
     const workbench = await browser.getWorkbench();
     // Clear output before running the command
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'View: Clear Output',
-      1
-    );
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Deploy Source in Manifest to Org',
@@ -123,19 +110,13 @@ describe('Manifest Builder', async () => {
   });
 
   step('SFDX: Retrieve Source in Manifest from Org', async () => {
-    utilities.log(
-      `${testSetup.testSuiteSuffixName} - SFDX: Retrieve Source in Manifest from Org`
-    );
+    utilities.log(`${testSetup.testSuiteSuffixName} - SFDX: Retrieve Source in Manifest from Org`);
     // Using the Command palette, run SFDX: Retrieve Source in Manifest from Org
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
     await editorView.openEditor('manifest.xml');
     // Clear output before running the command
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'View: Clear Output',
-      1
-    );
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Retrieve Source in Manifest from Org',

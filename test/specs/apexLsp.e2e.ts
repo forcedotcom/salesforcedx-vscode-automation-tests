@@ -13,7 +13,7 @@ describe('Apex LSP', async () => {
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-    utilities.log(`ApexLsp - Set up the testing environment`);
+    utilities.log('ApexLsp - Set up the testing environment');
     testSetup = new TestSetup('ApexLsp', false);
     await testSetup.setUp();
 

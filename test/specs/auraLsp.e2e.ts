@@ -13,7 +13,7 @@ describe('Aura LSP', async () => {
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-    utilities.log(`AuraLsp - Set up the testing environment`);
+    utilities.log('AuraLsp - Set up the testing environment');
     testSetup = new TestSetup('AuraLsp', false);
     await testSetup.setUp();
 

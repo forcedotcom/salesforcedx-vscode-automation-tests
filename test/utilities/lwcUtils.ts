@@ -50,7 +50,7 @@ export async function createLwc(name: string): Promise<void> {
   log('createLwc() - calling browser.getWorkbench()');
   const workbench = await browser.getWorkbench();
 
-  log(`createLwc() - Running SFDX: Create Lightning Web Component`);
+  log('createLwc() - Running SFDX: Create Lightning Web Component');
   // Using the Command palette, run SFDX: Create Lightning Web Component.
   let inputBox = await runCommandFromCommandPrompt(
     workbench,
@@ -58,18 +58,18 @@ export async function createLwc(name: string): Promise<void> {
     1
   );
 
-  log(`createLwc() - Set the name of the new component`);
+  log('createLwc() - Set the name of the new component');
   // Set the name of the new component
   await inputBox.setText(name);
   await inputBox.confirm();
   await pause(1);
 
-  log(`createLwc() - Select the default directory`);
+  log('createLwc() - Select the default directory');
   // Select the default directory (press Enter/Return).
   await inputBox.confirm();
   await pause(3);
 
-  log(`createLwc() - Modify js content`);
+  log('createLwc() - Modify js content');
   // Modify js content
   const editorView = workbench.getEditorView();
   let textEditor = (await editorView.openEditor(name + '.js')) as TextEditor;
@@ -84,7 +84,7 @@ export async function createLwc(name: string): Promise<void> {
   await textEditor.save();
   await pause(1);
 
-  log(`createLwc() - Modify html content`);
+  log('createLwc() - Modify html content');
   log('');
   // Modify html content
   inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
@@ -111,25 +111,25 @@ export async function createAura(name: string): Promise<void> {
   log('createAura() - calling browser.getWorkbench()');
   const workbench = await browser.getWorkbench();
 
-  log(`createAura() - Running SFDX: Create Aura Component`);
+  log('createAura() - Running SFDX: Create Aura Component');
   let inputBox = await runCommandFromCommandPrompt(
     workbench,
     'SFDX: Create Aura Component',
     1
   );
 
-  log(`createAura() - Set the name of the new component`);
+  log('createAura() - Set the name of the new component');
   // Set the name of the new component
   await inputBox.setText(name);
   await inputBox.confirm();
   await pause(1);
 
-  log(`createAura() - Select the default directory`);
+  log('createAura() - Select the default directory');
   // Select the default directory (press Enter/Return).
   await inputBox.confirm();
   await pause(3);
 
-  log(`createAura() - Modify html content`);
+  log('createAura() - Modify html content');
   // Modify html content
   const editorView = workbench.getEditorView();
   let textEditor = (await editorView.openEditor(name + '.cmp')) as TextEditor;

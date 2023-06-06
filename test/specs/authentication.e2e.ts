@@ -6,18 +6,10 @@
  */
 
 import fs from 'fs';
-import {
-  step
-} from 'mocha-steps';
+import { step } from 'mocha-steps';
 import path from 'path';
-import {
-  DefaultTreeItem,
-  InputBox,
-  QuickOpenBox
-} from 'wdio-vscode-service';
-import {
-  EnvironmentSettings
-} from '../environmentSettings';
+import { DefaultTreeItem, InputBox, QuickOpenBox } from 'wdio-vscode-service';
+import { EnvironmentSettings } from '../environmentSettings';
 import * as utilities from '../utilities';
 
 describe('Authentication', async () => {
@@ -80,7 +72,7 @@ describe('Authentication', async () => {
     const treeViewSection = await content.getSection(tempProjectName.toUpperCase());
     expect(treeViewSection).not.toEqual(undefined);
 
-    const forceAppTreeItem = await treeViewSection.findItem('force-app') as DefaultTreeItem;
+    const forceAppTreeItem = (await treeViewSection.findItem('force-app')) as DefaultTreeItem;
     expect(forceAppTreeItem).not.toEqual(undefined);
 
     await forceAppTreeItem.expand();
@@ -95,11 +87,19 @@ describe('Authentication', async () => {
     await utilities.pause(1);
 
     // In the initial state, the org picker button should be set to "No Default Org Set".
-    let noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(workbench, 'No Default Org Set');
+    let noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
+      workbench,
+      'No Default Org Set'
+    );
     expect(noDefaultOrgSetItem).not.toBeUndefined();
 
     const authFilePath = path.join(projectFolderPath, 'authFile.json');
-    const terminalView = await utilities.executeCommand(workbench, `sfdx force:org:display -u ${EnvironmentSettings.getInstance().devHubAliasName} --verbose --json > ${authFilePath}`);
+    const terminalView = await utilities.executeCommand(
+      workbench,
+      `sfdx force:org:display -u ${
+        EnvironmentSettings.getInstance().devHubAliasName
+      } --verbose --json > ${authFilePath}`
+    );
 
     const authFilePathFileExists = fs.existsSync(authFilePath);
     expect(authFilePathFileExists).toEqual(true);
@@ -107,10 +107,15 @@ describe('Authentication', async () => {
     await terminalView.executeCommand(`sfdx auth:sfdxurl:store -d -f ${authFilePath}`);
 
     const terminalText = await utilities.getTerminalViewText(terminalView, 60);
-    expect(terminalText).toContain(`Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID`);
+    expect(terminalText).toContain(
+      `Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID`
+    );
 
     // After a dev hub has been authorized, the org should still not be set.
-    noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(workbench, 'No Default Org Set');
+    noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
+      workbench,
+      'No Default Org Set'
+    );
     expect(noDefaultOrgSetItem).not.toBeUndefined();
   });
 
@@ -120,26 +125,29 @@ describe('Authentication', async () => {
 
     // Click on "No default Org Set" (in the bottom bar).
     const workbench = await browser.getWorkbench();
-    const changeDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(workbench, 'Change Default Org');
+    const changeDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
+      workbench,
+      'Change Default Org'
+    );
     expect(changeDefaultOrgSetItem).not.toBeUndefined();
     await changeDefaultOrgSetItem.click();
     await utilities.pause(1);
 
     // In the drop down menu that appears, verify the SFDX auth org commands are present...
     const expectedSfdxCommands = [
-        ' SFDX: Authorize an Org',
-        ' SFDX: Authorize a Dev Hub',
-        ' SFDX: Create a Default Scratch Org...',
-        ' SFDX: Authorize an Org using Session ID',
-        ' SFDX: Remove Deleted and Expired Orgs'
+      ' SFDX: Authorize an Org',
+      ' SFDX: Authorize a Dev Hub',
+      ' SFDX: Create a Default Scratch Org...',
+      ' SFDX: Authorize an Org using Session ID',
+      ' SFDX: Remove Deleted and Expired Orgs'
     ];
     const foundSfdxCommands: string[] = [];
     const quickPicks = await prompt.getQuickPicks();
     for (const quickPick of quickPicks) {
-        const label = await quickPick.getLabel();
-        if (expectedSfdxCommands.includes(label)) {
-          foundSfdxCommands.push(label);
-        }
+      const label = await quickPick.getLabel();
+      if (expectedSfdxCommands.includes(label)) {
+        foundSfdxCommands.push(label);
+      }
     }
 
     if (expectedSfdxCommands.length !== foundSfdxCommands.length) {
@@ -150,27 +158,45 @@ describe('Authentication', async () => {
     }
 
     // In the drop down menu that appears, select "vscodeOrg - user_name".
-    await utilities.selectQuickPickItem(prompt, `${EnvironmentSettings.getInstance().devHubAliasName} - ${EnvironmentSettings.getInstance().devHubUserName}`);
+    await utilities.selectQuickPickItem(
+      prompt,
+      `${EnvironmentSettings.getInstance().devHubAliasName} - ${
+        EnvironmentSettings.getInstance().devHubUserName
+      }`
+    );
 
     // Need to pause here for the "set a default org" command to finish.
     await utilities.pause(5);
 
     // Look for the notification that appears which says, "SFDX: Set a Default Org successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Set a Default Org successfully ran');
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Set a Default Org successfully ran'
+    );
     expect(successNotificationWasFound).toBe(true);
 
-    const expectedOutputWasFound = await utilities.attemptToFindOutputPanelText('Salesforce CLI', `defaultusername  ${EnvironmentSettings.getInstance().devHubAliasName}  true`, 5);
+    const expectedOutputWasFound = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      `defaultusername  ${EnvironmentSettings.getInstance().devHubAliasName}  true`,
+      5
+    );
     expect(expectedOutputWasFound).not.toBeUndefined();
 
     // Look for "vscodeOrg" in the status bar.
     const statusBar = workbench.getStatusBar();
-    const vscodeOrgItem = await statusBar.getItem(`plug  ${EnvironmentSettings.getInstance().devHubAliasName}, Change Default Org`);
+    const vscodeOrgItem = await statusBar.getItem(
+      `plug  ${EnvironmentSettings.getInstance().devHubAliasName}, Change Default Org`
+    );
     expect(vscodeOrgItem).not.toBeUndefined();
   });
 
   step('Run SFDX: Create a Default Scratch Org', async () => {
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create a Default Scratch Org...', 1);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Create a Default Scratch Org...',
+      1
+    );
 
     // Select a project scratch definition file (config/project-scratch-def.json)
     // Press Enter/Return to use the default (config/project-scratch-def.json)
@@ -198,32 +224,65 @@ describe('Authentication', async () => {
     // Press Enter/Return.
     await prompt.confirm();
 
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Create a Default Scratch Org...', 5 * 60);
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Create a Default Scratch Org...',
+      5 * 60
+    );
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Create a Default Scratch Org... successfully ran');
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Create a Default Scratch Org... successfully ran'
+    );
     if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Create a Default Scratch Org... failed to run');
+      const failureNotificationWasFound = await utilities.notificationIsPresent(
+        workbench,
+        'SFDX: Create a Default Scratch Org... failed to run'
+      );
       if (failureNotificationWasFound === true) {
-        if (await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'organization has reached its daily scratch org signup limit', 5)) {
+        if (
+          await utilities.attemptToFindOutputPanelText(
+            'Salesforce CLI',
+            'organization has reached its daily scratch org signup limit',
+            5
+          )
+        ) {
           // This is a known issue...
-          utilities.log('Warning - creating the scratch org failed, but the failure was due to the daily signup limit');
-        } else if (await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'is enabled as a Dev Hub', 5)) {
+          utilities.log(
+            'Warning - creating the scratch org failed, but the failure was due to the daily signup limit'
+          );
+        } else if (
+          await utilities.attemptToFindOutputPanelText(
+            'Salesforce CLI',
+            'is enabled as a Dev Hub',
+            5
+          )
+        ) {
           // This is a known issue...
           utilities.log('Warning - Make sure that the org is enabled as a Dev Hub.');
-          utilities.log('Warning - To enable it, open the org in your browser, navigate to the Dev Hub page in Setup, and click Enable.');
-          utilities.log('Warning - If you still see this error after enabling the Dev Hub feature, then re-authenticate to the org.');
+          utilities.log(
+            'Warning - To enable it, open the org in your browser, navigate to the Dev Hub page in Setup, and click Enable.'
+          );
+          utilities.log(
+            'Warning - If you still see this error after enabling the Dev Hub feature, then re-authenticate to the org.'
+          );
         } else {
           // The failure notification is showing, but it's not due to maxing out the daily limit.  What to do...?
           utilities.log('Warning - creating the scratch org failed... not sure why...');
         }
       } else {
-        utilities.log('Warning - creating the scratch org failed... neither the success notification or the failure notification was found.');
+        utilities.log(
+          'Warning - creating the scratch org failed... neither the success notification or the failure notification was found.'
+        );
       }
     }
     expect(successNotificationWasFound).toBe(true);
 
     // Look for the org's alias name in the list of status bar items.
-    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(workbench, scratchOrgAliasName);
+    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(
+      workbench,
+      scratchOrgAliasName
+    );
     expect(scratchOrgStatusBarItem).not.toBeUndefined();
   });
 
@@ -235,24 +294,37 @@ describe('Authentication', async () => {
       1
     );
 
-
-    const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(inputBox, scratchOrgAliasName, false, true);
+    const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
+      inputBox,
+      scratchOrgAliasName,
+      false,
+      true
+    );
     expect(scratchOrgQuickPickItemWasFound).toBe(true);
 
     await utilities.pause(3);
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Set a Default Org successfully ran');
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Set a Default Org successfully ran'
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Look for the org's alias name in the list of status bar items.
-    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(workbench, scratchOrgAliasName);
+    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(
+      workbench,
+      scratchOrgAliasName
+    );
     expect(scratchOrgStatusBarItem).not.toBeUndefined();
   });
 
   step('Tear down', async () => {
     if (scratchOrgAliasName) {
       const workbench = await browser.getWorkbench();
-      await utilities.executeCommand(workbench, `sfdx force:org:delete -u ${scratchOrgAliasName} --noprompt`);
+      await utilities.executeCommand(
+        workbench,
+        `sfdx force:org:delete -u ${scratchOrgAliasName} --noprompt`
+      );
     }
 
     // This used to work...

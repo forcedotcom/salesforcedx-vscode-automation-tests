@@ -10,20 +10,17 @@ import { runCommandFromCommandPrompt } from './commandPrompt';
 import { pause } from './miscellaneous';
 
 export async function showRunningExtensions(workbench: Workbench): Promise<void> {
-  await runCommandFromCommandPrompt(
-    workbench,
-    'Developer: Show Running Extensions',
-    2
-  );
+  await runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 2);
 }
 
-export async function findExtensionInRunningExtensionsList(workbench: Workbench, extensionName: string): Promise<boolean> {
+export async function findExtensionInRunningExtensionsList(
+  workbench: Workbench,
+  extensionName: string
+): Promise<boolean> {
+  // This function assumes the Extensions list was opened.
+
   // Close the panel so we can see as many of the running extensions as we can.
-  const inputBox = await runCommandFromCommandPrompt(
-    workbench,
-    'View: Close Panel',
-    1
-  );
+  const inputBox = await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
 
   const extensionNameDivs = await $$('div.name');
   let extensionWasFound = false;
@@ -36,11 +33,7 @@ export async function findExtensionInRunningExtensionsList(workbench: Workbench,
 
   // Open the panel back up.
   // First run the command, "View: Open View"...
-  await runCommandFromCommandPrompt(
-    workbench,
-    'View: Open View',
-    1
-  );
+  await runCommandFromCommandPrompt(workbench, 'View: Open View', 1);
 
   // Next, select "Output"...
   await inputBox.setText(' Output');

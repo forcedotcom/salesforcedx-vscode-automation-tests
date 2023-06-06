@@ -13,7 +13,7 @@ describe('LWC LSP', async () => {
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-    utilities.log(`LwcLsp - Set up the testing environment`);
+    utilities.log('LwcLsp - Set up the testing environment');
     testSetup = new TestSetup('LwcLsp', false);
     await testSetup.setUp();
 
