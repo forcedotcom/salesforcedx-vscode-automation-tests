@@ -7,6 +7,7 @@
 
 export * from './apexUtils';
 export * from './commandPrompt';
+export * from './extensionUtils';
 export * from './fileSystem';
 export * from './lwcUtils';
 export * from './miscellaneous';

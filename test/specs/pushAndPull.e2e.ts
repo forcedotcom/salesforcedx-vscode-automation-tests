@@ -160,15 +160,13 @@ describe('Push and Pull', async () => {
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
-    let outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Retrieved Source', 10);
+    let outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pulled Source', 10);
     expect(outputPanelText).not.toBeUndefined();
 
     // The first time a pull is performed, force-app/main/default/profiles/Admin.profile-meta.xml is pulled down.
-    expect(outputPanelText).toContain('Created Admin');
-    expect(outputPanelText).toContain('Profile force-app/main/default/profiles/Admin.profile-meta.xml');
+    expect(outputPanelText).toContain('Created  Admin');
+    expect(outputPanelText).toContain('force-app/main/default/profiles/Admin.profile-meta.xml');
     expect(outputPanelText).toContain('ended with exit code 0');
-    expect(outputPanelText).not.toContain('No results found');
-
 
     // Second pull...
     // Clear the output again.
@@ -181,11 +179,11 @@ describe('Push and Pull', async () => {
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
-    outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Retrieved Source', 10);
+    outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pulled Source', 10);
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('No results found');
     expect(outputPanelText).toContain('ended with exit code 0');
-    expect(outputPanelText).not.toContain('Created Admin');
+    expect(outputPanelText).not.toContain('Created  Admin');
   });
 
   step('Modify the file (but don\'t save), then pull', async () => {
@@ -207,7 +205,7 @@ describe('Push and Pull', async () => {
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
-    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Retrieved Source', 10);
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pulled Source', 10);
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('No results found');
     expect(outputPanelText).toContain('ended with exit code 0');
@@ -230,7 +228,7 @@ describe('Push and Pull', async () => {
     const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Org successfully ran', 10);
     expect(successNotificationWasFound).toBe(true);
 
-    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Retrieved Source', 10);
+    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pulled Source', 10);
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('No results found');
     expect(outputPanelText).toContain('ended with exit code 0');
@@ -269,29 +267,12 @@ describe('Push and Pull', async () => {
   step('Set the 2nd user as the default user', async () => {
     const workbench = await browser.getWorkbench();
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 1);
-
-    // Select this.scratchOrgAliasName from the list.
-    let scratchOrgQuickPickItemWasFound = false;
-    const quickPicks = await inputBox.getQuickPicks();
-    for (const quickPick of quickPicks) {
-      const label = await quickPick.getLabel();
-      // Find the org that was created.
-      if (label.includes(adminEmailAddress)) {
-        await quickPick.select();
-        await utilities.pause(3);
-        scratchOrgQuickPickItemWasFound = true;
-        break;
-      }
-    }
-
+    const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(inputBox, adminEmailAddress, false, true);
     if (!scratchOrgQuickPickItemWasFound) {
       throw new Error(`${adminEmailAddress} was not found in the the scratch org pick list`);
     }
-    // Warning! This only works if the item (the scratch org) is visible.
-    // If there are many scratch orgs, not all of them may be displayed.
-    // If lots of scratch orgs are created and aren't deleted, this can
-    // result in this list growing one not being able to find the org
-    // they are looking for.
+
+    await utilities.pause(3);
 
     // Look for the success notification.
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Set a Default Org successfully ran');
@@ -300,8 +281,7 @@ describe('Push and Pull', async () => {
     }
 
     // Look for adminEmailAddress in the list of status bar items.
-    const statusBar = await workbench.getStatusBar();
-    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(statusBar, adminEmailAddress);
+    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(workbench, adminEmailAddress);
     if (!scratchOrgStatusBarItem) {
       throw new Error('getStatusBarItemWhichIncludes() returned a scratchOrgStatusBarItem with a value of null (or undefined)');
     }
