@@ -5,22 +5,17 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { ChildProcess, exec } from 'child_process';
 import * as fs from 'fs-extra';
 import path from 'path';
 import { TestSetup } from '../testSetup';
 import { log } from './miscellaneous';
 
-export function createFolder(folderPath: string): ChildProcess {
-  const childProcess = exec(`mkdir "${folderPath}"`);
-
-  return childProcess;
+export function createFolder(folderPath: string): Promise<void> {
+  return fs.mkdirp(folderPath);
 }
 
-export function removeFolder(folderPath: string): ChildProcess {
-  const childProcess = exec(`rm -rf "${folderPath}"`);
-
-  return childProcess;
+export function removeFolder(folderPath: string): Promise<void> {
+  return fs.rm(folderPath, { recursive: true, force: true });
 }
 
 export async function createCustomObjects(testSetup: TestSetup): Promise<void> {

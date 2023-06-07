@@ -6,16 +6,17 @@
  */
 
 import { join } from 'path';
+import * as utilities from './utilities';
 
 export class EnvironmentSettings {
   private static _instance: EnvironmentSettings;
 
   private _vscodeVersion = 'stable'; //  or 'insiders' or '1.77.3'
+  private _sfdxProjectHome = join(__dirname, '..', '..');
   private _specFiles = [
     './test/specs/**/*.e2e.ts'
     // OR
     // './test/specs/**/anInitialSuite.e2e.ts',
-    // './test/specs/**/apexLsp.e2e.ts',
     // './test/specs/**/apexReplayDebugger.e2e.ts',
     // './test/specs/**/auraLsp.e2e.ts',
     // './test/specs/**/authentication.e2e.ts',
@@ -40,9 +41,9 @@ export class EnvironmentSettings {
     'salesforcedx-vscode',
     'packages'
   );
-  private _startTime = new Date(Date.now()).toLocaleTimeString([],
-    { timeStyle: "short" }
-  );
+  private _startTime = new Date(Date.now()).toLocaleTimeString([], {
+    timeStyle: 'short'
+  });
   private _throttleFactor = 1;
 
   private constructor() {}
@@ -55,10 +56,13 @@ export class EnvironmentSettings {
         process.env.VSCODE_VERSION ||
         EnvironmentSettings._instance._vscodeVersion;
 
-      if (process.env.SPEC_FILES) {
-        EnvironmentSettings._instance._specFiles = [
-          './test/specs/**/' + process.env.SPEC_FILES
-        ];
+      if (process.env.SPEC_FILES?.length) {
+        EnvironmentSettings._instance._specFiles = process.env.SPEC_FILES.split(
+          ','
+        ).map(specFile => `./test/specs/**/${specFile.trim()}`);
+        utilities.log(
+          `SPEC_FILES: ${EnvironmentSettings._instance._specFiles.join(', ')}`
+        );
       }
 
       EnvironmentSettings._instance._devHubAliasName =
@@ -73,6 +77,14 @@ export class EnvironmentSettings {
       EnvironmentSettings._instance._throttleFactor =
         parseInt(process.env.THROTTLE_FACTOR!) ||
         EnvironmentSettings._instance._throttleFactor;
+      if (process.env.WITH_TEST_PROJECT) {
+        EnvironmentSettings._instance._sfdxProjectHome = join(
+          __dirname,
+          '..',
+          '..',
+          process.env.WITH_TEST_PROJECT
+        );
+      }
     }
 
     return EnvironmentSettings._instance;
@@ -104,5 +116,9 @@ export class EnvironmentSettings {
 
   public get startTime(): string {
     return this._startTime;
+  }
+
+  public get sfdxProjectHome(): string {
+    return this._sfdxProjectHome;
   }
 }

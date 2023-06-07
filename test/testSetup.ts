@@ -26,12 +26,25 @@ export class TestSetup {
   private static aliasAndUserNameWereVerified = false;
   public tempFolderPath: string | undefined = undefined;
   public projectFolderPath: string | undefined = undefined;
+  public usingExistingProject: boolean;
   private prompt: QuickOpenBox | InputBox | undefined;
   private scratchOrgAliasName: string | undefined;
 
-  public constructor(testSuiteSuffixName: string, reuseScratchOrg: boolean) {
+  public constructor(
+    testSuiteSuffixName: string,
+    reuseScratchOrg: boolean,
+    existingProjectPath?: string
+  ) {
     this.testSuiteSuffixName = testSuiteSuffixName;
     this.reuseScratchOrg = reuseScratchOrg;
+    if (existingProjectPath && !fs.existsSync(existingProjectPath)) {
+      throw new Error(
+        `In TestSetup(), the existing project path '${existingProjectPath}' does not exist`
+      );
+    }
+
+    this.usingExistingProject = existingProjectPath !== undefined;
+    this.projectFolderPath = existingProjectPath;
 
     // To have all scratch orgs be reused, uncomment the following line:
     // this.reuseScratchOrg = true;
@@ -61,7 +74,7 @@ export class TestSetup {
     }
 
     // This used to work...
-    // if (this.projectFolderPath) {
+    // if (this.projectFolderPath && !this.usingExistingProject) {
     //   await utilities.removeFolder(this.projectFolderPath);
     // }
     // ...but something recently changed and now, removing the folder while VS Code has the folder open
@@ -82,16 +95,18 @@ export class TestSetup {
     );
 
     this.tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
-    this.projectFolderPath = path.join(
-      this.tempFolderPath,
-      this.tempProjectName
-    );
+    // set projectFolderPath if it is undefined
+    this.projectFolderPath ??=
+      path.join(this.tempFolderPath, this.tempProjectName);
+
     utilities.log(
-      `${this.testSuiteSuffixName} - creating project files in ${this.projectFolderPath}`
+      this.usingExistingProject
+        ? `${this.testSuiteSuffixName} - using existing project at ${this.projectFolderPath}`
+        : `${this.testSuiteSuffixName} - creating project files in ${this.projectFolderPath}`
     );
 
     // Remove the project folder, just in case there are stale files there.
-    if (fs.existsSync(this.projectFolderPath)) {
+    if (fs.existsSync(this.projectFolderPath) && !this.usingExistingProject) {
       await utilities.removeFolder(this.projectFolderPath);
       await utilities.pause(1);
     }
@@ -109,6 +124,11 @@ export class TestSetup {
   }
 
   public async createProject(scratchOrgEdition: string): Promise<void> {
+    if (this.usingExistingProject) {
+      utilities.log('Using existing project, skipping createProject()');
+      return;
+    }
+
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
 
