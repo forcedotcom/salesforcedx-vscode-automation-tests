@@ -7,6 +7,7 @@
 
 export * from './apexUtils';
 export * from './commandPrompt';
+export * from './extensionUtils';
 export * from './fileSystem';
 export * from './lwcUtils';
 export * from './miscellaneous';
@@ -15,3 +16,4 @@ export * from './outputView';
 export * from './sideBar';
 export * from './statusBar';
 export * from './terminalView';
+export * from './visualforceUtils';

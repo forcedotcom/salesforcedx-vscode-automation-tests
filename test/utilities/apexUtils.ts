@@ -76,18 +76,6 @@ export async function createApexClassWithTest(name: string): Promise<void> {
 export async function createApexClassWithBugs(): Promise<void> {
   const workbench = await browser.getWorkbench();
   let textEditor: TextEditor;
-  const classText = [
-    `public with sharing class AccountService {`,
-    `\tpublic Account createAccount(String accountName, String accountNumber, String tickerSymbol) {`,
-    `\t\tAccount newAcct = new Account(`,
-    `\t\t\tName = accountName,`,
-    `\t\t\tAccountNumber = accountNumber,`,
-    `\t\t\tTickerSymbol = accountNumber`,
-    `\t\t);`,
-    `\t\treturn newAcct;`,
-    `\t}`,
-    `}`
-  ].join('\n');
 
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
   const inputBox = await runCommandFromCommandPrompt(
@@ -109,6 +97,18 @@ export async function createApexClassWithBugs(): Promise<void> {
   textEditor = (await editorView.openEditor(
     'AccountService.cls'
   )) as TextEditor;
+  const classText = [
+    `public with sharing class AccountService {`,
+    `\tpublic Account createAccount(String accountName, String accountNumber, String tickerSymbol) {`,
+    `\t\tAccount newAcct = new Account(`,
+    `\t\t\tName = accountName,`,
+    `\t\t\tAccountNumber = accountNumber,`,
+    `\t\t\tTickerSymbol = accountNumber`,
+    `\t\t);`,
+    `\t\treturn newAcct;`,
+    `\t}`,
+    `}`
+  ].join('\n');
   await textEditor.setText(classText);
   await textEditor.save();
   await pause(1);
@@ -124,6 +124,10 @@ export async function createApexClassWithBugs(): Promise<void> {
   await inputBox.confirm();
   await pause(1);
 
+  // Modify class content
+  textEditor = (await editorView.openEditor(
+    'AccountServiceTest.cls'
+  )) as TextEditor;
   const testText = [
     `@IsTest`,
     `private class AccountServiceTest {`,
@@ -145,11 +149,6 @@ export async function createApexClassWithBugs(): Promise<void> {
     `\t}`,
     `}`
   ].join('\n');
-
-  // Modify class content
-  textEditor = (await editorView.openEditor(
-    'AccountServiceTest.cls'
-  )) as TextEditor;
   await textEditor.setText(testText);
   await textEditor.save();
   await pause(1);
@@ -175,6 +174,50 @@ export async function createAnonymousApexFile(): Promise<void> {
   )) as TextEditor;
 
   await textEditor.setText("System.debug('¡Hola mundo!');");
+  await textEditor.save();
+  await pause(1);
+}
+
+export async function createApexController(): Promise<void> {
+  const workbench = await browser.getWorkbench();
+
+  // Using the Command palette, run SFDX: Create Apex Class to create the controller
+  const inputBox = await runCommandFromCommandPrompt(
+    workbench,
+    'SFDX: Create Apex Class',
+    1
+  );
+
+  // Set the name of the new controller
+  await inputBox.setText('MyController');
+  await inputBox.confirm();
+
+  // Select the default directory (press Enter/Return).
+  await inputBox.confirm();
+  await pause(1);
+
+  // Modify class content
+  const editorView = workbench.getEditorView();
+  const textEditor = (await editorView.openEditor(
+    'MyController.cls'
+  )) as TextEditor;
+  const classText = [
+    `public class MyController {`,
+    `\tprivate final Account account;`,
+    `\tpublic MyController() {`,
+    `\t\taccount = [SELECT Id, Name, Phone, Site FROM Account `,
+    `\t\tWHERE Id = :ApexPages.currentPage().getParameters().get('id')];`,
+    `\t}`,
+    `\tpublic Account getAccount() {`,
+    `\t\treturn account;`,
+    `\t}`,
+    `\tpublic PageReference save() {`,
+    `\t\tupdate account;`,
+    `\t\treturn null;`,
+    `\t}`,
+    `}`
+  ].join('\n');
+  await textEditor.setText(classText);
   await textEditor.save();
   await pause(1);
 }

@@ -17,7 +17,6 @@ import * as utilities from '../utilities';
 
 describe('Debug Apex Tests', async () => {
   let testSetup: TestSetup;
-  const fiveMinutes = 5 * 60;
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('DebugApexTests', false);
@@ -35,7 +34,7 @@ describe('Debug Apex Tests', async () => {
     const workbench = await browser.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 1);
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Push Source to Default Org and Override Conflicts', fiveMinutes);
+    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Push Source to Default Org and Override Conflicts', utilities.FIVE_MINUTES);
     const successPushNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Push Source to Default Org and Override Conflicts successfully ran');
     expect(successPushNotificationWasFound).toBe(true);
   });
@@ -54,7 +53,7 @@ describe('Debug Apex Tests', async () => {
     await debugAllTestsOption!.click();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
+    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', utilities.FIVE_MINUTES);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
     expect(successNotificationWasFound).toBe(true);
@@ -80,7 +79,7 @@ describe('Debug Apex Tests', async () => {
     await debugTestOption!.click();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
+    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', utilities.FIVE_MINUTES);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
     expect(successNotificationWasFound).toBe(true);
@@ -113,7 +112,7 @@ describe('Debug Apex Tests', async () => {
     await utilities.pause(1);
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
+    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', utilities.FIVE_MINUTES);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
     expect(successNotificationWasFound).toBe(true);
@@ -146,7 +145,7 @@ describe('Debug Apex Tests', async () => {
     await utilities.pause(1);
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', fiveMinutes);
+    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', utilities.FIVE_MINUTES);
 
     const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
     expect(successNotificationWasFound).toBe(true);

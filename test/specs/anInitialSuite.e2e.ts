@@ -4,12 +4,8 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import {
-  step
-} from 'mocha-steps';
-import {
-  TestSetup
-} from '../testSetup';
+import { step } from 'mocha-steps';
+import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
 /*
@@ -29,24 +25,35 @@ suite does run, it needs to run first.
 describe('An Initial Suite', async () => {
   let testSetup: TestSetup;
 
+  step('Countdown', async () => {
+    utilities.log('About to start the e2e tests...');
+    for (let i = 10; i > 0; i--) {
+      utilities.log(`${i}...`);
+      await utilities.pause(1);
+    }
+  });
+
   step('Verify our extensions are not initially loaded', async () => {
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 2);
+    await utilities.showRunningExtensions(workbench);
 
     const extensionNameDivs = await $$('div.name');
     let sfdxKeywordWasFound = false;
     let salesforceKeywordWasFound = false;
     for (const extensionNameDiv of extensionNameDivs) {
       const text = await extensionNameDiv.getText();
-
       if (text.includes('sfdx')) {
         sfdxKeywordWasFound = true;
-        utilities.log(`AnInitialSuite - extension ${text} was present, but wasn't expected`);
+        utilities.log(
+          `AnInitialSuite - extension ${text} was present, but wasn't expected`
+        );
       } else if (text.includes('salesforce')) {
         if (text !== 'salesforce.system-tests') {
           // salesforce.system-tests is expected, anything else is an issue.
           salesforceKeywordWasFound = true;
-          utilities.log(`AnInitialSuite - extension ${text} was present, but wasn't expected before the extensions loaded`);
+          utilities.log(
+            `AnInitialSuite - extension ${text} was present, but wasn't expected before the extensions loaded`
+          );
         }
       }
     }
@@ -54,38 +61,46 @@ describe('An Initial Suite', async () => {
     expect(salesforceKeywordWasFound).toBe(false);
   });
 
-  step('Verify the default SFDX commands are present when no project is loaded', async () => {
-    const workbench = await browser.getWorkbench();
-    const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
+  step(
+    'Verify the default SFDX commands are present when no project is loaded',
+    async () => {
+      const workbench = await browser.getWorkbench();
+      const prompt = await utilities.openCommandPromptWithCommand(
+        workbench,
+        'SFDX:'
+      );
 
-    const quickPicks = await prompt.getQuickPicks();
-    let expectedSfdxCommandsFound = 0;
-    let unexpectedSfdxCommandWasFound = false;
-    for (const quickPick of quickPicks) {
-      const label = await quickPick.getLabel();
-      switch (label) {
-        // These three commands are expected to always be present,
-        // even before the extensions have been loaded.
-        case 'SFDX: Create and Set Up Project for ISV Debugging':
-        case 'SFDX: Create Project':
-        case 'SFDX: Create Project with Manifest':
-          expectedSfdxCommandsFound++;
-          break;
+      const quickPicks = await prompt.getQuickPicks();
+      let expectedSfdxCommandsFound = 0;
+      let unexpectedSfdxCommandWasFound = false;
+      for (const quickPick of quickPicks) {
+        const label = await quickPick.getLabel();
+        switch (label) {
+          // These three commands are expected to always be present,
+          // even before the extensions have been loaded.
+          case 'SFDX: Create and Set Up Project for ISV Debugging':
+          case 'SFDX: Create Project':
+          case 'SFDX: Create Project with Manifest':
+            expectedSfdxCommandsFound++;
+            break;
 
-        default:
-          // And if any other SFDX commands are present, this is unexpected and is an issue.
-          unexpectedSfdxCommandWasFound = true;
-          utilities.log(`AnInitialSuite - command ${label} was present, but wasn't expected before the extensions loaded`);
-          break;
+          default:
+            // And if any other SFDX commands are present, this is unexpected and is an issue.
+            unexpectedSfdxCommandWasFound = true;
+            utilities.log(
+              `AnInitialSuite - command ${label} was present, but wasn't expected before the extensions loaded`
+            );
+            break;
+        }
       }
+
+      expect(expectedSfdxCommandsFound).toBe(3);
+      expect(unexpectedSfdxCommandWasFound).toBe(false);
+
+      // Escape out of the pick list.
+      await prompt.cancel();
     }
-
-    expect(expectedSfdxCommandsFound).toBe(3);
-    expect(unexpectedSfdxCommandWasFound).toBe(false);
-
-    // Escape out of the pick list.
-    await prompt.cancel();
-  });
+  );
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('AnInitialSuite', false);
@@ -95,52 +110,77 @@ describe('An Initial Suite', async () => {
     await testSetup.createProject('Developer');
   });
 
-  step('Verify our extensions are loaded after creating an SFDX project', async () => {
-    const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 3);
+  step(
+    'Verify our extensions are loaded after creating an SFDX project',
+    async () => {
+      const workbench = await browser.getWorkbench();
+      await utilities.runCommandFromCommandPrompt(
+        workbench,
+        'Developer: Show Running Extensions',
+        3
+      );
 
-    // Close panel so all extensions can be seen
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
+      // Close panel so all extensions can be seen
+      await utilities.runCommandFromCommandPrompt(
+        workbench,
+        'View: Close Panel',
+        1
+      );
 
-    let matchesFound = 0;
-    const extensionNameDivs = await $$('div.name');
-    for (const extensionNameDiv of extensionNameDivs) {
-      const text = await extensionNameDiv.getText();
+      // Close panel so the visualforce extension can be seen
+      await utilities.runCommandFromCommandPrompt(
+        workbench,
+        'View: Close Panel',
+        1
+      );
 
-      if (text.startsWith('salesforce.salesforcedx-vscode-')) {
-        matchesFound++;
-        utilities.log(`AnInitialSuite - extension ${text} is loaded`);
+      let matchesFound = 0;
+      const extensionNameDivs = await $$('div.name');
+      for (const extensionNameDiv of extensionNameDivs) {
+        const text = await extensionNameDiv.getText();
+
+        if (text.startsWith('salesforce.salesforcedx-vscode-')) {
+          matchesFound++;
+          utilities.log(`AnInitialSuite - extension ${text} is loaded`);
+        }
       }
+
+      // 7 are in the list, but only 6 are visible.
+      expect(matchesFound).toBeGreaterThanOrEqual(6);
     }
+  );
 
-    expect(matchesFound).toBe(7);
-  });
+  step(
+    'Verify that SFDX commands are present after an SFDX project has been created',
+    async () => {
+      const workbench = await browser.getWorkbench();
+      const prompt = await utilities.openCommandPromptWithCommand(
+        workbench,
+        'SFDX:'
+      );
+      const quickPicks = await prompt.getQuickPicks();
+      const commands: string[] = [];
+      for (const quickPick of quickPicks) {
+        commands.push(await quickPick.getLabel());
+      }
 
-  step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
-    const workbench = await browser.getWorkbench();
-    const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
-    const quickPicks = await prompt.getQuickPicks();
-    const commands: string[] = [];
-    for (const quickPick of quickPicks) {
-      commands.push(await quickPick.getLabel());
+      // Look for the first few SFDX commands.
+      expect(commands).toContain('SFDX: Add Tests to Apex Test Suite');
+      expect(commands).toContain('SFDX: Authorize a Dev Hub');
+      expect(commands).toContain('SFDX: Authorize an Org');
+      expect(commands).toContain('SFDX: Authorize an Org using Session ID');
+      expect(commands).toContain('SFDX: Cancel Active Command');
+      expect(commands).toContain('SFDX: Configure Apex Debug Exceptions');
+      expect(commands).toContain('SFDX: Create a Default Scratch Org...');
+      expect(commands).toContain('SFDX: Create Apex Class');
+      expect(commands).toContain('SFDX: Create Apex Test Suite');
+      expect(commands).toContain('SFDX: Create Apex Trigger');
+      // There are more, but just look for the first few commands.
+
+      // Escape out of the pick list.
+      await prompt.cancel();
     }
-
-    // Look for the first few SFDX commands.
-    expect(commands).toContain('SFDX: Add Tests to Apex Test Suite');
-    expect(commands).toContain('SFDX: Authorize a Dev Hub');
-    expect(commands).toContain('SFDX: Authorize an Org');
-    expect(commands).toContain('SFDX: Authorize an Org using Session ID');
-    expect(commands).toContain('SFDX: Cancel Active Command');
-    expect(commands).toContain('SFDX: Configure Apex Debug Exceptions');
-    expect(commands).toContain('SFDX: Create a Default Scratch Org...');
-    expect(commands).toContain('SFDX: Create Apex Class');
-    expect(commands).toContain('SFDX: Create Apex Test Suite');
-    expect(commands).toContain('SFDX: Create Apex Trigger');
-    // There are more, but just look for the first few commands.
-
-    // Escape out of the pick list.
-    await prompt.cancel();
-  });
+  );
 
   step('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();

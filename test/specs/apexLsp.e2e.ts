@@ -11,13 +11,11 @@ import * as utilities from '../utilities';
 
 describe('Apex LSP', async () => {
   let testSetup: TestSetup;
-  let projectName: string;
 
   step('Set up the testing environment', async () => {
-    utilities.log(`ApexLsp - Set up the testing environment`);
+    utilities.log('ApexLsp - Set up the testing environment');
     testSetup = new TestSetup('ApexLsp', false);
     await testSetup.setUp();
-    projectName = testSetup.tempProjectName.toUpperCase();
 
     // Create Apex Class
     await utilities.createApexClassWithTest('ExampleClass');
@@ -27,23 +25,13 @@ describe('Apex LSP', async () => {
     utilities.log(
       `${testSetup.testSuiteSuffixName} - Verify Extension is Running`
     );
+
     // Using the Command palette, run Developer: Show Running Extensions
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Developer: Show Running Extensions',
-      1
-    );
+    await utilities.showRunningExtensions(workbench);
 
     // Verify Apex extension is present and running
-    const extensionNameDivs = await $$('div.name');
-    let extensionWasFound = false;
-    for (const extensionNameDiv of extensionNameDivs) {
-      const text = await extensionNameDiv.getText();
-      if (text.includes('salesforce.salesforcedx-vscode-apex')) {
-        extensionWasFound = true;
-      }
-    }
+    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforce.salesforcedx-vscode-apex');
     expect(extensionWasFound).toBe(true);
   });
 
