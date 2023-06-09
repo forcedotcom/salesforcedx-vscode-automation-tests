@@ -13,6 +13,8 @@ import {
   EnvironmentSettings
 } from '../environmentSettings';
 
+export const FIVE_MINUTES = 5 * 60;
+
 export async function pause(durationInSeconds: number): Promise<void> {
   await sleep(durationInSeconds * EnvironmentSettings.getInstance().throttleFactor * 1000);
 }
