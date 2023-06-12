@@ -14,8 +14,8 @@ import * as utilities from '../utilities';
 
 const DEV_HUB_USER_NAME = 'svc_idee_bot@salesforce.com';
 const DEV_HUB_ALIAS_NAME = 'vscodeOrg';
-const ORGID = ''
-const SFDXAUTHURL = '';
+const ORGID = '00D4S000001bTKtUAM'
+const SFDXAUTHURL = 'force://PlatformCLI::5Aep861_5w6WQI90bSdwcFh5tYU_Eh3RLBGtzfuZbMQ2EPwui1zc9k2UlPWs1DoepCSgy3yHfuzS9y_90KtakD3@d4s000001btktuam-dev-ed.develop.my.salesforce.com';
 
 const exec = util.promisify(child_process.exec);
 
