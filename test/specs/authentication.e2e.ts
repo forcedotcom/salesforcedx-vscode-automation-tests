@@ -200,11 +200,8 @@ describe('Authentication', async () => {
     // Enter an org alias - yyyy-mm-dd-username-ticks
     const currentDate = new Date();
     const ticks = currentDate.getTime();
-    const day = ('0' + currentDate.getDate()).slice(-2);
-    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-    const year = currentDate.getFullYear();
     const currentOsUserName = utilities.transformedUserName();
-    scratchOrgAliasName = `TempScratchOrg_${year}_${month}_${day}_${currentOsUserName}_${ticks}_OrgAuth`;
+    scratchOrgAliasName = `TempScratchOrg_${utilities.dateAsY_M_D(currentDate)}_${currentOsUserName}_${ticks}_OrgAuth`;
 
     await prompt.setText(scratchOrgAliasName);
     await utilities.pause(1);

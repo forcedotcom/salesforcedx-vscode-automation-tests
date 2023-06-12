@@ -8,8 +8,7 @@
             "node",
             "wdio-vscode-service"
         ],
-        "target": "es2019",
-        "moduleResolution": "node",
+        "target": "ES2021",
         "esModuleInterop": true,
         "strict": true
     }

@@ -238,11 +238,8 @@ describe('Push and Pull', async () => {
     // Org alias format: AdminUser_yyyy_mm_dd_username_ticks__PushAndPull
     const currentDate = new Date();
     const ticks = currentDate.getTime();
-    const day = ('0' + currentDate.getDate()).slice(-2);
-    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-    const year = currentDate.getFullYear();
     const currentOsUserName = await utilities.transformedUserName();
-    adminName = `AdminUser_${year}_${month}_${day}_${currentOsUserName}_${ticks}_PushAndPull`;
+    adminName = `AdminUser_${utilities.dateAsY_M_D(currentDate)}_${currentOsUserName}_${ticks}_PushAndPull`;
     adminEmailAddress = `${adminName}@sfdx.org`;
     utilities.log(`PushAndPull - admin alias is ${adminName}...`);
 
