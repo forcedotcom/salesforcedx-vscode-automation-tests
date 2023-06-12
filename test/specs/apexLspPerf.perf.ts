@@ -24,6 +24,8 @@ describe('Apex LSP Perf', async () => {
 
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 1);
 
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 10);
+
     // Verify Apex extension is present and running
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,

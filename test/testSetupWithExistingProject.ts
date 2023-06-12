@@ -16,4 +16,9 @@ export class TestSetupWithWExistingProject extends TestSetup {
   protected removeProject(): Promise<void> {
     return Promise.resolve();
   }
+
+  // overriding base class method to not create a tmp folder
+  protected createTmpFolder(): Promise<void> {
+    return Promise.resolve();
+  }
 }

@@ -17,7 +17,7 @@ export class TestSetup {
   public testSuiteSuffixName: string;
   private reuseScratchOrg = false;
   private static aliasAndUserNameWereVerified = false;
-  public tempFolderPath: string | undefined = undefined;
+  public tempFolderPath: string;
   protected _projectFolderPath: string | undefined = undefined;
   private prompt: QuickOpenBox | InputBox | undefined;
   private scratchOrgAliasName: string | undefined;
@@ -28,6 +28,7 @@ export class TestSetup {
   ) {
     this.testSuiteSuffixName = testSuiteSuffixName;
     this.reuseScratchOrg = reuseScratchOrg;
+    this.tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
   }
 
   public get tempProjectName(): string {
@@ -65,7 +66,6 @@ export class TestSetup {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting setUpTestingEnvironment()...`);
 
-    this.tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
     this.projectFolderPath = path.join(this.tempFolderPath, this.tempProjectName);
 
     utilities.log(`${this.testSuiteSuffixName} - creating project files in ${this.projectFolderPath}`);
@@ -74,13 +74,17 @@ export class TestSetup {
     await this.removeProject();
 
     // Now create the temp folder.  It should exist but create the folder if it is missing.
+    await this.createTmpFolder();
+
+    utilities.log(`${this.testSuiteSuffixName} - ...finished setUpTestingEnvironment()`);
+    utilities.log('');
+  }
+
+  protected async createTmpFolder() {
     if (!fs.existsSync(this.tempFolderPath)) {
       await utilities.createFolder(this.tempFolderPath);
       await utilities.pause(1);
     }
-
-    utilities.log(`${this.testSuiteSuffixName} - ...finished setUpTestingEnvironment()`);
-    utilities.log('');
   }
 
   public async createProject(): Promise<void> {
