@@ -42,3 +42,7 @@ export function currentOsUserName(): string {
 export function transformedUserName(): string {
   return currentOsUserName().replace('.', '_');
 }
+
+export function dateAsY_M_D(data: Date) {
+  return data.toISOString().split('T')[0].replaceAll('-', '_');
+}

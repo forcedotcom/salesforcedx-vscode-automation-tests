@@ -9,37 +9,26 @@ import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import { EnvironmentSettings } from '../environmentSettings';
+import { TestSetupWithWExistingProject } from '../TestSetupWithExistingProject';
 
 describe('Apex LSP Perf', async () => {
   let testSetup: TestSetup;
 
   step('Ensure Apex Language Server Starts Successfully', async () => {
     utilities.log(`ApexLsp - Set up the testing environment`);
-    testSetup = new TestSetup(
-      'ApexLsp',
-      false,
-      EnvironmentSettings.getInstance().sfdxProjectHome
-    );
+    testSetup = new TestSetupWithWExistingProject(EnvironmentSettings.getInstance().testProjectHome, 'ApexLspPerf', false);
 
     await testSetup.setUpTestingEnvironment();
 
     const workbench = await browser.getWorkbench();
 
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Developer: Show Running Extensions',
-      1
-    );
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 1);
 
-    // Verify Apex Language Server extension is present and running
-    const extensionNameDivs = await $$('div.name');
-    let extensionWasFound = false;
-    for (const extensionNameDiv of extensionNameDivs) {
-      const text = await extensionNameDiv.getText();
-      if (text.includes('salesforce.salesforcedx-vscode-apex')) {
-        extensionWasFound = true;
-      }
-    }
+    // Verify Apex extension is present and running
+    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+      workbench,
+      'salesforce.salesforcedx-vscode-apex'
+    );
     expect(extensionWasFound).toBe(true);
 
     const output = await utilities.attemptToFindOutputPanelText(
@@ -47,9 +36,7 @@ describe('Apex LSP Perf', async () => {
       'ApexIndexer: Scanning user-defined types took',
       20
     );
-    const standardApexClasses = output?.match(
-      /ApexIndexer: StandardObjects: [1-9][0-9]{0,5}/g
-    );
+    const standardApexClasses = output?.match(/ApexIndexer: StandardObjects: [1-9][0-9]{0,5}/g);
     expect(standardApexClasses).toHaveLength(1);
   });
 

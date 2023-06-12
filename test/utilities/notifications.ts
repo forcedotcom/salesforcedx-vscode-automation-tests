@@ -11,22 +11,21 @@ import {
 import {
   pause
 } from './miscellaneous';
+import { HrTime } from './hrTime';
 
 export async function waitForNotificationToGoAway(workbench: Workbench, notificationMessage: string, durationInSeconds: number, matchExactString: boolean = true): Promise<void> {
   // Change timeout from seconds to milliseconds
-  durationInSeconds *= 1000;
+  const durationInMillis = durationInSeconds * 1000;
 
   await pause(5);
-  const startDate = new Date();
+  const startTime = new HrTime();
   while (true) {
     let notificationWasFound = await notificationIsPresent(workbench, notificationMessage, matchExactString);
     if (!notificationWasFound) {
       return;
     }
 
-    const currentDate = new Date();
-    const secondsPassed = Math.abs(currentDate.getTime() - startDate.getTime()) / 1000;
-    if (secondsPassed >= durationInSeconds) {
+    if (startTime.getElapsedMilliseconds() >= durationInMillis) {
       throw new Error(`Exceeded time limit - notification "${notificationMessage}" is still present`);
     }
   }
@@ -68,7 +67,7 @@ export async function dismissAllNotifications(): Promise<void> {
   await browser.waitUntil(async () => {
     const notifications = await workbench.getNotifications();
     for (const notification of notifications) {
-        await notification.dismiss();
+      await notification.dismiss();
     }
 
     return !(await workbench.hasNotifications());

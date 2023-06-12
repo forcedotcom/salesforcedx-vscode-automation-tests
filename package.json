@@ -6,6 +6,7 @@
   "private": true,
   "devDependencies": {
     "@commitlint/config-conventional": "^17.1.0",
+    "@salesforce/core": "^3.36.2",
     "@types/node": "^16.15.1",
     "@wdio/cli": "^7.25.4",
     "@wdio/globals": "^8.0.5",
@@ -22,7 +23,6 @@
     "wdio-vscode-service": "^4.2.1",
     "wdio-wait-for": "^2.2.6"
   },
-  "dependencies": {},
   "scripts": {
     "automation-tests": "wdio run test/wdio.conf.ts",
     "commit": "git-cz"
