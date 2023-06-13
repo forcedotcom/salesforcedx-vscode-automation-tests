@@ -34,6 +34,8 @@ export class EnvironmentSettings {
   ];
   private _devHubAliasName = 'vscodeOrg';
   private _devHubUserName = 'svc_idee_bot@salesforce.com';
+  private _sfdxAuthUrl = 'force://PlatformCLI::5Aep861_5w6WQI90bSdwcFh5tYU_Eh3RLBGtzfuZbMQ2EPwui1zc9k2UlPWs1DoepCSgy3yHfuzS9y_90KtakD3@d4s000001btktuam-dev-ed.develop.my.salesforce.com';
+  private _orgId = '00D4S000001bTKtUAM';
   private _extensionPath = join(
     __dirname,
     '..',
@@ -74,6 +76,12 @@ export class EnvironmentSettings {
       EnvironmentSettings._instance._throttleFactor =
         parseInt(process.env.THROTTLE_FACTOR!) ||
         EnvironmentSettings._instance._throttleFactor;
+      EnvironmentSettings._instance._sfdxAuthUrl = 
+        process.env.SFDXAUTHURL_TEST ||
+      EnvironmentSettings._instance._sfdxAuthUrl;
+      EnvironmentSettings._instance._orgId = 
+        process.env.ORGID_TEST ||
+      EnvironmentSettings._instance._orgId;
     }
 
     return EnvironmentSettings._instance;
@@ -105,5 +113,13 @@ export class EnvironmentSettings {
 
   public get startTime(): string {
     return this._startTime;
+  }
+
+  public get sfdxAuthUrl(): string {
+    return this._sfdxAuthUrl;
+  }
+
+  public get orgId(): string {
+    return this._orgId;
   }
 }
