@@ -14,7 +14,7 @@ export class EnvironmentSettings {
   private _specFiles = [
     // './test/specs/**/*.e2e.ts'
     // OR
-    './test/specs/**/anInitialSetUp.ts',
+    './test/specs/**/anInitialSetUp.e2e.ts',
     './test/specs/**/anInitialSuite.e2e.ts',
     // './test/specs/**/apexLsp.e2e.ts',
     // './test/specs/**/apexReplayDebugger.e2e.ts',
