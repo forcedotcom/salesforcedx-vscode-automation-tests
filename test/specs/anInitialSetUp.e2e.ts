@@ -26,7 +26,7 @@ describe('An Initial SetUp', async () => {
   utilities.log(`${devHubUserName}`);
   utilities.log(`${devHubAliasName}`);
   step('Countdown', async () => {
-    utilities.log('About to start the e2e tests...');
+    utilities.log('About to start authorizing to devhub...');
     for (let i = 10; i > 0; i--) {
       utilities.log(`${i}...`);
       await utilities.pause(1);

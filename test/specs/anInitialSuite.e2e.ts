@@ -34,6 +34,8 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify our extensions are not initially loaded', async () => {
+    utilities.log('...Verifying our extensions are not initially loaded...')
+    utilities.pause(5)
     const workbench = await browser.getWorkbench();
     await utilities.showRunningExtensions(workbench);
 
@@ -60,6 +62,7 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify the default SFDX commands are present when no project is loaded', async () => {
+    utilities.log('...Verifying the default SFDX commands are present when no project is loaded...')
     const workbench = await browser.getWorkbench();
     const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
 
