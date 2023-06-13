@@ -15,6 +15,8 @@ import * as utilities from '../utilities';
 const exec = util.promisify(child_process.exec);
 
 describe('An Initial SetUp', async () => {
+  utilities.log('...AnInitialSetUP begin...');
+
   // ToDo: test if environment settings is accessible at this point in remote env
   const environmentSettings = EnvironmentSettings.getInstance();
   const devHubUserName = environmentSettings.devHubUserName;
@@ -23,6 +25,13 @@ describe('An Initial SetUp', async () => {
   const orgId = environmentSettings.orgId;
   utilities.log(`${devHubUserName}`);
   utilities.log(`${devHubAliasName}`);
+  step('Countdown', async () => {
+    utilities.log('About to start the e2e tests...');
+    for (let i = 10; i > 0; i--) {
+      utilities.log(`${i}...`);
+      await utilities.pause(1);
+    }
+  });
 
   step('Authorize DevHub', async () => {
     const sfdxAuthUrl = String(SFDX_AUTH_URL);
