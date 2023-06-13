@@ -35,7 +35,7 @@ export class EnvironmentSettings {
   private _devHubAliasName = 'vscodeOrg';
   private _devHubUserName = 'svc_idee_bot@salesforce.com';
   private _sfdxAuthUrl = 'force://PlatformCLI::5Aep861_5w6WQI90bSdwcFh5tYU_Eh3RLBGtzfuZbMQ2EPwui1zc9k2UlPWs1DoepCSgy3yHfuzS9y_90KtakD3@d4s000001btktuam-dev-ed.develop.my.salesforce.com';
-  private _orgId = '00D4S000001bTKtUAM';
+  private _orgId = process.env.ORGID_TEST;
   private _extensionPath = join(
     __dirname,
     '..',
@@ -119,7 +119,7 @@ export class EnvironmentSettings {
     return this._sfdxAuthUrl;
   }
 
-  public get orgId(): string {
+  public get orgId(): string | undefined {
     return this._orgId;
   }
 }

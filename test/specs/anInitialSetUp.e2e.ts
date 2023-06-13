@@ -16,14 +16,12 @@ const exec = util.promisify(child_process.exec);
 
 describe('An Initial SetUp', async () => {
   utilities.log('...AnInitialSetUP begin...');
-
-  // ToDo: test if environment settings is accessible at this point in remote env
   const environmentSettings = EnvironmentSettings.getInstance();
   const devHubUserName = environmentSettings.devHubUserName;
   const devHubAliasName = environmentSettings.devHubAliasName;
   const SFDX_AUTH_URL = environmentSettings.sfdxAuthUrl;
   const orgId = environmentSettings.orgId;
-  utilities.log(`${devHubUserName}`);
+  utilities.log(`Org ID - ${orgId}`);
   utilities.log(`${devHubAliasName}`);
   step('Countdown', async () => {
     utilities.log('About to start authorizing to devhub...');
@@ -46,7 +44,7 @@ describe('An Initial SetUp', async () => {
 
     await exec(`sfdx alias set ${devHubAliasName}=${devHubUserName}`);
     // For sfdx -> sf, remove above two lines and keep this
-    // await exec(`sf org login sfdx-url --sfdx-url-file ${authFilePath} --set-default --alias ${DEV_HUB_ALIAS_NAME}`);
+    // await exec(`sf org login sfdx-url --sfdx-url-file ${authFilePath} --set-default --alias ${devHubAliasName}`);
     utilities.log(`...Set Alias...`);
   });
 
@@ -54,13 +52,10 @@ describe('An Initial SetUp', async () => {
     const workbench = await browser.getWorkbench();
     const terminalView = await utilities.executeCommand(workbench, `sfdx org list`)
     const terminalText = await utilities.getTerminalViewText(terminalView, 100);
-    utilities.log('...Check-start...');
     expect(terminalText).toContain(`${orgId}`);
     expect(terminalText).toContain('Connected');
     expect(terminalText).toContain('Non-scratch orgs');
     expect(terminalText).toContain(`${devHubUserName}`);
     expect(terminalText).toContain(`${devHubAliasName}`);
-    utilities.log('...Check-finish...');
-
   });
 });
