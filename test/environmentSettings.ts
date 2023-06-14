@@ -33,9 +33,9 @@ export class EnvironmentSettings {
     // './test/specs/**/visualforceLsp.e2e.ts'
   ];
   private _devHubAliasName = 'vscodeOrg';
-  private _devHubUserName = 'svc_idee_bot@salesforce.com';
-  private _sfdxAuthUrl = 'force://PlatformCLI::5Aep861_5w6WQI90bSdwcFh5tYU_Eh3RLBGtzfuZbMQ2EPwui1zc9k2UlPWs1DoepCSgy3yHfuzS9y_90KtakD3@d4s000001btktuam-dev-ed.develop.my.salesforce.com';
-  private _orgId = process.env.ORGID_TEST;
+  private _devHubUserName = 'svcideebot@salesforce.com';
+  private _sfdxAuthUrl = process.env.SFDX_AUTH_URL;
+  private _orgId = process.env.ORG_ID;
   private _extensionPath = join(
     __dirname,
     '..',
@@ -80,7 +80,7 @@ export class EnvironmentSettings {
         process.env.SFDXAUTHURL_TEST ||
       EnvironmentSettings._instance._sfdxAuthUrl;
       EnvironmentSettings._instance._orgId = 
-        process.env.ORGID_TEST ||
+        process.env.ORG_ID ||
       EnvironmentSettings._instance._orgId;
     }
 
@@ -115,7 +115,7 @@ export class EnvironmentSettings {
     return this._startTime;
   }
 
-  public get sfdxAuthUrl(): string {
+  public get sfdxAuthUrl(): string | undefined {
     return this._sfdxAuthUrl;
   }
 
