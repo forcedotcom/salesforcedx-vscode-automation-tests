@@ -12,10 +12,10 @@ export class EnvironmentSettings {
 
   private _vscodeVersion = 'stable'; //  or 'insiders' or '1.77.3'
   private _specFiles = [
-    // './test/specs/**/*.e2e.ts'
+    './test/specs/**/*.e2e.ts'
     // OR
-    './test/specs/**/anInitialSetUp.e2e.ts',
-    './test/specs/**/anInitialSuite.e2e.ts',
+    // './test/specs/**/anInitialSetUp.e2e.ts',
+    // './test/specs/**/anInitialSuite.e2e.ts',
     // './test/specs/**/apexLsp.e2e.ts',
     // './test/specs/**/apexReplayDebugger.e2e.ts',
     // './test/specs/**/auraLsp.e2e.ts',
