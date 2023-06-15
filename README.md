@@ -47,3 +47,5 @@ Default value: 1
 ### Dev Hub
 
 A requirement of this project is for a dev hub to have been enabled on the user's machine. The default dev hub name is "vscodeOrg" and the default username is "svcideebot@salesforce.com", though this can be configured with the `DEV_HUB_ALIAS_NAME` and `DEV_HUB_USER_NAME` environment variables.
+Run Task : Authorize DevHub - E2E Testing Org through command palette (Cmd+shft+P).
+Once you are connected to the org with `DEV_HUB_ALIAS_NAME` and `DEV_HUB_USER_NAME` you can run single or all end-to-end test suites.
