@@ -15,43 +15,38 @@ import * as utilities from '../utilities';
 const exec = util.promisify(child_process.exec);
 
 describe('An Initial SetUp', async () => {
-  utilities.log('...AnInitialSetUP begin...');
   const environmentSettings = EnvironmentSettings.getInstance();
   const devHubUserName = environmentSettings.devHubUserName;
   const devHubAliasName = environmentSettings.devHubAliasName;
   const SFDX_AUTH_URL = environmentSettings.sfdxAuthUrl;
   const orgId = environmentSettings.orgId;
-  utilities.log(`Org ID - ${orgId}`);
-  utilities.log(`${devHubAliasName}`);
+
   step('Countdown', async () => {
-    utilities.log('About to start authorizing to devhub...');
-    for (let i = 10; i > 0; i--) {
+    utilities.log('About to start authorizing to devhub');
+    for (let i = 5; i > 0; i--) {
       utilities.log(`${i}...`);
       await utilities.pause(1);
     }
   });
 
-  step('Authorize DevHub', async () => {
+  step('Authorize to Testing Org', async () => {
     const sfdxAuthUrl = String(SFDX_AUTH_URL);
     const authFilePath = 'authFile.txt';
-    utilities.log('...Authorize DevHub...');
+
     // create and write in a text file
     fs.writeFileSync(authFilePath, sfdxAuthUrl);
-    utilities.log(`...Written authFile in  - ${authFilePath}...`);
 
-    await exec(`sfdx auth:sfdxurl:store -f ${authFilePath}`);
-    utilities.log(`...Ran auth:sfdxurl:store...`);
-
-    await exec(`sfdx alias set ${devHubAliasName}=${devHubUserName}`);
     // For sfdx -> sf, remove above two lines and keep this
     // await exec(`sf org login sfdx-url --sfdx-url-file ${authFilePath} --set-default --alias ${devHubAliasName}`);
-    utilities.log(`...Set Alias...`);
+    await exec(`sfdx auth:sfdxurl:store -f ${authFilePath}`);
+    await exec(`sfdx alias set ${devHubAliasName}=${devHubUserName}`);
   });
 
-  step('Verify Connection to Testing Org', async () => {
+  step('Verify Connection to the Testing Org', async () => {
     const workbench = await browser.getWorkbench();
     const terminalView = await utilities.executeCommand(workbench, `sfdx org list`)
     const terminalText = await utilities.getTerminalViewText(terminalView, 100);
+
     expect(terminalText).toContain(`${orgId}`);
     expect(terminalText).toContain('Connected');
     expect(terminalText).toContain('Non-scratch orgs');
