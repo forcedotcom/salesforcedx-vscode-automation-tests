@@ -34,6 +34,7 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify our extensions are not initially loaded', async () => {
+    utilities.pause(5)
     const workbench = await browser.getWorkbench();
     await utilities.showRunningExtensions(workbench);
 
