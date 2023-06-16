@@ -50,7 +50,7 @@ describe('An Initial SetUp', async () => {
     expect(terminalText).toContain(`${orgId}`);
     expect(terminalText).toContain('Connected');
     expect(terminalText).toContain('Non-scratch orgs');
-    expect(terminalText).toContain(`${devHubUserName}`);
-    expect(terminalText).toContain(`${devHubAliasName}`);
+    expect(terminalText).toContain(devHubUserName);
+    expect(terminalText).toContain(devHubAliasName);
   });
 });
