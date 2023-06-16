@@ -36,7 +36,7 @@ describe('An Initial SetUp', async () => {
     // create and write in a text file
     fs.writeFileSync(authFilePath, sfdxAuthUrl);
 
-    // For sfdx -> sf, remove above two lines and keep this
+    // For sfdx -> sf, remove the two lines below this comment block and uncomment the following line instead
     // await exec(`sf org login sfdx-url --sfdx-url-file ${authFilePath} --set-default --alias ${devHubAliasName}`);
     await exec(`sfdx auth:sfdxurl:store -f ${authFilePath}`);
     await exec(`sfdx alias set ${devHubAliasName}=${devHubUserName}`);
