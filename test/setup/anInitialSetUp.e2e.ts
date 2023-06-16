@@ -47,7 +47,7 @@ describe('An Initial SetUp', async () => {
     const terminalView = await utilities.executeCommand(workbench, 'sfdx org list')
     const terminalText = await utilities.getTerminalViewText(terminalView, 100);
 
-    expect(terminalText).toContain(`${orgId}`);
+    expect(terminalText).toContain(orgId);
     expect(terminalText).toContain('Connected');
     expect(terminalText).toContain('Non-scratch orgs');
     expect(terminalText).toContain(devHubUserName);
