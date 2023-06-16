@@ -44,7 +44,7 @@ describe('An Initial SetUp', async () => {
 
   step('Verify Connection to the Testing Org', async () => {
     const workbench = await browser.getWorkbench();
-    const terminalView = await utilities.executeCommand(workbench, `sfdx org list`)
+    const terminalView = await utilities.executeCommand(workbench, 'sfdx org list')
     const terminalText = await utilities.getTerminalViewText(terminalView, 100);
 
     expect(terminalText).toContain(`${orgId}`);
