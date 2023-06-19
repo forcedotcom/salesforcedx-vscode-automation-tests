@@ -90,7 +90,7 @@ describe('Templates', async () => {
 
   // Apex Trigger
   step('Create an Apex Trigger', async () => {
-    // Clear the out panel, then use the Command palette to run, "SFDX: Create Apex Trigger".
+    // Clear the output panel, then use the Command palette to run, "SFDX: Create Apex Trigger".
     const workbench = await browser.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Trigger', 1);
@@ -165,7 +165,7 @@ describe('Templates', async () => {
 
   // Aura App
   step('Create an Aura App', async () => {
-    // Clear the out panel, then use the Command palette to run, "SFDX: Create Aura App".
+    // Clear the output panel, then use the Command palette to run, "SFDX: Create Aura App".
     const workbench = await browser.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Aura App', 1);
@@ -364,7 +364,7 @@ describe('Templates', async () => {
 
   // Aura Interface
   step('Create an Aura Interface', async () => {
-    // Clear the out panel, then use the Command palette to run, "SFDX: Create Aura Interface".
+    // Clear the output panel, then use the Command palette to run, "SFDX: Create Aura Interface".
     const workbench = await browser.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Aura Interface', 1);
@@ -486,7 +486,7 @@ describe('Templates', async () => {
 
   // Visualforce Component
   step('Create a Visualforce Component', async () => {
-    // Clear the out panel, then use the Command palette to run, "SFDX: Create Visualforce Component".
+    // Clear the output panel, then use the Command palette to run, "SFDX: Create Visualforce Component".
     const workbench = await browser.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Visualforce Component', 1);
@@ -549,7 +549,7 @@ describe('Templates', async () => {
 
   // Visualforce Page
   step('Create a Visualforce Page', async () => {
-    // Clear the out panel, then use the Command palette to run, "SFDX: Create Visualforce Page".
+    // Clear the output panel, then use the Command palette to run, "SFDX: Create Visualforce Page".
     const workbench = await browser.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Visualforce Page', 1);
