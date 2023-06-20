@@ -71,6 +71,11 @@ export async function createLwc(name: string): Promise<void> {
 
   log('createLwc() - Modify js content');
   // Modify js content
+  inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+  await inputBox.setText(name + '.js');
+  await inputBox.confirm();
+  await pause(1);
+
   const editorView = workbench.getEditorView();
   let textEditor = (await editorView.openEditor(name + '.js')) as TextEditor;
   const jsText = [
@@ -112,11 +117,7 @@ export async function createAura(name: string): Promise<void> {
   const workbench = await browser.getWorkbench();
 
   log('createAura() - Running SFDX: Create Aura Component');
-  let inputBox = await runCommandFromCommandPrompt(
-    workbench,
-    'SFDX: Create Aura Component',
-    1
-  );
+  let inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Aura Component', 1);
 
   log('createAura() - Set the name of the new component');
   // Set the name of the new component
@@ -131,6 +132,11 @@ export async function createAura(name: string): Promise<void> {
 
   log('createAura() - Modify html content');
   // Modify html content
+  inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+  await inputBox.setText(name + '.cmp');
+  await inputBox.confirm();
+  await pause(1);
+
   const editorView = workbench.getEditorView();
   let textEditor = (await editorView.openEditor(name + '.cmp')) as TextEditor;
   const htmlText = [
