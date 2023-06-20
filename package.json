@@ -25,6 +25,7 @@
   "dependencies": {},
   "scripts": {
     "automation-tests": "wdio run test/wdio.conf.ts",
+    "setup": "wdio run test/wdio.conf.ts --spec test/setup/anInitialSetUp.e2e.ts",
     "commit": "git-cz"
   },
   "husky": {

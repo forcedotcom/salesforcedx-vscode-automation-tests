@@ -32,6 +32,16 @@
         "reveal": "always",
         "panel": "new"
       }
+    },
+    {
+      "label": "Authorize DevHub - E2E Testing Org",
+      "type": "shell",
+      "command": "sfdx auth web login | sfdx alias set vscodeOrg=svcideebot@salesforce.com | sfdx org list",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
     }
   ]
 }
