@@ -8,6 +8,7 @@
 import {
   step
 } from 'mocha-steps';
+import path from 'path';
 import {
   TextEditor
 } from 'wdio-vscode-service';
@@ -52,7 +53,7 @@ describe('Templates', async () => {
     const treeViewSection = await sidebar.getContent().getSection(projectName);
     await treeViewSection.expand();
 
-    // Get the matching (visible) items within the tree which contains "apexClass1".
+    // Get the matching (visible) items within the tree which contains "ApexClass1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(workbench, projectName, 'ApexClass1');
 
     expect(filteredTreeViewItems.includes('ApexClass1.cls')).toBe(true);
@@ -108,8 +109,12 @@ describe('Templates', async () => {
 
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'Finished SFDX: Create Apex Trigger', 10);
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('create force-app/main/default/triggers/ApexTrigger1.trigger');
-    expect(outputPanelText).toContain('create force-app/main/default/triggers/ApexTrigger1.trigger-meta.xml');
+
+    const triggerPath = path.join('force-app', 'main', 'default', 'triggers', 'ApexTrigger1.trigger');
+    expect(outputPanelText).toContain(`create ${triggerPath}`);
+
+    const metadataPath = path.join('force-app', 'main', 'default', 'triggers', 'ApexTrigger1.trigger-meta.xml');
+    expect(outputPanelText).toContain(`create ${metadataPath}`);
 
     // Check for expected items in the Explorer view.
     const sidebar = workbench.getSideBar();
@@ -183,14 +188,30 @@ describe('Templates', async () => {
 
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'Finished SFDX: Create Aura App', 10);
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('create force-app/main/default/aura/AuraApp1/AuraApp1.app');
-    expect(outputPanelText).toContain('create force-app/main/default/aura/AuraApp1/AuraApp1.app-meta.xml');
-    expect(outputPanelText).toContain('create force-app/main/default/aura/AuraApp1/AuraApp1.auradoc');
-    expect(outputPanelText).toContain('create force-app/main/default/aura/AuraApp1/AuraApp1.css');
-    expect(outputPanelText).toContain('create force-app/main/default/aura/AuraApp1/AuraApp1.svg');
-    expect(outputPanelText).toContain('create force-app/main/default/aura/AuraApp1/AuraApp1Controller.js');
-    expect(outputPanelText).toContain('create force-app/main/default/aura/AuraApp1/AuraApp1Helper.js');
-    expect(outputPanelText).toContain('create force-app/main/default/aura/AuraApp1/AuraApp1Renderer.js');
+
+    const appPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1.app');
+    expect(outputPanelText).toContain(`create ${appPath}`);
+
+    const metadataPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1.app-meta.xml');
+    expect(outputPanelText).toContain(`create ${metadataPath}`);
+
+    const docPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1.auradoc');
+    expect(outputPanelText).toContain(`create ${docPath}`);
+
+    const cssPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1.css');
+    expect(outputPanelText).toContain(`create ${cssPath}`);
+
+    const svgPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1.svg');
+    expect(outputPanelText).toContain(`create ${svgPath}`);
+
+    const controllerPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1Controller.js');
+    expect(outputPanelText).toContain(`create ${controllerPath}`);
+
+    const helperPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1Helper.js');
+    expect(outputPanelText).toContain(`create ${helperPath}`);
+
+    const rendererPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1Renderer.js');
+    expect(outputPanelText).toContain(`create ${rendererPath}`);
 
     // Get the matching (visible) items within the tree which contains "AuraApp1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(workbench, projectName, 'AuraApp1');
@@ -231,14 +252,30 @@ describe('Templates', async () => {
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pushed Source', 10);
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('Created  AuraApp1   AuraDefinitionBundle');
-    expect(outputPanelText).toContain('force-app/main/default/aura/AuraApp1/AuraApp1.app');
-    expect(outputPanelText).toContain('force-app/main/default/aura/AuraApp1/AuraApp1.auradoc');
-    expect(outputPanelText).toContain('force-app/main/default/aura/AuraApp1/AuraApp1.css');
-    expect(outputPanelText).toContain('force-app/main/default/aura/AuraApp1/AuraApp1.svg');
-    expect(outputPanelText).toContain('force-app/main/default/aura/AuraApp1/AuraApp1Controller.js');
-    expect(outputPanelText).toContain('force-app/main/default/aura/AuraApp1/AuraApp1Helper.js');
-    expect(outputPanelText).toContain('force-app/main/default/aura/AuraApp1/AuraApp1Renderer.js');
-    expect(outputPanelText).toContain('force-app/main/default/aura/AuraApp1/AuraApp1.app-meta.xml');
+
+    const appPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1.app');
+    expect(outputPanelText).toContain(appPath);
+
+    const docPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1.auradoc');
+    expect(outputPanelText).toContain(docPath);
+
+    const cssPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1.css');
+    expect(outputPanelText).toContain(cssPath);
+
+    const svgPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1.svg');
+    expect(outputPanelText).toContain(svgPath);
+
+    const controllerPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1Controller.js');
+    expect(outputPanelText).toContain(controllerPath);
+
+    const helperPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1Helper.js');
+    expect(outputPanelText).toContain(helperPath);
+
+    const rendererPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1Renderer.js');
+    expect(outputPanelText).toContain(rendererPath);
+
+    const metadataPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1.app-meta.xml');
+    expect(outputPanelText).toContain(metadataPath);
   });
 
   // Aura Component
@@ -382,8 +419,12 @@ describe('Templates', async () => {
 
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'Finished SFDX: Create Aura Interface', 10);
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('create force-app/main/default/aura/AuraInterface1/AuraInterface1.intf');
-    expect(outputPanelText).toContain('create force-app/main/default/aura/AuraInterface1/AuraInterface1.intf-meta.xml');
+
+    const interfacePath = path.join('force-app', 'main', 'default', 'aura', 'AuraInterface1', 'AuraInterface1.intf');
+    expect(outputPanelText).toContain(`create ${interfacePath}`);
+
+    const metadataPath = path.join('force-app', 'main', 'default', 'aura', 'AuraInterface1', 'AuraInterface1.intf-meta.xml');
+    expect(outputPanelText).toContain(`create ${metadataPath}`);
 
     // Get the matching (visible) items within the tree which contains "AuraInterface1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(workbench, projectName, 'AuraInterface1');
@@ -419,8 +460,12 @@ describe('Templates', async () => {
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pushed Source', 10);
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('Created  AuraInterface1  AuraDefinitionBundle');
-    expect(outputPanelText).toContain('force-app/main/default/aura/AuraInterface1/AuraInterface1.intf');
-    expect(outputPanelText).toContain('force-app/main/default/aura/AuraInterface1/AuraInterface1.intf-meta.xml');
+
+    const interfacePath = path.join('force-app', 'main', 'default', 'aura', 'AuraInterface1', 'AuraInterface1.intf');
+    expect(outputPanelText).toContain(interfacePath);
+
+    const metadataPath = path.join('force-app', 'main', 'default', 'aura', 'AuraInterface1', 'AuraInterface1.intf-meta.xml');
+    expect(outputPanelText).toContain(metadataPath);
   });
 
   // Lightning Web Component
@@ -504,8 +549,12 @@ describe('Templates', async () => {
 
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'Finished SFDX: Create Visualforce Component', 10);
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('create force-app/main/default/components/VisualforceCmp1.component');
-    expect(outputPanelText).toContain('create force-app/main/default/components/VisualforceCmp1.component-meta.xml');
+
+    const componentPath = path.join('force-app', 'main', 'default', 'components', 'VisualforceCmp1.component');
+    expect(outputPanelText).toContain(`create ${componentPath}`);
+
+    const metadataPath = path.join('force-app', 'main', 'default', 'components', 'VisualforceCmp1.component-meta.xml');
+    expect(outputPanelText).toContain(`create ${metadataPath}`);
 
     // Get the matching (visible) items within the tree which contains "AuraInterface1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(workbench, projectName, 'VisualforceCmp1');
@@ -543,8 +592,12 @@ describe('Templates', async () => {
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pushed Source', 10);
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('Created  VisualforceCmp1  ApexComponent');
-    expect(outputPanelText).toContain('force-app/main/default/components/VisualforceCmp1.component');
-    expect(outputPanelText).toContain('force-app/main/default/components/VisualforceCmp1.component-meta.xml');
+
+    const componentPath = path.join('force-app', 'main', 'default', 'components', 'VisualforceCmp1.component');
+    expect(outputPanelText).toContain(componentPath);
+
+    const metadataPath = path.join('force-app', 'main', 'default', 'components', 'VisualforceCmp1.component-meta.xml');
+    expect(outputPanelText).toContain(metadataPath);
   });
 
   // Visualforce Page
@@ -567,8 +620,12 @@ describe('Templates', async () => {
 
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'Finished SFDX: Create Visualforce Page', 10);
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('create force-app/main/default/pages/VisualforcePage1.page');
-    expect(outputPanelText).toContain('create force-app/main/default/pages/VisualforcePage1.page-meta.xml');
+
+    const visualforcePagePath = path.join('force-app', 'main', 'default', 'pages', 'VisualforcePage1.page');
+    expect(outputPanelText).toContain(`create ${visualforcePagePath}`);
+
+    const metadataPath = path.join('force-app', 'main', 'default', 'pages', 'VisualforcePage1.page-meta.xml');
+    expect(outputPanelText).toContain(`create ${metadataPath}`);
 
     // Get the matching (visible) items within the tree which contains "AuraInterface1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(workbench, projectName, 'VisualforcePage1');
@@ -606,8 +663,12 @@ describe('Templates', async () => {
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pushed Source', 10);
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('Created  VisualforcePage1  ApexPage');
-    expect(outputPanelText).toContain('force-app/main/default/pages/VisualforcePage1.page');
-    expect(outputPanelText).toContain('force-app/main/default/pages/VisualforcePage1.page-meta.xml');
+
+    const visualforcePagePath = path.join('force-app', 'main', 'default', 'pages', 'VisualforcePage1.page');
+    expect(outputPanelText).toContain(visualforcePagePath);
+
+    const metadataPath = path.join('force-app', 'main', 'default', 'pages', 'VisualforcePage1.page-meta.xml');
+    expect(outputPanelText).toContain(metadataPath);
   });
 
   // Tear down

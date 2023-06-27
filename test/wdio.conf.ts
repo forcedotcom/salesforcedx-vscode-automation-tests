@@ -104,11 +104,10 @@ export const config: Options.Testrunner = {
       // './test/specs/**/apexReplayDebugger.e2e.ts',
       // './test/specs/**/auraLsp.e2e.ts',
       // './test/specs/**/authentication.e2e.ts',
-      // './test/specs/**/lwcLsp.e2e.ts',
       // './test/specs/**/debugApexTests.e2e.ts',
       // './test/specs/**/deployAndRetrieve.e2e.ts',
       // './test/specs/**/lwcLsp.e2e.ts',
-      // './test/specs/**/manifestBuilder.e2e.ts'
+      // './test/specs/**/manifestBuilder.e2e.ts',
       // './test/specs/**/orgBrowser.e2e.ts',
       // './test/specs/**/pushAndPull.e2e.ts',
       // './test/specs/**/runApexTests.e2e.ts',
