@@ -175,7 +175,7 @@ describe('Templates', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Aura App', 1);
 
-    // Set the name of the new component to ApexClass1.
+    // Set the name of the new component to AuraApp1.
     await inputBox.setText('AuraApp1');
     await inputBox.confirm();
     await utilities.pause(1);
