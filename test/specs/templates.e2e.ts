@@ -406,7 +406,7 @@ describe('Templates', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Aura Interface', 1);
 
-    // Set the name of the new component to AuraInterface1.
+    // Set the name of the new interface to AuraInterface1.
     await inputBox.setText('AuraInterface1');
     await inputBox.confirm();
     await utilities.pause(1);
