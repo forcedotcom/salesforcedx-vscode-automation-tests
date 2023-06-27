@@ -48,6 +48,12 @@ describe('Templates', async () => {
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'Finished SFDX: Create Apex Class', 10);
     expect(outputPanelText).not.toBeUndefined();
 
+    const classPath = path.join('force-app', 'main', 'default', 'classes', 'ApexClass1.cls');
+    expect(outputPanelText).toContain(`create ${classPath}`);
+
+    const metadataPath = path.join('force-app', 'main', 'default', 'classes', 'ApexClass1.cls-meta.xml');
+    expect(outputPanelText).toContain(`create ${metadataPath}`);
+
     // Check for expected items in the Explorer view.
     const sidebar = workbench.getSideBar();
     const treeViewSection = await sidebar.getContent().getSection(projectName);
@@ -87,6 +93,12 @@ describe('Templates', async () => {
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pushed Source', 10);
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('Created  ApexClass1  ApexClass');
+
+    const classPath = path.join('force-app', 'main', 'default', 'classes', 'ApexClass1.cls');
+    expect(outputPanelText).toContain(classPath);
+
+    const metadataPath = path.join('force-app', 'main', 'default', 'classes', 'ApexClass1.cls-meta.xml');
+    expect(outputPanelText).toContain(metadataPath);
   });
 
   // Apex Trigger
@@ -166,6 +178,12 @@ describe('Templates', async () => {
     const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pushed Source', 10);
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('Created  ApexTrigger1  ApexTrigger');
+
+    const triggerPath = path.join('force-app', 'main', 'default', 'triggers', 'ApexTrigger1.trigger');
+    expect(outputPanelText).toContain(triggerPath);
+
+    const metadataPath = path.join('force-app', 'main', 'default', 'triggers', 'ApexTrigger1.trigger-meta.xml');
+    expect(outputPanelText).toContain(metadataPath);
   });
 
   // Aura App
