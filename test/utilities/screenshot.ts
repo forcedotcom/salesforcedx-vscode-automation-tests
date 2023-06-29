@@ -9,13 +9,22 @@ import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { EnvironmentSettings } from '../environmentSettings';
 
-export async function saveFailedTestScreenshot(specTitle: string, testTitle: string): Promise<void> {
+export async function saveFailedTestScreenshot(specTitle: string, testTitle: string, isError = true): Promise<void> {
   const saveDir = join(__dirname, '..', '..', 'screenshots', sanitizePath(specTitle));
-  console.log(`Test run failed! Saving a screenshot of the failure here: ${saveDir}`);
+  if (isError) {
+    console.log(`Test run failed! Saving a screenshot of the failure here: ${saveDir}`);
+  }
+  // } else {
+  //   console.log(`Debugging... saving a screenshot to here: ${saveDir}/${testTitle}`);
+  // }
+
   if (!existsSync(saveDir)) {
     mkdirSync(saveDir, { recursive: true });
   }
   const screenshotPath = getScreenshotSavePath(saveDir, testTitle);
+  if (!isError) {
+    console.log(`Debugging... saving screenshot to: ${screenshotPath}`);
+  }
   await browser.saveScreenshot(screenshotPath);
 }
 

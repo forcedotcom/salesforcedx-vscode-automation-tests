@@ -99,6 +99,22 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
 
     const workbench = await browser.getWorkbench();
+
+    // Let's see if the screenshots we take are capturing everything.
+    // We know that 'Developer: Show Running Extensions' works, so let's do this again and take a screenshot...
+
+    // this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 2);
+    const prompt = await utilities.openCommandPromptWithCommand(workbench, 'Developer: Show Running Extensions');
+    // ...and now take a screenshot
+    await utilities.saveFailedTestScreenshot('AnInitialSuite', 'debug-1: Show Running Extensions', false);
+    // The image that's saved _should_ have both VSCode's main window, plus the command pallet's window.
+    // On my local machine, both are in the screenshot.
+    // Need to now verify that's the case when running in GitHub.
+
+    await utilities.selectQuickPickItem(prompt, 'Developer: Show Running Extensions');
+    await utilities.pause(2);
+
+    // ...and now back to the real code...
     this.prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Create Project',
@@ -106,8 +122,38 @@ export class TestSetup {
     );
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
+    // comment out call to selectQuickPickWithText() in order to debug/troubleshoot issue in GitHub
     // Select the "Standard" project type.
-    await utilities.selectQuickPickWithText(this.prompt, 'Standard');
+    // await utilities.selectQuickPickWithText(this.prompt, 'Standard');
+
+    await utilities.saveFailedTestScreenshot('AnInitialSuite', 'debug-2: Post calling SFDX Create Project', false);
+    // At this point the screenshot that was saved should be displaying the quick pick list, with "Standard", "Empty", and "Analytics" in it.
+
+    const quickPicks = await this.prompt.getQuickPicks();
+    if (!quickPicks) {
+      utilities.log('ERROR!  quickPicks from this.prompt.getQuickPicks() was undefined');
+    }
+
+    utilities.log(`Count of quickPicks: ${quickPicks.length}`);
+    if (quickPicks.length < 1) {
+      utilities.log('ERROR!  quickPicks[] is an empty array (expected a count of 3 for "Standard", "Empty", and "Analytics"');
+    }
+
+    for (let i=0; i<quickPicks.length; i++) {
+      const quickPick = quickPicks[i];
+      const label = await quickPick.getLabel();
+      utilities.log(`quickPick[${i}].label: ${label}`);
+      // expected:
+      //   "Standard"
+      //   "Empty"
+      //   "Analytics"
+    }
+
+    await this.prompt.setText('Standard');
+    await utilities.pause(1);
+
+    await this.prompt.selectQuickPick('Standard');
+    await utilities.pause(1);
 
     // Enter the project's name.
     await this.prompt.setText(this.tempProjectName);

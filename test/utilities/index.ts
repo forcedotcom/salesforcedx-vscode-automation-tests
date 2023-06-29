@@ -13,6 +13,7 @@ export * from './lwcUtils';
 export * from './miscellaneous';
 export * from './notifications';
 export * from './outputView';
+export * from './screenshot';
 export * from './sideBar';
 export * from './statusBar';
 export * from './terminalView';
