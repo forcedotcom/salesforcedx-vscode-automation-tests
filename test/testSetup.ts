@@ -104,29 +104,51 @@ export class TestSetup {
     // We know that 'Developer: Show Running Extensions' works, so let's do this again and take a screenshot...
 
     // this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 2);
-    const prompt = await utilities.openCommandPromptWithCommand(workbench, 'Developer: Show Running Extensions');
+    this.prompt = await utilities.openCommandPromptWithCommand(workbench, 'Developer: Show Running Extensions');
     // ...and now take a screenshot
-    await utilities.saveFailedTestScreenshot('AnInitialSuite', 'debug-1: Show Running Extensions', false);
+    await utilities.saveFailedTestScreenshot('An Initial Suite', 'debug-1: Show Running Extensions', false);
     // The image that's saved _should_ have both VSCode's main window, plus the command pallet's window.
     // On my local machine, both are in the screenshot.
     // Need to now verify that's the case when running in GitHub.
 
-    await utilities.selectQuickPickItem(prompt, 'Developer: Show Running Extensions');
+    await utilities.selectQuickPickItem(this.prompt, 'Developer: Show Running Extensions');
     await utilities.pause(2);
 
-    // ...and now back to the real code...
-    this.prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Create Project',
-      10
-    );
+    // open the Output view
+    const outputView = await utilities.openOutputView();
+    // await utilities.selectOutputChannel(outputView, 'Salesforce CLI');
+    // The Salesforce extension hasn't loaded yet, so set to one of the built-in output views, like Main or Tasks
+    await utilities.selectOutputChannel(outputView, 'Main');
+    await utilities.saveFailedTestScreenshot('An Initial Suite', 'debug-2: Post opening the Output view', false);
+
+    // this.prompt = await utilities.runCommandFromCommandPrompt(
+    //   workbench,
+    //   'SFDX: Create Project',
+    //   10
+    // );
+    this.prompt = await workbench.openCommandPrompt();
+    await utilities.pause(5);
+
+    const command  = 'SFDX: Create Project';
+    await this.prompt.setText(`>${command}`);
+    await utilities.pause(10);
+    await utilities.saveFailedTestScreenshot('An Initial Suite', 'debug-3: Post calling SFDX Create Project', false);
+
+    await utilities.selectQuickPickItem(this.prompt, command);
+    await utilities.pause(10);
+
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
+
+    // Switch to the Salesforce CLI output.
+    await utilities.selectOutputChannel(outputView, 'Salesforce CLI');
+    await utilities.pause(10);
+    await utilities.saveFailedTestScreenshot('An Initial Suite', 'debug-4: Post opening the Salesforce CLI Output', false);
 
     // comment out call to selectQuickPickWithText() in order to debug/troubleshoot issue in GitHub
     // Select the "Standard" project type.
     // await utilities.selectQuickPickWithText(this.prompt, 'Standard');
 
-    await utilities.saveFailedTestScreenshot('AnInitialSuite', 'debug-2: Post calling SFDX Create Project', false);
+    await utilities.saveFailedTestScreenshot('An Initial Suite', 'debug-5: Post calling SFDX Create Project', false);
     // At this point the screenshot that was saved should be displaying the quick pick list, with "Standard", "Empty", and "Analytics" in it.
 
     const quickPicks = await this.prompt.getQuickPicks();

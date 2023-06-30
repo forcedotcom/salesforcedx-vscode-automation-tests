@@ -14,9 +14,6 @@ export async function saveFailedTestScreenshot(specTitle: string, testTitle: str
   if (isError) {
     console.log(`Test run failed! Saving a screenshot of the failure here: ${saveDir}`);
   }
-  // } else {
-  //   console.log(`Debugging... saving a screenshot to here: ${saveDir}/${testTitle}`);
-  // }
 
   if (!existsSync(saveDir)) {
     mkdirSync(saveDir, { recursive: true });
