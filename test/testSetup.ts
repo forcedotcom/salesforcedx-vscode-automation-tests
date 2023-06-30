@@ -136,6 +136,7 @@ export class TestSetup {
 
     await utilities.selectQuickPickItem(this.prompt, command);
     await utilities.pause(10);
+    await utilities.pause(60); // pause for another minute...
 
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
