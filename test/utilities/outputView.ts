@@ -11,10 +11,7 @@ import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { pause } from './miscellaneous';
 import { dismissAllNotifications } from './notifications';
 
-export async function selectOutputChannel(
-  outputView: OutputView,
-  name: string
-): Promise<void> {
+export async function selectOutputChannel(outputView: OutputView, name: string): Promise<void> {
   // Wait for all notifications to go away.  If there is a notification that is overlapping and hiding the Output channel's
   // dropdown menu, calling select.click() doesn't work, so dismiss all notifications first before clicking the dropdown
   // menu and opening it.
@@ -58,9 +55,7 @@ export async function openOutputView(): Promise<OutputView> {
   return outputView;
 }
 
-export async function getOutputViewText(
-  outputChannelName: string = ''
-): Promise<string> {
+export async function getOutputViewText(outputChannelName: string = ''): Promise<string> {
   const outputView = await openOutputView();
 
   // Set the output channel, but only if the value is passed in.
@@ -102,4 +97,43 @@ export async function attemptToFindOutputPanelText(
   }
 
   return undefined;
+}
+
+export async function getOperationTime(outputText: string): Promise<string> {
+  const initialTime = outputText.substring(
+    outputText.indexOf('.') - 8,
+    outputText.indexOf('.') + 4
+  );
+  const endTime = outputText.substring(
+    outputText.lastIndexOf('.') - 8,
+    outputText.lastIndexOf('.') + 4
+  );
+  let [hours1, minutes1, seconds1, milliseconds1] = initialTime.split(':').map(Number);
+  let [hours2, minutes2, seconds2, milliseconds2] = endTime.split(':').map(Number);
+  [seconds1, milliseconds1] = seconds1
+    .toString()
+    .split('.')
+    .map(Number);
+  [seconds2, milliseconds2] = seconds2
+    .toString()
+    .split('.')
+    .map(Number);
+  const totalMilliseconds1 =
+    milliseconds1 + seconds1 * 1000 + minutes1 * 60 * 1000 + hours1 * 60 * 60 * 1000;
+  const totalMilliseconds2 =
+    milliseconds2 + seconds2 * 1000 + minutes2 * 60 * 1000 + hours2 * 60 * 60 * 1000;
+
+  const differenceMilliseconds = totalMilliseconds2 - totalMilliseconds1;
+
+  const hoursDiff = Math.floor(differenceMilliseconds / (60 * 60 * 1000));
+  const minutesDiff = Math.floor((differenceMilliseconds % (60 * 60 * 1000)) / (60 * 1000));
+  const secondsDiff = Math.floor((differenceMilliseconds % (60 * 1000)) / 1000);
+  const millisecondsDiff = differenceMilliseconds % 1000;
+  return `${formatTimeComponent(hoursDiff)}:${formatTimeComponent(
+    minutesDiff
+  )}:${formatTimeComponent(secondsDiff)}.${formatTimeComponent(millisecondsDiff, 3)}`;
+}
+
+function formatTimeComponent(component: number, padLength: number = 2): string {
+  return component.toString().padStart(padLength, '0');
 }
