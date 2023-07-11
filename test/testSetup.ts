@@ -284,6 +284,7 @@ export class TestSetup {
 
     utilities.log(`${this.testSuiteSuffixName} - calling path.join()...`);
     const definitionFile = path.join(this.projectFolderPath!, 'config', 'project-scratch-def.json');
+    utilities.log(`${definitionFile} - is Definition file path...`)
 
     utilities.log(`${this.testSuiteSuffixName} - constructing scratchOrgAliasName...`);
     // Org alias format: TempScratchOrg_yyyy_mm_dd_username_ticks_testSuiteSuffixName
@@ -304,6 +305,9 @@ export class TestSetup {
     const sfdxForceOrgCreateResult = await exec(
       `sfdx force:org:create -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`
     );
+    utilities.log(`${this.testSuiteSuffixName} - ...sfdxForceOrgCreateResult-stdout - ${sfdxForceOrgCreateResult.stdout}`);
+    utilities.log(`${this.testSuiteSuffixName} - ...sfdxForceOrgCreateResult-stderr - ${sfdxForceOrgCreateResult.stderr}`);
+
     utilities.log(`${this.testSuiteSuffixName} - ..."sfdx force:org:create" finished`);
 
     utilities.log(`${this.testSuiteSuffixName} - calling removedEscapedCharacters()...`);
@@ -343,7 +347,7 @@ export class TestSetup {
     const inputBox = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Set a Default Org',
-      1
+      10
     );
 
     utilities.log(`${this.testSuiteSuffixName} - calling findQuickPickItem()...`);
