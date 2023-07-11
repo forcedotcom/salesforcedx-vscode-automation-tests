@@ -6,7 +6,7 @@
  */
 
 import { InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
-import { pause } from './miscellaneous';
+import { log, pause } from './miscellaneous';
 
 export async function openCommandPromptWithCommand(
   workbench: Workbench,
@@ -75,10 +75,12 @@ export async function findQuickPickItem(
   // Type the text into the filter.  Do this in case the pick list is long and
   // the target item is not visible (and one needs to scroll down to see it).
   await inputBox.setText(quickPickItemTitle);
-  await pause(1);
+  await pause(3);
+  log(`In findQuickPickItem -  set Text done...`);
 
   let itemWasFound = false;
   const quickPicks = await inputBox.getQuickPicks();
+  log(`${quickPicks} - are returned by getQuickPicks in input box...`);
   for (const quickPick of quickPicks) {
     const label = await quickPick.getLabel();
     if (useExactMatch && label === quickPickItemTitle) {
@@ -88,6 +90,7 @@ export async function findQuickPickItem(
     }
 
     if (itemWasFound) {
+      log(`${itemWasFound} - Value of itemWasFound...`)
       if (selectTheQuickPickItem) {
         await quickPick.select();
         await pause(1);
