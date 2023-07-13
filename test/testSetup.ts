@@ -305,8 +305,6 @@ export class TestSetup {
     const sfdxForceOrgCreateResult = await exec(
       `sfdx force:org:create -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`
     );
-    utilities.log(`${this.testSuiteSuffixName} - ...sfdxForceOrgCreateResult-stdout - ${sfdxForceOrgCreateResult.stdout}`);
-    utilities.log(`${this.testSuiteSuffixName} - ...sfdxForceOrgCreateResult-stderr - ${sfdxForceOrgCreateResult.stderr}`);
 
     utilities.log(`${this.testSuiteSuffixName} - ..."sfdx force:org:create" finished`);
 
