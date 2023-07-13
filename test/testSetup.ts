@@ -99,13 +99,13 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
 
     const workbench = await browser.getWorkbench();
-    utilities.pause(20);
+    utilities.pause(10);
     this.prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Create Project',
       30
     );
-    utilities.pause(30);
+    utilities.pause(10);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
     // Select the "Standard" project type.
@@ -305,7 +305,6 @@ export class TestSetup {
     const sfdxForceOrgCreateResult = await exec(
       `sfdx force:org:create -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`
     );
-
     utilities.log(`${this.testSuiteSuffixName} - ..."sfdx force:org:create" finished`);
 
     utilities.log(`${this.testSuiteSuffixName} - calling removedEscapedCharacters()...`);
