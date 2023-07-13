@@ -343,7 +343,7 @@ export class TestSetup {
     const inputBox = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Set a Default Org',
-      1
+      10
     );
 
     utilities.log(`${this.testSuiteSuffixName} - calling findQuickPickItem()...`);
