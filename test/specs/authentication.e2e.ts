@@ -38,7 +38,7 @@ describe('Authentication', async () => {
 
   step('Run SFDX: Create Project', async () => {
     const workbench = await browser.getWorkbench();
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 10);
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 20);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
     // Select the "Standard" project type.
