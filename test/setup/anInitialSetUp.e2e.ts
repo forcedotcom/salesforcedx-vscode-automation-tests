@@ -39,31 +39,11 @@ describe('An Initial SetUp', async () => {
     // For sfdx -> sf, remove the two lines below this comment block and uncomment the following line instead
     // await exec(`sf org login sfdx-url --sfdx-url-file ${authFilePath} --set-default --alias ${devHubAliasName}`);
     const authorizeOrg = await exec(`sfdx auth:sfdxurl:store -d -f ${authFilePath}`);
-    utilities.log('....authorized...')
     expect(authorizeOrg.stdout).toContain(`Successfully authorized ${devHubUserName} with org ID ${orgId}`);
-    utilities.log('...verified Authorization....')
 
     const setAlias = await exec(`sfdx alias set ${devHubAliasName}=${devHubUserName}`);
-    utilities.log('...set Alias done...')
     expect(setAlias.stdout).toContain(devHubAliasName);
     expect(setAlias.stdout).toContain(devHubUserName);
-    expect(setAlias.stdout).toContain(true);
+    expect(setAlias.stdout).toContain('true');
   });
-
-  // step('Verify Connection to the Testing Org', async () => {
-  //   const workbench = await browser.getWorkbench();
-  //   const terminalView = await utilities.executeCommand(workbench, 'sfdx org list')
-  //   const terminalText = await utilities.getTerminalViewText(terminalView, 100);
-  //   utilities.log(`............${terminalText}....`)
-  //   expect(terminalText).toContain(orgId);
-  //   utilities.log('...Contains OrgID...');
-  //   expect(terminalText).toContain('Connected');
-  //   utilities.log('...Contains text Connected...');
-  //   expect(terminalText).toContain('Non-scratch orgs');
-  //   utilities.log('...Contains text Non-scratch orgs...');
-  //   expect(terminalText).toContain(devHubUserName);
-  //   utilities.log('...Contains devhubUsername...');
-  //   expect(terminalText).toContain(devHubAliasName);
-  //   utilities.log('...Contains devhubAlias...');
-  // });
 });
