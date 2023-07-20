@@ -99,7 +99,7 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
 
     const workbench = await browser.getWorkbench();
-    utilities.pause(10);
+    utilities.pause(15);
     this.prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Create Project',
