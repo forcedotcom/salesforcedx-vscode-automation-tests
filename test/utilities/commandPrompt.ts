@@ -6,7 +6,7 @@
  */
 
 import { InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
-import { pause } from './miscellaneous';
+import { log, pause } from './miscellaneous';
 
 export async function openCommandPromptWithCommand(
   workbench: Workbench,
@@ -104,4 +104,13 @@ export async function clickFilePathOkButton(): Promise<void> {
   const okButton = await $('*:not([style*="display: none"]).quick-input-action .monaco-button');
   await okButton.click();
   await pause(1);
+  let buttons = await $$('a.monaco-button.monaco-text-button');
+  for (const item of buttons) {
+    const text = await item.getText();
+    if (text.includes('Overwrite')) {
+      log('clickFilePathOkButton() - folder already exists');
+      await item.click();
+    }
+  }
+  await pause(2);
 }

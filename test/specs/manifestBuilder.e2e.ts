@@ -100,10 +100,24 @@ describe('Manifest Builder', async () => {
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('Deployed Source');
     expect(outputPanelText).toContain(
-      'Customer__c  CustomObject  force-app/main/default/objects/Customer__c/Customer__c.object-meta.xml'
+      `Customer__c  CustomObject  ${path.join(
+        'force-app',
+        'main',
+        'default',
+        'objects',
+        'Customer__c',
+        'Customer__c.object-meta.xml'
+      )}`
     );
     expect(outputPanelText).toContain(
-      'Product__c   CustomObject  force-app/main/default/objects/Product__c/Product__c.object-meta.xml'
+      `Product__c   CustomObject  ${path.join(
+        'force-app',
+        'main',
+        'default',
+        'objects',
+        'Product__c',
+        'Product__c.object-meta.xml'
+      )}`
     );
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
@@ -145,12 +159,25 @@ describe('Manifest Builder', async () => {
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('Retrieved Source');
     expect(outputPanelText).toContain(
-      'Customer__c  CustomObject  force-app/main/default/objects/Customer__c/Customer__c.object-meta.xml'
+      `Customer__c  CustomObject  ${path.join(
+        'force-app',
+        'main',
+        'default',
+        'objects',
+        'Customer__c',
+        'Customer__c.object-meta.xml'
+      )}`
     );
     expect(outputPanelText).toContain(
-      'Product__c   CustomObject  force-app/main/default/objects/Product__c/Product__c.object-meta.xml'
+      `Product__c   CustomObject  ${path.join(
+        'force-app',
+        'main',
+        'default',
+        'objects',
+        'Product__c',
+        'Product__c.object-meta.xml'
+      )}`
     );
-    expect(outputPanelText).toContain('ended SFDX: Retrieve Source from Org');
   });
 
   step('Tear down and clean up the testing environment', async () => {

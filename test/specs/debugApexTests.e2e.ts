@@ -5,14 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step } from 'mocha-steps';
-import {
-  SideBarView,
-  TextEditor,
-  TreeItem
-} from 'wdio-vscode-service';
-import {
-  TestSetup
-} from '../testSetup';
+import { SideBarView, TextEditor, TreeItem } from 'wdio-vscode-service';
+import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
 describe('Debug Apex Tests', async () => {
@@ -32,10 +26,21 @@ describe('Debug Apex Tests', async () => {
 
     // Push source to org
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org and Override Conflicts', 1);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Push Source to Default Org and Override Conflicts',
+      1
+    );
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running SFDX: Push Source to Default Org and Override Conflicts', utilities.FIVE_MINUTES);
-    const successPushNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Push Source to Default Org and Override Conflicts successfully ran');
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Push Source to Default Org and Override Conflicts',
+      utilities.FIVE_MINUTES
+    );
+    const successPushNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Push Source to Default Org and Override Conflicts successfully ran'
+    );
     expect(successPushNotificationWasFound).toBe(true);
   });
 
@@ -44,7 +49,7 @@ describe('Debug Apex Tests', async () => {
     const editorView = workbench.getEditorView();
 
     // Open an existing apex test
-    const textEditor = await editorView.openEditor('ExampleApexClass1Test.cls') as TextEditor;
+    const textEditor = (await editorView.openEditor('ExampleApexClass1Test.cls')) as TextEditor;
 
     // Click the "Debug All Tests" code lens at the top of the class
     const codeLens = await textEditor.getCodeLens(0);
@@ -53,9 +58,16 @@ describe('Debug Apex Tests', async () => {
     await debugAllTestsOption!.click();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', utilities.FIVE_MINUTES);
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running Debug Test(s)',
+      utilities.FIVE_MINUTES
+    );
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'Debug Test(s) successfully ran'
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Continue with the debug session
@@ -70,7 +82,7 @@ describe('Debug Apex Tests', async () => {
     const editorView = workbench.getEditorView();
 
     // Open an existing apex test
-    const textEditor = await editorView.openEditor('ExampleApexClass2Test.cls') as TextEditor;
+    const textEditor = (await editorView.openEditor('ExampleApexClass2Test.cls')) as TextEditor;
 
     // Click the "Debug Test" code lens at the top of one of the test methods
     const codeLens = await textEditor.getCodeLens(1);
@@ -79,9 +91,16 @@ describe('Debug Apex Tests', async () => {
     await debugTestOption!.click();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', utilities.FIVE_MINUTES);
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running Debug Test(s)',
+      utilities.FIVE_MINUTES
+    );
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'Debug Test(s) successfully ran'
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Continue with the debug session
@@ -105,16 +124,23 @@ describe('Debug Apex Tests', async () => {
     expect(apexTestsSection.elem).toBePresent();
 
     // Click the debug tests button that is shown to the right when you hover a test class name on the Test sidebar
-    const apexTestItem = await apexTestsSection.findItem('ExampleApexClass1Test') as TreeItem;
+    const apexTestItem = (await apexTestsSection.findItem('ExampleApexClass1Test')) as TreeItem;
     await apexTestItem.select();
     const runTestsAction = await apexTestItem.getActionButton('Debug Tests');
     await runTestsAction!.elem.click();
     await utilities.pause(1);
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', utilities.FIVE_MINUTES);
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running Debug Test(s)',
+      utilities.FIVE_MINUTES
+    );
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'Debug Test(s) successfully ran'
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Continue with the debug session
@@ -138,16 +164,23 @@ describe('Debug Apex Tests', async () => {
     expect(apexTestsSection.elem).toBePresent();
 
     // Hover a test name under one of the test class sections and click the debug button that is shown to the right of the test name on the Test sidebar
-    const apexTestItem = await apexTestsSection.findItem('validateSayHello') as TreeItem;
+    const apexTestItem = (await apexTestsSection.findItem('validateSayHello')) as TreeItem;
     await apexTestItem.select();
     const runTestAction = await apexTestItem.getActionButton('Debug Single Test');
     await runTestAction!.elem.click();
     await utilities.pause(1);
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(workbench, 'Running Debug Test(s)', utilities.FIVE_MINUTES);
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running Debug Test(s)',
+      utilities.FIVE_MINUTES
+    );
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'Debug Test(s) successfully ran');
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'Debug Test(s) successfully ran'
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Continue with the debug session
