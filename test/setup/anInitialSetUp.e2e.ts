@@ -38,8 +38,9 @@ describe('An Initial SetUp', async () => {
 
     // For sfdx -> sf, remove the two lines below this comment block and uncomment the following line instead
     // await exec(`sf org login sfdx-url --sfdx-url-file ${authFilePath} --set-default --alias ${devHubAliasName}`);
-    await exec(`sfdx auth:sfdxurl:store -f ${authFilePath}`);
-    await exec(`sfdx alias set ${devHubAliasName}=${devHubUserName}`);
+    await exec(`sfdx auth:sfdxurl:store -d -f ${authFilePath}`);
+    const setAlias = await exec(`sfdx alias set ${devHubAliasName}=${devHubUserName}`);
+    utilities.log(`...${setAlias.stdout}...`)
   });
 
   step('Verify Connection to the Testing Org', async () => {
