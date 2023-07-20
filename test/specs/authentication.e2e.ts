@@ -37,8 +37,9 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Create Project', async () => {
-    const workbench = await browser.getWorkbench();
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 20);
+    const workbench = await (await browser.getWorkbench()).wait();
+    // const workbench = await browser.getWorkbench();
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 10);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
     // Select the "Standard" project type.
@@ -83,7 +84,8 @@ describe('Authentication', async () => {
 
   step('Run SFDX: Authorize a Dev Hub', async () => {
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
+    // const workbench = await browser.getWorkbench();
     await utilities.pause(1);
 
     // In the initial state, the org picker button should be set to "No Default Org Set".
@@ -123,7 +125,8 @@ describe('Authentication', async () => {
     // Could also run the command, "SFDX: Set a Default Org" but this exercises more UI elements.
 
     // Click on "No default Org Set" (in the bottom bar).
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
+    // const workbench = await browser.getWorkbench();
     const changeDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       'Change Default Org'
@@ -186,7 +189,8 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Create a Default Scratch Org', async () => {
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
+    // const workbench = await browser.getWorkbench();
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Create a Default Scratch Org...',
@@ -282,7 +286,8 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Set the Scratch Org As the Default Org', async () => {
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
+    // const workbench = await browser.getWorkbench();
     const inputBox = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Set a Default Org',
@@ -315,7 +320,8 @@ describe('Authentication', async () => {
 
   step('Tear down', async () => {
     if (scratchOrgAliasName) {
-      const workbench = await browser.getWorkbench();
+      const workbench = await (await browser.getWorkbench()).wait();
+      // const workbench = await browser.getWorkbench();
       await utilities.executeCommand(
         workbench,
         `sfdx force:org:delete -u ${scratchOrgAliasName} --noprompt`
