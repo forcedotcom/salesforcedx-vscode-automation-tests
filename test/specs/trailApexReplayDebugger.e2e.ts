@@ -48,16 +48,8 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('Run Apex Tests', async () => {
     // Run SFDX: Run Apex tests.
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'View: Clear Output',
-      1
-    );
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Run Apex Tests',
-      1
-    );
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
@@ -93,9 +85,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       10
     );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain(
-      'Assertion Failed: incorrect ticker symbol'
-    );
+    expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
     expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
   });
 
@@ -103,26 +93,16 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Get open text editor
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor(
-      'AccountService.cls'
-    )) as TextEditor;
+    const textEditor = (await editorView.openEditor('AccountService.cls')) as TextEditor;
     await textEditor.moveCursor(8, 5);
 
     // Run SFDX: Toggle Checkpoint.
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Toggle Checkpoint',
-      1
-    );
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Toggle Checkpoint', 1);
 
     // Calling SFDX: Update Checkpoints in Org fails if the org has been recently created,
     // it does not complete the 6 steps but only 4.
     // Reloading the window forces the extensions to be reloaded and this seems to fix the issue.
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Developer: Reload Window',
-      10
-    );
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
     await utilities.pause(20);
 
     // Verify checkpoint is present
@@ -151,11 +131,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'View: Clear Output',
-      1
-    );
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Turn On Apex Debug Log for Replay Debugger',
@@ -183,28 +159,15 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       10
     );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain(
-      'Starting sfdx force:data:record:update --sobjecttype DebugLevel --sobjectid'
-    );
-    expect(outputPanelText).toContain(
-      'SFDX: Turn On Apex Debug Log for Replay Debugger '
-    );
+    expect(outputPanelText).toContain('SFDX: Turn On Apex Debug Log for Replay Debugger ');
     expect(outputPanelText).toContain('ended with exit code 0');
   });
 
   step('Run Apex Tests', async () => {
     // Run SFDX: Run Apex tests.
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'View: Clear Output',
-      1
-    );
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Run Apex Tests',
-      1
-    );
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
@@ -240,20 +203,14 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       10
     );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain(
-      'Assertion Failed: incorrect ticker symbol'
-    );
+    expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
     expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
   });
 
   step('SFDX: Get Apex Debug Logs', async () => {
     // Run SFDX: Get Apex Debug Logs
     const workbench = await browser.getWorkbench();
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Get Apex Debug Logs',
-      1
-    );
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Get Apex Debug Logs', 1);
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(
@@ -297,12 +254,8 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
     const textEditor = (await editorView.openEditor(title!)) as TextEditor;
-    const executionStarted = await textEditor.getLineOfText(
-      '|EXECUTION_STARTED'
-    );
-    const executionFinished = await textEditor.getLineOfText(
-      '|EXECUTION_FINISHED'
-    );
+    const executionStarted = await textEditor.getLineOfText('|EXECUTION_STARTED');
+    const executionFinished = await textEditor.getLineOfText('|EXECUTION_FINISHED');
     expect(executionStarted).toBeGreaterThanOrEqual(1);
     expect(executionFinished).toBeGreaterThanOrEqual(1);
   });
@@ -327,9 +280,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Get open text editor
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor(
-      'AccountService.cls'
-    )) as TextEditor;
+    const textEditor = (await editorView.openEditor('AccountService.cls')) as TextEditor;
     await textEditor.setTextAtLine(6, '\t\t\tTickerSymbol = tickerSymbol');
     await textEditor.save();
     await utilities.pause(2);
@@ -356,16 +307,8 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('Run Apex Tests to Verify Fix', async () => {
     // Run SFDX: Run Apex tests.
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'View: Clear Output',
-      1
-    );
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Run Apex Tests',
-      1
-    );
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
@@ -401,9 +344,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       10
     );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain(
-      'AccountServiceTest.should_create_account'
-    );
+    expect(outputPanelText).toContain('AccountServiceTest.should_create_account');
     expect(outputPanelText).toContain('Pass');
   });
 

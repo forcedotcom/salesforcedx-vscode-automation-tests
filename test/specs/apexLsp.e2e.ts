@@ -22,16 +22,17 @@ describe('Apex LSP', async () => {
   });
 
   step('Verify Extension is Running', async () => {
-    utilities.log(
-      `${testSetup.testSuiteSuffixName} - Verify Extension is Running`
-    );
+    utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 
     // Using the Command palette, run Developer: Show Running Extensions
     const workbench = await browser.getWorkbench();
     await utilities.showRunningExtensions(workbench);
 
     // Verify Apex extension is present and running
-    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforce.salesforcedx-vscode-apex');
+    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+      workbench,
+      'salesforce.salesforcedx-vscode-apex'
+    );
     expect(extensionWasFound).toBe(true);
   });
 
@@ -40,9 +41,7 @@ describe('Apex LSP', async () => {
     // Get open text editor
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor(
-      'ExampleClassTest.cls'
-    )) as TextEditor;
+    const textEditor = (await editorView.openEditor('ExampleClassTest.cls')) as TextEditor;
     await textEditor.moveCursor(6, 20);
 
     // Go to definition through F12
@@ -60,22 +59,14 @@ describe('Apex LSP', async () => {
     // Get open text editor
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor(
-      'ExampleClassTest.cls'
-    )) as TextEditor;
+    const textEditor = (await editorView.openEditor('ExampleClassTest.cls')) as TextEditor;
     await textEditor.typeTextAt(7, 1, '\tExampleClass.s');
     await utilities.pause(1);
 
     // Verify autocompletion options are present
-    const autocompletionOptions = await $$(
-      'textarea.inputarea.monaco-mouse-cursor-text'
-    );
-    expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe(
-      'true'
-    );
-    expect(
-      await autocompletionOptions[0].getAttribute('aria-autocomplete')
-    ).toBe('list');
+    const autocompletionOptions = await $$('textarea.inputarea.monaco-mouse-cursor-text');
+    expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe('true');
+    expect(await autocompletionOptions[0].getAttribute('aria-autocomplete')).toBe('list');
 
     // Verify autocompletion options can be selected and therefore automatically inserted into the file
     await browser.keys(['Enter']);
