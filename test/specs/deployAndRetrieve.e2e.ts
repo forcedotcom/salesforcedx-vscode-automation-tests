@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { step, xstep } from 'mocha-steps';
+import { step } from 'mocha-steps';
 import path from 'path';
 import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
@@ -287,6 +287,13 @@ describe('Deploy and Retrieve', async () => {
 
     // Reload window to apply settings
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+
+    // Clear all notifications so clear output button is reachable
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Notifications: Clear All Notifications',
+      1
+    );
 
     // Clear the Output view first.
     outputView = await utilities.openOutputView();
