@@ -103,9 +103,8 @@ export class TestSetup {
     this.prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Create Project',
-      30
+      50
     );
-    utilities.pause(10);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
     // Select the "Standard" project type.
