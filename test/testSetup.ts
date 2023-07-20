@@ -127,9 +127,11 @@ export class TestSetup {
     await utilities.clickFilePathOkButton();
 
     // Verify the project was created and was loaded.
-    const sidebar = await workbench.getSideBar();
-    const content = await sidebar.getContent();
-    const treeViewSection = await content.getSection(this.tempProjectName.toUpperCase());
+    const sidebar = await (await workbench.getSideBar()).wait();
+    const content = await (await sidebar.getContent()).wait();
+    const treeViewSection = await (
+      await content.getSection(this.tempProjectName.toUpperCase())
+    ).wait();
     if (!treeViewSection) {
       throw new Error(
         'In createProject(), getSection() returned a treeViewSection with a value of null (or undefined)'
@@ -343,7 +345,7 @@ export class TestSetup {
     const inputBox = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Set a Default Org',
-      1
+      10
     );
 
     utilities.log(`${this.testSuiteSuffixName} - calling findQuickPickItem()...`);
