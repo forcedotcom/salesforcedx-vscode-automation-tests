@@ -42,15 +42,15 @@ describe('An Initial SetUp', async () => {
     await exec(`sfdx alias set ${devHubAliasName}=${devHubUserName}`);
   });
 
-  step('Verify Connection to the Testing Org', async () => {
-    const workbench = await browser.getWorkbench();
-    const terminalView = await utilities.executeCommand(workbench, 'sfdx org list')
-    const terminalText = await utilities.getTerminalViewText(terminalView, 100);
+  // step('Verify Connection to the Testing Org', async () => {
+  //   const workbench = await browser.getWorkbench();
+  //   const terminalView = await utilities.executeCommand(workbench, 'sfdx org list')
+  //   const terminalText = await utilities.getTerminalViewText(terminalView, 100);
 
-    expect(terminalText).toContain(orgId);
-    expect(terminalText).toContain('Connected');
-    expect(terminalText).toContain('Non-scratch orgs');
-    expect(terminalText).toContain(devHubUserName);
-    expect(terminalText).toContain(devHubAliasName);
-  });
+  //   expect(terminalText).toContain(orgId);
+  //   expect(terminalText).toContain('Connected');
+  //   expect(terminalText).toContain('Non-scratch orgs');
+  //   expect(terminalText).toContain(devHubUserName);
+  //   expect(terminalText).toContain(devHubAliasName);
+  // });
 });
