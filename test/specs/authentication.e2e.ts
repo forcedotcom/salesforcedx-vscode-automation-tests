@@ -44,6 +44,7 @@ describe('Authentication', async () => {
 
     // Select the "Standard" project type.
     const quickPicks = await prompt.getQuickPicks();
+    await utilities.pause(5);
     expect(quickPicks).not.toBeUndefined();
     expect(quickPicks.length).toEqual(3);
     expect(await quickPicks[0].getLabel()).toEqual('Standard');
@@ -93,7 +94,9 @@ describe('Authentication', async () => {
       workbench,
       'No Default Org Set'
     );
+    utilities.log('...noDefaultOrgSetItem....');
     expect(noDefaultOrgSetItem).not.toBeUndefined();
+    utilities.log('...noDefaultOrgSetItem Is Not Undefined....');
 
     const environmentSettings = EnvironmentSettings.getInstance();
     const authFilePath = path.join(projectFolderPath, 'authFile.json');
@@ -101,16 +104,20 @@ describe('Authentication', async () => {
       workbench,
       `sfdx force:org:display -u ${environmentSettings.devHubAliasName} --verbose --json > ${authFilePath}`
     );
+    utilities.log('......constructing authFile......')
 
     const authFilePathFileExists = fs.existsSync(authFilePath);
     expect(authFilePathFileExists).toEqual(true);
+    utilities.log('............authfile exists........')
 
     await terminalView.executeCommand(`sfdx auth:sfdxurl:store -d -f ${authFilePath}`);
+    utilities.log('............terminal view executed sfdx url command........')
 
     const terminalText = await utilities.getTerminalViewText(terminalView, 60);
     expect(terminalText).toContain(
       `Successfully authorized ${environmentSettings.devHubUserName} with org ID`
     );
+    utilities.log('............successfully authorized........')
 
     // After a dev hub has been authorized, the org should still not be set.
     noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(

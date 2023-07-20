@@ -7,13 +7,15 @@
 
 import { InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
 import { pause } from './miscellaneous';
+import * as utilities from '../utilities';
 
 export async function openCommandPromptWithCommand(
   workbench: Workbench,
   command: string
 ): Promise<InputBox | QuickOpenBox> {
-  const prompt = await workbench.openCommandPrompt();
-  await pause(5);
+  const prompt = await (await workbench.openCommandPrompt()).wait();
+  // await pause(5);
+  utilities.log('...waited dynamically in open Command prompt........ ');
 
   await prompt.setText(`>${command}`);
   await pause(2);
