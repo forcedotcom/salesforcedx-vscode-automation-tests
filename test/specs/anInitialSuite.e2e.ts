@@ -105,9 +105,8 @@ describe('An Initial Suite', async () => {
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 2);
-
-    // Close panel so the visualforce extension can be seen
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 3);
+    // Close panel so all extensions can be seen
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
 
     let matchesFound = 0;
@@ -121,7 +120,7 @@ describe('An Initial Suite', async () => {
       }
     }
 
-    // 7 are in the list, but only 6 are visible.
+    // 7 are in the list, but sometimes only 6 are visible.
     expect(matchesFound).toBeGreaterThanOrEqual(6);
   });
 

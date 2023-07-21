@@ -17,7 +17,7 @@ export async function createApexClass(
   const workbench = await browser.getWorkbench();
 
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
+  let inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
 
   // Set the name of the new Apex Class
   await inputBox.setText(name);
@@ -28,6 +28,11 @@ export async function createApexClass(
   await pause(1);
 
   // Modify class content
+  inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+  await inputBox.setText(name + '.cls');
+  await inputBox.confirm();
+  await pause(1);
+
   const editorView = workbench.getEditorView();
   const textEditor = (await editorView.openEditor(name + '.cls')) as TextEditor;
   await textEditor.setText(classText);
@@ -76,7 +81,6 @@ export async function createApexClassWithBugs(): Promise<void> {
     `\t}`,
     `}`
   ].join('\n');
-  // Using the Command palette, run SFDX: Create Apex Class to create the main class
   await createApexClass('AccountService', classText);
 
   const testText = [
@@ -100,7 +104,6 @@ export async function createApexClassWithBugs(): Promise<void> {
     `\t}`,
     `}`
   ].join('\n');
-  // Using the Command palette, run SFDX: Create Apex Class to create the Test
   await createApexClass('AccountServiceTest', testText);
 }
 
@@ -109,21 +112,26 @@ export async function createAnonymousApexFile(): Promise<void> {
   const editorView = workbench.getEditorView();
 
   // Using the Command palette, run File: New File...
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'Create: New File...', 1);
+  let inputBox = await runCommandFromCommandPrompt(workbench, 'Create: New File...', 1);
 
   // Set the name of the new Anonymous Apex file
   await inputBox.setText('Anonymous.apex');
   await inputBox.confirm();
   await inputBox.confirm();
-  const textEditor = (await editorView.openEditor('Anonymous.apex')) as TextEditor;
 
+  // Modify file content
+  inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+  await inputBox.setText('Anonymous.apex');
+  await inputBox.confirm();
+  await pause(1);
+
+  const textEditor = (await editorView.openEditor('Anonymous.apex')) as TextEditor;
   await textEditor.setText("System.debug('¡Hola mundo!');");
   await textEditor.save();
   await pause(1);
 }
 
 export async function createApexController(): Promise<void> {
-  // Using the Command palette, run SFDX: Create Apex Class to create the controller
   const classText = [
     `public class MyController {`,
     `\tprivate final Account account;`,

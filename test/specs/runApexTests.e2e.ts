@@ -5,13 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step } from 'mocha-steps';
-import {
-  InputBox,
-  QuickOpenBox,
-  SideBarView,
-  TextEditor,
-  TreeItem
-} from 'wdio-vscode-service';
+import { InputBox, QuickOpenBox, SideBarView, TextEditor, TreeItem } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
@@ -57,9 +51,7 @@ describe('Run Apex Tests', async () => {
     const editorView = workbench.getEditorView();
 
     // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
-    const textEditor = (await editorView.openEditor(
-      'ExampleApexClass1Test.cls'
-    )) as TextEditor;
+    const textEditor = (await editorView.openEditor('ExampleApexClass1Test.cls')) as TextEditor;
 
     // Click the "Run All Tests" code lens at the top of the class
     const codeLens = await textEditor.getCodeLens('Run All Tests');
@@ -110,9 +102,7 @@ describe('Run Apex Tests', async () => {
     const editorView = workbench.getEditorView();
 
     // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
-    const textEditor = (await editorView.openEditor(
-      'ExampleApexClass2Test.cls'
-    )) as TextEditor;
+    const textEditor = (await editorView.openEditor('ExampleApexClass2Test.cls')) as TextEditor;
 
     // Click the "Run Test" code lens at the top of one of the test methods
     const codeLens = await textEditor.getCodeLens('Run Test');
@@ -161,11 +151,7 @@ describe('Run Apex Tests', async () => {
   step('Run Tests via Command Palette', async () => {
     // Run SFDX: Run Apex tests.
     const workbench = await browser.getWorkbench();
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Run Apex Tests',
-      1
-    );
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
     // Select the "ExampleApexClass1Test" file
     await prompt.selectQuickPick('ExampleApexClass1Test');
@@ -209,9 +195,7 @@ describe('Run Apex Tests', async () => {
 
   step('Re-run Last Apex Test Class', async () => {
     const workbench = await browser.getWorkbench();
-    const testingView = await workbench
-      .getActivityBar()
-      .getViewControl('Testing');
+    const testingView = await workbench.getActivityBar().getViewControl('Testing');
     const editorView = await workbench.getEditorView();
 
     // Open the Test Sidebar
@@ -224,9 +208,7 @@ describe('Run Apex Tests', async () => {
     expect(apexTestsSection.elem).toBePresent();
 
     // Open an existing apex test and modify it
-    const textEditor = (await editorView.openEditor(
-      'ExampleApexClass1Test.cls'
-    )) as TextEditor;
+    const textEditor = (await editorView.openEditor('ExampleApexClass1Test.cls')) as TextEditor;
     const testText = [
       `@IsTest`,
       `public class ExampleApexClass1Test {`,
@@ -262,9 +244,7 @@ describe('Run Apex Tests', async () => {
 
   step('Run all Apex tests via Test Sidebar', async () => {
     const workbench = await browser.getWorkbench();
-    const testingView = await workbench
-      .getActivityBar()
-      .getViewControl('Testing');
+    const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
     // Open the Test Sidebar
     const testingSideBarView = await testingView?.openView();
@@ -277,15 +257,9 @@ describe('Run Apex Tests', async () => {
 
     const apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
     expect(apexTestsItems.length).toBe(6);
-    expect(
-      await apexTestsSection.findItem('ExampleApexClass1Test')
-    ).toBeTruthy();
-    expect(
-      await apexTestsSection.findItem('ExampleApexClass2Test')
-    ).toBeTruthy();
-    expect(
-      await apexTestsSection.findItem('ExampleApexClass3Test')
-    ).toBeTruthy();
+    expect(await apexTestsSection.findItem('ExampleApexClass1Test')).toBeTruthy();
+    expect(await apexTestsSection.findItem('ExampleApexClass2Test')).toBeTruthy();
+    expect(await apexTestsSection.findItem('ExampleApexClass3Test')).toBeTruthy();
     expect(await apexTestsItems[0].getLabel()).toBe('ExampleApexClass1Test');
     expect(await apexTestsItems[2].getLabel()).toBe('ExampleApexClass2Test');
     expect(await apexTestsItems[4].getLabel()).toBe('ExampleApexClass3Test');
@@ -335,9 +309,7 @@ describe('Run Apex Tests', async () => {
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
     for (const item of apexTestsItems) {
-      const icon = await (await item.elem).$(
-        '.custom-view-tree-node-item-icon'
-      );
+      const icon = await (await item.elem).$('.custom-view-tree-node-item-icon');
       const iconStyle = await icon.getAttribute('style');
       expect(iconStyle).toContain('testPass');
     }
@@ -345,9 +317,7 @@ describe('Run Apex Tests', async () => {
 
   step('Run all Apex Tests on a Class via the Test Sidebar', async () => {
     const workbench = await browser.getWorkbench();
-    const testingView = await workbench
-      .getActivityBar()
-      .getViewControl('Testing');
+    const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
     // Open the Test Sidebar
     const testingSideBarView = await testingView?.openView();
@@ -359,9 +329,7 @@ describe('Run Apex Tests', async () => {
     expect(apexTestsSection.elem).toBePresent();
 
     // Click the run test button that is shown to the right when you hover a test class name on the Test sidebar
-    const apexTestItem = (await apexTestsSection.findItem(
-      'ExampleApexClass2Test'
-    )) as TreeItem;
+    const apexTestItem = (await apexTestsSection.findItem('ExampleApexClass2Test')) as TreeItem;
     await apexTestItem.select();
     const runTestsAction = await apexTestItem.getActionButton('Run Tests');
     await runTestsAction!.elem.click();
@@ -404,18 +372,14 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
-    const icon = await (await apexTestItem.elem).$(
-      '.custom-view-tree-node-item-icon'
-    );
+    const icon = await (await apexTestItem.elem).$('.custom-view-tree-node-item-icon');
     const iconStyle = await icon.getAttribute('style');
     expect(iconStyle).toContain('testPass');
   });
 
   step('Run a Single Apex Test via the Test Sidebar', async () => {
     const workbench = await browser.getWorkbench();
-    const testingView = await workbench
-      .getActivityBar()
-      .getViewControl('Testing');
+    const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
     // Open the Test Sidebar
     const testingSideBarView = await testingView?.openView();
@@ -427,9 +391,7 @@ describe('Run Apex Tests', async () => {
     expect(apexTestsSection.elem).toBePresent();
 
     // Hover a test name under one of the test class sections and click the run button that is shown to the right of the test name on the Test sidebar
-    const apexTestItem = (await apexTestsSection.findItem(
-      'validateSayHello'
-    )) as TreeItem;
+    const apexTestItem = (await apexTestsSection.findItem('validateSayHello')) as TreeItem;
     await apexTestItem.select();
     const runTestAction = await apexTestItem.getActionButton('Run Single Test');
     await runTestAction!.elem.click();
@@ -472,9 +434,7 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
-    const icon = await (await apexTestItem.elem).$(
-      '.custom-view-tree-node-item-icon'
-    );
+    const icon = await (await apexTestItem.elem).$('.custom-view-tree-node-item-icon');
     const iconStyle = await icon.getAttribute('style');
     expect(iconStyle).toContain('testPass');
   });
@@ -503,11 +463,7 @@ describe('Run Apex Tests', async () => {
     expect(successPushNotificationWasFound).toBe(true);
 
     // Run SFDX: Run Apex tests.
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Run Apex Tests',
-      1
-    );
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
@@ -544,16 +500,12 @@ describe('Run Apex Tests', async () => {
       10
     );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain(
-      'Assertion Failed: incorrect ticker symbol'
-    );
+    expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
     expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
 
     // Fix test
     const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor(
-      'AccountService.cls'
-    )) as TextEditor;
+    const textEditor = (await editorView.openEditor('AccountService.cls')) as TextEditor;
     await textEditor.setTextAtLine(6, '\t\t\tTickerSymbol = tickerSymbol');
     await textEditor.save();
     await utilities.pause(1);
@@ -577,11 +529,7 @@ describe('Run Apex Tests', async () => {
     expect(successPushNotification2WasFound).toBe(true);
 
     // Run SFDX: Run Apex tests to verify fix
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Run Apex Tests',
-      1
-    );
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
@@ -611,15 +559,9 @@ describe('Run Apex Tests', async () => {
     expect(successNotification2WasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
-    outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Apex',
-      '=== Test Results',
-      10
-    );
+    outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain(
-      'AccountServiceTest.should_create_account'
-    );
+    expect(outputPanelText).toContain('AccountServiceTest.should_create_account');
     expect(outputPanelText).toContain('Pass');
   });
 
@@ -695,11 +637,7 @@ describe('Run Apex Tests', async () => {
     const workbench = await browser.getWorkbench();
 
     // Run SFDX: Run Apex Test Suite.
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Run Apex Test Suite',
-      1
-    );
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Test Suite', 1);
 
     // Select the suite recently created called ApexTestSuite
     await prompt.selectQuickPick('ApexTestSuite');

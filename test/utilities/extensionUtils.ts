@@ -31,15 +31,5 @@ export async function findExtensionInRunningExtensionsList(
     }
   }
 
-  // Open the panel back up.
-  // First run the command, "View: Open View"...
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'View: Open View', 1);
-
-  // Next, select "Output"...
-  await inputBox.setText(' Output');
-  await pause(1);
-  await inputBox.confirm();
-  await pause(1);
-
   return extensionWasFound;
 }

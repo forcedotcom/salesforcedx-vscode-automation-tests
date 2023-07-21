@@ -13,11 +13,7 @@ export async function createVisualforcePage(): Promise<void> {
   const workbench = await browser.getWorkbench();
 
   // Using the Command palette, run SFDX: Create Visualforce Page
-  const inputBox = await runCommandFromCommandPrompt(
-    workbench,
-    'SFDX: Create Visualforce Page',
-    1
-  );
+  let inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Visualforce Page', 1);
 
   // Set the name of the new Visualforce Page
   await inputBox.setText('FooPage');
@@ -28,10 +24,13 @@ export async function createVisualforcePage(): Promise<void> {
   await pause(1);
 
   // Modify page content
+  inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+  await inputBox.setText('FooPage');
+  await inputBox.confirm();
+  await pause(1);
+
   const editorView = workbench.getEditorView();
-  const textEditor = (await editorView.openEditor(
-    'FooPage.page'
-  )) as TextEditor;
+  const textEditor = (await editorView.openEditor('FooPage.page')) as TextEditor;
   const pageText = [
     `<apex:page controller="myController" tabStyle="Account">`,
     `\t<apex:form>`,
