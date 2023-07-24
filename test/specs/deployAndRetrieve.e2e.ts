@@ -270,7 +270,11 @@ describe('Deploy and Retrieve', async () => {
     await outputView.clearText();
 
     const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Preferences: Open Settings (UI)', 5);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Preferences: Open Workspace Settings',
+      5
+    );
     await browser.keys(['p', 'u', 's', 'h', 'Space', 'o', 'n', 'Space', 's', 'a', 'v', 'e']);
 
     const pushOrDeployOnSaveBtn = await $(
@@ -284,9 +288,6 @@ describe('Deploy and Retrieve', async () => {
     );
     await preferDeployOnSaveBtn.click();
     await utilities.pause(1);
-
-    // Reload window to apply settings
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
 
     // Clear all notifications so clear output button is reachable
     await utilities.runCommandFromCommandPrompt(
