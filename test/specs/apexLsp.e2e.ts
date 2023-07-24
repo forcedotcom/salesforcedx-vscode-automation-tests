@@ -39,8 +39,12 @@ describe('Apex LSP', async () => {
   step('Go to Definition', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
-    const workbench = await browser.getWorkbench();
-    const editorView = workbench.getEditorView();
+    const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('ExampleClassTest.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
+    const editorView = await workbench.getEditorView().wait();
     const textEditor = (await editorView.openEditor('ExampleClassTest.cls')) as TextEditor;
     await textEditor.moveCursor(6, 20);
 
