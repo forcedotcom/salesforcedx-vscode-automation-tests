@@ -43,11 +43,11 @@ export async function enableLwcExtension(): Promise<void> {
 
   log('enableLwcExtension() - 1 - Running Developer: Reload Window');
   log('');
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 5);
   // Reload again and wait to get the extensions to show up
   log('enableLwcExtension() - 2 - Running Developer: Reload Window');
   log('');
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
+  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
 }
 
 export async function createLwc(name: string): Promise<void> {
