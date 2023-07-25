@@ -24,7 +24,7 @@ describe('Visualforce LSP', async () => {
 
     utilities.log(`${testSetup.testSuiteSuffixName} - calling createVisualforcePage()`);
     // Clear output before running the command
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     // Create Visualforce Page
     await utilities.createVisualforcePage();
@@ -63,7 +63,7 @@ describe('Visualforce LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 
     // Using the Command palette, run Developer: Show Running Extensions
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.showRunningExtensions(workbench);
 
     // Verify Visualforce extension is present and running
@@ -77,7 +77,7 @@ describe('Visualforce LSP', async () => {
   step('Go to Definition', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('FooPage.page')) as TextEditor;
     await textEditor.moveCursor(1, 25);
@@ -97,7 +97,7 @@ describe('Visualforce LSP', async () => {
   step('Autocompletion', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('FooPage.page')) as TextEditor;
     await textEditor.typeTextAt(3, 1, '\t\t<apex:pageM');

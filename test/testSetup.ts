@@ -37,10 +37,14 @@ export class TestSetup {
   }
 
   public async setUp(scratchOrgEdition: string = 'Developer'): Promise<void> {
+    utilities.log('');
+    utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
+    utilities.log(`${this.testSuiteSuffixName} - ...finished TestSetup.setUp()`);
+    utilities.log('');
   }
 
   public async tearDown(): Promise<void> {
@@ -98,14 +102,13 @@ export class TestSetup {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
 
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     utilities.pause(15);
     this.prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Create Project',
-      30
+      50
     );
-    utilities.pause(10);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
     // Select the "Standard" project type.
@@ -127,9 +130,11 @@ export class TestSetup {
     await utilities.clickFilePathOkButton();
 
     // Verify the project was created and was loaded.
-    const sidebar = await workbench.getSideBar();
-    const content = await sidebar.getContent();
-    const treeViewSection = await content.getSection(this.tempProjectName.toUpperCase());
+    const sidebar = await (await workbench.getSideBar()).wait();
+    const content = await (await sidebar.getContent()).wait();
+    const treeViewSection = await (
+      await content.getSection(this.tempProjectName.toUpperCase())
+    ).wait();
     if (!treeViewSection) {
       throw new Error(
         'In createProject(), getSection() returned a treeViewSection with a value of null (or undefined)'
@@ -250,7 +255,7 @@ export class TestSetup {
     const currentOsUserName = await utilities.transformedUserName();
 
     utilities.log(`${this.testSuiteSuffixName} - calling getWorkbench()...`);
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
 
     if (this.reuseScratchOrg) {
       utilities.log(`${this.testSuiteSuffixName} - looking for a scratch org to reuse...`);
@@ -343,7 +348,7 @@ export class TestSetup {
     const inputBox = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Set a Default Org',
-      1
+      10
     );
 
     utilities.log(`${this.testSuiteSuffixName} - calling findQuickPickItem()...`);
