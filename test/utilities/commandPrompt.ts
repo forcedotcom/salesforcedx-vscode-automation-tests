@@ -12,8 +12,7 @@ export async function openCommandPromptWithCommand(
   workbench: Workbench,
   command: string
 ): Promise<InputBox | QuickOpenBox> {
-  const prompt = await workbench.openCommandPrompt();
-  await pause(5);
+  const prompt = await (await workbench.openCommandPrompt()).wait();
 
   await prompt.setText(`>${command}`);
   await pause(2);
