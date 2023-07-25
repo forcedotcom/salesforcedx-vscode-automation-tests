@@ -28,7 +28,7 @@ export async function enableLwcExtension(): Promise<void> {
       await item.click();
     }
   }
-  await pause(10);
+  await pause(20);
 
   log('enableLwcExtension() - getting buttons after reloading with selector');
   buttons = await $$('a.monaco-button.monaco-text-button');
@@ -43,7 +43,7 @@ export async function enableLwcExtension(): Promise<void> {
 
   log('enableLwcExtension() - Running Developer: Reload Window');
   log('');
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
 }
 
 export async function createLwc(name: string): Promise<void> {
