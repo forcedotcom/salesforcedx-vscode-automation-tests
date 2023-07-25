@@ -9,9 +9,13 @@ import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { EnvironmentSettings } from '../environmentSettings';
 
-export async function saveFailedTestScreenshot(specTitle: string, testTitle: string): Promise<void> {
+export async function saveFailedTestScreenshot(
+  specTitle: string,
+  testTitle: string
+): Promise<void> {
   const saveDir = join(__dirname, '..', '..', 'screenshots', sanitizePath(specTitle));
   console.log(`Test run failed! Saving a screenshot of the failure here: ${saveDir}`);
+  console.log('Time of screenshot: ', new Date().toTimeString());
   if (!existsSync(saveDir)) {
     mkdirSync(saveDir, { recursive: true });
   }
@@ -27,5 +31,5 @@ function getScreenshotSavePath(saveDir: string, testTitle: string): string {
 
 function sanitizePath(dir: string): string {
   //GHA does not allow for file uploads with: ", :, <, >, |, *, ?, \r, \n
-  return dir.replace(/[^a-zA-Z0-9 ]/g, "");
+  return dir.replace(/[^a-zA-Z0-9 ]/g, '');
 }
