@@ -10,7 +10,7 @@ import { runCommandFromCommandPrompt } from './commandPrompt';
 import { pause } from './miscellaneous';
 
 export async function showRunningExtensions(workbench: Workbench): Promise<void> {
-  await runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 2);
+  await runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);
 }
 
 export async function findExtensionInRunningExtensionsList(

@@ -108,7 +108,7 @@ describe('An Initial Suite', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 3);
     await utilities.enableLwcExtension();
     // Close panel so all extensions can be seen
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', 10);
 
     let matchesFound = 0;
     const extensionNameDivs = await $$('div.name');
