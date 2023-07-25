@@ -34,7 +34,6 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify our extensions are not initially loaded', async () => {
-    utilities.pause(5);
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.showRunningExtensions(workbench);
 
@@ -112,7 +111,7 @@ describe('An Initial Suite', async () => {
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'Notifications: Clear All Notifications',
-      5
+      1
     );
 
     let matchesFound = 0;

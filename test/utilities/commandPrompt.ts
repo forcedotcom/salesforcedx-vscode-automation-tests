@@ -12,11 +12,9 @@ export async function openCommandPromptWithCommand(
   workbench: Workbench,
   command: string
 ): Promise<InputBox | QuickOpenBox> {
-  const prompt = await workbench.openCommandPrompt();
+  const prompt = await (await workbench.openCommandPrompt()).wait();
 
-  await prompt.setText(`>${command}`);
-
-  await pause(2);
+  await (await prompt.wait()).setText(`>${command}`);
 
   return prompt;
 }
@@ -26,7 +24,7 @@ export async function runCommandFromCommandPrompt(
   command: string,
   durationInSeconds: number = 0
 ): Promise<InputBox | QuickOpenBox> {
-  const prompt = await openCommandPromptWithCommand(workbench, command);
+  const prompt = await (await openCommandPromptWithCommand(workbench, command)).wait();
   await selectQuickPickItem(prompt, command);
 
   if (durationInSeconds > 0) {
