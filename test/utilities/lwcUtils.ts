@@ -41,10 +41,12 @@ export async function enableLwcExtension(): Promise<void> {
   }
   await pause(5);
 
-  log('enableLwcExtension() - Running Developer: Reload Window');
+  log('enableLwcExtension() - 1 - Running Developer: Reload Window');
   log('');
   await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
   // Reload again and wait to get the extensions to show up
+  log('enableLwcExtension() - 2 - Running Developer: Reload Window');
+  log('');
   await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
 }
 
