@@ -37,10 +37,14 @@ export class TestSetup {
   }
 
   public async setUp(scratchOrgEdition: string = 'Developer'): Promise<void> {
+    utilities.log('');
+    utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
+    utilities.log(`${this.testSuiteSuffixName} - ...finished TestSetup.setUp()`);
+    utilities.log('');
   }
 
   public async tearDown(): Promise<void> {
