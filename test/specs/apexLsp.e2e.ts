@@ -14,7 +14,7 @@ describe('Apex LSP', async () => {
 
   step('Set up the testing environment', async () => {
     utilities.log('ApexLsp - Set up the testing environment');
-    testSetup = new TestSetup('ApexLsp', false);
+    testSetup = new TestSetup('ApexLsp', true);
     await testSetup.setUp();
 
     // Create Apex Class
