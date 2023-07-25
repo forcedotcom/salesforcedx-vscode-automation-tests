@@ -98,7 +98,7 @@ export class TestSetup {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
 
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     utilities.pause(15);
     this.prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
@@ -251,7 +251,7 @@ export class TestSetup {
     const currentOsUserName = await utilities.transformedUserName();
 
     utilities.log(`${this.testSuiteSuffixName} - calling getWorkbench()...`);
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
 
     if (this.reuseScratchOrg) {
       utilities.log(`${this.testSuiteSuffixName} - looking for a scratch org to reuse...`);

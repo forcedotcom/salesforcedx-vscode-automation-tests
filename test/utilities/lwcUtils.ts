@@ -17,7 +17,7 @@ export async function enableLwcExtension(): Promise<void> {
   log('');
   log('utilities.enableLwcExtension()');
   log('enableLwcExtension() - calling browser.getWorkbench()');
-  const workbench = await browser.getWorkbench();
+  const workbench = await (await browser.getWorkbench()).wait();
 
   log('enableLwcExtension() - getting buttons with selector');
   let buttons = await $$('a.monaco-button.monaco-text-button');
@@ -48,7 +48,7 @@ export async function enableLwcExtension(): Promise<void> {
 
 export async function createLwc(name: string): Promise<void> {
   log('createLwc() - calling browser.getWorkbench()');
-  const workbench = await browser.getWorkbench();
+  const workbench = await (await browser.getWorkbench()).wait();
 
   log('createLwc() - Running SFDX: Create Lightning Web Component');
   // Using the Command palette, run SFDX: Create Lightning Web Component.
@@ -114,7 +114,7 @@ export async function createLwc(name: string): Promise<void> {
 
 export async function createAura(name: string): Promise<void> {
   log('createAura() - calling browser.getWorkbench()');
-  const workbench = await browser.getWorkbench();
+  const workbench = await (await browser.getWorkbench()).wait();
 
   log('createAura() - Running SFDX: Create Aura Component');
   let inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Aura Component', 1);

@@ -25,7 +25,7 @@ describe('Apex LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 
     // Using the Command palette, run Developer: Show Running Extensions
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.showRunningExtensions(workbench);
 
     // Verify Apex extension is present and running
@@ -61,7 +61,7 @@ describe('Apex LSP', async () => {
   step('Autocompletion', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ExampleClassTest.cls')) as TextEditor;
     await textEditor.typeTextAt(7, 1, '\tExampleClass.s');

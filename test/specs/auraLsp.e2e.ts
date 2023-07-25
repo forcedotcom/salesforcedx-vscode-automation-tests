@@ -25,7 +25,7 @@ describe('Aura LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 
     // Using the Command palette, run Developer: Show Running Extensions
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.showRunningExtensions(workbench);
     await utilities.enableLwcExtension();
 
@@ -40,7 +40,7 @@ describe('Aura LSP', async () => {
   step('Go to Definition', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('aura1.cmp')) as TextEditor;
     await textEditor.moveCursor(8, 10);
@@ -58,7 +58,7 @@ describe('Aura LSP', async () => {
   step('Autocompletion', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('aura1.cmp')) as TextEditor;
     await textEditor.typeTextAt(2, 1, '<aura');

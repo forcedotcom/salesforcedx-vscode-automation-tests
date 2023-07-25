@@ -34,8 +34,8 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify our extensions are not initially loaded', async () => {
-    utilities.pause(5)
-    const workbench = await browser.getWorkbench();
+    utilities.pause(5);
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.showRunningExtensions(workbench);
 
     const extensionNameDivs = await $$('div.name');
@@ -61,7 +61,7 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify the default SFDX commands are present when no project is loaded', async () => {
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
 
     const quickPicks = await prompt.getQuickPicks();
@@ -104,7 +104,7 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 3);
     // Close panel so all extensions can be seen
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
@@ -125,7 +125,7 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
     const quickPicks = await prompt.getQuickPicks();
     const commands: string[] = [];
