@@ -426,10 +426,16 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
+    // Clear all notifications so clear output button is visible
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Notifications: Clear All Notifications',
+      1
+    );
     // Clear the Output view first.
     const outputView = await (await utilities.openOutputView()).wait();
     await outputView.clearText();
-    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
