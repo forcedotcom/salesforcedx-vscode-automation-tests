@@ -14,7 +14,7 @@ export async function createApexClass(
   classText: string,
   breakpoint?: number
 ): Promise<void> {
-  const workbench = await browser.getWorkbench();
+  const workbench = await (await browser.getWorkbench()).wait();
 
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
   let inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
@@ -108,7 +108,7 @@ export async function createApexClassWithBugs(): Promise<void> {
 }
 
 export async function createAnonymousApexFile(): Promise<void> {
-  const workbench = await browser.getWorkbench();
+  const workbench = await (await browser.getWorkbench()).wait();
   const editorView = workbench.getEditorView();
 
   // Using the Command palette, run File: New File...
