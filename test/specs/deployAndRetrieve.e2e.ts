@@ -30,7 +30,7 @@ describe('Deploy and Retrieve', async () => {
       `}`
     ].join('\n');
     await utilities.createApexClass('MyClass', classText);
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const successNotificationWasFound = await utilities.attemptToFindNotification(
       workbench,
       'SFDX: Create Apex Class successfully ran',
@@ -65,11 +65,56 @@ describe('Deploy and Retrieve', async () => {
     expect(filteredTreeViewItems.includes('MyClass.cls-meta.xml')).toBe(true);
   });
 
-  step('Deploy with SFDX: Deploy This Source to Org', async () => {
+  step('Verify Source Tracking Setting is enabled', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Preferences: Open Workspace Settings',
+      5
+    );
+    await browser.keys([
+      'e',
+      'n',
+      'a',
+      'b',
+      'l',
+      'e',
+      'Space',
+      's',
+      'o',
+      'u',
+      'r',
+      'c',
+      'e',
+      'Space',
+      't',
+      'r',
+      'a',
+      'c',
+      'k',
+      'i',
+      'n',
+      'g'
+    ]);
+
+    // Clear all notifications so setting is reachable
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Notifications: Clear All Notifications',
+      1
+    );
+
+    const enableSourceTrackingBtn = await $(
+      'div[title="salesforcedx-vscode-core.experimental.enableSourceTrackingForDeployAndRetrieve"]'
+    );
+    expect(await enableSourceTrackingBtn.getAttribute('aria-checked')).toBe('true');
+  });
+
+  step('Deploy with SFDX: Deploy This Source to Org - ST enabled', async () => {
     // Clear the Output view first.
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
@@ -92,7 +137,7 @@ describe('Deploy and Retrieve', async () => {
       'Starting SFDX: Deploy Source to Org',
       10
     );
-    utilities.log('Deploy time - 1: ' + (await utilities.getOperationTime(outputPanelText!)));
+    utilities.log('Deploy time ST - 1: ' + (await utilities.getOperationTime(outputPanelText!)));
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('Deployed Source');
     expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls`);
@@ -100,11 +145,11 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
 
-  step('Deploy again (with no changes)', async () => {
+  step('Deploy again (with no changes) - ST enabled', async () => {
     // Clear the Output view first.
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
@@ -126,7 +171,7 @@ describe('Deploy and Retrieve', async () => {
       'Starting SFDX: Deploy Source to Org',
       10
     );
-    utilities.log('Deploy time - 2: ' + (await utilities.getOperationTime(outputPanelText!)));
+    utilities.log('Deploy time ST - 2: ' + (await utilities.getOperationTime(outputPanelText!)));
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('Deployed Source');
     expect(outputPanelText).toContain(`Unchanged  MyClass    ApexClass  ${pathToClass}.cls`);
@@ -136,13 +181,13 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
 
-  step('Modify the file and deploy again', async () => {
+  step('Modify the file and deploy again - ST enabled', async () => {
     // Clear the Output view first.
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
 
     // Modify the file by adding a comment.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await textEditor.setTextAtLine(2, '\t//say hello to a given name');
@@ -169,7 +214,7 @@ describe('Deploy and Retrieve', async () => {
       'Starting SFDX: Deploy Source to Org',
       10
     );
-    utilities.log('Deploy time - 3: ' + (await utilities.getOperationTime(outputPanelText!)));
+    utilities.log('Deploy time ST - 3: ' + (await utilities.getOperationTime(outputPanelText!)));
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('Deployed Source');
     expect(outputPanelText).toContain(`Changed  MyClass    ApexClass  ${pathToClass}.cls`);
@@ -181,7 +226,7 @@ describe('Deploy and Retrieve', async () => {
     // Clear the Output view first.
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await utilities.runCommandFromCommandPrompt(
@@ -222,7 +267,7 @@ describe('Deploy and Retrieve', async () => {
     await outputView.clearText();
 
     // Modify the file by changing the comment.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await textEditor.setTextAtLine(2, '\t//modified comment');
@@ -269,7 +314,7 @@ describe('Deploy and Retrieve', async () => {
     let outputView = await utilities.openOutputView();
     await outputView.clearText();
 
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'Preferences: Open Workspace Settings',
@@ -329,6 +374,166 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('Deployed Source');
     expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls`);
     expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
+    expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
+  });
+
+  step('Disable Source Tracking Setting', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Preferences: Open Workspace Settings',
+      5
+    );
+    await browser.keys([
+      'e',
+      'n',
+      'a',
+      'b',
+      'l',
+      'e',
+      'Space',
+      's',
+      'o',
+      'u',
+      'r',
+      'c',
+      'e',
+      'Space',
+      't',
+      'r',
+      'a',
+      'c',
+      'k',
+      'i',
+      'n',
+      'g'
+    ]);
+
+    // Clear all notifications so setting is reachable
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Notifications: Clear All Notifications',
+      1
+    );
+
+    const enableSourceTrackingBtn = await $(
+      'div[title="salesforcedx-vscode-core.experimental.enableSourceTrackingForDeployAndRetrieve"]'
+    );
+    await enableSourceTrackingBtn.click();
+    await utilities.pause(1);
+    // Reload window to update cache and get the setting behavior to work
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+  });
+
+  step('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
+    // Clear the Output view first.
+    const outputView = await (await utilities.openOutputView()).wait();
+    await outputView.clearText();
+    const workbench = await (await browser.getWorkbench()).wait();
+    const editorView = await workbench.getEditorView();
+    (await editorView.openEditor('MyClass.cls')) as TextEditor;
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
+    // Wait for the command to execute
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Deploy Source to Org',
+      utilities.FIVE_MINUTES
+    );
+    // At this point there should be no conflicts since this is a new class.
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Deploy Source to Org successfully ran'
+    );
+    expect(successNotificationWasFound).toBe(true);
+
+    // Verify Output tab
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      'Starting SFDX: Deploy Source to Org',
+      10
+    );
+    utilities.log('Deploy time no-ST - 1: ' + (await utilities.getOperationTime(outputPanelText!)));
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('Deployed Source');
+    expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls`);
+    expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
+    expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
+  });
+
+  step('Deploy again (with no changes) - ST disabled', async () => {
+    // Clear the Output view first.
+    const outputView = await utilities.openOutputView();
+    await outputView.clearText();
+    const workbench = await (await browser.getWorkbench()).wait();
+    const editorView = await workbench.getEditorView();
+    (await editorView.openEditor('MyClass.cls')) as TextEditor;
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
+    // Wait for the command to execute
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Deploy Source to Org',
+      utilities.FIVE_MINUTES
+    );
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Deploy Source to Org successfully ran'
+    );
+    expect(successNotificationWasFound).toBe(true);
+
+    // Verify Output tab
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      'Starting SFDX: Deploy Source to Org',
+      10
+    );
+    utilities.log('Deploy time no-ST - 2: ' + (await utilities.getOperationTime(outputPanelText!)));
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('Deployed Source');
+    expect(outputPanelText).toContain(`Unchanged  MyClass    ApexClass  ${pathToClass}.cls`);
+    expect(outputPanelText).toContain(
+      `Unchanged  MyClass    ApexClass  ${pathToClass}.cls-meta.xml`
+    );
+    expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
+  });
+
+  step('Modify the file and deploy again - ST disabled', async () => {
+    // Clear the Output view first.
+    const outputView = await utilities.openOutputView();
+    await outputView.clearText();
+
+    // Modify the file by adding a comment.
+    const workbench = await (await browser.getWorkbench()).wait();
+    const editorView = await workbench.getEditorView();
+    const textEditor = (await editorView.openEditor('MyClass.cls')) as TextEditor;
+    await textEditor.setTextAtLine(2, '\t//say hello to a given name');
+    await textEditor.save();
+
+    // Deploy running SFDX: Deploy This Source to Org
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
+
+    // Wait for the command to execute
+    await utilities.waitForNotificationToGoAway(
+      workbench,
+      'Running SFDX: Deploy Source to Org',
+      utilities.FIVE_MINUTES
+    );
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Deploy Source to Org successfully ran'
+    );
+    expect(successNotificationWasFound).toBe(true);
+
+    // Verify Output tab
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      'Starting SFDX: Deploy Source to Org',
+      10
+    );
+    utilities.log('Deploy time no-ST - 3: ' + (await utilities.getOperationTime(outputPanelText!)));
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('Deployed Source');
+    expect(outputPanelText).toContain(`Changed  MyClass    ApexClass  ${pathToClass}.cls`);
+    expect(outputPanelText).toContain(`Changed  MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
 
