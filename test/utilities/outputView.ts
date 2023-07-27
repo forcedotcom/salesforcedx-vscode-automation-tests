@@ -47,7 +47,7 @@ export async function selectOutputChannel(outputView: OutputView, name: string):
 }
 
 export async function openOutputView(): Promise<OutputView> {
-  const workbench = await browser.getWorkbench();
+  const workbench = await (await browser.getWorkbench()).wait();
   const bottomBar = await workbench.getBottomBar(); // selector is 'div[id="workbench.parts.panel"]'
   const outputView = await bottomBar.openOutputView(); // selector is 'div[id="workbench.panel.output"]'
   await pause(2);

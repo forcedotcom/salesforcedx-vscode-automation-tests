@@ -15,7 +15,6 @@ export async function openCommandPromptWithCommand(
   const prompt = await (await workbench.openCommandPrompt()).wait();
 
   await (await prompt.wait()).setText(`>${command}`);
-  await pause(2);
 
   return prompt;
 }

@@ -17,7 +17,7 @@ export async function enableLwcExtension(): Promise<void> {
   log('');
   log('utilities.enableLwcExtension()');
   log('enableLwcExtension() - calling browser.getWorkbench()');
-  const workbench = await browser.getWorkbench();
+  const workbench = await (await browser.getWorkbench()).wait();
 
   log('enableLwcExtension() - getting buttons with selector');
   let buttons = await $$('a.monaco-button.monaco-text-button');
@@ -28,7 +28,7 @@ export async function enableLwcExtension(): Promise<void> {
       await item.click();
     }
   }
-  await pause(10);
+  await pause(20);
 
   log('enableLwcExtension() - getting buttons after reloading with selector');
   buttons = await $$('a.monaco-button.monaco-text-button');
@@ -41,14 +41,18 @@ export async function enableLwcExtension(): Promise<void> {
   }
   await pause(5);
 
-  log('enableLwcExtension() - Running Developer: Reload Window');
+  log('enableLwcExtension() - 1 - Running Developer: Reload Window');
   log('');
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 5);
+  // Reload again and wait to get the extensions to show up
+  log('enableLwcExtension() - 2 - Running Developer: Reload Window');
+  log('');
+  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
 }
 
 export async function createLwc(name: string): Promise<void> {
   log('createLwc() - calling browser.getWorkbench()');
-  const workbench = await browser.getWorkbench();
+  const workbench = await (await browser.getWorkbench()).wait();
 
   log('createLwc() - Running SFDX: Create Lightning Web Component');
   // Using the Command palette, run SFDX: Create Lightning Web Component.
@@ -114,7 +118,7 @@ export async function createLwc(name: string): Promise<void> {
 
 export async function createAura(name: string): Promise<void> {
   log('createAura() - calling browser.getWorkbench()');
-  const workbench = await browser.getWorkbench();
+  const workbench = await (await browser.getWorkbench()).wait();
 
   log('createAura() - Running SFDX: Create Aura Component');
   let inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Aura Component', 1);

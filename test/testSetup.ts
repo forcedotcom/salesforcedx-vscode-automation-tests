@@ -103,7 +103,6 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
 
     const workbench = await (await browser.getWorkbench()).wait();
-    utilities.pause(15);
     this.prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Create Project',
@@ -148,10 +147,7 @@ export class TestSetup {
       );
     }
 
-    await forceAppTreeItem.expand();
-
-    // Yep, we need to wait a long time here.
-    await utilities.pause(10);
+    await (await forceAppTreeItem.wait()).expand();
 
     if (scratchOrgEdition === 'Enterprise') {
       const projectScratchDefPath = path.join(
