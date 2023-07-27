@@ -10,7 +10,7 @@ import { runCommandFromCommandPrompt } from './commandPrompt';
 import { pause } from './miscellaneous';
 
 export async function showRunningExtensions(workbench: Workbench): Promise<void> {
-  await runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 2);
+  await runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);
 }
 
 export async function findExtensionInRunningExtensionsList(
@@ -19,8 +19,9 @@ export async function findExtensionInRunningExtensionsList(
 ): Promise<boolean> {
   // This function assumes the Extensions list was opened.
 
-  // Close the panel so we can see as many of the running extensions as we can.
+  // Close the panel and clear notifications so we can see as many of the running extensions as we can.
   await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
+  await runCommandFromCommandPrompt(workbench, 'Notifications: Clear All Notifications', 1);
 
   const extensionNameDivs = await $$('div.name');
   let extensionWasFound = false;

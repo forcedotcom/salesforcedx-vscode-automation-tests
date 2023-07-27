@@ -5,21 +5,26 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import {
-  Workbench
-} from 'wdio-vscode-service';
-import {
-  pause
-} from './miscellaneous';
+import { Workbench } from 'wdio-vscode-service';
+import { pause } from './miscellaneous';
 
-export async function waitForNotificationToGoAway(workbench: Workbench, notificationMessage: string, durationInSeconds: number, matchExactString: boolean = true): Promise<void> {
+export async function waitForNotificationToGoAway(
+  workbench: Workbench,
+  notificationMessage: string,
+  durationInSeconds: number,
+  matchExactString: boolean = true
+): Promise<void> {
   // Change timeout from seconds to milliseconds
   durationInSeconds *= 1000;
 
   await pause(5);
   const startDate = new Date();
   while (true) {
-    let notificationWasFound = await notificationIsPresent(workbench, notificationMessage, matchExactString);
+    let notificationWasFound = await notificationIsPresent(
+      workbench,
+      notificationMessage,
+      matchExactString
+    );
     if (!notificationWasFound) {
       return;
     }
@@ -27,12 +32,18 @@ export async function waitForNotificationToGoAway(workbench: Workbench, notifica
     const currentDate = new Date();
     const secondsPassed = Math.abs(currentDate.getTime() - startDate.getTime()) / 1000;
     if (secondsPassed >= durationInSeconds) {
-      throw new Error(`Exceeded time limit - notification "${notificationMessage}" is still present`);
+      throw new Error(
+        `Exceeded time limit - notification "${notificationMessage}" is still present`
+      );
     }
   }
 }
 
-export async function notificationIsPresent(workbench: Workbench, notificationMessage: string, matchExactString: boolean = true): Promise<boolean> {
+export async function notificationIsPresent(
+  workbench: Workbench,
+  notificationMessage: string,
+  matchExactString: boolean = true
+): Promise<boolean> {
   const notifications = await workbench.getNotifications();
   for (const notification of notifications) {
     const message = await notification.getMessage();
@@ -50,7 +61,11 @@ export async function notificationIsPresent(workbench: Workbench, notificationMe
   return false;
 }
 
-export async function attemptToFindNotification(workbench: Workbench, notificationMessage: string, attempts: number): Promise<boolean> {
+export async function attemptToFindNotification(
+  workbench: Workbench,
+  notificationMessage: string,
+  attempts: number
+): Promise<boolean> {
   while (attempts > 0) {
     if (await notificationIsPresent(workbench, notificationMessage)) {
       return true;
@@ -64,11 +79,11 @@ export async function attemptToFindNotification(workbench: Workbench, notificati
 }
 
 export async function dismissAllNotifications(): Promise<void> {
-  const workbench = await browser.getWorkbench();
+  const workbench = await (await browser.getWorkbench()).wait();
   await browser.waitUntil(async () => {
     const notifications = await workbench.getNotifications();
     for (const notification of notifications) {
-        await notification.dismiss();
+      await notification.dismiss();
     }
 
     return !(await workbench.hasNotifications());

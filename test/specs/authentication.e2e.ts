@@ -38,7 +38,7 @@ describe('Authentication', async () => {
 
   step('Run SFDX: Create Project', async () => {
     const workbench = await browser.getWorkbench();
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 8);
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 50);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
     // Select the "Standard" project type.
@@ -75,16 +75,12 @@ describe('Authentication', async () => {
     const forceAppTreeItem = (await treeViewSection.findItem('force-app')) as DefaultTreeItem;
     expect(forceAppTreeItem).not.toEqual(undefined);
 
-    await forceAppTreeItem.expand();
-
-    // Yep, we need to wait a long time here.
-    await utilities.pause(10);
+    await (await forceAppTreeItem.wait()).expand();
   });
 
   step('Run SFDX: Authorize a Dev Hub', async () => {
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
-    const workbench = await browser.getWorkbench();
-    await utilities.pause(1);
+    const workbench = await (await browser.getWorkbench()).wait();
 
     // In the initial state, the org picker button should be set to "No Default Org Set".
     let noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(

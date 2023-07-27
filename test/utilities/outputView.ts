@@ -11,10 +11,7 @@ import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { pause } from './miscellaneous';
 import { dismissAllNotifications } from './notifications';
 
-export async function selectOutputChannel(
-  outputView: OutputView,
-  name: string
-): Promise<void> {
+export async function selectOutputChannel(outputView: OutputView, name: string): Promise<void> {
   // Wait for all notifications to go away.  If there is a notification that is overlapping and hiding the Output channel's
   // dropdown menu, calling select.click() doesn't work, so dismiss all notifications first before clicking the dropdown
   // menu and opening it.
@@ -50,7 +47,7 @@ export async function selectOutputChannel(
 }
 
 export async function openOutputView(): Promise<OutputView> {
-  const workbench = await browser.getWorkbench();
+  const workbench = await (await browser.getWorkbench()).wait();
   const bottomBar = await workbench.getBottomBar(); // selector is 'div[id="workbench.parts.panel"]'
   const outputView = await bottomBar.openOutputView(); // selector is 'div[id="workbench.panel.output"]'
   await pause(2);
@@ -58,9 +55,7 @@ export async function openOutputView(): Promise<OutputView> {
   return outputView;
 }
 
-export async function getOutputViewText(
-  outputChannelName: string = ''
-): Promise<string> {
+export async function getOutputViewText(outputChannelName: string = ''): Promise<string> {
   const outputView = await openOutputView();
 
   // Set the output channel, but only if the value is passed in.
