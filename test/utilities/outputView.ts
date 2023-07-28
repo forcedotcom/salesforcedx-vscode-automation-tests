@@ -98,3 +98,42 @@ export async function attemptToFindOutputPanelText(
 
   return undefined;
 }
+
+export async function getOperationTime(outputText: string): Promise<string> {
+  const initialTime = outputText.substring(
+    outputText.indexOf('.') - 8,
+    outputText.indexOf('.') + 4
+  );
+  const endTime = outputText.substring(
+    outputText.lastIndexOf('.') - 8,
+    outputText.lastIndexOf('.') + 4
+  );
+  let [hours1, minutes1, seconds1, milliseconds1] = initialTime.split(':').map(Number);
+  let [hours2, minutes2, seconds2, milliseconds2] = endTime.split(':').map(Number);
+  [seconds1, milliseconds1] = seconds1
+    .toString()
+    .split('.')
+    .map(Number);
+  [seconds2, milliseconds2] = seconds2
+    .toString()
+    .split('.')
+    .map(Number);
+  const totalMilliseconds1 =
+    milliseconds1 + seconds1 * 1000 + minutes1 * 60 * 1000 + hours1 * 60 * 60 * 1000;
+  const totalMilliseconds2 =
+    milliseconds2 + seconds2 * 1000 + minutes2 * 60 * 1000 + hours2 * 60 * 60 * 1000;
+
+  const differenceMilliseconds = totalMilliseconds2 - totalMilliseconds1;
+
+  const hoursDiff = Math.floor(differenceMilliseconds / (60 * 60 * 1000));
+  const minutesDiff = Math.floor((differenceMilliseconds % (60 * 60 * 1000)) / (60 * 1000));
+  const secondsDiff = Math.floor((differenceMilliseconds % (60 * 1000)) / 1000);
+  const millisecondsDiff = differenceMilliseconds % 1000;
+  return `${formatTimeComponent(hoursDiff)}:${formatTimeComponent(
+    minutesDiff
+  )}:${formatTimeComponent(secondsDiff)}.${formatTimeComponent(millisecondsDiff, 3)}`;
+}
+
+function formatTimeComponent(component: number, padLength: number = 2): string {
+  return component.toString().padStart(padLength, '0');
+}

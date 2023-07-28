@@ -35,16 +35,8 @@ export class EnvironmentSettings {
   private _devHubUserName = 'svcideebot@salesforce.com';
   private _sfdxAuthUrl = process.env.SFDX_AUTH_URL;
   private _orgId = process.env.ORG_ID;
-  private _extensionPath = join(
-    __dirname,
-    '..',
-    '..',
-    'salesforcedx-vscode',
-    'packages'
-  );
-  private _startTime = new Date(Date.now()).toLocaleTimeString([],
-    { timeStyle: "short" }
-  );
+  private _extensionPath = join(__dirname, '..', '..', 'salesforcedx-vscode', 'packages');
+  private _startTime = new Date(Date.now()).toLocaleTimeString([], { timeStyle: 'short' });
   private _throttleFactor = 1;
 
   private constructor() {}
@@ -54,33 +46,24 @@ export class EnvironmentSettings {
       EnvironmentSettings._instance = new EnvironmentSettings();
 
       EnvironmentSettings._instance._vscodeVersion =
-        process.env.VSCODE_VERSION ||
-        EnvironmentSettings._instance._vscodeVersion;
+        process.env.VSCODE_VERSION || EnvironmentSettings._instance._vscodeVersion;
 
       if (process.env.SPEC_FILES) {
-        EnvironmentSettings._instance._specFiles = [
-          './test/specs/**/' + process.env.SPEC_FILES
-        ];
+        EnvironmentSettings._instance._specFiles = ['./test/specs/**/' + process.env.SPEC_FILES];
       }
 
       EnvironmentSettings._instance._devHubAliasName =
-        process.env.DEV_HUB_ALIAS_NAME ||
-        EnvironmentSettings._instance._devHubAliasName;
+        process.env.DEV_HUB_ALIAS_NAME || EnvironmentSettings._instance._devHubAliasName;
       EnvironmentSettings._instance._devHubUserName =
-        process.env.DEV_HUB_USER_NAME ||
-        EnvironmentSettings._instance._devHubUserName;
+        process.env.DEV_HUB_USER_NAME || EnvironmentSettings._instance._devHubUserName;
       EnvironmentSettings._instance._extensionPath =
-        process.env.EXTENSION_PATH ||
-        EnvironmentSettings._instance._extensionPath;
+        process.env.EXTENSION_PATH || EnvironmentSettings._instance._extensionPath;
       EnvironmentSettings._instance._throttleFactor =
-        parseInt(process.env.THROTTLE_FACTOR!) ||
-        EnvironmentSettings._instance._throttleFactor;
-      EnvironmentSettings._instance._sfdxAuthUrl = 
-        process.env.SFDXAUTHURL_TEST ||
-      EnvironmentSettings._instance._sfdxAuthUrl;
-      EnvironmentSettings._instance._orgId = 
-        process.env.ORG_ID ||
-      EnvironmentSettings._instance._orgId;
+        parseInt(process.env.THROTTLE_FACTOR!) || EnvironmentSettings._instance._throttleFactor;
+      EnvironmentSettings._instance._sfdxAuthUrl =
+        process.env.SFDXAUTHURL_TEST || EnvironmentSettings._instance._sfdxAuthUrl;
+      EnvironmentSettings._instance._orgId =
+        process.env.ORG_ID || EnvironmentSettings._instance._orgId;
     }
 
     return EnvironmentSettings._instance;
