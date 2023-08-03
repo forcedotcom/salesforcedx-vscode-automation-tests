@@ -349,7 +349,7 @@ describe('Deploy and Retrieve', async () => {
     const textEditor = (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await textEditor.setTextAtLine(2, `\t// let's trigger deploy`);
     await textEditor.save();
-    await utilities.pause(1);
+    await utilities.pause(5);
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(
       workbench,
@@ -422,7 +422,7 @@ describe('Deploy and Retrieve', async () => {
     await enableSourceTrackingBtn.click();
     await utilities.pause(1);
     // Reload window to update cache and get the setting behavior to work
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 50);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 40);
   });
 
   step('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
