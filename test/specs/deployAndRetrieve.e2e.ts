@@ -422,7 +422,7 @@ describe('Deploy and Retrieve', async () => {
     await enableSourceTrackingBtn.click();
     await utilities.pause(1);
     // Reload window to update cache and get the setting behavior to work
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 50);
   });
 
   step('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
