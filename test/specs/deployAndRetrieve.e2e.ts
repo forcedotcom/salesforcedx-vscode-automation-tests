@@ -349,13 +349,14 @@ describe('Deploy and Retrieve', async () => {
     const textEditor = (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await textEditor.setTextAtLine(2, `\t// let's trigger deploy`);
     await textEditor.save();
-    await utilities.pause(10);
+    await utilities.pause(5);
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Deploy Source to Org',
       utilities.FIVE_MINUTES
     );
+    await utilities.pause(15);
     // At this point there should be no conflicts since this is a new class.
     const successNotificationWasFound = await utilities.notificationIsPresent(
       workbench,
