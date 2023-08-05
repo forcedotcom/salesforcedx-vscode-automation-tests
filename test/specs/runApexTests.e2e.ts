@@ -14,7 +14,7 @@ describe('Run Apex Tests', async () => {
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('RunApexTests', false);
+    testSetup = new TestSetup('RunApexTests', true);
     await testSetup.setUp();
 
     // Create Apex class 1 and test
@@ -48,6 +48,12 @@ describe('Run Apex Tests', async () => {
 
   step('Run All Tests via Apex Class', async () => {
     const workbench = await browser.getWorkbench();
+    
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('ExampleApexClass1Test.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
+
     const editorView = workbench.getEditorView();
 
     // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
@@ -99,6 +105,12 @@ describe('Run Apex Tests', async () => {
 
   step('Run Single Test via Apex Class', async () => {
     const workbench = await browser.getWorkbench();
+
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('ExampleApexClass2Test.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
+
     const editorView = workbench.getEditorView();
 
     // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
@@ -196,6 +208,12 @@ describe('Run Apex Tests', async () => {
   step('Re-run Last Apex Test Class', async () => {
     const workbench = await browser.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
+
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('ExampleApexClass1Test.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
+
     const editorView = await workbench.getEditorView();
 
     // Open the Test Sidebar
@@ -504,6 +522,11 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
 
     // Fix test
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('AccountService.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
+
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('AccountService.cls')) as TextEditor;
     await textEditor.setTextAtLine(6, '\t\t\tTickerSymbol = tickerSymbol');
