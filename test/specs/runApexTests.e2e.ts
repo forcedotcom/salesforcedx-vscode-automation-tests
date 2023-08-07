@@ -274,7 +274,7 @@ describe('Run Apex Tests', async () => {
     expect(apexTestsSection.elem).toBePresent();
 
     const apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
-    utilities.pause(10);
+    utilities.pause(20);
     expect(apexTestsItems.length).toBe(6);
     expect(await apexTestsSection.findItem('ExampleApexClass1Test')).toBeTruthy();
     expect(await apexTestsSection.findItem('ExampleApexClass2Test')).toBeTruthy();
