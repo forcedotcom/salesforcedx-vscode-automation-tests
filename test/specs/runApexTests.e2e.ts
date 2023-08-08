@@ -71,11 +71,11 @@ describe('Run Apex Tests', async () => {
       'Running SFDX: Run Apex Tests',
       utilities.FIVE_MINUTES
     );
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
@@ -128,11 +128,11 @@ describe('Run Apex Tests', async () => {
       'Running SFDX: Run Apex Tests',
       utilities.FIVE_MINUTES
     );
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
@@ -174,11 +174,11 @@ describe('Run Apex Tests', async () => {
       'Running SFDX: Run Apex Tests',
       utilities.FIVE_MINUTES
     );
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
@@ -293,11 +293,11 @@ describe('Run Apex Tests', async () => {
       'Running SFDX: Run Apex Tests',
       utilities.FIVE_MINUTES
     );
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
@@ -359,11 +359,11 @@ describe('Run Apex Tests', async () => {
       'Running SFDX: Run Apex Tests',
       utilities.FIVE_MINUTES
     );
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
@@ -421,11 +421,11 @@ describe('Run Apex Tests', async () => {
       'Running SFDX: Run Apex Tests',
       utilities.FIVE_MINUTES
     );
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
@@ -493,11 +493,11 @@ describe('Run Apex Tests', async () => {
       'Running SFDX: Run Apex Tests',
       utilities.FIVE_MINUTES
     );
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
@@ -564,11 +564,11 @@ describe('Run Apex Tests', async () => {
       'Running SFDX: Run Apex Tests',
       utilities.FIVE_MINUTES
     );
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
@@ -672,11 +672,11 @@ describe('Run Apex Tests', async () => {
       'Running SFDX: Run Apex Tests',
       utilities.FIVE_MINUTES
     );
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Run Apex Tests: Processing test run',
