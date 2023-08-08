@@ -66,11 +66,11 @@ describe('Run Apex Tests', async () => {
     await runAllTestsOption!.click();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
     // await utilities.waitForNotificationToGoAway(
     //   workbench,
     //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
@@ -123,11 +123,11 @@ describe('Run Apex Tests', async () => {
     await runTestOption!.click();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
     // await utilities.waitForNotificationToGoAway(
     //   workbench,
     //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
@@ -169,11 +169,11 @@ describe('Run Apex Tests', async () => {
     await prompt.selectQuickPick('ExampleApexClass1Test');
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
     // await utilities.waitForNotificationToGoAway(
     //   workbench,
     //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
@@ -288,11 +288,11 @@ describe('Run Apex Tests', async () => {
     await runTestsAction!.elem.click();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
     // await utilities.waitForNotificationToGoAway(
     //   workbench,
     //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
@@ -354,11 +354,11 @@ describe('Run Apex Tests', async () => {
     await runTestsAction!.elem.click();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
     // await utilities.waitForNotificationToGoAway(
     //   workbench,
     //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
@@ -416,11 +416,11 @@ describe('Run Apex Tests', async () => {
     await runTestAction!.elem.click();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
     // await utilities.waitForNotificationToGoAway(
     //   workbench,
     //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
@@ -488,11 +488,11 @@ describe('Run Apex Tests', async () => {
     await prompt.selectQuickPick('AccountServiceTest');
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
     // await utilities.waitForNotificationToGoAway(
     //   workbench,
     //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
@@ -559,11 +559,11 @@ describe('Run Apex Tests', async () => {
     await prompt.selectQuickPick('AccountServiceTest');
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
     // await utilities.waitForNotificationToGoAway(
     //   workbench,
     //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
@@ -667,11 +667,11 @@ describe('Run Apex Tests', async () => {
     await prompt.selectQuickPick('ApexTestSuite');
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
     // await utilities.waitForNotificationToGoAway(
     //   workbench,
     //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
