@@ -325,11 +325,11 @@ describe('Run Apex Tests', async () => {
       await apexTestsSection.elem.click();
       const refreshAction = await apexTestsSection.getAction('Refresh Tests');
       await refreshAction!.elem.click();
-      apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
       utilities.pause(3);
+      apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
     }
 
-    utilities.log(apexTestsItems.length.toString());
+    utilities.log('Number of items in APEX TESTS: ' + apexTestsItems.length.toString());
     expect(apexTestsItems.length).toBe(6);
     expect(await apexTestsSection.findItem('ExampleApexClass1Test')).toBeTruthy();
     expect(await apexTestsSection.findItem('ExampleApexClass2Test')).toBeTruthy();
