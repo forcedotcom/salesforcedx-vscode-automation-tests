@@ -286,6 +286,7 @@ describe('Deploy and Retrieve', async () => {
       'Running SFDX: Retrieve Source from Org',
       utilities.FIVE_MINUTES
     );
+    await utilities.pause(3);
     const successNotificationWasFound = await utilities.notificationIsPresent(
       workbench,
       'SFDX: Retrieve Source from Org successfully ran'
