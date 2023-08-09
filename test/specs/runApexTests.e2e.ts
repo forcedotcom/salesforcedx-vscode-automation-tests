@@ -318,8 +318,18 @@ describe('Run Apex Tests', async () => {
     const apexTestsSection = await sidebarView.getSection('APEX TESTS');
     expect(apexTestsSection.elem).toBePresent();
 
-    const apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
-    utilities.pause(20);
+    let apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
+
+    // If the Apex tests did not show up, click the refresh button on the top right corner of the Test sidebar
+    if (apexTestsItems.length === 1) {
+      await apexTestsSection.elem.click();
+      const refreshAction = await apexTestsSection.getAction('Refresh Tests');
+      await refreshAction!.elem.click();
+      apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
+      utilities.pause(3);
+    }
+
+    utilities.log(apexTestsItems.length.toString());
     expect(apexTestsItems.length).toBe(6);
     expect(await apexTestsSection.findItem('ExampleApexClass1Test')).toBeTruthy();
     expect(await apexTestsSection.findItem('ExampleApexClass2Test')).toBeTruthy();
