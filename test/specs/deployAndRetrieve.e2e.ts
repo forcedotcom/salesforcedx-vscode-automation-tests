@@ -327,13 +327,13 @@ describe('Deploy and Retrieve', async () => {
       'div[title="salesforcedx-vscode-core.push-or-deploy-on-save.enabled"]'
     );
     await pushOrDeployOnSaveBtn.click();
-    await utilities.pause(1);
+    await utilities.pause(5);
 
     const preferDeployOnSaveBtn = await $(
       'div[title="salesforcedx-vscode-core.push-or-deploy-on-save.preferDeployOnSave"]'
     );
     await preferDeployOnSaveBtn.click();
-    await utilities.pause(1);
+    await utilities.pause(5);
 
     // Clear all notifications so clear output button is reachable
     await utilities.runCommandFromCommandPrompt(
@@ -355,7 +355,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES + 120
+      utilities.FIVE_MINUTES
     );
     // At this point there should be no conflicts since this is a new class.
     const successNotificationWasFound = await utilities.notificationIsPresent(
