@@ -71,6 +71,7 @@ describe('Run Apex Tests', async () => {
     const textEditor = (await editorView.openEditor('ExampleApexClass1Test.cls')) as TextEditor;
 
     // Clear the Output view first.
+    utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
     
@@ -164,6 +165,7 @@ describe('Run Apex Tests', async () => {
     const textEditor = (await editorView.openEditor('ExampleApexClass2Test.cls')) as TextEditor;
 
     // Clear the Output view first.
+    utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
     
@@ -229,6 +231,7 @@ describe('Run Apex Tests', async () => {
     utilities.log('Enter run tests via command palette');
 
     // Clear the Output view first.
+    utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();    
 
@@ -393,6 +396,7 @@ describe('Run Apex Tests', async () => {
     expect(await apexTestsItems[4].getLabel()).toBe('ExampleApexClass3Test');
 
     // Clear the Output view first.
+    utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
     
@@ -476,6 +480,7 @@ describe('Run Apex Tests', async () => {
     expect(apexTestsSection.elem).toBePresent();
 
     // Clear the Output view first.
+    utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();    
 
@@ -556,6 +561,7 @@ describe('Run Apex Tests', async () => {
     expect(apexTestsSection.elem).toBePresent();
 
     // Clear the Output view first.
+    utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();    
 
@@ -649,6 +655,7 @@ describe('Run Apex Tests', async () => {
     utilities.log('Done pushing buggy Apex test to org');
 
     // Clear the Output view first.
+    utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();    
 
@@ -741,6 +748,7 @@ describe('Run Apex Tests', async () => {
     utilities.log('Done pushing fixed Apex test to org');
 
     // Clear the Output view first.
+    utilities.dismissAllNotifications();
     await outputView.clearText();
     
     // Run SFDX: Run Apex tests to verify fix
@@ -873,6 +881,7 @@ describe('Run Apex Tests', async () => {
     utilities.log('Enter run apex test suite');
 
     // Clear the Output view first.
+    utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();    
 
