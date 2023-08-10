@@ -96,15 +96,15 @@ export async function notificationIsPresentWithTimeout(
           return true;
         }
       }
+    }
 
-      const currentDate = new Date();
-      utilities.log('currentDate = ' + currentDate);
-      const secondsPassed = Math.abs(currentDate.getTime() - startDate.getTime()) / 1000;
-      utilities.log('secondsPassed = ' + secondsPassed);
-      if (secondsPassed >= durationInSeconds) {
-        utilities.log('Notification not found! Return FALSE!')
-        return false;
-      }
+    const currentDate = new Date();
+    utilities.log('currentDate = ' + currentDate);
+    const secondsPassed = Math.abs(currentDate.getTime() - startDate.getTime()) / 1000;
+    utilities.log('secondsPassed = ' + secondsPassed);
+    if (secondsPassed >= durationInSeconds) {
+      utilities.log('Notification not found! Return FALSE!')
+      return false;
     }
   }
 }
