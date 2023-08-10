@@ -286,6 +286,7 @@ describe('Deploy and Retrieve', async () => {
       'Running SFDX: Retrieve Source from Org',
       utilities.FIVE_MINUTES
     );
+    await utilities.pause(3);
     const successNotificationWasFound = await utilities.notificationIsPresent(
       workbench,
       'SFDX: Retrieve Source from Org successfully ran'
@@ -318,7 +319,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'Preferences: Open Workspace Settings',
-      5
+      3
     );
     await browser.keys(['p', 'u', 's', 'h', 'Space', 'o', 'n', 'Space', 's', 'a', 'v', 'e']);
 
@@ -326,13 +327,20 @@ describe('Deploy and Retrieve', async () => {
       'div[title="salesforcedx-vscode-core.push-or-deploy-on-save.enabled"]'
     );
     await pushOrDeployOnSaveBtn.click();
-    await utilities.pause(1);
+    await utilities.pause(3);
+
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Preferences: Open Workspace Settings',
+      3
+    );
+    await browser.keys(['p', 'r', 'e', 'f', 'e', 'r', 'Space', 'd', 'e', 'p', 'l', 'o', 'y']);
 
     const preferDeployOnSaveBtn = await $(
       'div[title="salesforcedx-vscode-core.push-or-deploy-on-save.preferDeployOnSave"]'
     );
     await preferDeployOnSaveBtn.click();
-    await utilities.pause(1);
+    await utilities.pause(3);
 
     // Clear all notifications so clear output button is reachable
     await utilities.runCommandFromCommandPrompt(
@@ -349,13 +357,14 @@ describe('Deploy and Retrieve', async () => {
     const textEditor = (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await textEditor.setTextAtLine(2, `\t// let's trigger deploy`);
     await textEditor.save();
-    await utilities.pause(1);
+    await utilities.pause(5);
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Running SFDX: Deploy Source to Org',
       utilities.FIVE_MINUTES
     );
+    await utilities.pause(5);
     // At this point there should be no conflicts since this is a new class.
     const successNotificationWasFound = await utilities.notificationIsPresent(
       workbench,
@@ -422,7 +431,7 @@ describe('Deploy and Retrieve', async () => {
     await enableSourceTrackingBtn.click();
     await utilities.pause(1);
     // Reload window to update cache and get the setting behavior to work
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 50);
   });
 
   step('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
