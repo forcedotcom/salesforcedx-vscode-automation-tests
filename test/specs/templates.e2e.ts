@@ -93,7 +93,7 @@ describe('Templates', async () => {
     const workbench = await browser.getWorkbench();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ApexClass1.cls')) as TextEditor;
-    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
+    const textGeneratedFromTemplate = await textEditor.getText();
     await utilities.log('textGeneratedFromTemplate:');
     await utilities.log(textGeneratedFromTemplate);
     await utilities.log('expectedText:');
