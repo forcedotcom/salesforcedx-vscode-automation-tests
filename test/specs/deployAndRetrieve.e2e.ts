@@ -364,6 +364,7 @@ describe('Deploy and Retrieve', async () => {
       'Running SFDX: Deploy Source to Org',
       utilities.FIVE_MINUTES
     );
+    await utilities.pause(5);
     // At this point there should be no conflicts since this is a new class.
     const successNotificationWasFound = await utilities.notificationIsPresent(
       workbench,
