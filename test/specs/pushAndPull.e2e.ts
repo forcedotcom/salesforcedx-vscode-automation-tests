@@ -30,7 +30,7 @@ describe('Push and Pull', async () => {
 
   step('Create an Apex class', async () => {
     // Create an Apex Class.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const inputBox = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Create Apex Class',
@@ -90,7 +90,7 @@ describe('Push and Pull', async () => {
   });
 
   step('Push the Apex class', async () => {
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
     // At this point there should be no conflicts since this is a new class.
@@ -117,7 +117,7 @@ describe('Push and Pull', async () => {
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
 
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
     const successNotificationWasFound = await utilities.attemptToFindNotification(
@@ -143,7 +143,7 @@ describe('Push and Pull', async () => {
     await outputView.clearText();
 
     // Modify the file by adding a comment.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ExampleApexClass1.cls')) as TextEditor;
     await textEditor.setTextAtLine(3, '        // sample comment');
@@ -223,7 +223,7 @@ describe('Push and Pull', async () => {
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
 
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
 
     // At this point there should be no conflicts since there have been no changes.
@@ -282,7 +282,7 @@ describe('Push and Pull', async () => {
     await outputView.clearText();
 
     // Modify the file by adding a comment.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ExampleApexClass1.cls')) as TextEditor;
     await textEditor.setTextAtLine(3, '        // sample comment for the pull test');
@@ -315,7 +315,7 @@ describe('Push and Pull', async () => {
     await outputView.clearText();
 
     // Now save the file.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ExampleApexClass1.cls')) as TextEditor;
     await textEditor.save();
@@ -379,7 +379,7 @@ describe('Push and Pull', async () => {
   });
 
   step('Set the 2nd user as the default user', async () => {
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const inputBox = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Set a Default Org',
