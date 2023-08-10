@@ -21,8 +21,6 @@ describe('Push and Pull', async () => {
   let projectName = '';
   let adminName = '';
   let adminEmailAddress = '';
-  const pathToClass = path.join('force-app', 'main', 'default', 'classes', '');
-  const pathToProject = path.join('', 'e2e-temp', 'TempProject-PushAndPull', '');
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('PushAndPull', false);
@@ -60,8 +58,12 @@ describe('Push and Pull', async () => {
       10
     );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain(`create ${pathToClass}ExampleClass1.cls`);
-    expect(outputPanelText).toContain(`create ${pathToClass}ExampleClass1.cls-meta.xml`);
+    expect(outputPanelText).toContain(
+      `create ${path.join('force-app', 'main', 'default', 'classes', 'ExampleClass1.cls')}`
+    );
+    expect(outputPanelText).toContain(
+      `create ${path.join('force-app', 'main', 'default', 'classes', 'ExampleClass1.cls-meta.xml')}`
+    );
 
     // Check for expected items in the Explorer view.
     const sidebar = workbench.getSideBar();
@@ -184,9 +186,27 @@ describe('Push and Pull', async () => {
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('ended with exit code 0');
     expect(outputPanelText).toContain('Changed  ExampleApexClass1  ApexClass');
-    expect(outputPanelText).toContain(`${pathToProject}${pathToClass}ExampleApexClass1.cls`);
     expect(outputPanelText).toContain(
-      `${pathToProject}${pathToClass}ExampleApexClass1.cls-meta.xml`
+      `${path.join(
+        'e2e-temp',
+        'TempProject-PushAndPull',
+        'force-app',
+        'main',
+        'default',
+        'classes',
+        'ExampleApexClass1.cls'
+      )}`
+    );
+    expect(outputPanelText).toContain(
+      `${path.join(
+        'e2e-temp',
+        'TempProject-PushAndPull',
+        'force-app',
+        'main',
+        'default',
+        'classes',
+        'ExampleApexClass1.cls-meta.xml`'
+      )}`
     );
   });
 
