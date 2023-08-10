@@ -59,10 +59,16 @@ describe('Push and Pull', async () => {
     );
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain(
-      `create ${path.join('force-app', 'main', 'default', 'classes', 'ExampleClass1.cls')}`
+      `create ${path.join('force-app', 'main', 'default', 'classes', 'ExampleApexClass1.cls')}`
     );
     expect(outputPanelText).toContain(
-      `create ${path.join('force-app', 'main', 'default', 'classes', 'ExampleClass1.cls-meta.xml')}`
+      `create ${path.join(
+        'force-app',
+        'main',
+        'default',
+        'classes',
+        'ExampleApexClass1.cls-meta.xml'
+      )}`
     );
 
     // Check for expected items in the Explorer view.
