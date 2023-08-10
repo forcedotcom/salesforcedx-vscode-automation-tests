@@ -37,12 +37,12 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Create Project', async () => {
-    const workbench = await browser.getWorkbench();
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 50);
+    const workbench = await (await browser.getWorkbench()).wait();
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 60);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
     // Select the "Standard" project type.
-    const quickPicks = await prompt.getQuickPicks();
+    const quickPicks = await (await prompt.wait()).getQuickPicks();
     expect(quickPicks).not.toBeUndefined();
     expect(quickPicks.length).toEqual(3);
     expect(await quickPicks[0].getLabel()).toEqual('Standard');
@@ -67,9 +67,9 @@ describe('Authentication', async () => {
     await utilities.clickFilePathOkButton();
 
     // Verify the project was created and was loaded.
-    const sidebar = workbench.getSideBar();
-    const content = sidebar.getContent();
-    const treeViewSection = await content.getSection(tempProjectName.toUpperCase());
+    const sidebar = await workbench.getSideBar().wait();
+    const content = await sidebar.getContent().wait();
+    const treeViewSection = await (await content.getSection(tempProjectName.toUpperCase())).wait();
     expect(treeViewSection).not.toEqual(undefined);
 
     const forceAppTreeItem = (await treeViewSection.findItem('force-app')) as DefaultTreeItem;
@@ -119,7 +119,7 @@ describe('Authentication', async () => {
     // Could also run the command, "SFDX: Set a Default Org" but this exercises more UI elements.
 
     // Click on "No default Org Set" (in the bottom bar).
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const changeDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       'Change Default Org'
@@ -182,7 +182,7 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Create a Default Scratch Org', async () => {
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Create a Default Scratch Org...',
@@ -278,7 +278,7 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Set the Scratch Org As the Default Org', async () => {
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const inputBox = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Set a Default Org',
@@ -311,7 +311,7 @@ describe('Authentication', async () => {
 
   step('Tear down', async () => {
     if (scratchOrgAliasName) {
-      const workbench = await browser.getWorkbench();
+      const workbench = await (await browser.getWorkbench()).wait();
       await utilities.executeCommand(
         workbench,
         `sfdx force:org:delete -u ${scratchOrgAliasName} --noprompt`
