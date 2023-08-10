@@ -70,6 +70,10 @@ describe('Run Apex Tests', async () => {
     // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
     const textEditor = (await editorView.openEditor('ExampleApexClass1Test.cls')) as TextEditor;
 
+    // Clear the Output view first.
+    const outputView = await utilities.openOutputView();
+    await outputView.clearText();
+    
     // Click the "Run All Tests" code lens at the top of the class
     const codeLens = await textEditor.getCodeLens('Run All Tests');
     const codeLensElem = await codeLens?.elem;
@@ -159,6 +163,10 @@ describe('Run Apex Tests', async () => {
     // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
     const textEditor = (await editorView.openEditor('ExampleApexClass2Test.cls')) as TextEditor;
 
+    // Clear the Output view first.
+    const outputView = await utilities.openOutputView();
+    await outputView.clearText();
+    
     // Click the "Run Test" code lens at the top of one of the test methods
     const codeLens = await textEditor.getCodeLens('Run Test');
     const codeLensElem = await codeLens?.elem;
@@ -219,6 +227,10 @@ describe('Run Apex Tests', async () => {
   step('Run Tests via Command Palette', async () => {
 
     utilities.log('Enter run tests via command palette');
+
+    // Clear the Output view first.
+    const outputView = await utilities.openOutputView();
+    await outputView.clearText();    
 
     // Run SFDX: Run Apex tests.
     const workbench = await browser.getWorkbench();
@@ -380,7 +392,12 @@ describe('Run Apex Tests', async () => {
     expect(await apexTestsItems[2].getLabel()).toBe('ExampleApexClass2Test');
     expect(await apexTestsItems[4].getLabel()).toBe('ExampleApexClass3Test');
 
+    // Clear the Output view first.
+    const outputView = await utilities.openOutputView();
+    await outputView.clearText();
+    
     // Click the run tests button on the top right corner of the Test sidebar
+    await apexTestsSection.elem.click();
     const runTestsAction = await apexTestsSection.getAction('Run Tests');
     await runTestsAction!.elem.click();
 
@@ -458,6 +475,10 @@ describe('Run Apex Tests', async () => {
     const apexTestsSection = await sidebarView.getSection('APEX TESTS');
     expect(apexTestsSection.elem).toBePresent();
 
+    // Clear the Output view first.
+    const outputView = await utilities.openOutputView();
+    await outputView.clearText();    
+
     // Click the run test button that is shown to the right when you hover a test class name on the Test sidebar
     const apexTestItem = (await apexTestsSection.findItem('ExampleApexClass2Test')) as TreeItem;
     await apexTestItem.select();
@@ -533,6 +554,10 @@ describe('Run Apex Tests', async () => {
     const sidebarView = sidebar.getContent();
     const apexTestsSection = await sidebarView.getSection('APEX TESTS');
     expect(apexTestsSection.elem).toBePresent();
+
+    // Clear the Output view first.
+    const outputView = await utilities.openOutputView();
+    await outputView.clearText();    
 
     // Hover a test name under one of the test class sections and click the run button that is shown to the right of the test name on the Test sidebar
     const apexTestItem = (await apexTestsSection.findItem('validateSayHello')) as TreeItem;
@@ -623,6 +648,10 @@ describe('Run Apex Tests', async () => {
     expect(successPushNotificationWasFound).toBe(true);
     utilities.log('Done pushing buggy Apex test to org');
 
+    // Clear the Output view first.
+    const outputView = await utilities.openOutputView();
+    await outputView.clearText();    
+
     // Run SFDX: Run Apex tests.
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
@@ -711,6 +740,9 @@ describe('Run Apex Tests', async () => {
 
     utilities.log('Done pushing fixed Apex test to org');
 
+    // Clear the Output view first.
+    await outputView.clearText();
+    
     // Run SFDX: Run Apex tests to verify fix
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
@@ -839,6 +871,10 @@ describe('Run Apex Tests', async () => {
   step('Run Apex Test Suite', async () => {
 
     utilities.log('Enter run apex test suite');
+
+    // Clear the Output view first.
+    const outputView = await utilities.openOutputView();
+    await outputView.clearText();    
 
     const workbench = await browser.getWorkbench();
 
