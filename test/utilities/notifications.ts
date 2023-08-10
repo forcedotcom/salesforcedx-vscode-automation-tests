@@ -97,6 +97,7 @@ export async function notificationIsPresentWithTimeout(
         }
       }
     }
+    pause(1);
 
     const currentDate = new Date();
     utilities.log('currentDate = ' + currentDate);
