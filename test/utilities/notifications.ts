@@ -69,30 +69,40 @@ export async function notificationIsPresentWithTimeout(
   matchExactString: boolean = true
 ): Promise<boolean> {
 
+  utilities.log('Enter utilities.notificationIsPresentWithTimeout()');
+
   // Change timeout from seconds to milliseconds
   durationInSeconds *= 1000;
 
   const notifications = await workbench.getNotifications();
 
   const startDate = new Date();
+  utilities.log('startDate = ' + startDate);
 
   // Keep on searching for the notification until it is found or the timeout is reached
   while (true) {
+    utilities.log('A new iteration of the while loop');
     for (const notification of notifications) {
       const message = await notification.getMessage();
+      utilities.log('message = ' + message);
       if (matchExactString) {
         if (message === notificationMessage) {
+          utilities.log('Found it! Return TRUE 1!');
           return true;
         }
       } else {
         if (message.startsWith(notificationMessage)) {
+          utilities.log('Found it! Return TRUE 2!');
           return true;
         }
       }
 
       const currentDate = new Date();
+      utilities.log('currentDate = ' + currentDate);
       const secondsPassed = Math.abs(currentDate.getTime() - startDate.getTime()) / 1000;
+      utilities.log('secondsPassed = ' + secondsPassed);
       if (secondsPassed >= durationInSeconds) {
+        utilities.log('Notification not found! Return FALSE!')
         return false;
       }
     }

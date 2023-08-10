@@ -164,6 +164,8 @@ describe('Run Apex Tests', async () => {
     const runTestOption = await codeLensElem?.$('=Run Test');
     await runTestOption!.click();
 
+    utilities.log('Run Test Button Clicked!');
+
     // Wait for the command to execute
     // await utilities.waitForNotificationToGoAway(
     //   workbench,
