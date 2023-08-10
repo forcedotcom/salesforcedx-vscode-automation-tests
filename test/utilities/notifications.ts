@@ -79,24 +79,32 @@ export async function notificationIsPresentWithTimeout(
 
   // Keep on searching for the notification until it is found or the timeout is reached
   while (true) {
-    const notifications = await workbench.getNotifications(); //need to get the new notifications that show up
     utilities.log('A new iteration of the while loop');
-    for (const notification of notifications) {
-      const message = await notification.getMessage();
-      utilities.log('message = ' + message);
-      if (matchExactString) {
-        if (message === notificationMessage) {
-          utilities.log('Found it! Return TRUE 1!');
-          return true;
-        }
-      } else {
-        if (message.startsWith(notificationMessage)) {
-          utilities.log('Found it! Return TRUE 2!');
-          return true;
+    const notifications = await workbench.getNotifications(); //need to get the new notifications that show up
+    utilities.log('length of notifications = ' + notifications.length);
+
+    if (notifications.length === 0) {
+      pause(3);
+    }
+
+    else {
+      for (const notification of notifications) {
+        const message = await notification.getMessage();
+        utilities.log('message = ' + message);
+        if (matchExactString) {
+          if (message === notificationMessage) {
+            utilities.log('Found it! Return TRUE 1!');
+            return true;
+          }
+        } else {
+          if (message.startsWith(notificationMessage)) {
+            utilities.log('Found it! Return TRUE 2!');
+            return true;
+          }
         }
       }
+      pause(1);
     }
-    pause(1);
 
     const currentDate = new Date();
     utilities.log('currentDate = ' + currentDate);
