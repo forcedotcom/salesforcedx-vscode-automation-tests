@@ -39,14 +39,15 @@ describe('Run Apex Tests', async () => {
       1
     );
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Push Source to Default Org and Override Conflicts',
+    //   utilities.FIVE_MINUTES
+    // );
+    const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Push Source to Default Org and Override Conflicts',
+      'SFDX: Push Source to Default Org and Override Conflicts successfully ran',
       utilities.FIVE_MINUTES
-    );
-    const successPushNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Push Source to Default Org and Override Conflicts successfully ran'
     );
     expect(successPushNotificationWasFound).toBe(true);
 
@@ -320,14 +321,15 @@ describe('Run Apex Tests', async () => {
       1
     );
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Push Source to Default Org and Override Conflicts',
+    //   utilities.FIVE_MINUTES
+    // );
+    const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Push Source to Default Org and Override Conflicts',
+      'SFDX: Push Source to Default Org and Override Conflicts successfully ran',
       utilities.FIVE_MINUTES
-    );
-    const successPushNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Push Source to Default Org and Override Conflicts successfully ran'
     );
     expect(successPushNotificationWasFound).toBe(true);
 
@@ -353,12 +355,20 @@ describe('Run Apex Tests', async () => {
     let apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
 
     // If the Apex tests did not show up, click the refresh button on the top right corner of the Test sidebar
-    if (apexTestsItems.length === 1) {
-      await apexTestsSection.elem.click();
-      const refreshAction = await apexTestsSection.getAction('Refresh Tests');
-      await refreshAction!.elem.click();
-      utilities.pause(3);
-      apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
+    for (let x = 0; x < 3; x++) {
+      if (apexTestsItems.length === 1) {
+        await apexTestsSection.elem.click();
+        const refreshAction = await apexTestsSection.getAction('Refresh Tests');
+        await refreshAction!.elem.click();
+        utilities.pause(10);
+        apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
+      }
+      else if (apexTestsItems.length === 6) {
+        break;
+      }
+      else {
+        // do nothing
+      }
     }
 
     utilities.log('Number of items in APEX TESTS: ' + apexTestsItems.length.toString());
@@ -590,6 +600,7 @@ describe('Run Apex Tests', async () => {
 
     // Create Apex class AccountService
     await utilities.createApexClassWithBugs();
+    utilities.log('Apex test with bugs created');
 
     // Push source to org
     const workbench = await browser.getWorkbench();
@@ -599,22 +610,26 @@ describe('Run Apex Tests', async () => {
       1
     );
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Push Source to Default Org and Override Conflicts',
+    //   utilities.FIVE_MINUTES
+    // );
+    const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Push Source to Default Org and Override Conflicts',
+      'SFDX: Push Source to Default Org and Override Conflicts successfully ran',
       utilities.FIVE_MINUTES
     );
-    const successPushNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Push Source to Default Org and Override Conflicts successfully ran'
-    );
     expect(successPushNotificationWasFound).toBe(true);
+    utilities.log('Done pushing buggy Apex test to org');
 
     // Run SFDX: Run Apex tests.
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
+
+    utilities.log('Running buggy AccountServiceTest');
 
     // Wait for the command to execute
     // await utilities.waitForNotificationToGoAway(
@@ -659,6 +674,7 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
     expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
+    utilities.log('The Apex test failed! Time to fix the Apex test!');
 
     // Fix test
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
@@ -672,6 +688,8 @@ describe('Run Apex Tests', async () => {
     await textEditor.save();
     await utilities.pause(1);
 
+    utilities.log('Done fixing Apex test');
+
     // Push source to org
     await utilities.runCommandFromCommandPrompt(
       workbench,
@@ -679,22 +697,27 @@ describe('Run Apex Tests', async () => {
       1
     );
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Push Source to Default Org and Override Conflicts',
+    //   utilities.FIVE_MINUTES
+    // );
+    const successPushNotification2WasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Push Source to Default Org and Override Conflicts',
+      'SFDX: Push Source to Default Org and Override Conflicts successfully ran',
       utilities.FIVE_MINUTES
     );
-    const successPushNotification2WasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Push Source to Default Org and Override Conflicts successfully ran'
-    );
     expect(successPushNotification2WasFound).toBe(true);
+
+    utilities.log('Done pushing fixed Apex test to org');
 
     // Run SFDX: Run Apex tests to verify fix
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
+
+    utilities.log('Running fixed AccountServiceTest');
 
     // Wait for the command to execute
     // await utilities.waitForNotificationToGoAway(
@@ -725,7 +748,7 @@ describe('Run Apex Tests', async () => {
       workbench,
       'SFDX: Run Apex Tests successfully ran',
       utilities.FIVE_MINUTES
-    );
+    ); //NOTE: This is the run
     expect(successNotification2WasFound).toBe(true);
     utilities.log('4');
 
@@ -733,7 +756,7 @@ describe('Run Apex Tests', async () => {
     outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('AccountServiceTest.should_create_account');
-    expect(outputPanelText).toContain('Pass');
+    expect(outputPanelText).toContain('Pass'); //NOTE: This is the result of the test itself
 
     utilities.log('Exit run a test that fails and fix it');
   });
@@ -761,16 +784,17 @@ describe('Run Apex Tests', async () => {
     await prompt.confirm();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Build Apex Test Suite',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Build Apex Test Suite',
+    //   utilities.FIVE_MINUTES
+    // );
 
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Build Apex Test Suite successfully ran'
+      'SFDX: Build Apex Test Suite successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
   });
@@ -795,16 +819,17 @@ describe('Run Apex Tests', async () => {
     await prompt.confirm();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Build Apex Test Suite',
-      utilities.FIVE_MINUTES
-    );
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Build Apex Test Suite',
+    //   utilities.FIVE_MINUTES
+    // );
 
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Build Apex Test Suite successfully ran'
+      'SFDX: Build Apex Test Suite successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
