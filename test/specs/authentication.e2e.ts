@@ -5,16 +5,12 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import child_process from 'child_process';
 import fs from 'fs';
 import { step } from 'mocha-steps';
-import util from 'util';
 import path from 'path';
 import { DefaultTreeItem, InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings';
 import * as utilities from '../utilities';
-
-const exec = util.promisify(child_process.exec);
 
 describe('Authentication', async () => {
   const tempProjectName = 'TempProject-Authentication';
@@ -96,15 +92,18 @@ describe('Authentication', async () => {
 
     const environmentSettings = EnvironmentSettings.getInstance();
     const authFilePath = path.join(projectFolderPath, 'authFile.json');
-    await exec(
+    const terminalView = await utilities.executeCommand(
+      workbench,
       `sfdx force:org:display -u ${environmentSettings.devHubAliasName} --verbose --json > ${authFilePath}`
     );
 
     const authFilePathFileExists = fs.existsSync(authFilePath);
     expect(authFilePathFileExists).toEqual(true);
 
-    const authorizeOrg = await exec(`sfdx auth:sfdxurl:store -d -f ${authFilePath}`);
-    expect(authorizeOrg.stdout).toContain(
+    await terminalView.executeCommand(`sfdx auth:sfdxurl:store -d -f ${authFilePath}`);
+
+    const terminalText = await utilities.getTerminalViewText(terminalView, 60);
+    expect(terminalText).toContain(
       `Successfully authorized ${environmentSettings.devHubUserName} with org ID`
     );
 
@@ -313,7 +312,11 @@ describe('Authentication', async () => {
 
   step('Tear down', async () => {
     if (scratchOrgAliasName) {
-      await exec(`sfdx force:org:delete -u ${scratchOrgAliasName} --noprompt`);
+      const workbench = await (await browser.getWorkbench()).wait();
+      await utilities.executeCommand(
+        workbench,
+        `sfdx force:org:delete -u ${scratchOrgAliasName} --noprompt`
+      );
     }
 
     // This used to work...
