@@ -7,6 +7,7 @@
 
 import { Workbench } from 'wdio-vscode-service';
 import { pause } from './miscellaneous';
+import * as utilities from '../utilities';
 
 export async function waitForNotificationToGoAway(
   workbench: Workbench,
@@ -59,6 +60,65 @@ export async function notificationIsPresent(
   }
 
   return false;
+}
+
+export async function notificationIsPresentWithTimeout(
+  workbench: Workbench,
+  notificationMessage: string,
+  durationInSeconds: number,
+  matchExactString: boolean = true
+): Promise<boolean> {
+
+  // Change timeout from seconds to milliseconds
+  durationInSeconds *= 1000;
+
+  const notifications = await workbench.getNotifications();
+
+  const startDate = new Date();
+
+  // Keep on searching for the notification until it is found or the timeout is reached
+  while (true) {
+    for (const notification of notifications) {
+      const message = await notification.getMessage();
+      if (matchExactString) {
+        if (message === notificationMessage) {
+          return true;
+        }
+      } else {
+        if (message.startsWith(notificationMessage)) {
+          return true;
+        }
+      }
+
+      const currentDate = new Date();
+      const secondsPassed = Math.abs(currentDate.getTime() - startDate.getTime()) / 1000;
+      if (secondsPassed >= durationInSeconds) {
+        return false;
+      }
+    }
+  }
+}
+
+export async function dismissNotification(
+  workbench: Workbench,
+  notificationMessage: string,
+  matchExactString: boolean = true
+): Promise<void> {
+  utilities.log('notificationMessage = ' + notificationMessage);
+  const notifications = await workbench.getNotifications();
+  for (const notification of notifications) {
+    const message = await notification.getMessage();
+    utilities.log('current message is: ' + message);
+    if (matchExactString) {
+      if (message === notificationMessage) {
+        utilities.log('HERE');
+        //TODO: Click on the notification and then click the 'Clear notification' button (the X)
+        // await notification.elem.click();  //Is this needed?
+        await(notification.dismiss());
+        utilities.log('DISMISSED');
+      }
+    }
+  }
 }
 
 export async function attemptToFindNotification(

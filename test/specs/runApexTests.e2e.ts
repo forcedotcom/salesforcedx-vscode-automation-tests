@@ -78,30 +78,50 @@ describe('Run Apex Tests', async () => {
     utilities.log('Run all tests via apex class - waiting for command to execute');
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('1');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('2');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Processing test run',
-      utilities.FIVE_MINUTES,
-      false
-    );
-    utilities.log('3');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('1');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('2');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Processing test run',
+    //   utilities.FIVE_MINUTES,
+    //   false
+    // );
+    // utilities.log('3');
+    // await utilities.dismissNotification(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests'
+    // );
+    // utilities.log('11');
+    // await utilities.dismissNotification(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...'
+    // );
+    // utilities.log('22');
+    // await utilities.dismissNotification(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Processing test run'
+    // );
+    // utilities.log('33');
 
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    // const successNotificationWasFound = await utilities.notificationIsPresent(
+    //   workbench,
+    //   'SFDX: Run Apex Tests successfully ran'
+    // );
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Run Apex Tests successfully ran'
+      'SFDX: Run Apex Tests successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
     utilities.log('4');
@@ -145,30 +165,35 @@ describe('Run Apex Tests', async () => {
     await runTestOption!.click();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('1');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('2');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Processing test run',
-      utilities.FIVE_MINUTES,
-      false
-    );
-    utilities.log('3');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('1');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('2');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Processing test run',
+    //   utilities.FIVE_MINUTES,
+    //   false
+    // );
+    // utilities.log('3');
 
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    // const successNotificationWasFound = await utilities.notificationIsPresent(
+    //   workbench,
+    //   'SFDX: Run Apex Tests successfully ran'
+    // );
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Run Apex Tests successfully ran'
+      'SFDX: Run Apex Tests successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
     utilities.log('4');
@@ -200,30 +225,35 @@ describe('Run Apex Tests', async () => {
     await prompt.selectQuickPick('ExampleApexClass1Test');
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('1');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('2');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Processing test run',
-      utilities.FIVE_MINUTES,
-      false
-    );
-    utilities.log('3');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('1');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('2');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Processing test run',
+    //   utilities.FIVE_MINUTES,
+    //   false
+    // );
+    // utilities.log('3');
 
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    // const successNotificationWasFound = await utilities.notificationIsPresent(
+    //   workbench,
+    //   'SFDX: Run Apex Tests successfully ran'
+    // );
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Run Apex Tests successfully ran'
+      'SFDX: Run Apex Tests successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
     utilities.log('4');
@@ -343,30 +373,35 @@ describe('Run Apex Tests', async () => {
     await runTestsAction!.elem.click();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('1');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('2');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Processing test run',
-      utilities.FIVE_MINUTES,
-      false
-    );
-    utilities.log('3');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('1');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('2');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Processing test run',
+    //   utilities.FIVE_MINUTES,
+    //   false
+    // );
+    // utilities.log('3');
 
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    // const successNotificationWasFound = await utilities.notificationIsPresent(
+    //   workbench,
+    //   'SFDX: Run Apex Tests successfully ran'
+    // );
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Run Apex Tests successfully ran'
+      'SFDX: Run Apex Tests successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
     utilities.log('4');
@@ -418,30 +453,35 @@ describe('Run Apex Tests', async () => {
     await runTestsAction!.elem.click();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('1');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('2');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Processing test run',
-      utilities.FIVE_MINUTES,
-      false
-    );
-    utilities.log('3');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('1');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('2');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Processing test run',
+    //   utilities.FIVE_MINUTES,
+    //   false
+    // );
+    // utilities.log('3');
 
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    // const successNotificationWasFound = await utilities.notificationIsPresent(
+    //   workbench,
+    //   'SFDX: Run Apex Tests successfully ran'
+    // );
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Run Apex Tests successfully ran'
+      'SFDX: Run Apex Tests successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
     utilities.log('4');
@@ -489,30 +529,35 @@ describe('Run Apex Tests', async () => {
     await runTestAction!.elem.click();
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('1');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('2');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Processing test run',
-      utilities.FIVE_MINUTES,
-      false
-    );
-    utilities.log('3');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('1');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('2');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Processing test run',
+    //   utilities.FIVE_MINUTES,
+    //   false
+    // );
+    // utilities.log('3');
 
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    // const successNotificationWasFound = await utilities.notificationIsPresent(
+    //   workbench,
+    //   'SFDX: Run Apex Tests successfully ran'
+    // );
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Run Apex Tests successfully ran'
+      'SFDX: Run Apex Tests successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
     utilities.log('4');
@@ -570,30 +615,35 @@ describe('Run Apex Tests', async () => {
     await prompt.selectQuickPick('AccountServiceTest');
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('1');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('2');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Processing test run',
-      utilities.FIVE_MINUTES,
-      false
-    );
-    utilities.log('3');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('1');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('2');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Processing test run',
+    //   utilities.FIVE_MINUTES,
+    //   false
+    // );
+    // utilities.log('3');
 
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    // const successNotificationWasFound = await utilities.notificationIsPresent(
+    //   workbench,
+    //   'SFDX: Run Apex Tests successfully ran'
+    // );
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Run Apex Tests successfully ran'
+      'SFDX: Run Apex Tests successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
     utilities.log('4');
@@ -645,29 +695,34 @@ describe('Run Apex Tests', async () => {
     await prompt.selectQuickPick('AccountServiceTest');
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('1');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('2');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Processing test run',
-      utilities.FIVE_MINUTES,
-      false
-    );
-    utilities.log('3');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('1');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('2');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Processing test run',
+    //   utilities.FIVE_MINUTES,
+    //   false
+    // );
+    // utilities.log('3');
 
-    const successNotification2WasFound = await utilities.notificationIsPresent(
+    // const successNotification2WasFound = await utilities.notificationIsPresent(
+    //   workbench,
+    //   'SFDX: Run Apex Tests successfully ran'
+    // );
+    const successNotification2WasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Run Apex Tests successfully ran'
+      'SFDX: Run Apex Tests successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotification2WasFound).toBe(true);
     utilities.log('4');
@@ -767,30 +822,35 @@ describe('Run Apex Tests', async () => {
     await prompt.selectQuickPick('ApexTestSuite');
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('1');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
-    utilities.log('2');
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Processing test run',
-      utilities.FIVE_MINUTES,
-      false
-    );
-    utilities.log('3');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('1');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
+    //   utilities.FIVE_MINUTES
+    // );
+    // utilities.log('2');
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Run Apex Tests: Processing test run',
+    //   utilities.FIVE_MINUTES,
+    //   false
+    // );
+    // utilities.log('3');
 
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    // const successNotificationWasFound = await utilities.notificationIsPresent(
+    //   workbench,
+    //   'SFDX: Run Apex Tests successfully ran'
+    // );
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Run Apex Tests successfully ran'
+      'SFDX: Run Apex Tests successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
     utilities.log('4');
