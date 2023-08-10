@@ -193,7 +193,7 @@ describe('Push and Pull', async () => {
     expect(outputPanelText).toContain('ended with exit code 0');
     expect(outputPanelText).toContain('Changed  ExampleApexClass1  ApexClass');
     expect(outputPanelText).toContain(
-      `${path.join(
+      path.join(
         'e2e-temp',
         'TempProject-PushAndPull',
         'force-app',
@@ -201,18 +201,18 @@ describe('Push and Pull', async () => {
         'default',
         'classes',
         'ExampleApexClass1.cls'
-      )}`
+      )
     );
     expect(outputPanelText).toContain(
-      `${path.join(
+      path.join(
         'e2e-temp',
         'TempProject-PushAndPull',
         'force-app',
         'main',
         'default',
         'classes',
-        'ExampleApexClass1.cls-meta.xml`'
-      )}`
+        'ExampleApexClass1.cls-meta.xml'
+      )
     );
   });
 
