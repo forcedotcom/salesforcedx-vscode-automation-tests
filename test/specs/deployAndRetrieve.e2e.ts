@@ -319,7 +319,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'Preferences: Open Workspace Settings',
-      5
+      3
     );
     await browser.keys(['p', 'u', 's', 'h', 'Space', 'o', 'n', 'Space', 's', 'a', 'v', 'e']);
 
@@ -327,13 +327,20 @@ describe('Deploy and Retrieve', async () => {
       'div[title="salesforcedx-vscode-core.push-or-deploy-on-save.enabled"]'
     );
     await pushOrDeployOnSaveBtn.click();
-    await utilities.pause(5);
+    await utilities.pause(3);
+
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Preferences: Open Workspace Settings',
+      3
+    );
+    await browser.keys(['p', 'r', 'e', 'f', 'e', 'r', 'Space', 'd', 'e', 'p', 'l', 'o', 'y']);
 
     const preferDeployOnSaveBtn = await $(
       'div[title="salesforcedx-vscode-core.push-or-deploy-on-save.preferDeployOnSave"]'
     );
     await preferDeployOnSaveBtn.click();
-    await utilities.pause(5);
+    await utilities.pause(3);
 
     // Clear all notifications so clear output button is reachable
     await utilities.runCommandFromCommandPrompt(
