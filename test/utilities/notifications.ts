@@ -74,13 +74,12 @@ export async function notificationIsPresentWithTimeout(
   // Change timeout from seconds to milliseconds
   durationInSeconds *= 1000;
 
-  const notifications = await workbench.getNotifications();
-
   const startDate = new Date();
   utilities.log('startDate = ' + startDate);
 
   // Keep on searching for the notification until it is found or the timeout is reached
   while (true) {
+    const notifications = await workbench.getNotifications(); //need to get the new notifications that show up
     utilities.log('A new iteration of the while loop');
     for (const notification of notifications) {
       const message = await notification.getMessage();
