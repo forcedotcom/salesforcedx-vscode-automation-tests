@@ -5,12 +5,16 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import child_process from 'child_process';
 import fs from 'fs';
 import { step } from 'mocha-steps';
 import path from 'path';
+import util from 'util';
 import { DefaultTreeItem, InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings';
 import * as utilities from '../utilities';
+
+const exec = util.promisify(child_process.exec);
 
 describe('Authentication', async () => {
   const tempProjectName = 'TempProject-Authentication';
@@ -92,25 +96,30 @@ describe('Authentication', async () => {
 
     const environmentSettings = EnvironmentSettings.getInstance();
     const authFilePath = path.join(projectFolderPath, 'authFile.json');
-
-    // Clear all notifications so terminal view is reachable
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Notifications: Clear All Notifications',
-      1
-    );
-    const terminalView = await utilities.executeCommand(
-      workbench,
+    const sfdxForceOrgDisplayResult = await exec(
       `sfdx force:org:display -u ${environmentSettings.devHubAliasName} --verbose --json > ${authFilePath}`
     );
+    const json = sfdxForceOrgDisplayResult.stdout.replace(/\u001B\[\d\dm/g, '').replace(/\\n/g, '');
 
-    const authFilePathFileExists = fs.existsSync(authFilePath);
-    expect(authFilePathFileExists).toEqual(true);
+    // Now write the file.
+    fs.writeFileSync(authFilePath, json);
+    utilities.log(`Authentication - finished writing the file...`);
 
-    await terminalView.executeCommand(`sfdx auth:sfdxurl:store -d -f ${authFilePath}`);
+    // Call auth:sfdxurl:store and read in the JSON that was just created.
+    utilities.log(`Authentication - calling sfdx auth:sfdxurl:store...`);
+    const sfdxSfdxUrlStoreResult = await exec(`sfdx auth:sfdxurl:store -d -f ${authFilePath}`);
+    // const terminalView = await utilities.executeCommand(
+    //   workbench,
+    //   `sfdx force:org:display -u ${environmentSettings.devHubAliasName} --verbose --json > ${authFilePath}`
+    // );
 
-    const terminalText = await utilities.getTerminalViewText(terminalView, 60);
-    expect(terminalText).toContain(
+    // const authFilePathFileExists = fs.existsSync(authFilePath);
+    // expect(authFilePathFileExists).toEqual(true);
+
+    // await terminalView.executeCommand(`sfdx auth:sfdxurl:store -d -f ${authFilePath}`);
+
+    // const terminalText = await utilities.getTerminalViewText(terminalView, 60);
+    expect(sfdxSfdxUrlStoreResult.stdout).toContain(
       `Successfully authorized ${environmentSettings.devHubUserName} with org ID`
     );
 
