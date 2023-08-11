@@ -93,11 +93,7 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ApexClass1.cls')) as TextEditor;
-    const textGeneratedFromTemplate = await textEditor.getText();
-    await utilities.log('textGeneratedFromTemplate:');
-    await utilities.log(textGeneratedFromTemplate);
-    await utilities.log('expectedText:');
-    await utilities.log(expectedText);
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     expect(textGeneratedFromTemplate).toBe(expectedText);
   });
 
@@ -173,7 +169,7 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ApexTrigger1.trigger')) as TextEditor;
-    const textGeneratedFromTemplate = await textEditor.getText();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     expect(textGeneratedFromTemplate).toBe(expectedText);
   });
 
@@ -291,7 +287,7 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('AuraApp1.app')) as TextEditor;
-    const textGeneratedFromTemplate = await textEditor.getText();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     expect(textGeneratedFromTemplate).toBe(expectedText);
   });
 
@@ -352,7 +348,7 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('auraComponent1.cmp')) as TextEditor;
-    const textGeneratedFromTemplate = await textEditor.getText();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     expect(textGeneratedFromTemplate).toBe(expectedText);
   });
 
@@ -412,7 +408,7 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('auraEvent1.evt')) as TextEditor;
-    const textGeneratedFromTemplate = await textEditor.getText();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     expect(textGeneratedFromTemplate).toBe(expectedText);
   });
 
@@ -490,7 +486,7 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('AuraInterface1.intf')) as TextEditor;
-    const textGeneratedFromTemplate = await textEditor.getText();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     expect(textGeneratedFromTemplate).toBe(expectedText);
   });
 
@@ -553,7 +549,7 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lightningWebComponent1.js')) as TextEditor;
-    const textGeneratedFromTemplate = await textEditor.getText();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     expect(textGeneratedFromTemplate).toBe(expectedText);
   });
 
@@ -631,7 +627,7 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('VisualforceCmp1.component')) as TextEditor;
-    const textGeneratedFromTemplate = await textEditor.getText();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     expect(textGeneratedFromTemplate).toBe(expectedText);
   });
 
@@ -709,7 +705,7 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('VisualforcePage1.page')) as TextEditor;
-    const textGeneratedFromTemplate = await textEditor.getText();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     expect(textGeneratedFromTemplate).toBe(expectedText);
   });
 
