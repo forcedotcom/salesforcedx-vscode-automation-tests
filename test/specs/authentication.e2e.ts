@@ -92,6 +92,13 @@ describe('Authentication', async () => {
 
     const environmentSettings = EnvironmentSettings.getInstance();
     const authFilePath = path.join(projectFolderPath, 'authFile.json');
+
+    // Clear all notifications so terminal view is reachable
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Notifications: Clear All Notifications',
+      1
+    );
     const terminalView = await utilities.executeCommand(
       workbench,
       `sfdx force:org:display -u ${environmentSettings.devHubAliasName} --verbose --json > ${authFilePath}`
@@ -171,7 +178,7 @@ describe('Authentication', async () => {
 
     const expectedOutputWasFound = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      `defaultusername  ${devHubAliasName}  true`,
+      `target-org  ${devHubAliasName}  true`,
       5
     );
     expect(expectedOutputWasFound).not.toBeUndefined();
