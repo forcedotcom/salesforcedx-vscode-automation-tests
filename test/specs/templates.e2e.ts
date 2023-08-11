@@ -287,7 +287,7 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('AuraApp1.app')) as TextEditor;
-    const textGeneratedFromTemplate = await textEditor.getText();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     expect(textGeneratedFromTemplate).toBe(expectedText);
   });
 
