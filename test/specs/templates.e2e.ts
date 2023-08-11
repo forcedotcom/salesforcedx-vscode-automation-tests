@@ -93,8 +93,16 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ApexClass1.cls')) as TextEditor;
-    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
-    expect(textGeneratedFromTemplate).toBe(expectedText);
+    const textGeneratedFromTemplate = await textEditor.getText();
+    await utilities.log('trim');
+    await utilities.log(textGeneratedFromTemplate.trimEnd());
+    await utilities.log('no trim');
+    await utilities.log(textGeneratedFromTemplate);
+    await utilities.log('expected');
+    await utilities.log(expectedText);
+    await utilities.log('trim expected');
+    await utilities.log(expectedText.trimEnd());
+    expect(textGeneratedFromTemplate).toBe(expectedText.trimEnd());
   });
 
   // Apex Trigger
