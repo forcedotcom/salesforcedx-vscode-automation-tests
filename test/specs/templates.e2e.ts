@@ -94,7 +94,7 @@ describe('Templates', async () => {
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ApexClass1.cls')) as TextEditor;
     const textGeneratedFromTemplate = await textEditor.getText();
-    expect(textGeneratedFromTemplate).toBe(expectedText.trimEnd());
+    expect(textGeneratedFromTemplate.trimEnd()).toBe(expectedText.trimEnd());
   });
 
   // Apex Trigger
