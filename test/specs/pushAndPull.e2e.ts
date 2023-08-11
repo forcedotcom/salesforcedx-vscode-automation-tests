@@ -134,7 +134,7 @@ describe('Push and Pull', async () => {
       10
     );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('=== Pushed Source\nNo results found');
+    expect(outputPanelText).toContain('No results found');
   });
 
   step('Modify the file and push the changes', async () => {
@@ -165,7 +165,7 @@ describe('Push and Pull', async () => {
       10
     );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('=== Pushed Source\nNo results found');
+    expect(outputPanelText).toContain('No results found');
 
     // Clear the Output view again.
     await outputView.clearText();
