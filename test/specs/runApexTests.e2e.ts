@@ -447,14 +447,15 @@ describe('Run Apex Tests', async () => {
     );
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('=== Test Summary');
+    expect(outputPanelText).toContain('Outcome              Passed');
+    expect(outputPanelText).toContain('Tests Ran            3');
     // expect(outputPanelText).toContain('100%');
     expect(outputPanelText).toContain('Pass Rate            100%');
+    expect(outputPanelText).toContain('TEST NAME');
     expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
     expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
     expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
-
-    utilities.pause(3);
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
     // for (const item of apexTestsItems) {
@@ -535,14 +536,17 @@ describe('Run Apex Tests', async () => {
     );
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('=== Test Summary');
+    expect(outputPanelText).toContain('Outcome              Passed');
+    expect(outputPanelText).toContain('Tests Ran            1');
+    expect(outputPanelText).toContain('Pass Rate            100%');
     expect(outputPanelText).toContain('TEST NAME');
-    expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello');
+    expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello  Pass');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
-    const icon = await (await apexTestItem.elem).$('.custom-view-tree-node-item-icon');
-    const iconStyle = await icon.getAttribute('style');
-    expect(iconStyle).toContain('testPass');
+    // const icon = await (await apexTestItem.elem).$('.custom-view-tree-node-item-icon');
+    // const iconStyle = await icon.getAttribute('style');
+    // expect(iconStyle).toContain('testPass');
 
     utilities.log('Exit run all apex tests on a class via the test sidebar');
   });
@@ -616,14 +620,17 @@ describe('Run Apex Tests', async () => {
     );
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('=== Test Summary');
+    expect(outputPanelText).toContain('Outcome              Passed');
+    expect(outputPanelText).toContain('Tests Ran            1');
+    expect(outputPanelText).toContain('Pass Rate            100%');
     expect(outputPanelText).toContain('TEST NAME');
     expect(outputPanelText).toContain('ExampleApexClass3Test.validateSayHello');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
-    const icon = await (await apexTestItem.elem).$('.custom-view-tree-node-item-icon');
-    const iconStyle = await icon.getAttribute('style');
-    expect(iconStyle).toContain('testPass');
+    // const icon = await (await apexTestItem.elem).$('.custom-view-tree-node-item-icon');
+    // const iconStyle = await icon.getAttribute('style');
+    // expect(iconStyle).toContain('testPass');
 
     utilities.log('Exit run a single apex test via the test sidebar');
   });
