@@ -69,19 +69,19 @@ export async function notificationIsPresentWithTimeout(
   matchExactString: boolean = true
 ): Promise<boolean> {
 
-  utilities.log('Enter utilities.notificationIsPresentWithTimeout()');
+  //* utilities.log('Enter utilities.notificationIsPresentWithTimeout()');
 
   // Change timeout from seconds to milliseconds
   durationInSeconds *= 1000;
 
   const startDate = new Date();
-  utilities.log('startDate = ' + startDate);
+  //* utilities.log('startDate = ' + startDate);
 
   // Keep on searching for the notification until it is found or the timeout is reached
   while (true) {
-    utilities.log('A new iteration of the while loop');
+    //* utilities.log('A new iteration of the while loop');
     const notifications = await workbench.getNotifications(); //need to get the new notifications that show up
-    utilities.log('length of notifications = ' + notifications.length);
+    //* utilities.log('length of notifications = ' + notifications.length);
 
     if (notifications.length === 0) {
       pause(3);
@@ -90,15 +90,15 @@ export async function notificationIsPresentWithTimeout(
     else {
       for (const notification of notifications) {
         const message = await notification.getMessage();
-        utilities.log('message = ' + message);
+        //* utilities.log('message = ' + message);
         if (matchExactString) {
           if (message === notificationMessage) {
-            utilities.log('Found it! Return TRUE 1!');
+            //* utilities.log('Found it! Return TRUE 1!');
             return true;
           }
         } else {
           if (message.startsWith(notificationMessage)) {
-            utilities.log('Found it! Return TRUE 2!');
+            //* utilities.log('Found it! Return TRUE 2!');
             return true;
           }
         }
@@ -107,11 +107,11 @@ export async function notificationIsPresentWithTimeout(
     }
 
     const currentDate = new Date();
-    utilities.log('currentDate = ' + currentDate);
+    //* utilities.log('currentDate = ' + currentDate);
     const secondsPassed = Math.abs(currentDate.getTime() - startDate.getTime()) / 1000;
-    utilities.log('secondsPassed = ' + secondsPassed);
+    //* utilities.log('secondsPassed = ' + secondsPassed);
     if (secondsPassed >= durationInSeconds) {
-      utilities.log('Notification not found! Return FALSE!')
+      //* utilities.log('Notification not found! Return FALSE!')
       return false;
     }
   }
@@ -122,18 +122,18 @@ export async function dismissNotification(
   notificationMessage: string,
   matchExactString: boolean = true
 ): Promise<void> {
-  utilities.log('notificationMessage = ' + notificationMessage);
+  //* utilities.log('notificationMessage = ' + notificationMessage);
   const notifications = await workbench.getNotifications();
   for (const notification of notifications) {
     const message = await notification.getMessage();
-    utilities.log('current message is: ' + message);
+    //* utilities.log('current message is: ' + message);
     if (matchExactString) {
       if (message === notificationMessage) {
-        utilities.log('HERE');
+        //* utilities.log('HERE');
         //TODO: Click on the notification and then click the 'Clear notification' button (the X)
         // await notification.elem.click();  //Is this needed?
         await(notification.dismiss());
-        utilities.log('DISMISSED');
+        //* utilities.log('DISMISSED');
       }
     }
   }

@@ -13,11 +13,11 @@ describe('Run Apex Tests', async () => {
   let prompt: QuickOpenBox | InputBox;
   let testSetup: TestSetup;
 
-  utilities.log('START!');
+  //* utilities.log('START!');
 
   step('Set up the testing environment', async () => {
 
-    utilities.log('Enter set up the testing environment');
+    //* utilities.log('Enter set up the testing environment');
 
     testSetup = new TestSetup('RunApexTests', true);
     await testSetup.setUp();
@@ -51,12 +51,12 @@ describe('Run Apex Tests', async () => {
     );
     expect(successPushNotificationWasFound).toBe(true);
 
-    utilities.log('Exit set up the testing environment');
+    //* utilities.log('Exit set up the testing environment');
   });
 
   step('Run All Tests via Apex Class', async () => {
 
-    utilities.log('Enter run all tests via apex class');
+    //* utilities.log('Enter run all tests via apex class');
 
     const workbench = await browser.getWorkbench();
     
@@ -81,7 +81,7 @@ describe('Run Apex Tests', async () => {
     const runAllTestsOption = await codeLensElem?.$('=Run All Tests');
     await runAllTestsOption!.click();
 
-    utilities.log('Run all tests via apex class - waiting for command to execute');
+    //* utilities.log('Run all tests via apex class - waiting for command to execute');
 
     // Wait for the command to execute
     // await utilities.waitForNotificationToGoAway(
@@ -130,7 +130,7 @@ describe('Run Apex Tests', async () => {
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    utilities.log('4');
+    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -144,13 +144,13 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
-    utilities.log('Exit run all tests via apex class');
+    //* utilities.log('Exit run all tests via apex class');
 
   });
 
   step('Run Single Test via Apex Class', async () => {
 
-    utilities.log('Enter run single test via apex class');
+    //* utilities.log('Enter run single test via apex class');
 
     const workbench = await browser.getWorkbench();
 
@@ -175,7 +175,7 @@ describe('Run Apex Tests', async () => {
     const runTestOption = await codeLensElem?.$('=Run Test');
     await runTestOption!.click();
 
-    utilities.log('Run Test Button Clicked!');
+    //* utilities.log('Run Test Button Clicked!');
 
     // Wait for the command to execute
     // await utilities.waitForNotificationToGoAway(
@@ -209,7 +209,7 @@ describe('Run Apex Tests', async () => {
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    utilities.log('4');
+    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -223,12 +223,12 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
-    utilities.log('Exit run single test via apex class');
+    //* utilities.log('Exit run single test via apex class');
   });
 
   step('Run Tests via Command Palette', async () => {
 
-    utilities.log('Enter run tests via command palette');
+    //* utilities.log('Enter run tests via command palette');
 
     // Clear the Output view first.
     utilities.dismissAllNotifications();
@@ -274,7 +274,7 @@ describe('Run Apex Tests', async () => {
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    utilities.log('4');
+    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -287,12 +287,12 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('TEST NAME');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
-    utilities.log('Exit run tests via command palette');
+    //* utilities.log('Exit run tests via command palette');
   });
 
   step('Re-run Last Apex Test Class', async () => {
 
-    utilities.log('Enter rerun last apex test class');
+    //* utilities.log('Enter rerun last apex test class');
 
     const workbench = await browser.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
@@ -348,12 +348,12 @@ describe('Run Apex Tests', async () => {
     );
     expect(successPushNotificationWasFound).toBe(true);
 
-    utilities.log('Exit rerun last apex test class');
+    //* utilities.log('Exit rerun last apex test class');
   });
 
   step('Run all Apex tests via Test Sidebar', async () => {
 
-    utilities.log('Enter run all apex tests via test sidebar');
+    //* utilities.log('Enter run all apex tests via test sidebar');
 
     const workbench = await browser.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
@@ -386,7 +386,7 @@ describe('Run Apex Tests', async () => {
       }
     }
 
-    utilities.log('Number of items in APEX TESTS: ' + apexTestsItems.length.toString());
+    //* utilities.log('Number of items in APEX TESTS: ' + apexTestsItems.length.toString());
     expect(apexTestsItems.length).toBe(6);
     expect(await apexTestsSection.findItem('ExampleApexClass1Test')).toBeTruthy();
     expect(await apexTestsSection.findItem('ExampleApexClass2Test')).toBeTruthy();
@@ -437,7 +437,7 @@ describe('Run Apex Tests', async () => {
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    utilities.log('4');
+    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -458,18 +458,18 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
-    // for (const item of apexTestsItems) {
-    //   const icon = await (await item.elem).$('.custom-view-tree-node-item-icon');
-    //   const iconStyle = await icon.getAttribute('style');
-    //   expect(iconStyle).toContain('testPass');
-    // }
+    for (const item of apexTestsItems) {
+      const icon = await (await item.elem).$('.custom-view-tree-node-item-icon');
+      const iconStyle = await icon.getAttribute('style');
+      expect(iconStyle).toContain('testPass');
+    }
 
-    utilities.log('Exit run all apex tests via test sidebar');
+    //* utilities.log('Exit run all apex tests via test sidebar');
   });
 
   step('Run all Apex Tests on a Class via the Test Sidebar', async () => {
 
-    utilities.log('Enter run all apex tests on a class via the test sidebar');
+    //* utilities.log('Enter run all apex tests on a class via the test sidebar');
 
     const workbench = await browser.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
@@ -526,7 +526,7 @@ describe('Run Apex Tests', async () => {
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    utilities.log('4');
+    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -544,16 +544,16 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
-    // const icon = await (await apexTestItem.elem).$('.custom-view-tree-node-item-icon');
-    // const iconStyle = await icon.getAttribute('style');
-    // expect(iconStyle).toContain('testPass');
+    const icon = await (await apexTestItem.elem).$('.custom-view-tree-node-item-icon');
+    const iconStyle = await icon.getAttribute('style');
+    expect(iconStyle).toContain('testPass');
 
-    utilities.log('Exit run all apex tests on a class via the test sidebar');
+    //* utilities.log('Exit run all apex tests on a class via the test sidebar');
   });
 
   step('Run a Single Apex Test via the Test Sidebar', async () => {
 
-    utilities.log('Enter run a single apex test via the test sidebar');
+    //* utilities.log('Enter run a single apex test via the test sidebar');
 
     const workbench = await browser.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
@@ -610,7 +610,7 @@ describe('Run Apex Tests', async () => {
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    utilities.log('4');
+    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -628,20 +628,20 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
-    // const icon = await (await apexTestItem.elem).$('.custom-view-tree-node-item-icon');
-    // const iconStyle = await icon.getAttribute('style');
-    // expect(iconStyle).toContain('testPass');
+    const icon = await (await apexTestItem.elem).$('.custom-view-tree-node-item-icon');
+    const iconStyle = await icon.getAttribute('style');
+    expect(iconStyle).toContain('testPass');
 
-    utilities.log('Exit run a single apex test via the test sidebar');
+    //* utilities.log('Exit run a single apex test via the test sidebar');
   });
 
   step('Run a test that fails and fix it', async () => {
 
-    utilities.log('Enter run a test that fails and fix it');
+    //* utilities.log('Enter run a test that fails and fix it');
 
     // Create Apex class AccountService
     await utilities.createApexClassWithBugs();
-    utilities.log('Apex test with bugs created');
+    //* utilities.log('Apex test with bugs created');
 
     // Push source to org
     const workbench = await browser.getWorkbench();
@@ -662,7 +662,7 @@ describe('Run Apex Tests', async () => {
       utilities.FIVE_MINUTES
     );
     expect(successPushNotificationWasFound).toBe(true);
-    utilities.log('Done pushing buggy Apex test to org');
+    //* utilities.log('Done pushing buggy Apex test to org');
 
     // Clear the Output view first.
     utilities.dismissAllNotifications();
@@ -675,7 +675,7 @@ describe('Run Apex Tests', async () => {
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
 
-    utilities.log('Running buggy AccountServiceTest');
+    //* utilities.log('Running buggy AccountServiceTest');
 
     // Wait for the command to execute
     // await utilities.waitForNotificationToGoAway(
@@ -709,7 +709,7 @@ describe('Run Apex Tests', async () => {
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    utilities.log('4');
+    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
     let outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -720,7 +720,7 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
     expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
-    utilities.log('The Apex test failed! Time to fix the Apex test!');
+    //* utilities.log('The Apex test failed! Time to fix the Apex test!');
 
     // Fix test
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
@@ -734,7 +734,7 @@ describe('Run Apex Tests', async () => {
     await textEditor.save();
     await utilities.pause(1);
 
-    utilities.log('Done fixing Apex test');
+    //* utilities.log('Done fixing Apex test');
 
     // Push source to org
     await utilities.runCommandFromCommandPrompt(
@@ -755,7 +755,7 @@ describe('Run Apex Tests', async () => {
     );
     expect(successPushNotification2WasFound).toBe(true);
 
-    utilities.log('Done pushing fixed Apex test to org');
+    //* utilities.log('Done pushing fixed Apex test to org');
 
     // Clear the Output view first.
     utilities.dismissAllNotifications();
@@ -767,7 +767,7 @@ describe('Run Apex Tests', async () => {
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
 
-    utilities.log('Running fixed AccountServiceTest');
+    //* utilities.log('Running fixed AccountServiceTest');
 
     // Wait for the command to execute
     // await utilities.waitForNotificationToGoAway(
@@ -800,7 +800,7 @@ describe('Run Apex Tests', async () => {
       utilities.FIVE_MINUTES
     ); //NOTE: This is the run
     expect(successNotification2WasFound).toBe(true);
-    utilities.log('4');
+    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
     outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
@@ -808,12 +808,12 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('AccountServiceTest.should_create_account');
     expect(outputPanelText).toContain('Pass'); //NOTE: This is the result of the test itself
 
-    utilities.log('Exit run a test that fails and fix it');
+    //* utilities.log('Exit run a test that fails and fix it');
   });
 
   step('Create Apex Test Suite', async () => {
 
-    utilities.log('Enter create apex test suite');
+    //* utilities.log('Enter create apex test suite');
 
     // Run SFDX: Create Apex Test Suite.
     const workbench = await browser.getWorkbench();
@@ -883,12 +883,12 @@ describe('Run Apex Tests', async () => {
     );
     expect(successNotificationWasFound).toBe(true);
 
-    utilities.log('Exit create apex test suite');
+    //* utilities.log('Exit create apex test suite');
   });
 
   step('Run Apex Test Suite', async () => {
 
-    utilities.log('Enter run apex test suite');
+    //* utilities.log('Enter run apex test suite');
 
     // Clear the Output view first.
     utilities.dismissAllNotifications();
@@ -935,7 +935,7 @@ describe('Run Apex Tests', async () => {
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    utilities.log('4');
+    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -948,14 +948,14 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('TEST NAME');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
-    utilities.log('Exit run apex test suite');
+    //* utilities.log('Exit run apex test suite');
   });
 
   step('Tear down and clean up the testing environment', async () => {
-    utilities.log('Enter tear down');
+    //* utilities.log('Enter tear down');
     await testSetup.tearDown();
-    utilities.log('Exit tear down');
+    //* utilities.log('Exit tear down');
   });
 
-  utilities.log('TEST COMPLETE!');
+  //* utilities.log('TEST COMPLETE!');
 });
