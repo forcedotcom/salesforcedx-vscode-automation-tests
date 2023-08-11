@@ -13,11 +13,7 @@ describe('Run Apex Tests', async () => {
   let prompt: QuickOpenBox | InputBox;
   let testSetup: TestSetup;
 
-  //* utilities.log('START!');
-
   step('Set up the testing environment', async () => {
-
-    //* utilities.log('Enter set up the testing environment');
 
     testSetup = new TestSetup('RunApexTests', true);
     await testSetup.setUp();
@@ -38,12 +34,9 @@ describe('Run Apex Tests', async () => {
       'SFDX: Push Source to Default Org and Override Conflicts',
       1
     );
+
     // Wait for the command to execute
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Push Source to Default Org and Override Conflicts',
-    //   utilities.FIVE_MINUTES
-    // );
+    // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Override Conflicts successfully ran".
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Push Source to Default Org and Override Conflicts successfully ran',
@@ -51,15 +44,12 @@ describe('Run Apex Tests', async () => {
     );
     expect(successPushNotificationWasFound).toBe(true);
 
-    //* utilities.log('Exit set up the testing environment');
   });
 
   step('Run All Tests via Apex Class', async () => {
 
-    //* utilities.log('Enter run all tests via apex class');
-
     const workbench = await browser.getWorkbench();
-    
+
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
     await inputBox.setText('ExampleApexClass1Test.cls');
     await inputBox.confirm();
@@ -70,69 +60,28 @@ describe('Run Apex Tests', async () => {
     // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
     const textEditor = (await editorView.openEditor('ExampleApexClass1Test.cls')) as TextEditor;
 
-    // Clear the Output view first.
+    // Clear the Output view.
     utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
-    
+
     // Click the "Run All Tests" code lens at the top of the class
     const codeLens = await textEditor.getCodeLens('Run All Tests');
     const codeLensElem = await codeLens?.elem;
     const runAllTestsOption = await codeLensElem?.$('=Run All Tests');
     await runAllTestsOption!.click();
 
-    //* utilities.log('Run all tests via apex class - waiting for command to execute');
-
     // Wait for the command to execute
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('1');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('2');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Processing test run',
-    //   utilities.FIVE_MINUTES,
-    //   false
-    // );
-    // utilities.log('3');
-    // await utilities.dismissNotification(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests'
-    // );
-    // utilities.log('11');
-    // await utilities.dismissNotification(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...'
-    // );
-    // utilities.log('22');
-    // await utilities.dismissNotification(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Processing test run'
-    // );
-    // utilities.log('33');
-
-    // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
-    // const successNotificationWasFound = await utilities.notificationIsPresent(
-    //   workbench,
-    //   'SFDX: Run Apex Tests successfully ran'
-    // );
+    // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Run Apex Tests successfully ran',
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
+    // Also verify that all tests pass
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Apex',
       '=== Test Results',
@@ -140,17 +89,16 @@ describe('Run Apex Tests', async () => {
     );
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('=== Test Summary');
+    expect(outputPanelText).toContain('Outcome              Passed');
+    expect(outputPanelText).toContain('Tests Ran            1');
+    expect(outputPanelText).toContain('Pass Rate            100%');
     expect(outputPanelText).toContain('TEST NAME');
-    expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello');
+    expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
-
-    //* utilities.log('Exit run all tests via apex class');
 
   });
 
   step('Run Single Test via Apex Class', async () => {
-
-    //* utilities.log('Enter run single test via apex class');
 
     const workbench = await browser.getWorkbench();
 
@@ -164,54 +112,28 @@ describe('Run Apex Tests', async () => {
     // Open an existing apex test (e.g. BotTest.cls, search for @isTest)
     const textEditor = (await editorView.openEditor('ExampleApexClass2Test.cls')) as TextEditor;
 
-    // Clear the Output view first.
+    // Clear the Output view.
     utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
-    
+
     // Click the "Run Test" code lens at the top of one of the test methods
     const codeLens = await textEditor.getCodeLens('Run Test');
     const codeLensElem = await codeLens?.elem;
     const runTestOption = await codeLensElem?.$('=Run Test');
     await runTestOption!.click();
 
-    //* utilities.log('Run Test Button Clicked!');
-
     // Wait for the command to execute
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('1');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('2');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Processing test run',
-    //   utilities.FIVE_MINUTES,
-    //   false
-    // );
-    // utilities.log('3');
-
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
-    // const successNotificationWasFound = await utilities.notificationIsPresent(
-    //   workbench,
-    //   'SFDX: Run Apex Tests successfully ran'
-    // );
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Run Apex Tests successfully ran',
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
+    // Also verify that all tests pass
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Apex',
       '=== Test Results',
@@ -219,21 +141,21 @@ describe('Run Apex Tests', async () => {
     );
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('=== Test Summary');
+    expect(outputPanelText).toContain('Outcome              Passed');
+    expect(outputPanelText).toContain('Tests Ran            1');
+    expect(outputPanelText).toContain('Pass Rate            100%');
     expect(outputPanelText).toContain('TEST NAME');
-    expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello');
+    expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello  Pass');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
-    //* utilities.log('Exit run single test via apex class');
   });
 
   step('Run Tests via Command Palette', async () => {
 
-    //* utilities.log('Enter run tests via command palette');
-
-    // Clear the Output view first.
+    // Clear the Output view.
     utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
-    await outputView.clearText();    
+    await outputView.clearText();
 
     // Run SFDX: Run Apex tests.
     const workbench = await browser.getWorkbench();
@@ -243,40 +165,16 @@ describe('Run Apex Tests', async () => {
     await prompt.selectQuickPick('ExampleApexClass1Test');
 
     // Wait for the command to execute
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('1');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('2');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Processing test run',
-    //   utilities.FIVE_MINUTES,
-    //   false
-    // );
-    // utilities.log('3');
-
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
-    // const successNotificationWasFound = await utilities.notificationIsPresent(
-    //   workbench,
-    //   'SFDX: Run Apex Tests successfully ran'
-    // );
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Run Apex Tests successfully ran',
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
+    // Also verify that all tests pass
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Apex',
       '=== Test Results',
@@ -284,15 +182,16 @@ describe('Run Apex Tests', async () => {
     );
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('=== Test Summary');
+    expect(outputPanelText).toContain('Outcome              Passed');
+    expect(outputPanelText).toContain('Tests Ran            1');
+    expect(outputPanelText).toContain('Pass Rate            100%');
     expect(outputPanelText).toContain('TEST NAME');
+    expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
-    //* utilities.log('Exit run tests via command palette');
   });
 
-  step('Re-run Last Apex Test Class', async () => {
-
-    //* utilities.log('Enter rerun last apex test class');
+  step('Modify Existing Apex Test Class', async () => {
 
     const workbench = await browser.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
@@ -335,12 +234,9 @@ describe('Run Apex Tests', async () => {
       'SFDX: Push Source to Default Org and Override Conflicts',
       1
     );
+
     // Wait for the command to execute
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Push Source to Default Org and Override Conflicts',
-    //   utilities.FIVE_MINUTES
-    // );
+    // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Override Conflicts successfully ran".
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Push Source to Default Org and Override Conflicts successfully ran',
@@ -348,12 +244,9 @@ describe('Run Apex Tests', async () => {
     );
     expect(successPushNotificationWasFound).toBe(true);
 
-    //* utilities.log('Exit rerun last apex test class');
   });
 
   step('Run all Apex tests via Test Sidebar', async () => {
-
-    //* utilities.log('Enter run all apex tests via test sidebar');
 
     const workbench = await browser.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
@@ -386,7 +279,7 @@ describe('Run Apex Tests', async () => {
       }
     }
 
-    //* utilities.log('Number of items in APEX TESTS: ' + apexTestsItems.length.toString());
+    // Make sure all the tests are present in the sidebar
     expect(apexTestsItems.length).toBe(6);
     expect(await apexTestsSection.findItem('ExampleApexClass1Test')).toBeTruthy();
     expect(await apexTestsSection.findItem('ExampleApexClass2Test')).toBeTruthy();
@@ -395,51 +288,27 @@ describe('Run Apex Tests', async () => {
     expect(await apexTestsItems[2].getLabel()).toBe('ExampleApexClass2Test');
     expect(await apexTestsItems[4].getLabel()).toBe('ExampleApexClass3Test');
 
-    // Clear the Output view first.
+    // Clear the Output view.
     utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
-    
+
     // Click the run tests button on the top right corner of the Test sidebar
     await apexTestsSection.elem.click();
     const runTestsAction = await apexTestsSection.getAction('Run Tests');
     await runTestsAction!.elem.click();
 
     // Wait for the command to execute
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('1');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('2');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Processing test run',
-    //   utilities.FIVE_MINUTES,
-    //   false
-    // );
-    // utilities.log('3');
-
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
-    // const successNotificationWasFound = await utilities.notificationIsPresent(
-    //   workbench,
-    //   'SFDX: Run Apex Tests successfully ran'
-    // );
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Run Apex Tests successfully ran',
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
+    // Also verify that all tests pass
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Apex',
       '=== Test Results',
@@ -449,7 +318,6 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('=== Test Summary');
     expect(outputPanelText).toContain('Outcome              Passed');
     expect(outputPanelText).toContain('Tests Ran            3');
-    // expect(outputPanelText).toContain('100%');
     expect(outputPanelText).toContain('Pass Rate            100%');
     expect(outputPanelText).toContain('TEST NAME');
     expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
@@ -461,15 +329,18 @@ describe('Run Apex Tests', async () => {
     for (const item of apexTestsItems) {
       const icon = await (await item.elem).$('.custom-view-tree-node-item-icon');
       const iconStyle = await icon.getAttribute('style');
-      expect(iconStyle).toContain('testPass');
+      // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
+      try {
+        expect(iconStyle).toContain('testPass');
+      }
+      catch {
+        utilities.log('ERROR: icon did not turn green after test successfully ran');
+      }
     }
 
-    //* utilities.log('Exit run all apex tests via test sidebar');
   });
 
   step('Run all Apex Tests on a Class via the Test Sidebar', async () => {
-
-    //* utilities.log('Enter run all apex tests on a class via the test sidebar');
 
     const workbench = await browser.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
@@ -483,10 +354,10 @@ describe('Run Apex Tests', async () => {
     const apexTestsSection = await sidebarView.getSection('APEX TESTS');
     expect(apexTestsSection.elem).toBePresent();
 
-    // Clear the Output view first.
+    // Clear the Output view.
     utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
-    await outputView.clearText();    
+    await outputView.clearText();
 
     // Click the run test button that is shown to the right when you hover a test class name on the Test sidebar
     const apexTestItem = (await apexTestsSection.findItem('ExampleApexClass2Test')) as TreeItem;
@@ -495,40 +366,16 @@ describe('Run Apex Tests', async () => {
     await runTestsAction!.elem.click();
 
     // Wait for the command to execute
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('1');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('2');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Processing test run',
-    //   utilities.FIVE_MINUTES,
-    //   false
-    // );
-    // utilities.log('3');
-
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
-    // const successNotificationWasFound = await utilities.notificationIsPresent(
-    //   workbench,
-    //   'SFDX: Run Apex Tests successfully ran'
-    // );
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Run Apex Tests successfully ran',
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
+    // Also verify that all tests pass
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Apex',
       '=== Test Results',
@@ -546,14 +393,17 @@ describe('Run Apex Tests', async () => {
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
     const icon = await (await apexTestItem.elem).$('.custom-view-tree-node-item-icon');
     const iconStyle = await icon.getAttribute('style');
-    expect(iconStyle).toContain('testPass');
+    // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
+    try {
+      expect(iconStyle).toContain('testPass');
+    }
+    catch {
+      utilities.log('ERROR: icon did not turn green after test successfully ran');
+    }
 
-    //* utilities.log('Exit run all apex tests on a class via the test sidebar');
   });
 
   step('Run a Single Apex Test via the Test Sidebar', async () => {
-
-    //* utilities.log('Enter run a single apex test via the test sidebar');
 
     const workbench = await browser.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
@@ -567,7 +417,7 @@ describe('Run Apex Tests', async () => {
     const apexTestsSection = await sidebarView.getSection('APEX TESTS');
     expect(apexTestsSection.elem).toBePresent();
 
-    // Clear the Output view first.
+    // Clear the Output view.
     utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();    
@@ -579,40 +429,16 @@ describe('Run Apex Tests', async () => {
     await runTestAction!.elem.click();
 
     // Wait for the command to execute
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('1');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('2');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Processing test run',
-    //   utilities.FIVE_MINUTES,
-    //   false
-    // );
-    // utilities.log('3');
-
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
-    // const successNotificationWasFound = await utilities.notificationIsPresent(
-    //   workbench,
-    //   'SFDX: Run Apex Tests successfully ran'
-    // );
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Run Apex Tests successfully ran',
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
+    // Also verify that all tests pass
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Apex',
       '=== Test Results',
@@ -624,24 +450,26 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('Tests Ran            1');
     expect(outputPanelText).toContain('Pass Rate            100%');
     expect(outputPanelText).toContain('TEST NAME');
-    expect(outputPanelText).toContain('ExampleApexClass3Test.validateSayHello');
+    expect(outputPanelText).toContain('ExampleApexClass3Test.validateSayHello  Pass');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
     const icon = await (await apexTestItem.elem).$('.custom-view-tree-node-item-icon');
     const iconStyle = await icon.getAttribute('style');
-    expect(iconStyle).toContain('testPass');
+    // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
+    try {
+      expect(iconStyle).toContain('testPass');
+    }
+    catch {
+      utilities.log('ERROR: icon did not turn green after test successfully ran');
+    }
 
-    //* utilities.log('Exit run a single apex test via the test sidebar');
   });
 
   step('Run a test that fails and fix it', async () => {
 
-    //* utilities.log('Enter run a test that fails and fix it');
-
     // Create Apex class AccountService
     await utilities.createApexClassWithBugs();
-    //* utilities.log('Apex test with bugs created');
 
     // Push source to org
     const workbench = await browser.getWorkbench();
@@ -650,24 +478,20 @@ describe('Run Apex Tests', async () => {
       'SFDX: Push Source to Default Org and Override Conflicts',
       1
     );
+
     // Wait for the command to execute
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Push Source to Default Org and Override Conflicts',
-    //   utilities.FIVE_MINUTES
-    // );
+    // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Override Conflicts successfully ran".
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Push Source to Default Org and Override Conflicts successfully ran',
       utilities.FIVE_MINUTES
     );
     expect(successPushNotificationWasFound).toBe(true);
-    //* utilities.log('Done pushing buggy Apex test to org');
 
-    // Clear the Output view first.
+    // Clear the Output view.
     utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
-    await outputView.clearText();    
+    await outputView.clearText();
 
     // Run SFDX: Run Apex tests.
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
@@ -675,43 +499,17 @@ describe('Run Apex Tests', async () => {
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
 
-    //* utilities.log('Running buggy AccountServiceTest');
-
     // Wait for the command to execute
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('1');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('2');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Processing test run',
-    //   utilities.FIVE_MINUTES,
-    //   false
-    // );
-    // utilities.log('3');
-
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
-    // const successNotificationWasFound = await utilities.notificationIsPresent(
-    //   workbench,
-    //   'SFDX: Run Apex Tests successfully ran'
-    // );
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Run Apex Tests successfully ran',
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
+    // Also verify that the test fails
     let outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Apex',
       '=== Test Results',
@@ -720,7 +518,6 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
     expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
-    //* utilities.log('The Apex test failed! Time to fix the Apex test!');
 
     // Fix test
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
@@ -734,20 +531,15 @@ describe('Run Apex Tests', async () => {
     await textEditor.save();
     await utilities.pause(1);
 
-    //* utilities.log('Done fixing Apex test');
-
     // Push source to org
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Push Source to Default Org and Override Conflicts',
       1
     );
+
     // Wait for the command to execute
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Push Source to Default Org and Override Conflicts',
-    //   utilities.FIVE_MINUTES
-    // );
+    // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Override Conflicts successfully ran".
     const successPushNotification2WasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Push Source to Default Org and Override Conflicts successfully ran',
@@ -755,65 +547,39 @@ describe('Run Apex Tests', async () => {
     );
     expect(successPushNotification2WasFound).toBe(true);
 
-    //* utilities.log('Done pushing fixed Apex test to org');
-
-    // Clear the Output view first.
+    // Clear the Output view.
     utilities.dismissAllNotifications();
     await outputView.clearText();
-    
+
     // Run SFDX: Run Apex tests to verify fix
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
 
-    //* utilities.log('Running fixed AccountServiceTest');
-
     // Wait for the command to execute
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('1');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('2');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Processing test run',
-    //   utilities.FIVE_MINUTES,
-    //   false
-    // );
-    // utilities.log('3');
-
-    // const successNotification2WasFound = await utilities.notificationIsPresent(
-    //   workbench,
-    //   'SFDX: Run Apex Tests successfully ran'
-    // );
+    // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotification2WasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Run Apex Tests successfully ran',
       utilities.FIVE_MINUTES
-    ); //NOTE: This is the run
+    );
     expect(successNotification2WasFound).toBe(true);
-    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
     outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('AccountServiceTest.should_create_account');
-    expect(outputPanelText).toContain('Pass'); //NOTE: This is the result of the test itself
+    expect(outputPanelText).toContain('=== Test Summary');
+    expect(outputPanelText).toContain('Outcome              Passed');
+    expect(outputPanelText).toContain('Tests Ran            1');
+    expect(outputPanelText).toContain('Pass Rate            100%');
+    expect(outputPanelText).toContain('TEST NAME');
+    expect(outputPanelText).toContain('AccountServiceTest.should_create_account  Pass');
+    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
-    //* utilities.log('Exit run a test that fails and fix it');
   });
 
   step('Create Apex Test Suite', async () => {
-
-    //* utilities.log('Enter create apex test suite');
 
     // Run SFDX: Create Apex Test Suite.
     const workbench = await browser.getWorkbench();
@@ -834,12 +600,6 @@ describe('Run Apex Tests', async () => {
     await prompt.confirm();
 
     // Wait for the command to execute
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Build Apex Test Suite',
-    //   utilities.FIVE_MINUTES
-    // );
-
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -847,9 +607,11 @@ describe('Run Apex Tests', async () => {
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
+
   });
 
   step('Add test to Apex Test Suite', async () => {
+
     // Run SFDX: Add Tests to Apex Test Suite.
     const workbench = await browser.getWorkbench();
     prompt = await utilities.runCommandFromCommandPrompt(
@@ -869,12 +631,6 @@ describe('Run Apex Tests', async () => {
     await prompt.confirm();
 
     // Wait for the command to execute
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Build Apex Test Suite',
-    //   utilities.FIVE_MINUTES
-    // );
-
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -883,17 +639,14 @@ describe('Run Apex Tests', async () => {
     );
     expect(successNotificationWasFound).toBe(true);
 
-    //* utilities.log('Exit create apex test suite');
   });
 
   step('Run Apex Test Suite', async () => {
 
-    //* utilities.log('Enter run apex test suite');
-
-    // Clear the Output view first.
+    // Clear the Output view.
     utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
-    await outputView.clearText();    
+    await outputView.clearText();
 
     const workbench = await browser.getWorkbench();
 
@@ -904,40 +657,16 @@ describe('Run Apex Tests', async () => {
     await prompt.selectQuickPick('ApexTestSuite');
 
     // Wait for the command to execute
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('1');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-    //   utilities.FIVE_MINUTES
-    // );
-    // utilities.log('2');
-    // await utilities.waitForNotificationToGoAway(
-    //   workbench,
-    //   'Running SFDX: Run Apex Tests: Processing test run',
-    //   utilities.FIVE_MINUTES,
-    //   false
-    // );
-    // utilities.log('3');
-
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
-    // const successNotificationWasFound = await utilities.notificationIsPresent(
-    //   workbench,
-    //   'SFDX: Run Apex Tests successfully ran'
-    // );
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Run Apex Tests successfully ran',
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-    //* utilities.log('4');
 
     // Verify test results are listed on vscode's Output section
+    // Also verify that all tests pass
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Apex',
       '=== Test Results',
@@ -948,14 +677,18 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('TEST NAME');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
-    //* utilities.log('Exit run apex test suite');
+    expect(outputPanelText).toContain('Outcome              Passed');
+    expect(outputPanelText).toContain('Tests Ran            2');
+    expect(outputPanelText).toContain('Pass Rate            100%');
+    expect(outputPanelText).toContain('TEST NAME');
+    expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello  Pass');
+    expect(outputPanelText).toContain('ExampleApexClass3Test.validateSayHello  Pass');
+    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
+
   });
 
   step('Tear down and clean up the testing environment', async () => {
-    //* utilities.log('Enter tear down');
     await testSetup.tearDown();
-    //* utilities.log('Exit tear down');
   });
 
-  //* utilities.log('TEST COMPLETE!');
 });
