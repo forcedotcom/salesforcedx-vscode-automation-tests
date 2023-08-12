@@ -15,7 +15,7 @@ describe('Run Apex Tests', async () => {
 
   step('Set up the testing environment', async () => {
 
-    testSetup = new TestSetup('RunApexTests', true);
+    testSetup = new TestSetup('RunApexTests', false);
     await testSetup.setUp();
 
     // Create Apex class 1 and test
@@ -35,7 +35,6 @@ describe('Run Apex Tests', async () => {
       1
     );
 
-    // Wait for the command to execute
     // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Override Conflicts successfully ran".
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -61,7 +60,7 @@ describe('Run Apex Tests', async () => {
     const textEditor = (await editorView.openEditor('ExampleApexClass1Test.cls')) as TextEditor;
 
     // Clear the Output view.
-    utilities.dismissAllNotifications();
+    await utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
 
@@ -71,7 +70,6 @@ describe('Run Apex Tests', async () => {
     const runAllTestsOption = await codeLensElem?.$('=Run All Tests');
     await runAllTestsOption!.click();
 
-    // Wait for the command to execute
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -113,7 +111,7 @@ describe('Run Apex Tests', async () => {
     const textEditor = (await editorView.openEditor('ExampleApexClass2Test.cls')) as TextEditor;
 
     // Clear the Output view.
-    utilities.dismissAllNotifications();
+    await utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
 
@@ -123,7 +121,6 @@ describe('Run Apex Tests', async () => {
     const runTestOption = await codeLensElem?.$('=Run Test');
     await runTestOption!.click();
 
-    // Wait for the command to execute
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -153,7 +150,7 @@ describe('Run Apex Tests', async () => {
   step('Run Tests via Command Palette', async () => {
 
     // Clear the Output view.
-    utilities.dismissAllNotifications();
+    await utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
 
@@ -164,7 +161,6 @@ describe('Run Apex Tests', async () => {
     // Select the "ExampleApexClass1Test" file
     await prompt.selectQuickPick('ExampleApexClass1Test');
 
-    // Wait for the command to execute
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -235,7 +231,6 @@ describe('Run Apex Tests', async () => {
       1
     );
 
-    // Wait for the command to execute
     // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Override Conflicts successfully ran".
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -289,7 +284,7 @@ describe('Run Apex Tests', async () => {
     expect(await apexTestsItems[4].getLabel()).toBe('ExampleApexClass3Test');
 
     // Clear the Output view.
-    utilities.dismissAllNotifications();
+    await utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
 
@@ -298,7 +293,6 @@ describe('Run Apex Tests', async () => {
     const runTestsAction = await apexTestsSection.getAction('Run Tests');
     await runTestsAction!.elem.click();
 
-    // Wait for the command to execute
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -355,7 +349,7 @@ describe('Run Apex Tests', async () => {
     expect(apexTestsSection.elem).toBePresent();
 
     // Clear the Output view.
-    utilities.dismissAllNotifications();
+    await utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
 
@@ -365,7 +359,6 @@ describe('Run Apex Tests', async () => {
     const runTestsAction = await apexTestItem.getActionButton('Run Tests');
     await runTestsAction!.elem.click();
 
-    // Wait for the command to execute
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -418,7 +411,7 @@ describe('Run Apex Tests', async () => {
     expect(apexTestsSection.elem).toBePresent();
 
     // Clear the Output view.
-    utilities.dismissAllNotifications();
+    await utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();    
 
@@ -428,7 +421,6 @@ describe('Run Apex Tests', async () => {
     const runTestAction = await apexTestItem.getActionButton('Run Single Test');
     await runTestAction!.elem.click();
 
-    // Wait for the command to execute
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -479,7 +471,6 @@ describe('Run Apex Tests', async () => {
       1
     );
 
-    // Wait for the command to execute
     // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Override Conflicts successfully ran".
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -489,7 +480,7 @@ describe('Run Apex Tests', async () => {
     expect(successPushNotificationWasFound).toBe(true);
 
     // Clear the Output view.
-    utilities.dismissAllNotifications();
+    await utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
 
@@ -499,7 +490,6 @@ describe('Run Apex Tests', async () => {
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
 
-    // Wait for the command to execute
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -538,7 +528,6 @@ describe('Run Apex Tests', async () => {
       1
     );
 
-    // Wait for the command to execute
     // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Override Conflicts successfully ran".
     const successPushNotification2WasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -548,7 +537,7 @@ describe('Run Apex Tests', async () => {
     expect(successPushNotification2WasFound).toBe(true);
 
     // Clear the Output view.
-    utilities.dismissAllNotifications();
+    await utilities.dismissAllNotifications();
     await outputView.clearText();
 
     // Run SFDX: Run Apex tests to verify fix
@@ -557,7 +546,6 @@ describe('Run Apex Tests', async () => {
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
 
-    // Wait for the command to execute
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotification2WasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -599,7 +587,6 @@ describe('Run Apex Tests', async () => {
     await browser.keys(['Space']);
     await prompt.confirm();
 
-    // Wait for the command to execute
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -630,7 +617,6 @@ describe('Run Apex Tests', async () => {
     await browser.keys([' ']);
     await prompt.confirm();
 
-    // Wait for the command to execute
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -644,7 +630,7 @@ describe('Run Apex Tests', async () => {
   step('Run Apex Test Suite', async () => {
 
     // Clear the Output view.
-    utilities.dismissAllNotifications();
+    await utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
 
@@ -656,7 +642,6 @@ describe('Run Apex Tests', async () => {
     // Select the suite recently created called ApexTestSuite
     await prompt.selectQuickPick('ApexTestSuite');
 
-    // Wait for the command to execute
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
