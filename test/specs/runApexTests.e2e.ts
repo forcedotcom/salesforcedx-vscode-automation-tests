@@ -413,7 +413,7 @@ describe('Run Apex Tests', async () => {
     // Clear the Output view.
     await utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
-    await outputView.clearText();    
+    await outputView.clearText();
 
     // Hover a test name under one of the test class sections and click the run button that is shown to the right of the test name on the Test sidebar
     const apexTestItem = (await apexTestsSection.findItem('validateSayHello')) as TreeItem;
@@ -583,6 +583,7 @@ describe('Run Apex Tests', async () => {
     await utilities.pause(2);
 
     // Choose tests that will belong to the new Apex Test Suite
+    await browser.keys(['3']);
     await browser.keys(['ArrowDown']);
     await browser.keys(['Space']);
     await prompt.confirm();
@@ -612,7 +613,7 @@ describe('Run Apex Tests', async () => {
     await utilities.pause(2);
 
     // Choose tests that will belong to the already created Apex Test Suite
-    await browser.keys(['ArrowDown']);
+    await browser.keys(['2']);
     await browser.keys(['ArrowDown']);
     await browser.keys([' ']);
     await prompt.confirm();
