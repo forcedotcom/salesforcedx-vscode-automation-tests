@@ -168,7 +168,7 @@ export class TestSetup {
     utilities.log('');
   }
 
-  private async authorizeDevHub(): Promise<void> {
+  public async authorizeDevHub(): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting authorizeDevHub()...`);
 
