@@ -6,8 +6,7 @@
  */
 
 import { Workbench } from 'wdio-vscode-service';
-import { pause } from './miscellaneous';
-import * as utilities from '../utilities';
+import { log, pause } from './miscellaneous';
 
 export async function waitForNotificationToGoAway(
   workbench: Workbench,
@@ -156,7 +155,7 @@ export async function dismissAllNotifications(): Promise<void> {
         await notification.dismiss();
       }
       catch {
-        utilities.log('ERROR: Can\'t call $ on element with selector ".notification-toast-container" because element wasn\'t found');
+        log('ERROR: Can\'t call $ on element with selector ".notification-toast-container" because element wasn\'t found');
       }
     }
     return !(await workbench.hasNotifications());
