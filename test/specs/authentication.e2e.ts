@@ -97,7 +97,8 @@ describe('Authentication', async () => {
     const environmentSettings = EnvironmentSettings.getInstance();
     const devHubAliasName = environmentSettings.devHubAliasName;
     const devHubUserName = environmentSettings.devHubUserName;
-    await utilities.selectQuickPickItem(prompt, `${devHubAliasName} - ${devHubUserName}`);
+    await browser.keys([`${devHubAliasName} - ${devHubUserName}`]);
+    await browser.keys(['Enter']);
 
     // Need to pause here for the "set a default org" command to finish.
     await utilities.pause(5);
@@ -111,7 +112,7 @@ describe('Authentication', async () => {
 
     const expectedOutputWasFound = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      `defaultusername  ${devHubAliasName}  true`,
+      `target-org  ${devHubAliasName}  true`,
       5
     );
     expect(expectedOutputWasFound).toBeDefined();
@@ -124,7 +125,7 @@ describe('Authentication', async () => {
 
   step('Run SFDX: Create a Default Scratch Org', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
+    prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Create a Default Scratch Org...',
       1
