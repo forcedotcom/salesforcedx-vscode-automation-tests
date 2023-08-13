@@ -72,30 +72,7 @@ describe('Deploy and Retrieve', async () => {
       'Preferences: Open Workspace Settings',
       5
     );
-    await browser.keys([
-      'e',
-      'n',
-      'a',
-      'b',
-      'l',
-      'e',
-      'Space',
-      's',
-      'o',
-      'u',
-      'r',
-      'c',
-      'e',
-      'Space',
-      't',
-      'r',
-      'a',
-      'c',
-      'k',
-      'i',
-      'n',
-      'g'
-    ]);
+    await browser.keys(['enable source tracking']);
 
     // Clear all notifications so setting is reachable
     await utilities.runCommandFromCommandPrompt(
@@ -321,7 +298,7 @@ describe('Deploy and Retrieve', async () => {
       'Preferences: Open Workspace Settings',
       3
     );
-    await browser.keys(['p', 'u', 's', 'h', 'Space', 'o', 'n', 'Space', 's', 'a', 'v', 'e']);
+    await browser.keys(['push on save']);
 
     const pushOrDeployOnSaveBtn = await $(
       'div[title="salesforcedx-vscode-core.push-or-deploy-on-save.enabled"]'
@@ -334,7 +311,7 @@ describe('Deploy and Retrieve', async () => {
       'Preferences: Open Workspace Settings',
       3
     );
-    await browser.keys(['p', 'r', 'e', 'f', 'e', 'r', 'Space', 'd', 'e', 'p', 'l', 'o', 'y']);
+    await browser.keys(['prefer deploy']);
 
     const preferDeployOnSaveBtn = await $(
       'div[title="salesforcedx-vscode-core.push-or-deploy-on-save.preferDeployOnSave"]'
@@ -393,30 +370,7 @@ describe('Deploy and Retrieve', async () => {
       'Preferences: Open Workspace Settings',
       5
     );
-    await browser.keys([
-      'e',
-      'n',
-      'a',
-      'b',
-      'l',
-      'e',
-      'Space',
-      's',
-      'o',
-      'u',
-      'r',
-      'c',
-      'e',
-      'Space',
-      't',
-      'r',
-      'a',
-      'c',
-      'k',
-      'i',
-      'n',
-      'g'
-    ]);
+    await browser.keys(['enable source tracking']);
 
     // Clear all notifications so setting is reachable
     await utilities.runCommandFromCommandPrompt(
