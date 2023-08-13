@@ -30,6 +30,10 @@ describe('Authentication', async () => {
 
   step('Run SFDX: Authorize a Dev Hub', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
+    // Reloading the window forces the extensions to be reloaded and this seems to fix
+    // the issue.
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+    await utilities.pause(10);
     // In the initial state, the org picker button should be set to "No Default Org Set".
     let noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
       workbench,
@@ -58,12 +62,11 @@ describe('Authentication', async () => {
       workbench,
       'No Default Org Set'
     );
-    console.log(changeDefaultOrgSetItem);
     expect(changeDefaultOrgSetItem).toBeDefined();
     await changeDefaultOrgSetItem.click();
     await utilities.pause(5);
 
-    const orgPickerOptions = await $('div.monaco-list.list_id_9')
+    const orgPickerOptions = await $('div.monaco-list#quickInput_list')
       .$('div.monaco-scrollable-element')
       .$('div.monaco-list-rows')
       .$$('div.monaco-list-row');
