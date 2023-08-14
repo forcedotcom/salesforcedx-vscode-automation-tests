@@ -94,14 +94,7 @@ describe('Templates', async () => {
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ApexClass1.cls')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
-    try {
-      expect(textGeneratedFromTemplate).toEqual(expectedText);
-      console.log('woo');
-    } catch (error) {
-      const errorMessage = (error as Error).message;
-      expect(errorMessage).toContain('deep equality');
-      console.log('error', errorMessage);
-    }
+    expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
 
   // Apex Trigger
@@ -177,13 +170,7 @@ describe('Templates', async () => {
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ApexTrigger1.trigger')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
-    try {
-      expect(textGeneratedFromTemplate).toEqual(expectedText);
-      console.log('woo');
-    } catch (error) {
-      const errorMessage = (error as Error).message;
-      console.log('error', errorMessage);
-    }
+    expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
 
   // Aura App
@@ -301,13 +288,7 @@ describe('Templates', async () => {
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('AuraApp1.app')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
-    try {
-      expect(textGeneratedFromTemplate).toEqual(expectedText);
-      console.log('woo');
-    } catch (error) {
-      const errorMessage = (error as Error).message;
-      console.log('error', errorMessage);
-    }
+    expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
 
   // Aura Component
@@ -369,12 +350,7 @@ describe('Templates', async () => {
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('auraComponent1.cmp')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
-    try {
-      expect(textGeneratedFromTemplate).toEqual(expectedText);
-      console.log('woo');
-    } catch (error) {
-      const errorMessage = (error as Error).message;
-    }
+    expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
 
   // Aura Event
@@ -434,13 +410,7 @@ describe('Templates', async () => {
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('auraEvent1.evt')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
-    try {
-      expect(textGeneratedFromTemplate).toEqual(expectedText);
-      console.log('woo');
-    } catch (error) {
-      const errorMessage = (error as Error).message;
-      console.log('error', errorMessage);
-    }
+    expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
 
   // Aura Interface
@@ -518,13 +488,7 @@ describe('Templates', async () => {
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('AuraInterface1.intf')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
-    try {
-      expect(textGeneratedFromTemplate).toEqual(expectedText);
-      console.log('woo');
-    } catch (error) {
-      const errorMessage = (error as Error).message;
-      console.log('error', errorMessage);
-    }
+    expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
 
   // Lightning Web Component
@@ -587,13 +551,7 @@ describe('Templates', async () => {
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lightningWebComponent1.js')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
-    try {
-      expect(textGeneratedFromTemplate).toEqual(expectedText);
-      console.log('woo');
-    } catch (error) {
-      const errorMessage = (error as Error).message;
-      console.log('error', errorMessage);
-    }
+    expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
 
   // Visualforce Component
@@ -671,13 +629,7 @@ describe('Templates', async () => {
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('VisualforceCmp1.component')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
-    try {
-      expect(textGeneratedFromTemplate).toEqual(expectedText);
-      console.log('woo');
-    } catch (error) {
-      const errorMessage = (error as Error).message;
-      console.log('error', errorMessage);
-    }
+    expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
 
   // Visualforce Page
@@ -755,13 +707,7 @@ describe('Templates', async () => {
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('VisualforcePage1.page')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
-    try {
-      expect(textGeneratedFromTemplate).toEqual(expectedText);
-      console.log('woo');
-    } catch (error) {
-      const errorMessage = (error as Error).message;
-      console.log('error', errorMessage);
-    }
+    expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
 
   // Tear down
