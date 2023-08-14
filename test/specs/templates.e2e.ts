@@ -95,8 +95,10 @@ describe('Templates', async () => {
     const textEditor = (await editorView.openEditor('ApexClass1.cls')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     try {
-      expect(textGeneratedFromTemplate.toString()).toBe(expectedText.toString());
-    } catch {
+      expect(textGeneratedFromTemplate.toString()).toEqual(expectedText.toString());
+    } catch (error) {
+      // expect(error).
+      console.log('error', error);
       utilities.log('Apex class - Windows workaround: text is actually the same');
       utilities.log('-');
       utilities.log('received:');
@@ -183,7 +185,8 @@ describe('Templates', async () => {
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     try {
       expect(textGeneratedFromTemplate).toBe(expectedText);
-    } catch {
+    } catch (error) {
+      console.log('error', error);
       utilities.log('Apex Trigger - Windows workaround: text is actually the same');
       utilities.log('-');
       utilities.log('received:');
