@@ -102,7 +102,7 @@ describe('Templates', async () => {
       utilities.log('received:');
       utilities.log(textGeneratedFromTemplate);
       utilities.log('-');
-      utilities.log('expected');
+      utilities.log('expected:');
       utilities.log(expectedText);
       utilities.log('-');
     }
@@ -189,7 +189,7 @@ describe('Templates', async () => {
       utilities.log('received:');
       utilities.log(textGeneratedFromTemplate);
       utilities.log('-');
-      utilities.log('expected');
+      utilities.log('expected:');
       utilities.log(expectedText);
       utilities.log('-');
     }
@@ -318,7 +318,7 @@ describe('Templates', async () => {
       utilities.log('received:');
       utilities.log(textGeneratedFromTemplate);
       utilities.log('-');
-      utilities.log('expected');
+      utilities.log('expected:');
       utilities.log(expectedText);
       utilities.log('-');
     }
@@ -391,7 +391,7 @@ describe('Templates', async () => {
       utilities.log('received:');
       utilities.log(textGeneratedFromTemplate);
       utilities.log('-');
-      utilities.log('expected');
+      utilities.log('expected:');
       utilities.log(expectedText);
       utilities.log('-');
     }
@@ -462,7 +462,7 @@ describe('Templates', async () => {
       utilities.log('received:');
       utilities.log(textGeneratedFromTemplate);
       utilities.log('-');
-      utilities.log('expected');
+      utilities.log('expected:');
       utilities.log(expectedText);
       utilities.log('-');
     }
@@ -551,7 +551,7 @@ describe('Templates', async () => {
       utilities.log('received:');
       utilities.log(textGeneratedFromTemplate);
       utilities.log('-');
-      utilities.log('expected');
+      utilities.log('expected:');
       utilities.log(expectedText);
       utilities.log('-');
     }
@@ -625,7 +625,7 @@ describe('Templates', async () => {
       utilities.log('received:');
       utilities.log(textGeneratedFromTemplate);
       utilities.log('-');
-      utilities.log('expected');
+      utilities.log('expected:');
       utilities.log(expectedText);
       utilities.log('-');
     }
@@ -714,7 +714,7 @@ describe('Templates', async () => {
       utilities.log('received:');
       utilities.log(textGeneratedFromTemplate);
       utilities.log('-');
-      utilities.log('expected');
+      utilities.log('expected:');
       utilities.log(expectedText);
       utilities.log('-');
     }
@@ -803,7 +803,7 @@ describe('Templates', async () => {
       utilities.log('received:');
       utilities.log(textGeneratedFromTemplate);
       utilities.log('-');
-      utilities.log('expected');
+      utilities.log('expected:');
       utilities.log(expectedText);
       utilities.log('-');
     }
