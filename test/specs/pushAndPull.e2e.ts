@@ -7,17 +7,11 @@
 
 import child_process from 'child_process';
 import fs from 'fs';
-import {
-  step
-} from 'mocha-steps';
+import { step } from 'mocha-steps';
 import path from 'path';
 import util from 'util';
-import {
-  TextEditor
-} from 'wdio-vscode-service';
-import {
-  TestSetup
-} from '../testSetup';
+import { TextEditor } from 'wdio-vscode-service';
+import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
 const exec = util.promisify(child_process.exec);
@@ -36,8 +30,12 @@ describe('Push and Pull', async () => {
 
   step('Create an Apex class', async () => {
     // Create an Apex Class.
-    const workbench = await browser.getWorkbench();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
+    const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Create Apex Class',
+      1
+    );
 
     // Set the name of the new component to ExampleApexClass1.
     await inputBox.setText('ExampleApexClass1');
@@ -47,13 +45,31 @@ describe('Push and Pull', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Create Apex Class successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(
+      workbench,
+      'SFDX: Create Apex Class successfully ran',
+      10
+    );
     expect(successNotificationWasFound).toBe(true);
 
-    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', 'Finished SFDX: Create Apex Class', 10);
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      'Finished SFDX: Create Apex Class',
+      10
+    );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('create force-app/main/default/classes/ExampleApexClass1.cls');
-    expect(outputPanelText).toContain('create force-app/main/default/classes/ExampleApexClass1.cls-meta.xml');
+    expect(outputPanelText).toContain(
+      `create ${path.join('force-app', 'main', 'default', 'classes', 'ExampleApexClass1.cls')}`
+    );
+    expect(outputPanelText).toContain(
+      `create ${path.join(
+        'force-app',
+        'main',
+        'default',
+        'classes',
+        'ExampleApexClass1.cls-meta.xml'
+      )}`
+    );
 
     // Check for expected items in the Explorer view.
     const sidebar = workbench.getSideBar();
@@ -61,7 +77,11 @@ describe('Push and Pull', async () => {
     await treeViewSection.expand();
 
     // Get the matching (visible) items within the tree which contain "ExampleApexClass1".
-    const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(workbench, projectName, 'ExampleApexClass1');
+    const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
+      workbench,
+      projectName,
+      'ExampleApexClass1'
+    );
 
     // It's a tree, but it's also a list.  Everything in the view is actually flat
     // and returned from the call to visibleItems.reduce().
@@ -70,16 +90,24 @@ describe('Push and Pull', async () => {
   });
 
   step('Push the Apex class', async () => {
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
     // At this point there should be no conflicts since this is a new class.
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(
+      workbench,
+      'SFDX: Push Source to Default Org successfully ran',
+      10
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
-    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pushed Source', 10);
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      '=== Pushed Source',
+      10
+    );
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('Created  ExampleApexClass1  ApexClass');
   });
@@ -89,16 +117,24 @@ describe('Push and Pull', async () => {
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
 
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(
+      workbench,
+      'SFDX: Push Source to Default Org successfully ran',
+      10
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
-    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pushed Source', 10);
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      '=== Pushed Source',
+      10
+    );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('=== Pushed Source\nNo results found');
+    expect(outputPanelText).toContain('No results found');
   });
 
   step('Modify the file and push the changes', async () => {
@@ -107,21 +143,29 @@ describe('Push and Pull', async () => {
     await outputView.clearText();
 
     // Modify the file by adding a comment.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
-    const textEditor = await editorView.openEditor('ExampleApexClass1.cls') as TextEditor;
+    const textEditor = (await editorView.openEditor('ExampleApexClass1.cls')) as TextEditor;
     await textEditor.setTextAtLine(3, '        // sample comment');
 
     // Push the file.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    let successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
+    let successNotificationWasFound = await utilities.attemptToFindNotification(
+      workbench,
+      'SFDX: Push Source to Default Org successfully ran',
+      10
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
-    let outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pushed Source', 10);
+    let outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      '=== Pushed Source',
+      10
+    );
     expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('=== Pushed Source\nNo results found');
+    expect(outputPanelText).toContain('No results found');
 
     // Clear the Output view again.
     await outputView.clearText();
@@ -132,16 +176,44 @@ describe('Push and Pull', async () => {
     // An now push the changes.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Push Source to Default Org successfully ran', 10);
+    successNotificationWasFound = await utilities.attemptToFindNotification(
+      workbench,
+      'SFDX: Push Source to Default Org successfully ran',
+      10
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
-    outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pushed Source', 10);
+    outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      '=== Pushed Source',
+      10
+    );
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('ended with exit code 0');
     expect(outputPanelText).toContain('Changed  ExampleApexClass1  ApexClass');
-    expect(outputPanelText).toContain('/e2e-temp/TempProject-PushAndPull/force-app/main/default/classes/ExampleApexClass1.cls');
-    expect(outputPanelText).toContain('/e2e-temp/TempProject-PushAndPull/force-app/main/default/classes/ExampleApexClass1.cls-meta.xml');
+    expect(outputPanelText).toContain(
+      path.join(
+        'e2e-temp',
+        'TempProject-PushAndPull',
+        'force-app',
+        'main',
+        'default',
+        'classes',
+        'ExampleApexClass1.cls'
+      )
+    );
+    expect(outputPanelText).toContain(
+      path.join(
+        'e2e-temp',
+        'TempProject-PushAndPull',
+        'force-app',
+        'main',
+        'default',
+        'classes',
+        'ExampleApexClass1.cls-meta.xml'
+      )
+    );
   });
 
   step('Pull the Apex class', async () => {
@@ -151,21 +223,31 @@ describe('Push and Pull', async () => {
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
 
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
 
     // At this point there should be no conflicts since there have been no changes.
 
-    let successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Org successfully ran', 10);
+    let successNotificationWasFound = await utilities.attemptToFindNotification(
+      workbench,
+      'SFDX: Pull Source from Default Org successfully ran',
+      10
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
-    let outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pulled Source', 10);
+    let outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      '=== Pulled Source',
+      10
+    );
     expect(outputPanelText).not.toBeUndefined();
 
     // The first time a pull is performed, force-app/main/default/profiles/Admin.profile-meta.xml is pulled down.
     expect(outputPanelText).toContain('Created  Admin');
-    expect(outputPanelText).toContain('force-app/main/default/profiles/Admin.profile-meta.xml');
+    expect(outputPanelText).toContain(
+      path.join('force-app', 'main', 'default', 'profiles', 'Admin.profile-meta.xml')
+    );
     expect(outputPanelText).toContain('ended with exit code 0');
 
     // Second pull...
@@ -175,37 +257,53 @@ describe('Push and Pull', async () => {
     // And pull again.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
 
-    successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Org successfully ran', 10);
+    successNotificationWasFound = await utilities.attemptToFindNotification(
+      workbench,
+      'SFDX: Pull Source from Default Org successfully ran',
+      10
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
-    outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pulled Source', 10);
+    outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      '=== Pulled Source',
+      10
+    );
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('No results found');
     expect(outputPanelText).toContain('ended with exit code 0');
     expect(outputPanelText).not.toContain('Created  Admin');
   });
 
-  step('Modify the file (but don\'t save), then pull', async () => {
+  step("Modify the file (but don't save), then pull", async () => {
     // Clear the Output view first.
     const outputView = await utilities.openOutputView();
     await outputView.clearText();
 
     // Modify the file by adding a comment.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
-    const textEditor = await editorView.openEditor('ExampleApexClass1.cls') as TextEditor;
+    const textEditor = (await editorView.openEditor('ExampleApexClass1.cls')) as TextEditor;
     await textEditor.setTextAtLine(3, '        // sample comment for the pull test');
     // Don't save the file just yet.
 
     // Pull the file.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Org successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(
+      workbench,
+      'SFDX: Pull Source from Default Org successfully ran',
+      10
+    );
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
-    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pulled Source', 10);
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      '=== Pulled Source',
+      10
+    );
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('No results found');
     expect(outputPanelText).toContain('ended with exit code 0');
@@ -217,18 +315,26 @@ describe('Push and Pull', async () => {
     await outputView.clearText();
 
     // Now save the file.
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
-    const textEditor = await editorView.openEditor('ExampleApexClass1.cls') as TextEditor;
+    const textEditor = (await editorView.openEditor('ExampleApexClass1.cls')) as TextEditor;
     await textEditor.save();
 
     // An now pull the changes.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(workbench, 'SFDX: Pull Source from Default Org successfully ran', 10);
+    const successNotificationWasFound = await utilities.attemptToFindNotification(
+      workbench,
+      'SFDX: Pull Source from Default Org successfully ran',
+      10
+    );
     expect(successNotificationWasFound).toBe(true);
 
-    const outputPanelText = await utilities.attemptToFindOutputPanelText('Salesforce CLI', '=== Pulled Source', 10);
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      '=== Pulled Source',
+      10
+    );
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('No results found');
     expect(outputPanelText).toContain('ended with exit code 0');
@@ -247,27 +353,44 @@ describe('Push and Pull', async () => {
     utilities.log(`PushAndPull - admin alias is ${adminName}...`);
 
     const systemAdminUserDef = {
-      'Email': adminEmailAddress,
-      'Username': adminEmailAddress,
-      'LastName': adminName,
-      'LocaleSidKey': 'en_US',
-      'EmailEncodingKey': 'UTF-8',
-      'LanguageLocaleKey': 'en_US',
-      'profileName': 'System Administrator',
-      'generatePassword': false
+      Email: adminEmailAddress,
+      Username: adminEmailAddress,
+      LastName: adminName,
+      LocaleSidKey: 'en_US',
+      EmailEncodingKey: 'UTF-8',
+      LanguageLocaleKey: 'en_US',
+      profileName: 'System Administrator',
+      generatePassword: false
     };
 
-    const systemAdminUserDefPath = path.join(testSetup.projectFolderPath!, 'config', 'system-admin-user-def.json');
+    const systemAdminUserDefPath = path.join(
+      testSetup.projectFolderPath!,
+      'config',
+      'system-admin-user-def.json'
+    );
     fs.writeFileSync(systemAdminUserDefPath, JSON.stringify(systemAdminUserDef), 'utf8');
 
-    const sfdxForceOrgCreateResult = await exec(`sfdx force:user:create --definitionfile ${systemAdminUserDefPath}`);
-    expect(sfdxForceOrgCreateResult.stdout).toContain(`Successfully created user "${adminEmailAddress}"`);
+    const sfdxForceOrgCreateResult = await exec(
+      `sfdx force:user:create --definitionfile ${systemAdminUserDefPath}`
+    );
+    expect(sfdxForceOrgCreateResult.stdout).toContain(
+      `Successfully created user "${adminEmailAddress}"`
+    );
   });
 
   step('Set the 2nd user as the default user', async () => {
-    const workbench = await browser.getWorkbench();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Set a Default Org', 1);
-    const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(inputBox, adminEmailAddress, false, true);
+    const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Set a Default Org',
+      1
+    );
+    const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
+      inputBox,
+      adminEmailAddress,
+      false,
+      true
+    );
     if (!scratchOrgQuickPickItemWasFound) {
       throw new Error(`${adminEmailAddress} was not found in the the scratch org pick list`);
     }
@@ -275,15 +398,25 @@ describe('Push and Pull', async () => {
     await utilities.pause(3);
 
     // Look for the success notification.
-    const successNotificationWasFound = await utilities.notificationIsPresent(workbench, 'SFDX: Set a Default Org successfully ran');
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Set a Default Org successfully ran'
+    );
     if (!successNotificationWasFound) {
-      throw new Error('In createDefaultScratchOrg(), the notification of "SFDX: Set a Default Org successfully ran" was not found');
+      throw new Error(
+        'In createDefaultScratchOrg(), the notification of "SFDX: Set a Default Org successfully ran" was not found'
+      );
     }
 
     // Look for adminEmailAddress in the list of status bar items.
-    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(workbench, adminEmailAddress);
+    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(
+      workbench,
+      adminEmailAddress
+    );
     if (!scratchOrgStatusBarItem) {
-      throw new Error('getStatusBarItemWhichIncludes() returned a scratchOrgStatusBarItem with a value of null (or undefined)');
+      throw new Error(
+        'getStatusBarItemWhichIncludes() returned a scratchOrgStatusBarItem with a value of null (or undefined)'
+      );
     }
   });
 
