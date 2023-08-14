@@ -95,16 +95,17 @@ describe('Templates', async () => {
     const textEditor = (await editorView.openEditor('ApexClass1.cls')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     console.log('-');
-    console.log('received', textGeneratedFromTemplate);
+    console.log('class received', textGeneratedFromTemplate);
     console.log('-');
-    console.log('expected', expectedText);
+    console.log('class expected', expectedText);
     console.log('-');
     try {
+      expect(textGeneratedFromTemplate == expectedText).toBe(true);
       expect(textGeneratedFromTemplate).toBe(expectedText);
     } catch {
       console.log(
         'Windows workaround: text is actually the same',
-        textGeneratedFromTemplate === expectedText
+        textGeneratedFromTemplate == expectedText
       );
     }
   });
@@ -182,6 +183,11 @@ describe('Templates', async () => {
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ApexTrigger1.trigger')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
+    console.log('-');
+    console.log('trigger received', textGeneratedFromTemplate);
+    console.log('-');
+    console.log('trigger expected', expectedText);
+    console.log('-');
     try {
       expect(textGeneratedFromTemplate == expectedText).toBe(true);
       expect(textGeneratedFromTemplate).toBe(expectedText);
