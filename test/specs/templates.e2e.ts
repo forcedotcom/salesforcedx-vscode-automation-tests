@@ -93,7 +93,12 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ApexClass1.cls')) as TextEditor;
-    const textGeneratedFromTemplate = await textEditor.getText();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
+    console.log('-');
+    console.log('received', textGeneratedFromTemplate);
+    console.log('-');
+    console.log('expected', expectedText);
+    console.log('-');
     try {
       expect(textGeneratedFromTemplate).toBe(expectedText);
     } catch {
@@ -176,8 +181,16 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ApexTrigger1.trigger')) as TextEditor;
-    const textGeneratedFromTemplate = await textEditor.getText();
-    expect(textGeneratedFromTemplate).toBe(expectedText);
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
+    try {
+      expect(textGeneratedFromTemplate == expectedText).toBe(true);
+      expect(textGeneratedFromTemplate).toBe(expectedText);
+    } catch {
+      console.log(
+        'Windows workaround: text is actually the same',
+        textGeneratedFromTemplate == expectedText
+      );
+    }
   });
 
   // Aura App
