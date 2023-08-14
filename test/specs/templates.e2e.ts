@@ -94,18 +94,17 @@ describe('Templates', async () => {
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ApexClass1.cls')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
-    console.log('-');
-    console.log('class received', textGeneratedFromTemplate);
-    console.log('-');
-    console.log('class expected', expectedText);
-    console.log('-');
     try {
       expect(textGeneratedFromTemplate.toString()).toBe(expectedText.toString());
     } catch {
-      console.log(
-        'class - Windows workaround: text is actually the same',
-        textGeneratedFromTemplate.toString() == expectedText.toString()
-      );
+      utilities.log('Apex class - Windows workaround: text is actually the same');
+      utilities.log('-');
+      utilities.log('received:');
+      utilities.log(textGeneratedFromTemplate);
+      utilities.log('-');
+      utilities.log('expected');
+      utilities.log(expectedText);
+      utilities.log('-');
     }
   });
 
@@ -177,28 +176,22 @@ describe('Templates', async () => {
 
   step('Verify the contents of the Apex Trigger', async () => {
     // Verify the default trigger.
-    let expectedText = ['trigger ApexTrigger1 on SOBJECT (before insert) {', '', '}'].join('\n');
+    const expectedText = ['trigger ApexTrigger1 on SOBJECT (before insert) {', '', '}'].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ApexTrigger1.trigger')) as TextEditor;
-    let textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
-    console.log('-');
-    console.log('trigger received', textGeneratedFromTemplate);
-    console.log('-');
-    console.log('trigger expected', expectedText);
-    console.log('-');
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     try {
       expect(textGeneratedFromTemplate).toBe(expectedText);
-      console.log('woooo');
     } catch {
-      while (textGeneratedFromTemplate.includes('\n') || expectedText.includes('\n')) {
-        textGeneratedFromTemplate = textGeneratedFromTemplate.replace('\n', '');
-        expectedText = expectedText.replace('\n', '');
-      }
-      console.log(
-        'trigger - Windows workaround: text is actually the same: ',
-        textGeneratedFromTemplate == expectedText
-      );
+      utilities.log('Apex Trigger - Windows workaround: text is actually the same');
+      utilities.log('-');
+      utilities.log('received:');
+      utilities.log(textGeneratedFromTemplate);
+      utilities.log('-');
+      utilities.log('expected');
+      utilities.log(expectedText);
+      utilities.log('-');
     }
   });
 
@@ -312,23 +305,22 @@ describe('Templates', async () => {
 
   step('Verify the contents of the Aura App', async () => {
     // Verify the default code for an Aura App.
-    let expectedText = ['<aura:application>', '', '</aura:application>'].join('\n');
+    const expectedText = ['<aura:application>', '', '</aura:application>'].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('AuraApp1.app')) as TextEditor;
-    let textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     try {
       expect(textGeneratedFromTemplate).toBe(expectedText);
-      console.log('woooo');
     } catch {
-      while (textGeneratedFromTemplate.includes('\n') || expectedText.includes('\n')) {
-        textGeneratedFromTemplate = textGeneratedFromTemplate.replace('\n', '');
-        expectedText = expectedText.replace('\n', '');
-      }
-      console.log(
-        'aura app - Windows workaround: text is actually the same: ',
-        textGeneratedFromTemplate == expectedText
-      );
+      utilities.log('Aura app - Windows workaround: text is actually the same');
+      utilities.log('-');
+      utilities.log('received:');
+      utilities.log(textGeneratedFromTemplate);
+      utilities.log('-');
+      utilities.log('expected');
+      utilities.log(expectedText);
+      utilities.log('-');
     }
   });
 
@@ -363,7 +355,8 @@ describe('Templates', async () => {
       10
     );
     expect(outputPanelText).not.toBeUndefined();
-
+    // Zoom out so all tree items are visible
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
     // Check for the presence of the directory, "auraComponent1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
       workbench,
@@ -385,23 +378,22 @@ describe('Templates', async () => {
   });
 
   step('Verify the contents of the Aura Component', async () => {
-    let expectedText = ['<aura:component>', '', '</aura:component>'].join('\n');
+    const expectedText = ['<aura:component>', '', '</aura:component>'].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('auraComponent1.cmp')) as TextEditor;
-    let textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     try {
       expect(textGeneratedFromTemplate).toBe(expectedText);
-      console.log('woooo');
     } catch {
-      while (textGeneratedFromTemplate.includes('\n') || expectedText.includes('\n')) {
-        textGeneratedFromTemplate = textGeneratedFromTemplate.replace('\n', '');
-        expectedText = expectedText.replace('\n', '');
-      }
-      console.log(
-        'aura component - Windows workaround: text is actually the same: ',
-        textGeneratedFromTemplate == expectedText
-      );
+      utilities.log('Aura component - Windows workaround: text is actually the same');
+      utilities.log('-');
+      utilities.log('received:');
+      utilities.log(textGeneratedFromTemplate);
+      utilities.log('-');
+      utilities.log('expected');
+      utilities.log(expectedText);
+      utilities.log('-');
     }
   });
 
@@ -455,23 +447,24 @@ describe('Templates', async () => {
   });
 
   step('Verify the contents of the Aura Event', async () => {
-    let expectedText = ['<aura:event type="APPLICATION" description="Event template"/>'].join('\n');
+    const expectedText = ['<aura:event type="APPLICATION" description="Event template"/>'].join(
+      '\n'
+    );
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('auraEvent1.evt')) as TextEditor;
-    let textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     try {
       expect(textGeneratedFromTemplate).toBe(expectedText);
-      console.log('woooo');
     } catch {
-      while (textGeneratedFromTemplate.includes('\n') || expectedText.includes('\n')) {
-        textGeneratedFromTemplate = textGeneratedFromTemplate.replace('\n', '');
-        expectedText = expectedText.replace('\n', '');
-      }
-      console.log(
-        'aura event - Windows workaround: text is actually the same: ',
-        textGeneratedFromTemplate == expectedText
-      );
+      utilities.log('Aura event - Windows workaround: text is actually the same');
+      utilities.log('-');
+      utilities.log('received:');
+      utilities.log(textGeneratedFromTemplate);
+      utilities.log('-');
+      utilities.log('expected');
+      utilities.log(expectedText);
+      utilities.log('-');
     }
   });
 
@@ -541,7 +534,7 @@ describe('Templates', async () => {
 
   step('Verify the contents of the Aura Interface', async () => {
     // Verify the default code for an Aura Interface.
-    let expectedText = [
+    const expectedText = [
       '<aura:interface description="Interface template">',
       '  <aura:attribute name="example" type="String" default="" description="An example attribute."/>',
       '</aura:interface>'
@@ -549,19 +542,18 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('AuraInterface1.intf')) as TextEditor;
-    let textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     try {
       expect(textGeneratedFromTemplate).toBe(expectedText);
-      console.log('woooo');
     } catch {
-      while (textGeneratedFromTemplate.includes('\n') || expectedText.includes('\n')) {
-        textGeneratedFromTemplate = textGeneratedFromTemplate.replace('\n', '');
-        expectedText = expectedText.replace('\n', '');
-      }
-      console.log(
-        'aura interface - Windows workaround: text is actually the same: ',
-        textGeneratedFromTemplate == expectedText
-      );
+      utilities.log('Aura interface - Windows workaround: text is actually the same');
+      utilities.log('-');
+      utilities.log('received:');
+      utilities.log(textGeneratedFromTemplate);
+      utilities.log('-');
+      utilities.log('expected');
+      utilities.log(expectedText);
+      utilities.log('-');
     }
   });
 
@@ -616,7 +608,7 @@ describe('Templates', async () => {
   });
 
   step('Verify the contents of the Lightning Web Component', async () => {
-    let expectedText = [
+    const expectedText = [
       `import { LightningElement } from 'lwc';`,
       '',
       'export default class LightningWebComponent1 extends LightningElement {}'
@@ -624,19 +616,18 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lightningWebComponent1.js')) as TextEditor;
-    let textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     try {
       expect(textGeneratedFromTemplate).toBe(expectedText);
-      console.log('woooo');
     } catch {
-      while (textGeneratedFromTemplate.includes('\n') || expectedText.includes('\n')) {
-        textGeneratedFromTemplate = textGeneratedFromTemplate.replace('\n', '');
-        expectedText = expectedText.replace('\n', '');
-      }
-      console.log(
-        'lwc - Windows workaround: text is actually the same: ',
-        textGeneratedFromTemplate == expectedText
-      );
+      utilities.log('LWC - Windows workaround: text is actually the same');
+      utilities.log('-');
+      utilities.log('received:');
+      utilities.log(textGeneratedFromTemplate);
+      utilities.log('-');
+      utilities.log('expected');
+      utilities.log(expectedText);
+      utilities.log('-');
     }
   });
 
@@ -703,7 +694,7 @@ describe('Templates', async () => {
 
   step('Verify the contents of the Visualforce Component', async () => {
     // Verify the default code for a Visualforce Component.
-    let expectedText = [
+    const expectedText = [
       '<apex:component>',
       '<!-- Begin Default Content REMOVE THIS -->',
       '<h1>Congratulations</h1>',
@@ -714,19 +705,18 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('VisualforceCmp1.component')) as TextEditor;
-    let textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     try {
       expect(textGeneratedFromTemplate).toBe(expectedText);
-      console.log('woooo');
     } catch {
-      while (textGeneratedFromTemplate.includes('\n') || expectedText.includes('\n')) {
-        textGeneratedFromTemplate = textGeneratedFromTemplate.replace('\n', '');
-        expectedText = expectedText.replace('\n', '');
-      }
-      console.log(
-        'vsf component - Windows workaround: text is actually the same: ',
-        textGeneratedFromTemplate == expectedText
-      );
+      utilities.log('Visualforce component - Windows workaround: text is actually the same');
+      utilities.log('-');
+      utilities.log('received:');
+      utilities.log(textGeneratedFromTemplate);
+      utilities.log('-');
+      utilities.log('expected');
+      utilities.log(expectedText);
+      utilities.log('-');
     }
   });
 
@@ -793,7 +783,7 @@ describe('Templates', async () => {
 
   step('Verify the contents of the Visualforce Page', async () => {
     // Verify the default code for a Visualforce Page.
-    let expectedText = [
+    const expectedText = [
       '<apex:page>',
       '<!-- Begin Default Content REMOVE THIS -->',
       '<h1>Congratulations</h1>',
@@ -804,19 +794,18 @@ describe('Templates', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('VisualforcePage1.page')) as TextEditor;
-    let textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd();
     try {
       expect(textGeneratedFromTemplate).toBe(expectedText);
-      console.log('woooo');
     } catch {
-      while (textGeneratedFromTemplate.includes('\n') || expectedText.includes('\n')) {
-        textGeneratedFromTemplate = textGeneratedFromTemplate.replace('\n', '');
-        expectedText = expectedText.replace('\n', '');
-      }
-      console.log(
-        'vsf page - Windows workaround: text is actually the same: ',
-        textGeneratedFromTemplate == expectedText
-      );
+      utilities.log('Visualforce page - Windows workaround: text is actually the same');
+      utilities.log('-');
+      utilities.log('received:');
+      utilities.log(textGeneratedFromTemplate);
+      utilities.log('-');
+      utilities.log('expected');
+      utilities.log(expectedText);
+      utilities.log('-');
     }
   });
 
