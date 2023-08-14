@@ -5,13 +5,12 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import fs from 'fs';
 import { step } from 'mocha-steps';
 import path from 'path';
-import { DefaultTreeItem, InputBox, QuickOpenBox } from 'wdio-vscode-service';
+import { InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings';
-import * as utilities from '../utilities';
 import { TestSetup } from '../testSetup';
+import * as utilities from '../utilities';
 
 describe('Authentication', async () => {
   const tempProjectName = 'TempProject-Authentication';
