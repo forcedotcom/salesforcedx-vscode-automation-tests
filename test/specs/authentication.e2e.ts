@@ -5,11 +5,11 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import fs from 'fs';
 import { step } from 'mocha-steps';
 import path from 'path';
-import { DefaultTreeItem, InputBox, QuickOpenBox } from 'wdio-vscode-service';
+import { InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings';
+import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
 describe('Authentication', async () => {
@@ -18,100 +18,37 @@ describe('Authentication', async () => {
   let projectFolderPath: string;
   let prompt: QuickOpenBox | InputBox;
   let scratchOrgAliasName: string;
+  let testSetup = new TestSetup('Authentication', false);
 
   step('Set up the testing environment', async () => {
     tempFolderPath = getTempFolderPath();
     projectFolderPath = path.join(tempFolderPath, tempProjectName);
-
-    // Remove the project folder, just in case there are stale files there.
-    if (fs.existsSync(projectFolderPath)) {
-      utilities.removeFolder(projectFolderPath);
-      await utilities.pause(1);
-    }
-
-    // Now create the temp folder.  It should exist but create the folder if it is missing.
-    if (!fs.existsSync(tempFolderPath)) {
-      await utilities.createFolder(tempFolderPath);
-      await utilities.pause(1);
-    }
-  });
-
-  step('Run SFDX: Create Project', async () => {
-    const workbench = await browser.getWorkbench();
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 50);
-    // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
-
-    // Select the "Standard" project type.
-    const quickPicks = await prompt.getQuickPicks();
-    expect(quickPicks).not.toBeUndefined();
-    expect(quickPicks.length).toEqual(3);
-    expect(await quickPicks[0].getLabel()).toEqual('Standard');
-    expect(await quickPicks[1].getLabel()).toEqual('Empty');
-    expect(await quickPicks[2].getLabel()).toEqual('Analytics');
-    await prompt.selectQuickPick('Standard');
-    await utilities.pause(1);
-
-    // Enter "TempProject-Authentication" for the project name.
-    await prompt.setText(tempProjectName);
-    await utilities.pause(1);
-
-    // Press Enter/Return.
-    await prompt.confirm();
-
-    // Set the location of the project.
-    const input = await prompt.input$;
-    await input.setValue(tempFolderPath);
-    await utilities.pause(1);
-
-    // Click the OK button.
-    await utilities.clickFilePathOkButton();
-
-    // Verify the project was created and was loaded.
-    const sidebar = workbench.getSideBar();
-    const content = sidebar.getContent();
-    const treeViewSection = await content.getSection(tempProjectName.toUpperCase());
-    expect(treeViewSection).not.toEqual(undefined);
-
-    const forceAppTreeItem = (await treeViewSection.findItem('force-app')) as DefaultTreeItem;
-    expect(forceAppTreeItem).not.toEqual(undefined);
-
-    await (await forceAppTreeItem.wait()).expand();
+    await testSetup.setUpTestingEnvironment();
+    await testSetup.createProject('Standard');
   });
 
   step('Run SFDX: Authorize a Dev Hub', async () => {
-    // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
     const workbench = await (await browser.getWorkbench()).wait();
-
+    // Reloading the window forces the extensions to be reloaded and this seems to fix
+    // the issue.
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+    await utilities.pause(20);
     // In the initial state, the org picker button should be set to "No Default Org Set".
     let noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       'No Default Org Set'
     );
-    expect(noDefaultOrgSetItem).not.toBeUndefined();
+    expect(noDefaultOrgSetItem).toBeDefined();
 
-    const environmentSettings = EnvironmentSettings.getInstance();
-    const authFilePath = path.join(projectFolderPath, 'authFile.json');
-    const terminalView = await utilities.executeCommand(
-      workbench,
-      `sfdx force:org:display -u ${environmentSettings.devHubAliasName} --verbose --json > ${authFilePath}`
-    );
-
-    const authFilePathFileExists = fs.existsSync(authFilePath);
-    expect(authFilePathFileExists).toEqual(true);
-
-    await terminalView.executeCommand(`sfdx auth:sfdxurl:store -d -f ${authFilePath}`);
-
-    const terminalText = await utilities.getTerminalViewText(terminalView, 60);
-    expect(terminalText).toContain(
-      `Successfully authorized ${environmentSettings.devHubUserName} with org ID`
-    );
+    // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
+    await testSetup.authorizeDevHub();
 
     // After a dev hub has been authorized, the org should still not be set.
     noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       'No Default Org Set'
     );
-    expect(noDefaultOrgSetItem).not.toBeUndefined();
+    expect(noDefaultOrgSetItem).toBeDefined();
   });
 
   step('Run SFDX: Set a Default Org', async () => {
@@ -119,15 +56,19 @@ describe('Authentication', async () => {
     // Could also run the command, "SFDX: Set a Default Org" but this exercises more UI elements.
 
     // Click on "No default Org Set" (in the bottom bar).
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const changeDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
       workbench,
-      'Change Default Org'
+      'No Default Org Set'
     );
-    expect(changeDefaultOrgSetItem).not.toBeUndefined();
+    expect(changeDefaultOrgSetItem).toBeDefined();
     await changeDefaultOrgSetItem.click();
-    await utilities.pause(1);
+    await utilities.pause(5);
 
+    const orgPickerOptions = await $('div.monaco-list#quickInput_list')
+      .$('div.monaco-scrollable-element')
+      .$('div.monaco-list-rows')
+      .$$('div.monaco-list-row');
     // In the drop down menu that appears, verify the SFDX auth org commands are present...
     const expectedSfdxCommands = [
       ' SFDX: Authorize an Org',
@@ -137,9 +78,8 @@ describe('Authentication', async () => {
       ' SFDX: Remove Deleted and Expired Orgs'
     ];
     const foundSfdxCommands: string[] = [];
-    const quickPicks = await prompt.getQuickPicks();
-    for (const quickPick of quickPicks) {
-      const label = await quickPick.getLabel();
+    for (const quickPick of orgPickerOptions) {
+      const label = (await quickPick.getAttribute('aria-label')).slice(5);
       if (expectedSfdxCommands.includes(label)) {
         foundSfdxCommands.push(label);
       }
@@ -156,7 +96,8 @@ describe('Authentication', async () => {
     const environmentSettings = EnvironmentSettings.getInstance();
     const devHubAliasName = environmentSettings.devHubAliasName;
     const devHubUserName = environmentSettings.devHubUserName;
-    await utilities.selectQuickPickItem(prompt, `${devHubAliasName} - ${devHubUserName}`);
+    await browser.keys([`${devHubAliasName} - ${devHubUserName}`]);
+    await browser.keys(['Enter']);
 
     // Need to pause here for the "set a default org" command to finish.
     await utilities.pause(5);
@@ -170,20 +111,20 @@ describe('Authentication', async () => {
 
     const expectedOutputWasFound = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      `defaultusername  ${devHubAliasName}  true`,
+      `target-org  ${devHubAliasName}  true`,
       5
     );
-    expect(expectedOutputWasFound).not.toBeUndefined();
+    expect(expectedOutputWasFound).toBeDefined();
 
     // Look for "vscodeOrg" in the status bar.
     const statusBar = workbench.getStatusBar();
     const vscodeOrgItem = await statusBar.getItem(`plug  ${devHubAliasName}, Change Default Org`);
-    expect(vscodeOrgItem).not.toBeUndefined();
+    expect(vscodeOrgItem).toBeDefined();
   });
 
   step('Run SFDX: Create a Default Scratch Org', async () => {
-    const workbench = await browser.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(
+    const workbench = await (await browser.getWorkbench()).wait();
+    prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Create a Default Scratch Org...',
       1
@@ -274,11 +215,11 @@ describe('Authentication', async () => {
       workbench,
       scratchOrgAliasName
     );
-    expect(scratchOrgStatusBarItem).not.toBeUndefined();
+    expect(scratchOrgStatusBarItem).toBeDefined();
   });
 
   step('Run SFDX: Set the Scratch Org As the Default Org', async () => {
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const inputBox = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Set a Default Org',
@@ -306,12 +247,12 @@ describe('Authentication', async () => {
       workbench,
       scratchOrgAliasName
     );
-    expect(scratchOrgStatusBarItem).not.toBeUndefined();
+    expect(scratchOrgStatusBarItem).toBeDefined();
   });
 
   step('Tear down', async () => {
     if (scratchOrgAliasName) {
-      const workbench = await browser.getWorkbench();
+      const workbench = await (await browser.getWorkbench()).wait();
       await utilities.executeCommand(
         workbench,
         `sfdx force:org:delete -u ${scratchOrgAliasName} --noprompt`

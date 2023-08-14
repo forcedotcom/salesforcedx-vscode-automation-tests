@@ -45,13 +45,13 @@ export async function getTerminalViewText(
 export async function executeCommand(workbench: Workbench, command: string): Promise<TerminalView> {
   log(`Executing the command, "${command}"`);
 
-  const terminalView = await getTerminalView(workbench);
+  const terminalView = await (await getTerminalView(workbench)).wait();
   if (!terminalView) {
     throw new Error(
       'In executeCommand(), the terminal view returned from getTerminalView() was null (or undefined)'
     );
   }
-
+  await pause(5);
   await terminalView.executeCommand(command);
 
   return terminalView;
