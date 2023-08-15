@@ -7,6 +7,7 @@
 import { step } from 'mocha-steps';
 import path from 'path';
 import { InputBox, QuickOpenBox, TextEditor } from 'wdio-vscode-service';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
@@ -93,7 +94,9 @@ describe('Apex Replay Debugger', async () => {
     const textEditor = (await editorView.openEditor('ExampleApexClassTest.cls')) as TextEditor;
 
     // Select text
-    await textEditor.selectText("ExampleApexClass.SayHello('Cody');");
+    await browser.keys([CMD_KEY, 'f']);
+    await utilities.pause(1);
+    await browser.keys(["ExampleApexClass.SayHello('Cody');"]);
     await utilities.pause(1);
 
     // Clear output before running the command
