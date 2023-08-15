@@ -8,6 +8,7 @@ import { step } from 'mocha-steps';
 import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 describe('Aura LSP', async () => {
   let testSetup: TestSetup;
@@ -43,13 +44,20 @@ describe('Aura LSP', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('aura1.cmp')) as TextEditor;
-    await textEditor.moveCursor(8, 10);
+
+    // Move cursor to the middle of "simpleNewContact"
+    await browser.keys([CMD_KEY, 'f']);
+    await utilities.pause(1);
+    await browser.keys(["!v.sim"]);
+    await browser.keys(['Escape']);
+    await browser.keys(['ArrowRight']);
+    await utilities.pause(1);
 
     // Go to definition through F12
     await browser.keys(['F12']);
     await utilities.pause(1);
 
-    //Verify 'Go to definition'
+    // Verify 'Go to definition'
     const definition = await textEditor.getCoordinates();
     expect(definition[0]).toBe(3);
     expect(definition[1]).toBe(27);
