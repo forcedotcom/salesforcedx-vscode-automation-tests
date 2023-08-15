@@ -6,7 +6,6 @@
  */
 import { step } from 'mocha-steps';
 import { TextEditor } from 'wdio-vscode-service';
-import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
@@ -30,7 +29,7 @@ describe('LWC LSP', async () => {
     await utilities.showRunningExtensions(workbench);
     await utilities.enableLwcExtension();
     // Zoom out so more extensions are visible
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
 
     // Verify Lightning Web Components extension is present and running
