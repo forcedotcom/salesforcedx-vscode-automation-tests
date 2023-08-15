@@ -15,7 +15,7 @@ describe('LWC LSP', async () => {
 
   step('Set up the testing environment', async () => {
     utilities.log('LwcLsp - Set up the testing environment');
-    testSetup = new TestSetup('LwcLsp', true);
+    testSetup = new TestSetup('LwcLsp', false);
     await testSetup.setUp();
 
     // Create Lightning Web Component
