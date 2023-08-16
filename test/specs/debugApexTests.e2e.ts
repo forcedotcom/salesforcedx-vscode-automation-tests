@@ -122,6 +122,32 @@ describe('Debug Apex Tests', async () => {
     const apexTestsSection = await sidebarView.getSection('APEX TESTS');
     expect(apexTestsSection.elem).toBePresent();
 
+    let apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
+
+    // If the Apex tests did not show up, click the refresh button on the top right corner of the Test sidebar
+    for (let x = 0; x < 3; x++) {
+      if (apexTestsItems.length === 1) {
+        await apexTestsSection.elem.click();
+        const refreshAction = await apexTestsSection.getAction('Refresh Tests');
+        await refreshAction!.elem.click();
+        utilities.pause(10);
+        apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
+      }
+      else if (apexTestsItems.length === 6) {
+        break;
+      }
+      else {
+        // do nothing
+      }
+    }
+
+    // Make sure all the tests are present in the sidebar
+    expect(apexTestsItems.length).toBe(4);
+    expect(await apexTestsSection.findItem('ExampleApexClass1Test')).toBeTruthy();
+    expect(await apexTestsSection.findItem('ExampleApexClass2Test')).toBeTruthy();
+    expect(await apexTestsItems[0].getLabel()).toBe('ExampleApexClass1Test');
+    expect(await apexTestsItems[2].getLabel()).toBe('ExampleApexClass2Test');
+
     // Click the debug tests button that is shown to the right when you hover a test class name on the Test sidebar
     await browser.keys(['Escape']);
     await apexTestsSection.elem.click();
