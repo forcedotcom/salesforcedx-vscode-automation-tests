@@ -38,6 +38,7 @@ describe('LWC LSP', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
 
     // Verify Lightning Web Components extension is present and running
+    await utilities.showRunningExtensions(workbench);
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
       'salesforce.salesforcedx-vscode-lwc'
