@@ -130,6 +130,7 @@ describe('Debug Apex Tests', async () => {
 
     let apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
     utilities.log('7');
+    await browser.keys(['Escape']);
 
     // If the Apex tests did not show up, click the refresh button on the top right corner of the Test sidebar
     for (let x = 0; x < 3; x++) {
@@ -158,7 +159,6 @@ describe('Debug Apex Tests', async () => {
     utilities.log('9');
 
     // Click the debug tests button that is shown to the right when you hover a test class name on the Test sidebar
-    await browser.keys(['Escape']);
     utilities.log('10');
     await apexTestsSection.elem.click();
     utilities.log('11');
