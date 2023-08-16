@@ -30,12 +30,12 @@ describe('LWC LSP', async () => {
     // await utilities.showRunningExtensions(workbench);
     await utilities.enableLwcExtension();
     // Zoom out so more extensions are visible
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Show Extensions', 2);
 
     // Verify Lightning Web Components extension is present and running
     await utilities.showRunningExtensions(workbench);
