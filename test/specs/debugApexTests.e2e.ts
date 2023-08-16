@@ -123,6 +123,8 @@ describe('Debug Apex Tests', async () => {
     expect(apexTestsSection.elem).toBePresent();
 
     // Click the debug tests button that is shown to the right when you hover a test class name on the Test sidebar
+    await browser.keys(['Escape']);
+    await apexTestsSection.elem.click();
     const apexTestItem = (await apexTestsSection.findItem('ExampleApexClass1Test')) as TreeItem;
     await apexTestItem.select();
     const runTestsAction = await apexTestItem.getActionButton('Debug Tests');
@@ -158,6 +160,8 @@ describe('Debug Apex Tests', async () => {
     expect(apexTestsSection.elem).toBePresent();
 
     // Hover a test name under one of the test class sections and click the debug button that is shown to the right of the test name on the Test sidebar
+    await browser.keys(['Escape']);
+    await apexTestsSection.elem.click();
     const apexTestItem = (await apexTestsSection.findItem('validateSayHello')) as TreeItem;
     await apexTestItem.select();
     const runTestAction = await apexTestItem.getActionButton('Debug Single Test');
