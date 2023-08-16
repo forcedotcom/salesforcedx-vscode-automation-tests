@@ -27,12 +27,17 @@ describe('LWC LSP', async () => {
 
     // Using the Command palette, run Developer: Show Running Extensions
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.showRunningExtensions(workbench);
+    // await utilities.showRunningExtensions(workbench);
     await utilities.enableLwcExtension();
     // Zoom out so more extensions are visible
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
-
+    await utilities.showRunningExtensions(workbench);
+    await browser.keys(['Tab']);
+    // Go to the bottom of running extensions
+    for (let i = 0; i < 20; i++) {
+      await browser.keys(['ArrowDown']);
+    }
     // Verify Lightning Web Components extension is present and running
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
