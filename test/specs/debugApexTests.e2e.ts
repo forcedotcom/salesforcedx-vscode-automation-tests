@@ -111,18 +111,25 @@ describe('Debug Apex Tests', async () => {
 
   step('Debug all Apex Methods on a Class via the Test Sidebar', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
+    utilities.log('1');
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
+    utilities.log('2');
 
     // Open the Test Sidebar
     const testingSideBarView = await testingView?.openView();
     expect(testingSideBarView).toBeInstanceOf(SideBarView);
+    utilities.log('3');
 
     const sidebar = workbench.getSideBar();
+    utilities.log('4');
     const sidebarView = sidebar.getContent();
+    utilities.log('5');
     const apexTestsSection = await sidebarView.getSection('APEX TESTS');
     expect(apexTestsSection.elem).toBePresent();
+    utilities.log('6');
 
     let apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
+    utilities.log('7');
 
     // If the Apex tests did not show up, click the refresh button on the top right corner of the Test sidebar
     for (let x = 0; x < 3; x++) {
@@ -140,6 +147,7 @@ describe('Debug Apex Tests', async () => {
         // do nothing
       }
     }
+    utilities.log('8');
 
     // Make sure all the tests are present in the sidebar
     expect(apexTestsItems.length).toBe(4);
@@ -147,14 +155,19 @@ describe('Debug Apex Tests', async () => {
     expect(await apexTestsSection.findItem('ExampleApexClass2Test')).toBeTruthy();
     expect(await apexTestsItems[0].getLabel()).toBe('ExampleApexClass1Test');
     expect(await apexTestsItems[2].getLabel()).toBe('ExampleApexClass2Test');
+    utilities.log('9');
 
     // Click the debug tests button that is shown to the right when you hover a test class name on the Test sidebar
     await browser.keys(['Escape']);
+    utilities.log('10');
     await apexTestsSection.elem.click();
+    utilities.log('11');
     const apexTestItem = (await apexTestsSection.findItem('ExampleApexClass1Test')) as TreeItem;
     await apexTestItem.select();
+    utilities.log('12');
     const runTestsAction = await apexTestItem.getActionButton('Debug Tests');
     await runTestsAction!.elem.click();
+    utilities.log('13');
     await utilities.pause(1);
 
     // Look for the success notification that appears which says, "Debug Test(s) successfully ran".
@@ -164,11 +177,14 @@ describe('Debug Apex Tests', async () => {
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
+    utilities.log('14');
 
     // Continue with the debug session
     await browser.keys(['F5']);
+    utilities.log('15');
     await utilities.pause(1);
     await browser.keys(['F5']);
+    utilities.log('16');
     await utilities.pause(1);
   });
 
