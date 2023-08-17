@@ -113,6 +113,7 @@ describe('Debug Apex Tests', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on Apex Tests View', 1);
 
+    // Open the Test Sidebar
     const sidebar = workbench.getSideBar();
     const sidebarView = sidebar.getContent();
     const apexTestsSection = await sidebarView.getSection('APEX TESTS');
@@ -170,12 +171,9 @@ describe('Debug Apex Tests', async () => {
 
   step('Debug a Single Apex Test Method via the Test Sidebar', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
-    const testingView = await workbench.getActivityBar().getViewControl('Testing');
+    await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on Apex Tests View', 1);
 
     // Open the Test Sidebar
-    const testingSideBarView = await testingView?.openView();
-    expect(testingSideBarView).toBeInstanceOf(SideBarView);
-
     const sidebar = workbench.getSideBar();
     const sidebarView = sidebar.getContent();
     const apexTestsSection = await sidebarView.getSection('APEX TESTS');
