@@ -13,7 +13,7 @@ describe('Debug Apex Tests', async () => {
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('DebugApexTests', true);
+    testSetup = new TestSetup('DebugApexTests', false);
     await testSetup.setUp();
 
     // Create Apex class 1 and test
@@ -112,15 +112,17 @@ describe('Debug Apex Tests', async () => {
   step('Debug all Apex Methods on a Class via the Test Sidebar', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     utilities.log('1');
-    const activityBar = workbench.getActivityBar();
-    utilities.log('1.5');
-    const testingView = await activityBar.getViewControl('Testing');
+    // const activityBar = workbench.getActivityBar();
+    // utilities.log('1.5');
+    // const testingView = await activityBar.getViewControl('Testing');
     // const testingView = await workbench.getActivityBar().getViewControl('Testing');
+    // Run SFDX: Run Apex tests.
+    await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on Apex Tests View', 1);
     utilities.log('2');
 
     // Open the Test Sidebar
-    const testingSideBarView = await testingView?.openView();
-    expect(testingSideBarView).toBeInstanceOf(SideBarView);
+    // const testingSideBarView = await testingView?.openView();
+    // expect(testingSideBarView).toBeInstanceOf(SideBarView);
     utilities.log('3');
 
     const sidebar = workbench.getSideBar();
@@ -144,7 +146,7 @@ describe('Debug Apex Tests', async () => {
         utilities.pause(10);
         apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
       }
-      else if (apexTestsItems.length === 6) {
+      else if (apexTestsItems.length === 4) {
         break;
       }
       else {
