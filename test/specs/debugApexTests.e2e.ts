@@ -13,7 +13,7 @@ describe('Debug Apex Tests', async () => {
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('DebugApexTests', false);
+    testSetup = new TestSetup('DebugApexTests', true);
     await testSetup.setUp();
 
     // Create Apex class 1 and test
@@ -112,7 +112,10 @@ describe('Debug Apex Tests', async () => {
   step('Debug all Apex Methods on a Class via the Test Sidebar', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     utilities.log('1');
-    const testingView = await workbench.getActivityBar().getViewControl('Testing');
+    const activityBar = workbench.getActivityBar();
+    utilities.log('1.5');
+    const testingView = await activityBar.getViewControl('Testing');
+    // const testingView = await workbench.getActivityBar().getViewControl('Testing');
     utilities.log('2');
 
     // Open the Test Sidebar
