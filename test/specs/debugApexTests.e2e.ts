@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step } from 'mocha-steps';
-import { SideBarView, TextEditor, TreeItem } from 'wdio-vscode-service';
+import { TextEditor, TreeItem } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 

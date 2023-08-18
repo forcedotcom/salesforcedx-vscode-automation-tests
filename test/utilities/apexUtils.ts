@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { TextEditor, TreeItem, ViewSection } from 'wdio-vscode-service';
+import { TextEditor } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 import { pause } from './miscellaneous';
 
@@ -143,26 +143,4 @@ export async function createApexController(): Promise<void> {
     `}`
   ].join('\n');
   await createApexClass('MyController', classText);
-}
-
-export async function retrieveAllApexTestItemsFromSidebar(expectedNumTests: number, apexTestsSection: ViewSection): Promise<TreeItem[]> {
-
-  let apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
-  await browser.keys(['Escape']);
-
-  // If the Apex tests did not show up, click the refresh button on the top right corner of the Test sidebar
-  for (let x = 0; x < 3; x++) {
-    if (apexTestsItems.length === 1) {
-      await apexTestsSection.elem.click();
-      const refreshAction = await apexTestsSection.getAction('Refresh Tests');
-      await refreshAction!.elem.click();
-      pause(10);
-      apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
-    }
-    else if (apexTestsItems.length === expectedNumTests) {
-      break;
-    }
-  }
-
-  return apexTestsItems;
 }
