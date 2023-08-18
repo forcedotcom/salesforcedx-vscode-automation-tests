@@ -9,8 +9,10 @@ import {
   DefaultTreeItem,
   TreeItem,
   ViewItem,
-  Workbench
+  Workbench,
+  ViewSection
 } from 'wdio-vscode-service';
+import { pause } from './miscellaneous';
 
 export async function getFilteredVisibleTreeViewItems(workbench: Workbench, projectName: string, searchString: string): Promise<DefaultTreeItem[]> {
   const sidebar = workbench.getSideBar();
@@ -98,4 +100,26 @@ export async function getVisibleItems(treeItem: TreeItem, locator: string): Prom
   const rows = await treeItem.parent.$$(locator);
 
   return rows;
+}
+
+export async function retrieveAllApexTestItemsFromSidebar(expectedNumTests: number, apexTestsSection: ViewSection): Promise<TreeItem[]> {
+
+  let apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
+  await browser.keys(['Escape']);
+
+  // If the Apex tests did not show up, click the refresh button on the top right corner of the Test sidebar
+  for (let x = 0; x < 3; x++) {
+    if (apexTestsItems.length === 1) {
+      await apexTestsSection.elem.click();
+      const refreshAction = await apexTestsSection.getAction('Refresh Tests');
+      await refreshAction!.elem.click();
+      pause(10);
+      apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
+    }
+    else if (apexTestsItems.length === expectedNumTests) {
+      break;
+    }
+  }
+
+  return apexTestsItems;
 }
