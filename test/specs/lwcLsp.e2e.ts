@@ -28,33 +28,57 @@ describe('LWC LSP', async () => {
     // Using the Command palette, run Developer: Show Running Extensions
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.showRunningExtensions(workbench);
-    await utilities.enableLwcExtension();
+
     // Zoom out so more extensions are visible
-    // await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
-    utilities.pause(60);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Show Extensions', 2);
 
     let extensionWasFound;
-    // Verify Lightning Web Components extension is present and running
     for (let x = 0; x < 5; x++) {
       utilities.log('x = ' + x);
+
+      await utilities.enableLwcExtension();
+      utilities.pause(60);
+
       extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
         workbench,
         'salesforce.salesforcedx-vscode-lwc'
       );
+
       if (extensionWasFound) {
         utilities.log('lwc extension is found - breaking out of for loop');
         break;
       }
       else {
-        utilities.log('lwc extension NOT found - reloading');
-        await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
+        utilities.log('lwc extension NOT found - disabling the extension');
+        await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Disable All Installed Extensions', 5);
+        await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 5);
       }
     }
+
+    // await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
+    // utilities.pause(60);
+    // await utilities.runCommandFromCommandPrompt(workbench, 'View: Show Extensions', 2);
+
+    // let extensionWasFound;
+    // Verify Lightning Web Components extension is present and running
+    // for (let x = 0; x < 5; x++) {
+    //   utilities.log('x = ' + x);
+    //   extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+    //     workbench,
+    //     'salesforce.salesforcedx-vscode-lwc'
+    //   );
+    //   if (extensionWasFound) {
+    //     utilities.log('lwc extension is found - breaking out of for loop');
+    //     break;
+    //   }
+    //   else {
+    //     utilities.log('lwc extension NOT found - reloading');
+    //     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
+    //   }
+    // }
     expect(extensionWasFound).toBe(true);
   });
 
