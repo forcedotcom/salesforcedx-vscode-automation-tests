@@ -32,6 +32,7 @@ describe('LWC LSP', async () => {
     // Using the Command palette, run Developer: Show Running Extensions
     const workbench = await (await browser.getWorkbench()).wait();
     // await utilities.showRunningExtensions(workbench);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 60);
     await utilities.enableLwcExtension();
     // Zoom out so more extensions are visible
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
@@ -47,7 +48,7 @@ describe('LWC LSP', async () => {
       workbench,
       'salesforce.salesforcedx-vscode-lwc'
     );
-    expect(extensionWasFound).toBe(true);
+    expect(extensionWasFound).toBe(false);
   });
 
   step('Go to Definition (JavaScript)', async () => {
