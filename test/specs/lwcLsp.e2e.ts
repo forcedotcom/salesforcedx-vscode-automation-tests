@@ -52,13 +52,14 @@ describe('LWC LSP', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.js')) as TextEditor;
-    // Move cursor to the middle of "LightningElement"
-    await browser.keys([CMD_KEY, 'f']);
-    await utilities.pause(1);
-    await browser.keys(['extends LightningElement']);
-    await browser.keys(['Escape']);
-    await browser.keys(['ArrowRight']);
-    await browser.keys(['ArrowLeft']);
+    // Move cursor to the middle of "LightningElement"\
+    await textEditor.moveCursor(1, 15);
+    // await browser.keys([CMD_KEY, 'f']);
+    // await utilities.pause(1);
+    // await browser.keys(['import { LightningElement']);
+    // await browser.keys(['Escape']);
+    // await browser.keys(['ArrowRight']);
+    // await browser.keys(['ArrowLeft']);
     await utilities.pause(1);
 
     // Go to definition through F12
