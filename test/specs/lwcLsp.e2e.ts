@@ -10,6 +10,7 @@ import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
+// *** IMPORTANT NOTE: The lwc extension not being enabled problem can be replicated on local computer if you uninstall the ESLint and Lightning Web Components extensions on your computer.
 describe('LWC LSP', async () => {
   let testSetup: TestSetup;
 
@@ -23,6 +24,8 @@ describe('LWC LSP', async () => {
 
     // Create Lightning Web Component
     await utilities.createLwc('lwc1');
+
+    // NOTE: Tried manually installing ESLint here but it did not wake up the lwc extension.
   });
 
   step('Verify Extension is Running', async () => {
@@ -30,12 +33,14 @@ describe('LWC LSP', async () => {
 
     // Using the Command palette, run Developer: Show Running Extensions
     const workbench = await (await browser.getWorkbench()).wait();
-    // await utilities.showRunningExtensions(workbench);
-    await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 60);
-    await utilities.enableLwcExtension();
+    await utilities.showRunningExtensions(workbench);
     // Zoom out so more extensions are visible
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.enableLwcExtension();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
 
     // Verify Lightning Web Components extension is present and running
     await utilities.showRunningExtensions(workbench);

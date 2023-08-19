@@ -25,7 +25,8 @@ export async function enableLwcExtension(): Promise<void> {
     const text = await item.getText();
     if (text.includes('Install and Reload')) {
       log('enableLwcExtension() - Install and Reload');
-      await item.click();
+      await item.click(); // NOTE: This button is supposed to enable the ESLint extension.
+      log('*** Button to enable ESLint clicked');
     }
   }
   await pause(20);
@@ -36,15 +37,16 @@ export async function enableLwcExtension(): Promise<void> {
     const text = await item.getText();
     if (text.includes('Reload and Enable Extensions')) {
       log('enableLwcExtension() - Reload and Enable Extensions');
-      await item.click(); // NOTE: This is important because it enables the ESLint extension.
-      log('*** Button to enable ESLint clicked');
+      await item.click(); // NOTE: This button actually enables the ESLint extension.
+      log('*** Button to enable LWC extension clicked');
     }
   }
   await pause(5);
+  // NOTE: There is no button to install the LWC extension, so reloading does not help.
 
   log('enableLwcExtension() - 1 - Running Developer: Reload Window');
   log('');
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 5);
+  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 5); // NOTE: ESLint disappears after this reload.
   // Reload again and wait to get the extensions to show up
   log('enableLwcExtension() - 2 - Running Developer: Reload Window');
   log('');
