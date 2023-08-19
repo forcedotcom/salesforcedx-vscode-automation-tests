@@ -28,6 +28,12 @@ describe('Aura LSP', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.showRunningExtensions(workbench);
     await utilities.enableLwcExtension();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    let x = true;
+    expect(x).toBe(false); // trigger an error here to get a screenshot of all the enabled extensions
 
     // Verify Aura Components extension is present and running.
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
