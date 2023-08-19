@@ -36,7 +36,8 @@ export async function enableLwcExtension(): Promise<void> {
     const text = await item.getText();
     if (text.includes('Reload and Enable Extensions')) {
       log('enableLwcExtension() - Reload and Enable Extensions');
-      await item.click();
+      await item.click(); // NOTE: This is important because it enables the ESLint extension.
+      log('*** Button to enable ESLint clicked');
     }
   }
   await pause(5);

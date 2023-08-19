@@ -43,7 +43,7 @@ describe('LWC LSP', async () => {
       workbench,
       'salesforce.salesforcedx-vscode-lwc'
     );
-    expect(extensionWasFound).toBe(false);
+    expect(extensionWasFound).toBe(true);
   });
 
   step('Go to Definition (JavaScript)', async () => {
