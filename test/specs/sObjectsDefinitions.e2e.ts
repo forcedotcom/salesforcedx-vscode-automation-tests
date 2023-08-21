@@ -54,6 +54,15 @@ describe('SObjects Definitions', async () => {
       expect(customerObjectFolder).not.toEqual(undefined);
       await customerObjectFolder?.expand();
       expect(await customerObjectFolder?.isExpanded()).toBe(true);
+
+      if (customerObjectFolder instanceof TreeItem) {
+        utilities.log((await customerObjectFolder.hasChildren()).toString());
+        utilities.log((await customerObjectFolder.getChildren()).toString());
+      }
+      else {
+        utilities.log('customerObjectFolder is undefined');
+      }
+
       const customerCustomObject = await customerObjectFolder?.findChildItem(
         'Customer__c.object-meta.xml'
       );
