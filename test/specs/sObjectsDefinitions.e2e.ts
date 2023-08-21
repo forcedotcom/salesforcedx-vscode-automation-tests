@@ -40,9 +40,9 @@ describe('SObjects Definitions', async () => {
       expect(objectTreeItem).not.toEqual(undefined);
       await objectTreeItem.select();
 
-      const customerObjectFolder = await objectTreeItem.findChildItem(
+      const customerObjectFolder = (await objectTreeItem.findChildItem(
         'Customer__c'
-      );
+      )) as DefaultTreeItem;
 
       if (customerObjectFolder instanceof TreeItem) {
         utilities.log(await customerObjectFolder.getLabel());
@@ -63,7 +63,12 @@ describe('SObjects Definitions', async () => {
         utilities.log('customerObjectFolder is undefined');
       }
 
-      const customerCustomObject = await customerObjectFolder?.findChildItem(
+      // const customerCustomObject = await customerObjectFolder?.findChildItem(
+      //   'Customer__c.object-meta.xml'
+      // );
+
+      const customerCustomObject = await utilities.getVisibleChild(
+        customerObjectFolder,
         'Customer__c.object-meta.xml'
       );
 
