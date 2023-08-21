@@ -43,23 +43,55 @@ describe('SObjects Definitions', async () => {
       const customerObjectFolder = await objectTreeItem.findChildItem(
         'Customer__c'
       );
+
+      if (customerObjectFolder instanceof TreeItem) {
+        utilities.log(await customerObjectFolder.getLabel());
+      }
+      else {
+        utilities.log('customerObjectFolder is undefined');
+      }
+
       expect(customerObjectFolder).not.toEqual(undefined);
       await customerObjectFolder?.expand();
       expect(await customerObjectFolder?.isExpanded()).toBe(true);
       const customerCustomObject = await customerObjectFolder?.findChildItem(
         'Customer__c.object-meta.xml'
       );
+
+      if (customerCustomObject instanceof TreeItem) {
+        utilities.log(await customerCustomObject.getLabel());
+      }
+      else {
+        utilities.log('customerCustomObject is undefined');
+      }
+
       expect(customerCustomObject).not.toEqual(undefined);
 
       const productObjectFolder = await objectTreeItem.findChildItem(
         'Product__c'
       );
+
+      if (productObjectFolder instanceof TreeItem) {
+        utilities.log(await productObjectFolder.getLabel());
+      }
+      else {
+        utilities.log('productObjectFolder is undefined');
+      }
+
       expect(productObjectFolder).not.toEqual(undefined);
       await productObjectFolder?.expand();
       expect(await productObjectFolder?.isExpanded()).toBe(true);
       const productCustomObject = await productObjectFolder?.findChildItem(
         'Product__c.object-meta.xml'
       );
+
+      if (productCustomObject instanceof TreeItem) {
+        utilities.log(await productCustomObject.getLabel());
+      }
+      else {
+        utilities.log('productCustomObject is undefined');
+      }
+
       expect(productCustomObject).not.toEqual(undefined);
     }
   );
