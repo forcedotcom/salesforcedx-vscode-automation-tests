@@ -8,43 +8,64 @@ import { step } from 'mocha-steps';
 import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
+// *** IMPORTANT NOTE: The lwc extension not being enabled problem can be replicated on local computer if you uninstall the ESLint and Lightning Web Components extensions on your computer.
 describe('LWC LSP', async () => {
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
     utilities.log('LwcLsp - Set up the testing environment');
     testSetup = new TestSetup('LwcLsp', false);
+
+    // Using the Command palette, run Developer: Show Running Extensions
+    const workbench = await (await browser.getWorkbench()).wait();
     await testSetup.setUp();
 
     // Create Lightning Web Component
     await utilities.createLwc('lwc1');
+
+    // NOTE: Tried manually installing ESLint here but it did not wake up the lwc extension.
   });
 
   step('Verify Extension is Running', async () => {
-    utilities.log(
-      `${testSetup.testSuiteSuffixName} - Verify Extension is Running`
-    );
+    utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 
     // Using the Command palette, run Developer: Show Running Extensions
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.showRunningExtensions(workbench);
+    // Zoom out so more extensions are visible
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
     await utilities.enableLwcExtension();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
 
     // Verify Lightning Web Components extension is present and running
-    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforce.salesforcedx-vscode-lwc');
+    await utilities.showRunningExtensions(workbench);
+    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+      workbench,
+      'salesforce.salesforcedx-vscode-lwc'
+    );
     expect(extensionWasFound).toBe(true);
   });
 
   step('Go to Definition (JavaScript)', async () => {
-    utilities.log(
-      `${testSetup.testSuiteSuffixName} - Go to Definition (Javascript)`
-    );
+    utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition (Javascript)`);
     // Get open text editor
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.js')) as TextEditor;
-    await textEditor.moveCursor(3, 40);
+    // Move cursor to the middle of "LightningElement"\
+    await textEditor.moveCursor(1, 15);
+    // await browser.keys([CMD_KEY, 'f']);
+    // await utilities.pause(1);
+    // await browser.keys(['import { LightningElement']);
+    // await browser.keys(['Escape']);
+    // await browser.keys(['ArrowRight']);
+    // await browser.keys(['ArrowLeft']);
+    await utilities.pause(1);
 
     // Go to definition through F12
     await browser.keys(['F12']);
@@ -59,7 +80,7 @@ describe('LWC LSP', async () => {
   step('Go to Definition (HTML)', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition (HTML)`);
     // Get open text editor
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
     await textEditor.moveCursor(3, 52);
@@ -77,22 +98,16 @@ describe('LWC LSP', async () => {
   step('Autocompletion', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
-    const workbench = await browser.getWorkbench();
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
     await textEditor.typeTextAt(3, 7, ' lwc');
     await utilities.pause(2);
 
     // Verify autocompletion options are present
-    const autocompletionOptions = await $$(
-      'textarea.inputarea.monaco-mouse-cursor-text'
-    );
-    expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe(
-      'true'
-    );
-    expect(
-      await autocompletionOptions[0].getAttribute('aria-autocomplete')
-    ).toBe('list');
+    const autocompletionOptions = await $$('textarea.inputarea.monaco-mouse-cursor-text');
+    expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe('true');
+    expect(await autocompletionOptions[0].getAttribute('aria-autocomplete')).toBe('list');
 
     // Verify autocompletion options can be selected and therefore automatically inserted into the file
     await browser.keys(['Enter']);
