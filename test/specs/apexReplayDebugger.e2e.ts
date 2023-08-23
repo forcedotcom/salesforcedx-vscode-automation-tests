@@ -42,6 +42,27 @@ describe('Apex Replay Debugger', async () => {
     expect(successPushNotificationWasFound).toBe(true);
   });
 
+  step('Reload window to restart DB', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Reload window to restart DB`);
+
+    // Reload window to restart db
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
+  });
+
+  step('Verify LSP finished indexing', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
+
+    // Get Apex LSP Status Bar
+    const workbench = await (await browser.getWorkbench()).wait();
+    const statusBar = await utilities.getStatusBarItemWhichIncludes(
+      workbench,
+      'Editor Language Status'
+    );
+    await statusBar.click();
+    expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
+  });
+
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
     const workbench = await (await browser.getWorkbench()).wait();

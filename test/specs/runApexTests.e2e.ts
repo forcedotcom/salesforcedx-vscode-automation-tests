@@ -14,7 +14,6 @@ describe('Run Apex Tests', async () => {
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-
     testSetup = new TestSetup('RunApexTests', false);
     await testSetup.setUp();
 
@@ -42,11 +41,30 @@ describe('Run Apex Tests', async () => {
       utilities.FIVE_MINUTES
     );
     expect(successPushNotificationWasFound).toBe(true);
+  });
 
+  step('Reload window to restart DB', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Reload window to restart DB`);
+
+    // Reload window to restart db
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
+  });
+
+  step('Verify LSP finished indexing', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
+
+    // Get Apex LSP Status Bar
+    const workbench = await (await browser.getWorkbench()).wait();
+    const statusBar = await utilities.getStatusBarItemWhichIncludes(
+      workbench,
+      'Editor Language Status'
+    );
+    await statusBar.click();
+    expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
   });
 
   step('Run All Tests via Apex Class', async () => {
-
     const workbench = await (await browser.getWorkbench()).wait();
 
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
@@ -93,11 +111,9 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('TEST NAME');
     expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
-
   });
 
   step('Run Single Test via Apex Class', async () => {
-
     const workbench = await (await browser.getWorkbench()).wait();
 
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
@@ -144,11 +160,9 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('TEST NAME');
     expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello  Pass');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
-
   });
 
   step('Run Tests via Command Palette', async () => {
-
     // Clear the Output view.
     await utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
@@ -184,11 +198,9 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('TEST NAME');
     expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
-
   });
 
   step('Modify Existing Apex Test Class', async () => {
-
     const workbench = await (await browser.getWorkbench()).wait();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
@@ -238,11 +250,9 @@ describe('Run Apex Tests', async () => {
       utilities.FIVE_MINUTES
     );
     expect(successPushNotificationWasFound).toBe(true);
-
   });
 
   step('Run all Apex tests via Test Sidebar', async () => {
-
     const workbench = await (await browser.getWorkbench()).wait();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
@@ -309,16 +319,13 @@ describe('Run Apex Tests', async () => {
       // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
       try {
         expect(iconStyle).toContain('testPass');
-      }
-      catch {
+      } catch {
         utilities.log('ERROR: icon did not turn green after test successfully ran');
       }
     }
-
   });
 
   step('Run all Apex Tests on a Class via the Test Sidebar', async () => {
-
     const workbench = await (await browser.getWorkbench()).wait();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
@@ -372,15 +379,12 @@ describe('Run Apex Tests', async () => {
     // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
     try {
       expect(iconStyle).toContain('testPass');
-    }
-    catch {
+    } catch {
       utilities.log('ERROR: icon did not turn green after test successfully ran');
     }
-
   });
 
   step('Run a Single Apex Test via the Test Sidebar', async () => {
-
     const workbench = await (await browser.getWorkbench()).wait();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
@@ -434,15 +438,12 @@ describe('Run Apex Tests', async () => {
     // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
     try {
       expect(iconStyle).toContain('testPass');
-    }
-    catch {
+    } catch {
       utilities.log('ERROR: icon did not turn green after test successfully ran');
     }
-
   });
 
   step('Run a test that fails and fix it', async () => {
-
     // Create Apex class AccountService
     await utilities.createApexClassWithBugs();
 
@@ -547,11 +548,9 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('TEST NAME');
     expect(outputPanelText).toContain('AccountServiceTest.should_create_account  Pass');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
-
   });
 
   step('Create Apex Test Suite', async () => {
-
     // Run SFDX: Create Apex Test Suite.
     const workbench = await (await browser.getWorkbench()).wait();
     prompt = await utilities.runCommandFromCommandPrompt(
@@ -578,11 +577,9 @@ describe('Run Apex Tests', async () => {
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-
   });
 
   step('Add test to Apex Test Suite', async () => {
-
     // Run SFDX: Add Tests to Apex Test Suite.
     const workbench = await (await browser.getWorkbench()).wait();
     prompt = await utilities.runCommandFromCommandPrompt(
@@ -608,11 +605,9 @@ describe('Run Apex Tests', async () => {
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
-
   });
 
   step('Run Apex Test Suite', async () => {
-
     // Clear the Output view.
     await utilities.dismissAllNotifications();
     const outputView = await utilities.openOutputView();
@@ -653,11 +648,9 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello  Pass');
     expect(outputPanelText).toContain('ExampleApexClass3Test.validateSayHello  Pass');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
-
   });
 
   step('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
-
 });
