@@ -41,6 +41,14 @@ describe('Debug Apex Tests', async () => {
     expect(successPushNotificationWasFound).toBe(true);
   });
 
+  step('Reload window to restart DB', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Reload window to restart DB`);
+
+    // Reload window to restart db
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
+  });
+
   step('Debug All Tests via Apex Class', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
 

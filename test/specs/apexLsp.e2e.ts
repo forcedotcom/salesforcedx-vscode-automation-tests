@@ -21,6 +21,14 @@ describe('Apex LSP', async () => {
     await utilities.createApexClassWithTest('ExampleClass');
   });
 
+  step('Reload window to restart DB', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Reload window to restart DB`);
+
+    // Reload window to restart db
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
+  });
+
   step('Verify Extension is Running', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 

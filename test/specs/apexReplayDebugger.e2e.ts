@@ -49,8 +49,7 @@ describe('Apex Replay Debugger', async () => {
     // Calling SFDX: Turn On Apex Debug Log for Replay Debugger fails on some machines.
     // Reloading the window forces the extensions to be reloaded and this seems to fix
     // the issue.
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
-    await utilities.pause(20);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
 
     // Clear output before running the command
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
@@ -122,6 +121,11 @@ describe('Apex Replay Debugger', async () => {
     );
     expect(successNotificationWasFound).toBe(true);
 
+    // Close finder tool
+    await browser.keys(['Escape']);
+    await browser.keys(['Escape']);
+    await browser.keys(['Escape']);
+
     // Verify content on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Apex',
@@ -191,15 +195,8 @@ describe('Apex Replay Debugger', async () => {
   });
 
   step('SFDX: Launch Apex Replay Debugger with Last Log File', async () => {
-    // Run SFDX: Launch Apex Replay Debugger with Last Log File
-    const workbench = await (await browser.getWorkbench()).wait();
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Launch Apex Replay Debugger with Last Log File',
-      1
-    );
-
     // Get open text editor
+    const workbench = await (await browser.getWorkbench()).wait();
     const editorView = await workbench.getEditorView();
 
     // Get file path from open text editor
@@ -207,6 +204,13 @@ describe('Apex Replay Debugger', async () => {
     expect(activeTab).not.toBe(undefined);
     const title = await activeTab?.getTitle();
     const logFilePath = path.join(path.delimiter, 'tools', 'debug', 'logs', title!).slice(1);
+
+    // Run SFDX: Launch Apex Replay Debugger with Last Log File
+    prompt = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Launch Apex Replay Debugger with Last Log File',
+      1
+    );
     await prompt.setText(logFilePath);
     await prompt.confirm();
     await utilities.pause(1);

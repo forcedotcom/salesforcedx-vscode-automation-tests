@@ -45,6 +45,14 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     expect(successPushNotificationWasFound).toBe(true);
   });
 
+  step('Reload window to restart DB', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Reload window to restart DB`);
+
+    // Reload window to restart db
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
+  });
+
   step('Run Apex Tests', async () => {
     // Run SFDX: Run Apex tests.
     const workbench = await browser.getWorkbench();
