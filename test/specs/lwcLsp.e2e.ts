@@ -8,6 +8,7 @@ import { step } from 'mocha-steps';
 import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 describe('LWC LSP', async () => {
   let testSetup: TestSetup;
@@ -44,8 +45,16 @@ describe('LWC LSP', async () => {
     // Get open text editor
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('lwc1.js')) as TextEditor;
-    await textEditor.moveCursor(3, 40);
+    await editorView.openEditor('lwc1.js') as TextEditor;
+
+    // Move cursor to the middle of "LightningElement"
+    await browser.keys([CMD_KEY, 'f']);
+    await utilities.pause(1);
+    await browser.keys(["Lightning"]);
+    await browser.keys(['Enter']);
+    await browser.keys(['Escape']);
+    await browser.keys(['ArrowRight']);
+    await utilities.pause(1);
 
     // Go to definition through F12
     await browser.keys(['F12']);
@@ -62,8 +71,15 @@ describe('LWC LSP', async () => {
     // Get open text editor
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
-    await textEditor.moveCursor(3, 52);
+    await editorView.openEditor('lwc1.html') as TextEditor;
+
+    // Move cursor to the middle of "greeting"
+    await browser.keys([CMD_KEY, 'f']);
+    await utilities.pause(1);
+    await browser.keys(["greet"]);
+    await browser.keys(['Escape']);
+    await browser.keys(['ArrowRight']);
+    await utilities.pause(1);
 
     // Go to definition through F12
     await browser.keys(['F12']);
@@ -81,7 +97,17 @@ describe('LWC LSP', async () => {
     const workbench = await browser.getWorkbench();
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
-    await textEditor.typeTextAt(3, 7, ' lwc');
+
+    // Move cursor to the end of "div"
+    await browser.keys([CMD_KEY, 'f']);
+    await utilities.pause(1);
+    await browser.keys(["div"]);
+    await browser.keys(['Enter']);
+    await browser.keys(['Escape']);
+    await browser.keys(['ArrowRight']);
+    await utilities.pause(1);
+
+    await textEditor.typeText(' lwc');
     await utilities.pause(2);
 
     // Verify autocompletion options are present
