@@ -27,7 +27,7 @@ describe('Apex LSP', async () => {
 
     // Reload window to restart db
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 50);
   });
 
   step('Verify Extension is Running', async () => {
