@@ -31,19 +31,25 @@ describe('LWC LSP', async () => {
     const workbench = await browser.getWorkbench();
     await utilities.showRunningExtensions(workbench);
 
+    // Zoom out so more extensions are visible
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+
     // Reload window so that the LWC extension's functionality will work in later steps
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 5);
+
+    // Wait for a minute so that the LWC extension is activated.
+    utilities.pause(60);
 
     // Verify Lightning Web Components extension is present and running
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforce.salesforcedx-vscode-lwc');
     expect(extensionWasFound).toBe(true);
 
-    // Wait for a minute so that the LWC extension is activated.
-    utilities.pause(60);
-
     // REMOVE LATER: Throw an error here to check the screenshot for whether LWC extension is activated
-    let x = true;
-    expect(x).toBe(false);
+    let x = 0;
+    expect(x).toBe(1);
   });
 
   step('Go to Definition (JavaScript)', async () => {
