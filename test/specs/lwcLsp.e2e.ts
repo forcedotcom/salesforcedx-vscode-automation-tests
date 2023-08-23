@@ -40,6 +40,10 @@ describe('LWC LSP', async () => {
 
     // Wait for a minute so that the LWC extension is activated.
     utilities.pause(60);
+
+    // REMOVE LATER: Throw an error here to check the screenshot for whether LWC extension is activated
+    let x = true;
+    expect(x).toBe(false);
   });
 
   step('Go to Definition (JavaScript)', async () => {
