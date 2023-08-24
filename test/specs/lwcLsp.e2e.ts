@@ -61,7 +61,7 @@ describe('LWC LSP', async () => {
     // Move cursor to the middle of "LightningElement"
     await browser.keys([CMD_KEY, 'f']);
     await utilities.pause(1);
-    await browser.keys(["Lightning"]);
+    await browser.keys(["s Lightning"]);
     await browser.keys(['Enter']);
     await browser.keys(['Escape']);
     await browser.keys(['ArrowRight']);
