@@ -47,9 +47,6 @@ describe('LWC LSP', async () => {
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforce.salesforcedx-vscode-lwc');
     expect(extensionWasFound).toBe(true);
 
-    // REMOVE LATER: Throw an error here to check the screenshot for whether LWC extension is activated
-    let x = 0;
-    expect(x).toBe(1);
   });
 
   step('Go to Definition (JavaScript)', async () => {
