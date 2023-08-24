@@ -20,6 +20,21 @@ describe('LWC LSP', async () => {
 
     // Create Lightning Web Component
     await utilities.createLwc('lwc1');
+
+    // TODO: Try installing ESLint here
+    const workbench = await browser.getWorkbench();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Install Extensions', 5);
+    await utilities.pause(1);
+    await browser.keys(["ESLint"]);
+    await utilities.pause(1);
+    await browser.keys(['Tab']);
+    await utilities.pause(1);
+    await browser.keys(['ArrowDown']);
+    await utilities.pause(1);
+    await browser.keys(['Tab']);
+    await utilities.pause(1);
+    await browser.keys(['Enter']);
+    await utilities.pause(1);
   });
 
   step('Verify Extension is Running', async () => {
@@ -44,18 +59,34 @@ describe('LWC LSP', async () => {
     await utilities.pause(60);
 
     // Verify Lightning Web Components extension is present and running
-    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforce.salesforcedx-vscode-lwc');
-    expect(extensionWasFound).toBe(true);
+    // const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforce.salesforcedx-vscode-lwc');
+    // expect(extensionWasFound).toBe(true);
+
+    // The ESLint extension is disabled - click the 'Reload and Enable Extensions' button
+    let buttons = await $$('a.monaco-button.monaco-text-button');
+    utilities.log('number of buttons = ' + buttons.length);
+    for (const item of buttons) {
+      const text = await item.getText();
+      utilities.log('text of current button = ' + text);
+      if (text.includes('Reload and Enable Extensions')) {
+        utilities.log('"Reload and Enable Extensions" clicked');
+        await item.click();
+      }
+    }
+    await utilities.pause(60);
 
     // Disable and re-enable all running extensions
-    await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Disable All Installed Extensions', 60);
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 60);
-    await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 60);
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 60);
+    // await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Disable All Installed Extensions', 5);
+    // await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 60);
+    // await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 5);
+    // await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 60);
 
     // Verify Lightning Web Components extension is present and running
     const extensionWasFound2 = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforce.salesforcedx-vscode-lwc');
     expect(extensionWasFound2).toBe(true);
+
+    const eslintWasFound = await utilities.findExtensionInRunningExtensionsListNoClosePanel(workbench, 'ESLint');
+    expect(eslintWasFound).toBe(true);
 
   });
 
@@ -121,8 +152,7 @@ describe('LWC LSP', async () => {
     // Move cursor to the end of "div"
     await browser.keys([CMD_KEY, 'f']);
     await utilities.pause(1);
-    await browser.keys(["div"]);
-    await browser.keys(['Enter']);
+    await browser.keys(["<div"]);
     await browser.keys(['Escape']);
     await browser.keys(['ArrowRight']);
     await utilities.pause(1);

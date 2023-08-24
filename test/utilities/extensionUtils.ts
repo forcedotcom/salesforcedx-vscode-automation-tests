@@ -13,6 +13,27 @@ export async function showRunningExtensions(workbench: Workbench): Promise<void>
   await runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);
 }
 
+export async function findExtensionInRunningExtensionsListNoClosePanel(
+  workbench: Workbench,
+  extensionName: string
+): Promise<boolean> {
+  // This function assumes the Extensions list was opened.
+
+  // Clear notifications so we can see as many of the running extensions as we can.
+  await runCommandFromCommandPrompt(workbench, 'Notifications: Clear All Notifications', 1);
+
+  const extensionNameDivs = await $$('div.name');
+  let extensionWasFound = false;
+  for (const extensionNameDiv of extensionNameDivs) {
+    const text = await extensionNameDiv.getText();
+    if (text.includes(extensionName)) {
+      extensionWasFound = true;
+    }
+  }
+
+  return extensionWasFound;
+}
+
 export async function findExtensionInRunningExtensionsList(
   workbench: Workbench,
   extensionName: string
