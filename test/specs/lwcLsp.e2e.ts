@@ -66,10 +66,6 @@ describe('LWC LSP', async () => {
     await browser.keys(['ArrowRight']);
     await utilities.pause(1);
 
-    // THROW ERROR
-    let x = 1;
-    expect(x).toBe(0);
-
     // Go to definition through F12
     await browser.keys(['F12']);
     await utilities.pause(1);
