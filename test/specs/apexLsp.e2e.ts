@@ -40,28 +40,8 @@ describe('Apex LSP', async () => {
   step('Verify LSP finished indexing', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
 
-    // Check java path
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Terminal: Focus Terminal', 5);
-
-    // For mac/ubuntu
-    await browser.keys(['echo $JAVA_HOME', 'Enter']);
-    await utilities.pause(1);
-
-    // For windows
-    await browser.keys(['echo $env:JAVA_HOME', 'Enter']);
-    await utilities.pause(1);
-
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Preferences: Open Workspace Settings',
-      5
-    );
-    await browser.keys(['Salesforcedx-vscode-apex java']);
-    await utilities.pause(2);
-    expect(true).toBe(false);
-
     // Get output text from the LSP
+    const workbench = await (await browser.getWorkbench()).wait();
     const outputViewText = await utilities.getOutputViewText('Apex Language Server');
     utilities.log('Output view text');
     utilities.log(outputViewText);
