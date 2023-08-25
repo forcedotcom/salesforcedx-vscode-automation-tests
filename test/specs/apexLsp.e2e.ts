@@ -48,6 +48,12 @@ describe('Apex LSP', async () => {
   step('Verify LSP finished indexing', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
 
+    // Get output text from the LSP
+    const outputViewText = await utilities.getOutputViewText('Apex Language Server');
+    utilities.log('Output view text');
+    utilities.log(outputViewText);
+    utilities.log('Output view text');
+
     // Close running extensions view
     await browser.keys([CMD_KEY, 'w']);
 
