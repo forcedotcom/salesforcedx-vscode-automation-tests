@@ -74,24 +74,21 @@ describe('LWC LSP', async () => {
     await utilities.pause(60);
 
     // Verify Lightning Web Components extension is present and running
-    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforce.salesforcedx-vscode-lwc');
-    expect(extensionWasFound).toBe(true);
+    // const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforce.salesforcedx-vscode-lwc');
+    // expect(extensionWasFound).toBe(true);
 
-    const redHatXmlWasFound = await utilities.findExtensionInRunningExtensionsListNoClosePanel(workbench, 'XML');
-    expect(redHatXmlWasFound).toBe(true);
-
-    // The ESLint extension is disabled - click the 'Reload and Enable Extensions' button
-    // let buttons = await $$('a.monaco-button.monaco-text-button');
-    // utilities.log('number of buttons = ' + buttons.length);
-    // for (const item of buttons) {
-    //   const text = await item.getText();
-    //   utilities.log('text of current button = ' + text);
-    //   if (text.includes('Reload and Enable Extensions')) {
-    //     utilities.log('"Reload and Enable Extensions" clicked');
-    //     await item.click();
-    //   }
-    // }
-    // await utilities.pause(60);
+    // The Red Hat XML extension is disabled - click the 'Reload and Enable Extensions' button
+    let buttons = await $$('a.monaco-button.monaco-text-button');
+    utilities.log('number of buttons = ' + buttons.length);
+    for (const item of buttons) {
+      const text = await item.getText();
+      utilities.log('text of current button = ' + text);
+      if (text.includes('Reload and Enable Extensions')) {
+        utilities.log('"Reload and Enable Extensions" clicked');
+        await item.click();
+      }
+    }
+    await utilities.pause(60);
 
     // Disable and re-enable all running extensions
     // await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Disable All Installed Extensions', 5);
@@ -100,8 +97,11 @@ describe('LWC LSP', async () => {
     // await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 60);
 
     // Verify Lightning Web Components extension is present and running
-    // const extensionWasFound2 = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforce.salesforcedx-vscode-lwc');
-    // expect(extensionWasFound2).toBe(true);
+    const extensionWasFound2 = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforce.salesforcedx-vscode-lwc');
+    expect(extensionWasFound2).toBe(true);
+
+    const redHatXmlWasFound = await utilities.findExtensionInRunningExtensionsListNoClosePanel(workbench, 'XML');
+    expect(redHatXmlWasFound).toBe(true);
 
     // const eslintWasFound = await utilities.findExtensionInRunningExtensionsListNoClosePanel(workbench, 'ESLint');
     // expect(eslintWasFound).toBe(true);
