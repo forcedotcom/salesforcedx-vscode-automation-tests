@@ -44,9 +44,12 @@ describe('Apex LSP', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'Terminal: Focus Terminal', 5);
 
+    // For mac/ubuntu
     await browser.keys(['echo $JAVA_HOME', 'Enter']);
     await utilities.pause(1);
-    await browser.keys(['echo %JAVA_HOME%', 'Enter']);
+
+    // For windows
+    await browser.keys(['echo $env:JAVA_HOME', 'Enter']);
     await utilities.pause(1);
 
     await utilities.runCommandFromCommandPrompt(
