@@ -43,13 +43,13 @@ describe('Apex LSP', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
 
     // Get os info
-    const os = navigator.userAgent;
+    const os = process.platform;
     utilities.log('os');
     utilities.log(os);
     utilities.log('os');
 
     // Set right JAVA_HOME path if os is mac
-    if (os.includes('Mac')) {
+    if (os === 'darwin') {
       await utilities.runCommandFromCommandPrompt(
         workbench,
         'Preferences: Open Workspace Settings',
