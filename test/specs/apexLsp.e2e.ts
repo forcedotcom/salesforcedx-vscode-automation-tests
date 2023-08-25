@@ -44,9 +44,6 @@ describe('Apex LSP', async () => {
 
     // Get os info
     const os = process.platform;
-    utilities.log('os');
-    utilities.log(os);
-    utilities.log('os');
 
     // Set right JAVA_HOME path if os is mac
     if (os === 'darwin') {
@@ -61,6 +58,10 @@ describe('Apex LSP', async () => {
       await javaHomeInput.click();
       await browser.keys(['/Users/runner/hostedtoolcache/Java_Zulu_jdk/11.0.20-8/x64']);
       await utilities.pause(2);
+
+      utilities.log('Reloading window so setting takes effect');
+      // Reload window to update cache and get the setting behavior to work
+      await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 50);
     }
 
     // Get output text from the LSP
