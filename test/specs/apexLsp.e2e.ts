@@ -55,6 +55,8 @@ describe('Apex LSP', async () => {
       5
     );
     await browser.keys(['Salesforcedx-vscode-apex java']);
+    await utilities.pause(2);
+    expect(true).toBe(false);
 
     // Get output text from the LSP
     const outputViewText = await utilities.getOutputViewText('Apex Language Server');
