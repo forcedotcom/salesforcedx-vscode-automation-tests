@@ -35,6 +35,21 @@ describe('LWC LSP', async () => {
     // await utilities.pause(1);
     // await browser.keys(['Enter']);
     // await utilities.pause(1);
+
+    // Install Red Hat XML Extension
+    const workbench = await browser.getWorkbench();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Install Extensions', 5);
+    await utilities.pause(1);
+    await browser.keys(["Red Hat XML"]);
+    await utilities.pause(5);
+    await browser.keys(['Tab']);
+    await utilities.pause(1);
+    await browser.keys(['ArrowDown']);
+    await utilities.pause(1);
+    await browser.keys(['Tab']);
+    await utilities.pause(1);
+    await browser.keys(['Enter']);
+    await utilities.pause(1);
   });
 
   step('Verify Extension is Running', async () => {
@@ -61,6 +76,9 @@ describe('LWC LSP', async () => {
     // Verify Lightning Web Components extension is present and running
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforce.salesforcedx-vscode-lwc');
     expect(extensionWasFound).toBe(true);
+
+    const redHatXmlWasFound = await utilities.findExtensionInRunningExtensionsListNoClosePanel(workbench, 'XML');
+    expect(redHatXmlWasFound).toBe(true);
 
     // The ESLint extension is disabled - click the 'Reload and Enable Extensions' button
     // let buttons = await $$('a.monaco-button.monaco-text-button');
@@ -94,8 +112,8 @@ describe('LWC LSP', async () => {
     utilities.log(lwcMessage);
 
     // Trigger an error to check the screenshot and see what is in the 'LWC Extension' tab of the output panel
-    let x = 0;
-    expect(x).toBe(1);
+    // let x = 0;
+    // expect(x).toBe(1);
 
   });
 
