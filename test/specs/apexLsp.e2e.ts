@@ -45,7 +45,9 @@ describe('Apex LSP', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'Terminal: Focus Terminal', 5);
 
     await browser.keys(['echo $JAVA_HOME', 'Enter']);
+    await utilities.pause(1);
     await browser.keys(['echo %JAVA_HOME%', 'Enter']);
+    await utilities.pause(1);
 
     await utilities.runCommandFromCommandPrompt(
       workbench,
