@@ -44,9 +44,9 @@ describe('Apex LSP', async () => {
 
     // Get os info
     const os = navigator.userAgent;
-    console.log('os');
-    console.log(os);
-    console.log('os');
+    utilities.log('os');
+    utilities.log(os);
+    utilities.log('os');
 
     // Set right JAVA_HOME path if os is mac
     if (os.includes('Mac')) {
