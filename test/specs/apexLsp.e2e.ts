@@ -22,14 +22,6 @@ describe('Apex LSP', async () => {
     await utilities.createApexClassWithTest('ExampleClass');
   });
 
-  step('Reload window to restart DB', async () => {
-    utilities.log(`${testSetup.testSuiteSuffixName} - Reload window to restart DB`);
-
-    // Reload window to restart db
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 50);
-  });
-
   step('Verify Extension is Running', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 
@@ -48,6 +40,20 @@ describe('Apex LSP', async () => {
   step('Verify LSP finished indexing', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
 
+    // Check java path
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Terminal: Focus Terminal', 5);
+
+    await browser.keys(['echo $JAVA_HOME', 'Enter']);
+    await browser.keys(['echo %JAVA_HOME%', 'Enter']);
+
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Preferences: Open Workspace Settings',
+      5
+    );
+    await browser.keys(['Salesforcedx-vscode-apex java']);
+
     // Get output text from the LSP
     const outputViewText = await utilities.getOutputViewText('Apex Language Server');
     utilities.log('Output view text');
@@ -58,7 +64,6 @@ describe('Apex LSP', async () => {
     await browser.keys([CMD_KEY, 'w']);
 
     // Get Apex LSP Status Bar
-    const workbench = await (await browser.getWorkbench()).wait();
     const statusBar = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       'Editor Language Status'
