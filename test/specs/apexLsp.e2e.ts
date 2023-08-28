@@ -62,10 +62,11 @@ describe('Apex LSP', async () => {
       utilities.log('Reloading window so setting takes effect');
       // Reload window to update cache and get the setting behavior to work
       await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
-    }
+      expect(true).toBe(false);
 
-    // Close settings view
-    await browser.keys([CMD_KEY, 'w']);
+      // Close settings view
+      await browser.keys([CMD_KEY, 'w']);
+    }
 
     // Get output text from the LSP
     const outputViewText = await utilities.getOutputViewText('Apex Language Server');
