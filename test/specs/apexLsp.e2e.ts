@@ -42,46 +42,46 @@ describe('Apex LSP', async () => {
 
     const workbench = await (await browser.getWorkbench()).wait();
 
-    // Get os info
-    const os = process.platform;
+    // // Get os info
+    // const os = process.platform;
 
-    // Set right JAVA_HOME path if os is mac
-    if (os === 'darwin') {
-      // await utilities.runCommandFromCommandPrompt(
-      //   workbench,
-      //   'Preferences: Open Workspace Settings',
-      //   5
-      // );
-      // await browser.keys(['Salesforcedx-vscode-apex java']);
-      // await utilities.pause(1);
-      // const javaHomeInput = await $('input.input.setting-control-focus-target');
-      // await javaHomeInput.click();
-      // await browser.keys(['/Users/runner/hostedtoolcache/Java_Zulu_jdk/11.0.20-8/x64']);
-      // await utilities.pause(2);
+    // // Set right JAVA_HOME path if os is mac
+    // if (os === 'darwin') {
+    //   // await utilities.runCommandFromCommandPrompt(
+    //   //   workbench,
+    //   //   'Preferences: Open Workspace Settings',
+    //   //   5
+    //   // );
+    //   // await browser.keys(['Salesforcedx-vscode-apex java']);
+    //   // await utilities.pause(1);
+    //   // const javaHomeInput = await $('input.input.setting-control-focus-target');
+    //   // await javaHomeInput.click();
+    //   // await browser.keys(['/Users/runner/hostedtoolcache/Java_Zulu_jdk/11.0.20-8/x64']);
+    //   // await utilities.pause(2);
 
-      await utilities.runCommandFromCommandPrompt(workbench, 'Terminal: Focus Terminal', 5);
+    //   await utilities.runCommandFromCommandPrompt(workbench, 'Terminal: Focus Terminal', 5);
 
-      // Set JAVA_HOME with terminal
-      await browser.keys([
-        'export JAVA_HOME=/Users/runner/hostedtoolcache/Java_Zulu_jdk/11.0.20-8/x64',
-        'Enter'
-      ]);
-      await browser.keys(['echo $JAVA_HOME', 'Enter']);
-      await utilities.pause(1);
+    //   // Set JAVA_HOME with terminal
+    //   await browser.keys([
+    //     'export JAVA_HOME=/Users/runner/hostedtoolcache/Java_Zulu_jdk/11.0.20-8/x64',
+    //     'Enter'
+    //   ]);
+    //   await browser.keys(['echo $JAVA_HOME', 'Enter']);
+    //   await utilities.pause(1);
 
-      utilities.log('Reloading window so setting takes effect');
-      // Reload window to update cache and get the setting behavior to work
-      await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 60);
+    //   utilities.log('Reloading window so setting takes effect');
+    //   // Reload window to update cache and get the setting behavior to work
+    //   await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 60);
 
-      await utilities.runCommandFromCommandPrompt(workbench, 'Terminal: Focus Terminal', 5);
-      // Verify JAVA_HOME is ok
-      await browser.keys(['echo $JAVA_HOME', 'Enter']);
-      await utilities.pause(2);
-      expect(true).toBe(false);
+    //   await utilities.runCommandFromCommandPrompt(workbench, 'Terminal: Focus Terminal', 5);
+    //   // Verify JAVA_HOME is ok
+    //   await browser.keys(['echo $JAVA_HOME', 'Enter']);
+    //   await utilities.pause(2);
+    //   expect(true).toBe(false);
 
-      // Close settings view
-      await browser.keys([CMD_KEY, 'w']);
-    }
+    //   // Close settings view
+    //   await browser.keys([CMD_KEY, 'w']);
+    // }
 
     // Get output text from the LSP
     const outputViewText = await utilities.getOutputViewText('Apex Language Server');
