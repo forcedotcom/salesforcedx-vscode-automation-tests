@@ -77,6 +77,7 @@ describe('Apex LSP', async () => {
       // Verify JAVA_HOME is ok
       await browser.keys(['echo $JAVA_HOME', 'Enter']);
       await utilities.pause(2);
+      expect(true).toBe(false);
 
       // Close settings view
       await browser.keys([CMD_KEY, 'w']);
