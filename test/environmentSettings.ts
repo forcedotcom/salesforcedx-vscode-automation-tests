@@ -38,8 +38,9 @@ export class EnvironmentSettings {
   private _extensionPath = join(__dirname, '..', '..', 'salesforcedx-vscode', 'packages');
   private _startTime = new Date(Date.now()).toLocaleTimeString([], { timeStyle: 'short' });
   private _throttleFactor = 1;
+  private _javaHome = process.env.JAVA_HOME;
 
-  private constructor() {}
+  private constructor() { }
 
   public static getInstance(): EnvironmentSettings {
     if (!EnvironmentSettings._instance) {
@@ -103,5 +104,8 @@ export class EnvironmentSettings {
 
   public get orgId(): string | undefined {
     return this._orgId;
+  }
+  public get javaHome(): string | undefined {
+    return this._javaHome;
   }
 }

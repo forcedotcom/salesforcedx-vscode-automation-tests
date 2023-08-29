@@ -9,12 +9,14 @@ import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
+import { EnvironmentSettings } from '../environmentSettings';
 
 describe('Apex LSP', async () => {
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
     utilities.log('ApexLsp - Set up the testing environment');
+    utilities.log(`ApexLsp - JAVA_HOME: ${EnvironmentSettings.getInstance().javaHome}`);
     testSetup = new TestSetup('ApexLsp', false);
     await testSetup.setUp();
 

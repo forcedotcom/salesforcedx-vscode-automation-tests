@@ -228,6 +228,9 @@ export const config: Options.Testrunner = {
     // timeout: 30 0000
     timeout: 2400000
   },
+  runnerEnv: {
+    ...process.env
+  },
   //
   // =====
   // Hooks
