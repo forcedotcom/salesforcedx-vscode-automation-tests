@@ -228,9 +228,6 @@ export const config: Options.Testrunner = {
     // timeout: 30 0000
     timeout: 2_400_000
   },
-  runnerEnv: {
-    JAVA_HOME: EnvironmentSettings.getInstance().javaHome
-  },
   //
   // =====
   // Hooks
