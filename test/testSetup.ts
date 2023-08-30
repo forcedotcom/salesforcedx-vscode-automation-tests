@@ -449,7 +449,7 @@ export class TestSetup {
       return;
     }
     if (!fs.existsSync(path.dirname(vscodeSettingsPath))) {
-      fs.mkdirSync(path.dirname(vscodeSettingsPath));
+      fs.mkdirSync(path.dirname(vscodeSettingsPath), { recursive: true });
     }
 
     let settings = fs.existsSync(vscodeSettingsPath)
