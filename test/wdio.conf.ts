@@ -229,7 +229,7 @@ export const config: Options.Testrunner = {
     timeout: 2400000
   },
   runnerEnv: {
-    ...process.env
+    // ...process.env
   },
   //
   // =====
