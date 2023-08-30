@@ -226,10 +226,10 @@ export const config: Options.Testrunner = {
     // timeout: 180000
     // timeout: 240000
     // timeout: 30 0000
-    timeout: 2400000
+    timeout: 2_400_000
   },
   runnerEnv: {
-    // ...process.env
+    JAVA_HOME: EnvironmentSettings.getInstance().javaHome
   },
   //
   // =====
