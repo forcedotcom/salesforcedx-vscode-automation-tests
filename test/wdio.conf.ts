@@ -241,8 +241,10 @@ export const config: Options.Testrunner = {
    * @param {Object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  // onPrepare: function (config, capabilities) {
-  // },
+  onPrepare: function (config, capabilities) {
+    console.error(`onPrepare JAVA_HOME: ${process.env.JAVA_HOME}`);
+    console.error(`onPrepare PATH: ${process.env.PATH}`);
+  },
   /**
    * Gets executed before a worker process is spawned and can be used to initialise specific service
    * for that worker as well as modify runtime environments in an async fashion.
@@ -252,8 +254,10 @@ export const config: Options.Testrunner = {
    * @param  {[type]} args     object that will be merged with the main configuration once worker is initialized
    * @param  {[type]} execArgv list of string arguments passed to the worker process
    */
-  // onWorkerStart: function (cid, caps, specs, args, execArgv) {
-  // },
+  onWorkerStart: function (cid, caps, specs, args, execArgv) {
+    console.error(`onPrepare JAVA_HOME: ${process.env.JAVA_HOME}`);
+    console.error(`onPrepare PATH: ${process.env.PATH}`);
+  },
   /**
    * Gets executed just after a worker process has exited.
    * @param  {String} cid      capability id (e.g 0-0)
