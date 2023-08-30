@@ -255,8 +255,8 @@ export const config: Options.Testrunner = {
    * @param  {[type]} execArgv list of string arguments passed to the worker process
    */
   onWorkerStart: function (cid, caps, specs, args, execArgv) {
-    console.error(`onPrepare JAVA_HOME: ${process.env.JAVA_HOME}`);
-    console.error(`onPrepare PATH: ${process.env.PATH}`);
+    console.error(`onWorkerStart JAVA_HOME: ${process.env.JAVA_HOME}`);
+    console.error(`onWorkerStart PATH: ${process.env.PATH}`);
   },
   /**
    * Gets executed just after a worker process has exited.
