@@ -228,10 +228,6 @@ export const config: Options.Testrunner = {
     // timeout: 30 0000
     timeout: 2_400_000
   },
-  runnerEnv: {
-    JAVA_HOME: process.env.JAVA_HOME,
-    PATH: process.env.PATH
-  },
   //
   // =====
   // Hooks
@@ -245,10 +241,8 @@ export const config: Options.Testrunner = {
    * @param {Object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  onPrepare: function (config, capabilities) {
-    console.error(`onPrepare JAVA_HOME: ${process.env.JAVA_HOME}`);
-    console.error(`onPrepare PATH: ${process.env.PATH}`);
-  },
+  // onPrepare: function (config, capabilities) {
+  // },
   /**
    * Gets executed before a worker process is spawned and can be used to initialise specific service
    * for that worker as well as modify runtime environments in an async fashion.
@@ -258,10 +252,8 @@ export const config: Options.Testrunner = {
    * @param  {[type]} args     object that will be merged with the main configuration once worker is initialized
    * @param  {[type]} execArgv list of string arguments passed to the worker process
    */
-  onWorkerStart: function (cid, caps, specs, args, execArgv) {
-    console.error(`onWorkerStart JAVA_HOME: ${process.env.JAVA_HOME}`);
-    console.error(`onWorkerStart PATH: ${process.env.PATH}`);
-  },
+  // onWorkerStart: function (cid, caps, specs, args, execArgv) {
+  // },
   /**
    * Gets executed just after a worker process has exited.
    * @param  {String} cid      capability id (e.g 0-0)
@@ -279,8 +271,13 @@ export const config: Options.Testrunner = {
    * @param {Array.<String>} specs List of spec file paths that are to be run
    * @param {String} cid worker id (e.g. 0-0)
    */
-  // beforeSession: function (config, capabilities, specs, cid) {
-  // },
+  beforeSession: function (config, capabilities, specs, cid) {
+    console.error(`beforeSession JAVA_HOME: ${process.env.JAVA_HOME}`);
+    console.error(`beforeSession PATH: ${process.env.PATH}`);
+    config.runnerEnv = { ...(config.runnerEnv ?? {}), JAVA_HOME: process.env.JAVA_HOME, PATH: process.env.PATH };
+    console.error(`beforeSession - runnerEnv JAVA_HOME: ${config.runnerEnv?.JAVA_HOME}`);
+    console.error(`beforeSession - runnerEnv PATH: ${config.runnerEnv?.PATH}`);
+  },
   /**
    * Gets executed before test execution begins. At this point you can access to all global
    * variables like `browser`. It is the perfect place to define custom commands.
