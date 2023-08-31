@@ -12,6 +12,7 @@ import util from 'util';
 import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
 import { EnvironmentSettings } from './environmentSettings';
 import * as utilities from './utilities';
+import vscode from 'wdio-vscode-service';
 
 const exec = util.promisify(child_process.exec);
 
@@ -94,9 +95,6 @@ export class TestSetup {
       await utilities.pause(1);
     }
 
-    this.setJavaHomeConfigEntry();
-    this.dumpWorkspaceSettings();
-
     utilities.log(`${this.testSuiteSuffixName} - ...finished setUpTestingEnvironment()`);
     utilities.log('');
   }
@@ -131,6 +129,8 @@ export class TestSetup {
     // Click the OK button.
     await utilities.clickFilePathOkButton();
 
+    this.setJavaHomeConfigEntry();
+
     // Verify the project was created and was loaded.
     await this.verifyProjectCreated();
 
@@ -149,6 +149,7 @@ export class TestSetup {
     this.setJavaHomeConfigEntry();
 
     this.updateScratchOrgDefWithEdition(scratchOrgEdition);
+
     this.dumpWorkspaceSettings();
 
     this.verifyProjectCreated();
@@ -445,13 +446,17 @@ export class TestSetup {
 
     settings = { ...settings, 'salesforcedx-vscode-apex.java.home': process.env.JAVA_HOME };
     fs.writeFileSync(vscodeSettingsPath, JSON.stringify(settings, null, 2), 'utf8');
-    utilities.log(`${this.testSuiteSuffixName} - Set 'salesforcedx-vscode-apex.java.home' to '${process.env.JAVA_HOME}' in ${vscodeSettingsPath}`);
+    utilities.log(
+      `${this.testSuiteSuffixName} - Set 'salesforcedx-vscode-apex.java.home' to '${process.env.JAVA_HOME}' in ${vscodeSettingsPath}`
+    );
   }
 
   private dumpWorkspaceSettings() {
     const vscodeSettingsPath = path.join(this.projectFolderPath!, '.vscode', 'settings.json');
     if (!fs.existsSync(path.dirname(vscodeSettingsPath))) {
-      utilities.log(`${this.testSuiteSuffixName} - ${path.dirname(vscodeSettingsPath)} does not exist`);
+      utilities.log(
+        `${this.testSuiteSuffixName} - ${path.dirname(vscodeSettingsPath)} does not exist`
+      );
     }
 
     const settings = fs.readFileSync(vscodeSettingsPath, 'utf8');
@@ -479,7 +484,10 @@ export class TestSetup {
   private async verifyProjectCreated() {
     utilities.log(`${this.testSuiteSuffixName} - Verifying project was created...`);
 
+    // Reload the VS Code window
     const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 60);
+
     const sidebar = await (await workbench.getSideBar()).wait();
     const content = await (await sidebar.getContent()).wait();
     const treeViewSection = await (
@@ -501,5 +509,4 @@ export class TestSetup {
     await (await forceAppTreeItem.wait()).expand();
     utilities.log(`${this.testSuiteSuffixName} - Verifying project complete`);
   }
-
 }

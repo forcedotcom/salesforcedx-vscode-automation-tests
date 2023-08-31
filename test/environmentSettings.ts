@@ -65,6 +65,9 @@ export class EnvironmentSettings {
         process.env.SFDXAUTHURL_TEST || EnvironmentSettings._instance._sfdxAuthUrl;
       EnvironmentSettings._instance._orgId =
         process.env.ORG_ID || EnvironmentSettings._instance._orgId;
+      EnvironmentSettings._instance._extensionPath =
+        process.env.SALESFORCEDX_VSCODE_EXTENSIONS_PATH ||
+        EnvironmentSettings._instance._extensionPath;
     }
 
     return EnvironmentSettings._instance;
