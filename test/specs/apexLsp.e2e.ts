@@ -18,6 +18,10 @@ describe('Apex LSP', async () => {
     utilities.log('ApexLsp - Set up the testing environment');
     utilities.log(`ApexLsp - JAVA_HOME: ${EnvironmentSettings.getInstance().javaHome}`);
     testSetup = new TestSetup('ApexLsp', false);
+    await testSetup.setUpTestingEnvironment();
+    await testSetup.createProjectWithSfdx(testSetup.tempProjectName);
+    await testSetup.authorizeDevHub();
+    await testSetup.createDefaultScratchOrg();
     await testSetup.setUp();
 
     // Create Apex Class

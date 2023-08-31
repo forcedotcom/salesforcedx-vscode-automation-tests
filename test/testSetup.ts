@@ -95,6 +95,7 @@ export class TestSetup {
     }
 
     this.setJavaHomeConfigEntry();
+    this.dumpWorkspaceSettings();
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished setUpTestingEnvironment()`);
     utilities.log('');
@@ -151,22 +152,24 @@ export class TestSetup {
 
     await (await forceAppTreeItem.wait()).expand();
 
-    if (scratchOrgEdition === 'Enterprise') {
-      const projectScratchDefPath = path.join(
-        this.tempFolderPath!,
-        this.tempProjectName,
-        'config',
-        'project-scratch-def.json'
-      );
-      let projectScratchDef = fs.readFileSync(projectScratchDefPath, 'utf8');
-      projectScratchDef = projectScratchDef.replace(
-        `"edition": "Developer"`,
-        `"edition": "Enterprise"`
-      );
-      fs.writeFileSync(projectScratchDefPath, projectScratchDef, 'utf8');
-    }
+    this.updateScratchOrgDefWithEdition(scratchOrgEdition);
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
+    utilities.log('');
+  }
+
+  public async createProjectWithSfdx(scratchOrgEdition: string): Promise<void> {
+    utilities.log('');
+    utilities.log(`${this.testSuiteSuffixName} - Starting createProjectWithSfdx()...`);
+
+    await exec(`sfdx force:project:create -n ${this.tempProjectName} -d ${this.tempFolderPath}`);
+
+    this.setJavaHomeConfigEntry();
+
+    this.updateScratchOrgDefWithEdition(scratchOrgEdition);
+    this.dumpWorkspaceSettings();
+
+    utilities.log(`${this.testSuiteSuffixName} - ...finished createProjectWithSfdx()`);
     utilities.log('');
   }
 
@@ -243,7 +246,7 @@ export class TestSetup {
     );
   }
 
-  private async createDefaultScratchOrg(): Promise<void> {
+  public async createDefaultScratchOrg(): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`);
 
@@ -460,4 +463,33 @@ export class TestSetup {
     fs.writeFileSync(vscodeSettingsPath, JSON.stringify(settings, null, 2), 'utf8');
     utilities.log(`${this.testSuiteSuffixName} - Set 'salesforcedx-vscode-apex.java.home' to '${process.env.JAVA_HOME}' in ${vscodeSettingsPath}`);
   }
+
+  private dumpWorkspaceSettings() {
+    const vscodeSettingsPath = path.join(this.projectFolderPath!, '.vscode', 'settings.json');
+    if (!fs.existsSync(path.dirname(vscodeSettingsPath))) {
+      utilities.log(`${this.testSuiteSuffixName} - ${path.dirname(vscodeSettingsPath)} does not exist`);
+    }
+
+    const settings = fs.readFileSync(vscodeSettingsPath, 'utf8');
+
+    utilities.log(`${this.testSuiteSuffixName} - Workspace settings: ${JSON.stringify(settings)}`);
+  }
+
+  private updateScratchOrgDefWithEdition(scratchOrgEdition: string) {
+    if (scratchOrgEdition === 'Enterprise') {
+      const projectScratchDefPath = path.join(
+        this.tempFolderPath!,
+        this.tempProjectName,
+        'config',
+        'project-scratch-def.json'
+      );
+      let projectScratchDef = fs.readFileSync(projectScratchDefPath, 'utf8');
+      projectScratchDef = projectScratchDef.replace(
+        `"edition": "Developer"`,
+        `"edition": "Enterprise"`
+      );
+      fs.writeFileSync(projectScratchDefPath, projectScratchDef, 'utf8');
+    }
+  }
+
 }
