@@ -140,24 +140,6 @@ export class TestSetup {
     utilities.log('');
   }
 
-  public async createProjectWithSfdx(scratchOrgEdition: string): Promise<void> {
-    utilities.log('');
-    utilities.log(`${this.testSuiteSuffixName} - Starting createProjectWithSfdx()...`);
-
-    await exec(`sfdx force:project:create -n ${this.tempProjectName} -d ${this.tempFolderPath}`);
-
-    this.setJavaHomeConfigEntry();
-
-    this.updateScratchOrgDefWithEdition(scratchOrgEdition);
-
-    this.dumpWorkspaceSettings();
-
-    this.verifyProjectCreated();
-
-    utilities.log(`${this.testSuiteSuffixName} - ...finished createProjectWithSfdx()`);
-    utilities.log('');
-  }
-
   public async authorizeDevHub(): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting authorizeDevHub()...`);
