@@ -172,7 +172,8 @@ export class TestSetup {
     const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
     utilities.log(`${this.testSuiteSuffixName} - calling sfdx force:org:display...`);
     const sfdxForceOrgDisplayResult = await exec(
-      `sfdx force:org:display -u ${EnvironmentSettings.getInstance().devHubAliasName
+      `sfdx force:org:display -u ${
+        EnvironmentSettings.getInstance().devHubAliasName
       } --verbose --json`
     );
     const json = this.removedEscapedCharacters(sfdxForceOrgDisplayResult.stdout);
@@ -190,7 +191,8 @@ export class TestSetup {
       )
     ) {
       throw new Error(
-        `In authorizeDevHub(), sfdxSfdxUrlStoreResult does not contain "Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName
+        `In authorizeDevHub(), sfdxSfdxUrlStoreResult does not contain "Successfully authorized ${
+          EnvironmentSettings.getInstance().devHubUserName
         } with org ID"`
       );
     }
@@ -444,7 +446,12 @@ export class TestSetup {
       ? JSON.parse(fs.readFileSync(vscodeSettingsPath, 'utf8'))
       : {};
 
-    settings = { ...settings, 'salesforcedx-vscode-apex.java.home': process.env.JAVA_HOME };
+    settings = {
+      ...settings,
+      ...(process.env.JAVA_HOME
+        ? { 'salesforcedx-vscode-apex.java.home': process.env.JAVA_HOME }
+        : {})
+    };
     fs.writeFileSync(vscodeSettingsPath, JSON.stringify(settings, null, 2), 'utf8');
     utilities.log(
       `${this.testSuiteSuffixName} - Set 'salesforcedx-vscode-apex.java.home' to '${process.env.JAVA_HOME}' in ${vscodeSettingsPath}`
