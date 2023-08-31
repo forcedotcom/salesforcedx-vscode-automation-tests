@@ -132,25 +132,7 @@ export class TestSetup {
     await utilities.clickFilePathOkButton();
 
     // Verify the project was created and was loaded.
-    const sidebar = await (await workbench.getSideBar()).wait();
-    const content = await (await sidebar.getContent()).wait();
-    const treeViewSection = await (
-      await content.getSection(this.tempProjectName.toUpperCase())
-    ).wait();
-    if (!treeViewSection) {
-      throw new Error(
-        'In createProject(), getSection() returned a treeViewSection with a value of null (or undefined)'
-      );
-    }
-
-    const forceAppTreeItem = (await treeViewSection.findItem('force-app')) as DefaultTreeItem;
-    if (!forceAppTreeItem) {
-      throw new Error(
-        'In createProject(), findItem() returned a forceAppTreeItem with a value of null (or undefined)'
-      );
-    }
-
-    await (await forceAppTreeItem.wait()).expand();
+    await this.verifyProjectCreated();
 
     this.updateScratchOrgDefWithEdition(scratchOrgEdition);
 
@@ -168,6 +150,8 @@ export class TestSetup {
 
     this.updateScratchOrgDefWithEdition(scratchOrgEdition);
     this.dumpWorkspaceSettings();
+
+    this.verifyProjectCreated();
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished createProjectWithSfdx()`);
     utilities.log('');
@@ -490,6 +474,29 @@ export class TestSetup {
       );
       fs.writeFileSync(projectScratchDefPath, projectScratchDef, 'utf8');
     }
+  }
+
+  private async verifyProjectCreated() {
+    const workbench = await (await browser.getWorkbench()).wait();
+    const sidebar = await (await workbench.getSideBar()).wait();
+    const content = await (await sidebar.getContent()).wait();
+    const treeViewSection = await (
+      await content.getSection(this.tempProjectName.toUpperCase())
+    ).wait();
+    if (!treeViewSection) {
+      throw new Error(
+        'In createProject(), getSection() returned a treeViewSection with a value of null (or undefined)'
+      );
+    }
+
+    const forceAppTreeItem = (await treeViewSection.findItem('force-app')) as DefaultTreeItem;
+    if (!forceAppTreeItem) {
+      throw new Error(
+        'In createProject(), findItem() returned a forceAppTreeItem with a value of null (or undefined)'
+      );
+    }
+
+    await (await forceAppTreeItem.wait()).expand();
   }
 
 }
