@@ -477,6 +477,8 @@ export class TestSetup {
   }
 
   private async verifyProjectCreated() {
+    utilities.log(`${this.testSuiteSuffixName} - Verifying project was created...`);
+
     const workbench = await (await browser.getWorkbench()).wait();
     const sidebar = await (await workbench.getSideBar()).wait();
     const content = await (await sidebar.getContent()).wait();
@@ -485,18 +487,19 @@ export class TestSetup {
     ).wait();
     if (!treeViewSection) {
       throw new Error(
-        'In createProject(), getSection() returned a treeViewSection with a value of null (or undefined)'
+        'In verifyProjectCreated(), getSection() returned a treeViewSection with a value of null (or undefined)'
       );
     }
 
     const forceAppTreeItem = (await treeViewSection.findItem('force-app')) as DefaultTreeItem;
     if (!forceAppTreeItem) {
       throw new Error(
-        'In createProject(), findItem() returned a forceAppTreeItem with a value of null (or undefined)'
+        'In verifyProjectCreated(), findItem() returned a forceAppTreeItem with a value of null (or undefined)'
       );
     }
 
     await (await forceAppTreeItem.wait()).expand();
+    utilities.log(`${this.testSuiteSuffixName} - Verifying project complete`);
   }
 
 }
