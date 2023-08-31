@@ -61,8 +61,8 @@ export class EnvironmentSettings {
         // EnvironmentSettings._instance._specFiles = ['./test/specs/**/' + process.env.SPEC_FILES];
 
         let specFilesList = [];
-        for (var test in e2eTestList) {
-          specFilesList.push('./test/specs/**/' + test);
+        for (var index in e2eTestList) {
+          specFilesList.push('./test/specs/**/' + e2eTestList[index]);
         }
         // specFilesList.push('./test/specs/**/auraLsp.e2e.ts');
         // specFilesList.push('./test/specs/**/visualforceLsp.e2e.ts');
