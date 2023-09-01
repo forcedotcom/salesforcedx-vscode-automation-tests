@@ -61,7 +61,10 @@ export class EnvironmentSettings {
         // EnvironmentSettings._instance._specFiles = ['./test/specs/**/' + process.env.SPEC_FILES];
 
         let specFilesList = [];
-        for (var index in e2eTestList) {
+        if (e2eTestList.length === 1) {
+          throw Error('No E2E tests selected');
+        }
+        for (let index in e2eTestList) {
           if (+index === 0) {
             // The first element is always dummyvalue - can skip
           }
