@@ -42,6 +42,9 @@ describe('Apex LSP', async () => {
   step('Verify LSP finished indexing', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
 
+    // Close running extensions view
+    await browser.keys([CMD_KEY, 'w']);
+
     // Get Apex LSP Status Bar
     const workbench = await (await browser.getWorkbench()).wait();
     const statusBar = await utilities.getStatusBarItemWhichIncludes(
@@ -55,9 +58,6 @@ describe('Apex LSP', async () => {
     const outputViewText = await utilities.getOutputViewText('Apex Language Server');
     utilities.log('Output view text');
     utilities.log(outputViewText);
-
-    // Close running extensions view
-    await browser.keys([CMD_KEY, 'w']);
   });
 
   step('Go to Definition', async () => {
