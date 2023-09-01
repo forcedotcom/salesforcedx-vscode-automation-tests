@@ -54,7 +54,7 @@ export class EnvironmentSettings {
         utilities.log('process.env.SPEC_FILES = ' + process.env.SPEC_FILES);
 
         // Step 1: Parse the string of inputs into an array by splitting on semicolon
-        let e2eTestList = process.env.SPEC_FILES.split(';');
+        let e2eTestList = process.env.SPEC_FILES.split('+');
         // Step 2: Iterate through the array of e2e tests
         // Step 3: Add each file './test/specs/**/<name>.e2e.ts' to specFilesList
 
@@ -62,7 +62,12 @@ export class EnvironmentSettings {
 
         let specFilesList = [];
         for (var index in e2eTestList) {
-          specFilesList.push('./test/specs/**/' + e2eTestList[index]);
+          if (+index === 0) {
+            // The first element is always dummyvalue - can skip
+          }
+          else {
+            specFilesList.push('./test/specs/**/' + e2eTestList[index]);
+          }
         }
         // specFilesList.push('./test/specs/**/auraLsp.e2e.ts');
         // specFilesList.push('./test/specs/**/visualforceLsp.e2e.ts');
