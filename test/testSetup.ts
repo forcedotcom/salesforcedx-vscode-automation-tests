@@ -129,7 +129,13 @@ export class TestSetup {
     // Click the OK button.
     await utilities.clickFilePathOkButton();
 
-    this.setJavaHomeConfigEntry();
+    // Get os info
+    const os = process.platform;
+
+    // Extra config needed for Apex LSP on GHA
+    if (os === 'darwin') {
+      this.setJavaHomeConfigEntry();
+    }
 
     // Verify the project was created and was loaded.
     await this.verifyProjectCreated();
@@ -475,8 +481,7 @@ export class TestSetup {
 
     // Reload the VS Code window
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 60);
-    await utilities.pause(15);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 70);
 
     const sidebar = await (await workbench.getSideBar()).wait();
     const content = await (await sidebar.getContent()).wait();
