@@ -13,6 +13,7 @@ import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-
 import { EnvironmentSettings } from './environmentSettings';
 import * as utilities from './utilities';
 import vscode from 'wdio-vscode-service';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 const exec = util.promisify(child_process.exec);
 
@@ -44,6 +45,7 @@ export class TestSetup {
     await this.createProject(scratchOrgEdition);
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
+    await this.disableCommandCenter();
     utilities.log(`${this.testSuiteSuffixName} - ...finished TestSetup.setUp()`);
     utilities.log('');
   }
@@ -71,6 +73,24 @@ export class TestSetup {
     // Not deleting the folder that was created is OK, b/c it is deleted in setUpTestingEnvironment()
     // the next time the test suite runs.  I'm going to leave this in for now in case this gets fixed
     // and this code can be added back in.
+  }
+
+  public async disableCommandCenter(): Promise<void> {
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Preferences: Open Workspace Settings',
+      3
+    );
+    await browser.keys(['Window: Command Center']);
+
+    const commandCenterBtn = await $('div[title="window.commandCenter"]');
+    await commandCenterBtn.click();
+    await utilities.pause(3);
+
+    // Close settings tab
+    await browser.keys([CMD_KEY, 'w']);
+    await utilities.pause(1);
   }
 
   public async setUpTestingEnvironment(): Promise<void> {
