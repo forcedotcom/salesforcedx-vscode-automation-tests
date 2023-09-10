@@ -101,9 +101,7 @@ describe('Apex Replay Debugger', async () => {
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
     const editorView = workbench.getEditorView();
-
-    // Open test file
-    const textEditor = (await editorView.openEditor('ExampleApexClassTest.cls')) as TextEditor;
+    (await editorView.openEditor('ExampleApexClassTest.cls')) as TextEditor;
 
     // Select text
     await browser.keys([CMD_KEY, 'f']);

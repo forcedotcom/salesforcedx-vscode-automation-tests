@@ -12,7 +12,6 @@ import util from 'util';
 import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
 import { EnvironmentSettings } from './environmentSettings';
 import * as utilities from './utilities';
-import vscode from 'wdio-vscode-service';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 const exec = util.promisify(child_process.exec);
@@ -241,7 +240,7 @@ export class TestSetup {
     );
   }
 
-  public async createDefaultScratchOrg(): Promise<void> {
+  private async createDefaultScratchOrg(): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`);
 
@@ -464,19 +463,6 @@ export class TestSetup {
     utilities.log(
       `${this.testSuiteSuffixName} - Set 'salesforcedx-vscode-apex.java.home' to '${process.env.JAVA_HOME}' in ${vscodeSettingsPath}`
     );
-  }
-
-  private dumpWorkspaceSettings() {
-    const vscodeSettingsPath = path.join(this.projectFolderPath!, '.vscode', 'settings.json');
-    if (!fs.existsSync(path.dirname(vscodeSettingsPath))) {
-      utilities.log(
-        `${this.testSuiteSuffixName} - ${path.dirname(vscodeSettingsPath)} does not exist`
-      );
-    }
-
-    const settings = fs.readFileSync(vscodeSettingsPath, 'utf8');
-
-    utilities.log(`${this.testSuiteSuffixName} - Workspace settings: ${JSON.stringify(settings)}`);
   }
 
   private updateScratchOrgDefWithEdition(scratchOrgEdition: string) {
