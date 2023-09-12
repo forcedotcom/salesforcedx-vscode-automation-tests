@@ -22,7 +22,7 @@ export class EnvironmentSettings {
     // './test/specs/**/debugApexTests.e2e.ts',
     // './test/specs/**/deployAndRetrieve.e2e.ts',
     // './test/specs/**/lwcLsp.e2e.ts',
-    // './test/specs/**/manifestBuilder.e2e.ts'
+    // './test/specs/**/manifestBuilder.e2e.ts',
     // './test/specs/**/orgBrowser.e2e.ts',
     // './test/specs/**/pushAndPull.e2e.ts',
     // './test/specs/**/runApexTests.e2e.ts',
@@ -38,6 +38,7 @@ export class EnvironmentSettings {
   private _extensionPath = join(__dirname, '..', '..', 'salesforcedx-vscode', 'packages');
   private _startTime = new Date(Date.now()).toLocaleTimeString([], { timeStyle: 'short' });
   private _throttleFactor = 1;
+  private _javaHome = process.env.JAVA_HOME;
 
   private constructor() {}
 
@@ -64,6 +65,9 @@ export class EnvironmentSettings {
         process.env.SFDXAUTHURL_TEST || EnvironmentSettings._instance._sfdxAuthUrl;
       EnvironmentSettings._instance._orgId =
         process.env.ORG_ID || EnvironmentSettings._instance._orgId;
+      EnvironmentSettings._instance._extensionPath =
+        process.env.SALESFORCEDX_VSCODE_EXTENSIONS_PATH ||
+        EnvironmentSettings._instance._extensionPath;
     }
 
     return EnvironmentSettings._instance;
@@ -103,5 +107,8 @@ export class EnvironmentSettings {
 
   public get orgId(): string | undefined {
     return this._orgId;
+  }
+  public get javaHome(): string | undefined {
+    return this._javaHome;
   }
 }

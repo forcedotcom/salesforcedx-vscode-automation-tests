@@ -226,7 +226,7 @@ export const config: Options.Testrunner = {
     // timeout: 180000
     // timeout: 240000
     // timeout: 30 0000
-    timeout: 2400000
+    timeout: 2_400_000
   },
   //
   // =====
@@ -271,8 +271,13 @@ export const config: Options.Testrunner = {
    * @param {Array.<String>} specs List of spec file paths that are to be run
    * @param {String} cid worker id (e.g. 0-0)
    */
-  // beforeSession: function (config, capabilities, specs, cid) {
-  // },
+  beforeSession: function (config, capabilities, specs, cid) {
+    console.error(`beforeSession JAVA_HOME: ${process.env.JAVA_HOME}`);
+    console.error(`beforeSession PATH: ${process.env.PATH}`);
+    config.runnerEnv = { ...(config.runnerEnv ?? {}), JAVA_HOME: process.env.JAVA_HOME, PATH: process.env.PATH };
+    console.error(`beforeSession - runnerEnv JAVA_HOME: ${config.runnerEnv?.JAVA_HOME}`);
+    console.error(`beforeSession - runnerEnv PATH: ${config.runnerEnv?.PATH}`);
+  },
   /**
    * Gets executed before test execution begins. At this point you can access to all global
    * variables like `browser`. It is the perfect place to define custom commands.

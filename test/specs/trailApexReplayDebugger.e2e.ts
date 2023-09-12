@@ -45,6 +45,19 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     expect(successPushNotificationWasFound).toBe(true);
   });
 
+  step('Verify LSP finished indexing', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
+
+    // Get Apex LSP Status Bar
+    const workbench = await (await browser.getWorkbench()).wait();
+    const statusBar = await utilities.getStatusBarItemWhichIncludes(
+      workbench,
+      'Editor Language Status'
+    );
+    await statusBar.click();
+    expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
+  });
+
   step('Run Apex Tests', async () => {
     // Run SFDX: Run Apex tests.
     const workbench = await browser.getWorkbench();

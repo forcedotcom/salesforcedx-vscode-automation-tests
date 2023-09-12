@@ -12,6 +12,7 @@ import util from 'util';
 import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
 import { EnvironmentSettings } from './environmentSettings';
 import * as utilities from './utilities';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 const exec = util.promisify(child_process.exec);
 
@@ -43,6 +44,7 @@ export class TestSetup {
     await this.createProject(scratchOrgEdition);
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
+    await this.disableCommandCenter();
     utilities.log(`${this.testSuiteSuffixName} - ...finished TestSetup.setUp()`);
     utilities.log('');
   }
@@ -70,6 +72,24 @@ export class TestSetup {
     // Not deleting the folder that was created is OK, b/c it is deleted in setUpTestingEnvironment()
     // the next time the test suite runs.  I'm going to leave this in for now in case this gets fixed
     // and this code can be added back in.
+  }
+
+  public async disableCommandCenter(): Promise<void> {
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Preferences: Open Workspace Settings',
+      3
+    );
+    await browser.keys(['Window: Command Center']);
+
+    const commandCenterBtn = await $('div[title="window.commandCenter"]');
+    await commandCenterBtn.click();
+    await utilities.pause(3);
+
+    // Close settings tab
+    await browser.keys([CMD_KEY, 'w']);
+    await utilities.pause(1);
   }
 
   public async setUpTestingEnvironment(): Promise<void> {
@@ -128,41 +148,18 @@ export class TestSetup {
     // Click the OK button.
     await utilities.clickFilePathOkButton();
 
+    // Get os info
+    const os = process.platform;
+
+    // Extra config needed for Apex LSP on GHA
+    if (os === 'darwin') {
+      this.setJavaHomeConfigEntry();
+    }
+
     // Verify the project was created and was loaded.
-    const sidebar = await (await workbench.getSideBar()).wait();
-    const content = await (await sidebar.getContent()).wait();
-    const treeViewSection = await (
-      await content.getSection(this.tempProjectName.toUpperCase())
-    ).wait();
-    if (!treeViewSection) {
-      throw new Error(
-        'In createProject(), getSection() returned a treeViewSection with a value of null (or undefined)'
-      );
-    }
+    await this.verifyProjectCreated();
 
-    const forceAppTreeItem = (await treeViewSection.findItem('force-app')) as DefaultTreeItem;
-    if (!forceAppTreeItem) {
-      throw new Error(
-        'In createProject(), findItem() returned a forceAppTreeItem with a value of null (or undefined)'
-      );
-    }
-
-    await (await forceAppTreeItem.wait()).expand();
-
-    if (scratchOrgEdition === 'Enterprise') {
-      const projectScratchDefPath = path.join(
-        this.tempFolderPath!,
-        this.tempProjectName,
-        'config',
-        'project-scratch-def.json'
-      );
-      let projectScratchDef = fs.readFileSync(projectScratchDefPath, 'utf8');
-      projectScratchDef = projectScratchDef.replace(
-        `"edition": "Developer"`,
-        `"edition": "Enterprise"`
-      );
-      fs.writeFileSync(projectScratchDefPath, projectScratchDef, 'utf8');
-    }
+    this.updateScratchOrgDefWithEdition(scratchOrgEdition);
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
     utilities.log('');
@@ -441,5 +438,76 @@ export class TestSetup {
     const resultJson = stdout.replace(/\u001B\[\d\dm/g, '').replace(/\\n/g, '');
 
     return resultJson;
+  }
+
+  private setJavaHomeConfigEntry(): void {
+    const vscodeSettingsPath = path.join(this.projectFolderPath!, '.vscode', 'settings.json');
+    if (!EnvironmentSettings.getInstance().javaHome) {
+      return;
+    }
+    if (!fs.existsSync(path.dirname(vscodeSettingsPath))) {
+      fs.mkdirSync(path.dirname(vscodeSettingsPath), { recursive: true });
+    }
+
+    let settings = fs.existsSync(vscodeSettingsPath)
+      ? JSON.parse(fs.readFileSync(vscodeSettingsPath, 'utf8'))
+      : {};
+
+    settings = {
+      ...settings,
+      ...(process.env.JAVA_HOME
+        ? { 'salesforcedx-vscode-apex.java.home': process.env.JAVA_HOME }
+        : {})
+    };
+    fs.writeFileSync(vscodeSettingsPath, JSON.stringify(settings, null, 2), 'utf8');
+    utilities.log(
+      `${this.testSuiteSuffixName} - Set 'salesforcedx-vscode-apex.java.home' to '${process.env.JAVA_HOME}' in ${vscodeSettingsPath}`
+    );
+  }
+
+  private updateScratchOrgDefWithEdition(scratchOrgEdition: string) {
+    if (scratchOrgEdition === 'Enterprise') {
+      const projectScratchDefPath = path.join(
+        this.tempFolderPath!,
+        this.tempProjectName,
+        'config',
+        'project-scratch-def.json'
+      );
+      let projectScratchDef = fs.readFileSync(projectScratchDefPath, 'utf8');
+      projectScratchDef = projectScratchDef.replace(
+        `"edition": "Developer"`,
+        `"edition": "Enterprise"`
+      );
+      fs.writeFileSync(projectScratchDefPath, projectScratchDef, 'utf8');
+    }
+  }
+
+  private async verifyProjectCreated() {
+    utilities.log(`${this.testSuiteSuffixName} - Verifying project was created...`);
+
+    // Reload the VS Code window
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 70);
+
+    const sidebar = await (await workbench.getSideBar()).wait();
+    const content = await (await sidebar.getContent()).wait();
+    const treeViewSection = await (
+      await content.getSection(this.tempProjectName.toUpperCase())
+    ).wait();
+    if (!treeViewSection) {
+      throw new Error(
+        'In verifyProjectCreated(), getSection() returned a treeViewSection with a value of null (or undefined)'
+      );
+    }
+
+    const forceAppTreeItem = (await treeViewSection.findItem('force-app')) as DefaultTreeItem;
+    if (!forceAppTreeItem) {
+      throw new Error(
+        'In verifyProjectCreated(), findItem() returned a forceAppTreeItem with a value of null (or undefined)'
+      );
+    }
+
+    await (await forceAppTreeItem.wait()).expand();
+    utilities.log(`${this.testSuiteSuffixName} - Verifying project complete`);
   }
 }

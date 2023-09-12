@@ -8,12 +8,15 @@ import { step } from 'mocha-steps';
 import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
+import { EnvironmentSettings } from '../environmentSettings';
 
 describe('Apex LSP', async () => {
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
     utilities.log('ApexLsp - Set up the testing environment');
+    utilities.log(`ApexLsp - JAVA_HOME: ${EnvironmentSettings.getInstance().javaHome}`);
     testSetup = new TestSetup('ApexLsp', false);
     await testSetup.setUp();
 
@@ -34,6 +37,27 @@ describe('Apex LSP', async () => {
       'salesforce.salesforcedx-vscode-apex'
     );
     expect(extensionWasFound).toBe(true);
+  });
+
+  step('Verify LSP finished indexing', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
+
+    // Close running extensions view
+    await browser.keys([CMD_KEY, 'w']);
+
+    // Get Apex LSP Status Bar
+    const workbench = await (await browser.getWorkbench()).wait();
+    const statusBar = await utilities.getStatusBarItemWhichIncludes(
+      workbench,
+      'Editor Language Status'
+    );
+    await statusBar.click();
+    expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
+
+    // Get output text from the LSP
+    const outputViewText = await utilities.getOutputViewText('Apex Language Server');
+    utilities.log('Output view text');
+    utilities.log(outputViewText);
   });
 
   step('Go to Definition', async () => {
