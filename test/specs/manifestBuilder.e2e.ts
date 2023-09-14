@@ -77,17 +77,11 @@ describe('Manifest Builder', async () => {
       1
     );
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
-
     // Look for the success notification that appears which says, "SFDX: Deploy Source to Org successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -136,17 +130,11 @@ describe('Manifest Builder', async () => {
       1
     );
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Retrieve Source from Org',
-      utilities.FIVE_MINUTES
-    );
-
     // Look for the success notification that appears which says, "SFDX: Retrieve Source from Org successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Retrieve Source from Org successfully ran'
+      'SFDX: Retrieve Source from Org successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 

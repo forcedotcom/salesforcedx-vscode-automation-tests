@@ -366,9 +366,10 @@ export class TestSetup {
     // they are looking for.
 
     // Look for the success notification.
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Set a Default Org successfully ran'
+      'SFDX: Set a Default Org successfully ran',
+      utilities.FIVE_MINUTES
     );
     if (!successNotificationWasFound) {
       throw new Error(
@@ -410,9 +411,10 @@ export class TestSetup {
 
     await utilities.pause(3);
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Set a Default Org successfully ran'
+      'SFDX: Set a Default Org successfully ran',
+      utilities.FIVE_MINUTES
     );
     if (!successNotificationWasFound) {
       throw new Error(

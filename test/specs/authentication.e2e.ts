@@ -103,9 +103,10 @@ describe('Authentication', async () => {
     await utilities.pause(5);
 
     // Look for the notification that appears which says, "SFDX: Set a Default Org successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Set a Default Org successfully ran'
+      'SFDX: Set a Default Org successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -156,20 +157,16 @@ describe('Authentication', async () => {
     // Press Enter/Return.
     await prompt.confirm();
 
-    await utilities.waitForNotificationToGoAway(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Create a Default Scratch Org...',
+      'SFDX: Create a Default Scratch Org... successfully ran',
       utilities.FIVE_MINUTES
     );
-
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Create a Default Scratch Org... successfully ran'
-    );
     if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(
+      const failureNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
         workbench,
-        'SFDX: Create a Default Scratch Org... failed to run'
+        'SFDX: Create a Default Scratch Org... failed to run',
+        utilities.FIVE_MINUTES
       );
       if (failureNotificationWasFound === true) {
         if (
@@ -236,9 +233,10 @@ describe('Authentication', async () => {
 
     await utilities.pause(3);
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Set a Default Org successfully ran'
+      'SFDX: Set a Default Org successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 

@@ -29,15 +29,11 @@ describe('Apex Replay Debugger', async () => {
       'SFDX: Push Source to Default Org and Override Conflicts',
       1
     );
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+
+    const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Push Source to Default Org and Override Conflicts',
+      'SFDX: Push Source to Default Org and Override Conflicts successfully ran',
       utilities.FIVE_MINUTES
-    );
-    const successPushNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Push Source to Default Org and Override Conflicts successfully ran'
     );
     expect(successPushNotificationWasFound).toBe(true);
   });
@@ -72,17 +68,11 @@ describe('Apex Replay Debugger', async () => {
       10
     );
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Turn On Apex Debug Log for Replay Debugger',
-      utilities.FIVE_MINUTES
-    );
-
     // Look for the success notification that appears which says, "SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran'
+      'SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -119,16 +109,10 @@ describe('Apex Replay Debugger', async () => {
       1
     );
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running Execute Anonymous Apex',
+      'Execute Anonymous Apex successfully ran',
       utilities.FIVE_MINUTES
-    );
-
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'Execute Anonymous Apex successfully ran'
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -170,16 +154,10 @@ describe('Apex Replay Debugger', async () => {
     expect(quickPicks.length).toBeGreaterThanOrEqual(1);
     await prompt.selectQuickPick('User User - Api');
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Get Apex Debug Logs',
+      'SFDX: Get Apex Debug Logs successfully ran',
       utilities.FIVE_MINUTES
-    );
-
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Get Apex Debug Logs successfully ran'
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -266,15 +244,10 @@ describe('Apex Replay Debugger', async () => {
       10
     );
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running Execute Anonymous Apex',
+      'Execute Anonymous Apex successfully ran',
       utilities.FIVE_MINUTES
-    );
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'Execute Anonymous Apex successfully ran'
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -302,17 +275,11 @@ describe('Apex Replay Debugger', async () => {
       1
     );
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Turn Off Apex Debug Log for Replay Debugger',
-      utilities.FIVE_MINUTES
-    );
-
     // Look for the success notification that appears which says, "SFDX: Turn Off Apex Debug Log for Replay Debugger successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Turn Off Apex Debug Log for Replay Debugger successfully ran'
+      'SFDX: Turn Off Apex Debug Log for Replay Debugger successfully ran',
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
