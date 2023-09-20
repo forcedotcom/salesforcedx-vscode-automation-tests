@@ -150,11 +150,17 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       10
     );
 
-    // Look for the success notification that appears which says, "SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+    // Wait for the command to execute
+    await utilities.waitForNotificationToGoAway(
       workbench,
-      'SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran',
+      'Running SFDX: Turn On Apex Debug Log for Replay Debugger',
       utilities.FIVE_MINUTES
+    );
+
+    // Look for the success notification that appears which says, "SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran".
+    const successNotificationWasFound = await utilities.notificationIsPresent(
+      workbench,
+      'SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran'
     );
     expect(successNotificationWasFound).toBe(true);
 
