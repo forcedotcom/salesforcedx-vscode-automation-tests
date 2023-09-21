@@ -32,15 +32,20 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       'SFDX: Push Source to Default Org and Override Conflicts',
       1
     );
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    // // Wait for the command to execute
+    // await utilities.waitForNotificationToGoAway(
+    //   workbench,
+    //   'Running SFDX: Push Source to Default Org and Override Conflicts',
+    //   utilities.FIVE_MINUTES
+    // );
+    // const successPushNotificationWasFound = await utilities.notificationIsPresent(
+    //   workbench,
+    //   'SFDX: Push Source to Default Org and Override Conflicts successfully ran'
+    // );
+    const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Push Source to Default Org and Override Conflicts',
+      'SFDX: Push Source to Default Org and Override Conflicts successfully ran',
       utilities.FIVE_MINUTES
-    );
-    const successPushNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Push Source to Default Org and Override Conflicts successfully ran'
     );
     expect(successPushNotificationWasFound).toBe(true);
   });
