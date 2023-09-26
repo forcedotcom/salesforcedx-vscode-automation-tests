@@ -21,10 +21,6 @@ const capabilities: VSCodeCapabilities = {
 
   browserName: 'vscode',
   browserVersion: EnvironmentSettings.getInstance().vscodeVersion,
-  'wdio:vscodeOptions': {
-    // Point to the root directory of your project.
-    extensionPath: EnvironmentSettings.getInstance().extensionPath
-  },
 
   acceptInsecureCerts: true
   // If outputDir is provided WebdriverIO can capture driver session logs
