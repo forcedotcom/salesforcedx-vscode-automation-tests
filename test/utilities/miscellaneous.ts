@@ -6,12 +6,8 @@
  */
 
 import os from 'os';
-import {
-  sleep
-} from 'wdio-vscode-service';
-import {
-  EnvironmentSettings
-} from '../environmentSettings';
+import { sleep } from 'wdio-vscode-service';
+import { EnvironmentSettings } from '../environmentSettings';
 
 export const FIVE_MINUTES = 5 * 60;
 
@@ -24,7 +20,8 @@ export function log(message: string) {
 }
 
 export function currentOsUserName(): string {
-  const userName = os.userInfo().username ||
+  const userName =
+    os.userInfo().username ||
     process.env.SUDO_USER ||
     process.env.C9_USER ||
     process.env.LOGNAME ||
@@ -41,4 +38,19 @@ export function currentOsUserName(): string {
 // the periods with an underscore.
 export function transformedUserName(): string {
   return currentOsUserName().replace('.', '_');
+}
+
+export async function findLabel(labelText: string): Promise<WebdriverIO.Element> {
+  let labels = await $$('span.monaco-highlighted-label');
+  let labelElement: WebdriverIO.Element;
+  for (const label of labels) {
+    labelElement = label;
+    const text = await label.getText();
+
+    log(`${labelText} found`);
+    if (text === labelText) {
+      break;
+    }
+  }
+  return labelElement!;
 }
