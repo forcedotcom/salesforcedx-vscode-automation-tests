@@ -83,7 +83,7 @@ describe('SObjects Definitions', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Push Source to Default Org successfully ran',
-      utilities.FIVE_MINUTES
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -110,7 +110,7 @@ describe('SObjects Definitions', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Refresh SObject Definitions successfully ran',
-      utilities.FIVE_MINUTES
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -206,7 +206,7 @@ describe('SObjects Definitions', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Refresh SObject Definitions successfully ran',
-      utilities.FIVE_MINUTES
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -275,7 +275,7 @@ describe('SObjects Definitions', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Refresh SObject Definitions successfully ran',
-      utilities.FIVE_MINUTES
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 

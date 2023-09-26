@@ -179,8 +179,7 @@ export class TestSetup {
     const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
     utilities.log(`${this.testSuiteSuffixName} - calling sfdx force:org:display...`);
     const sfdxForceOrgDisplayResult = await exec(
-      `sfdx force:org:display -u ${
-        EnvironmentSettings.getInstance().devHubAliasName
+      `sfdx force:org:display -u ${EnvironmentSettings.getInstance().devHubAliasName
       } --verbose --json`
     );
     const json = this.removedEscapedCharacters(sfdxForceOrgDisplayResult.stdout);
@@ -198,8 +197,7 @@ export class TestSetup {
       )
     ) {
       throw new Error(
-        `In authorizeDevHub(), sfdxSfdxUrlStoreResult does not contain "Successfully authorized ${
-          EnvironmentSettings.getInstance().devHubUserName
+        `In authorizeDevHub(), sfdxSfdxUrlStoreResult does not contain "Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName
         } with org ID"`
       );
     }
@@ -369,7 +367,7 @@ export class TestSetup {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Set a Default Org successfully ran',
-      utilities.FIVE_MINUTES
+      utilities.TEN_MINUTES
     );
     if (!successNotificationWasFound) {
       throw new Error(
@@ -414,7 +412,7 @@ export class TestSetup {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Set a Default Org successfully ran',
-      utilities.FIVE_MINUTES
+      utilities.TEN_MINUTES
     );
     if (!successNotificationWasFound) {
       throw new Error(
