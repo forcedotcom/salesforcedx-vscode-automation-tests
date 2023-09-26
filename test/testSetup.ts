@@ -40,6 +40,8 @@ export class TestSetup {
   public async setUp(scratchOrgEdition: string = 'Developer'): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
+    await this.installCodeCommandInPath();
+    await this.installExtensions();
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
     await this.authorizeDevHub();
@@ -509,5 +511,26 @@ export class TestSetup {
 
     await (await forceAppTreeItem.wait()).expand();
     utilities.log(`${this.testSuiteSuffixName} - Verifying project complete`);
+  }
+
+  private async installCodeCommandInPath(): Promise<void> {
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      `Shell Command: Install 'code' command in PATH`,
+      2
+    );
+  }
+
+  private async installExtensions(): Promise<void> {
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, `Terminal: Create New Terminal`, 5);
+    //Run command to fins and install extensions
+    const pathToExtensions = path.join('..', 'salesforcedx-vscode', 'extensions');
+    await browser.keys([
+      `find ${pathToExtensions} -type f -name "*.vsix" -exec code --install-extension {} ;`,
+      'Enter'
+    ]);
+    await utilities.pause(100);
   }
 }
