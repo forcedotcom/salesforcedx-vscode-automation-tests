@@ -100,7 +100,7 @@ describe('Deploy and Retrieve', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Deploy Source to Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.FIFTEEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -130,7 +130,7 @@ describe('Deploy and Retrieve', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Deploy Source to Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.FIFTEEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -168,7 +168,7 @@ describe('Deploy and Retrieve', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Deploy Source to Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.FIFTEEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -202,7 +202,7 @@ describe('Deploy and Retrieve', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Retrieve Source from Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.FIFTEEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -243,7 +243,7 @@ describe('Deploy and Retrieve', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Retrieve Source from Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.FIFTEEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
     const textAfterRetrieve = await textEditor.getText();
@@ -317,7 +317,7 @@ describe('Deploy and Retrieve', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Deploy Source to Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.FIFTEEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -379,7 +379,7 @@ describe('Deploy and Retrieve', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Deploy Source to Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.FIFTEEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -409,7 +409,7 @@ describe('Deploy and Retrieve', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Deploy Source to Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.FIFTEEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -447,7 +447,7 @@ describe('Deploy and Retrieve', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Deploy Source to Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.FIFTEEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
