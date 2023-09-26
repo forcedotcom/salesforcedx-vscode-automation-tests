@@ -514,15 +514,18 @@ export class TestSetup {
   }
 
   private async installCodeCommandInPath(): Promise<void> {
+    utilities.log(`SetUp - Started Install code command in path...`);
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(
       workbench,
       `Shell Command: Install 'code' command in PATH`,
       2
     );
+    utilities.log(`...SetUp - Finished Install code command in path`);
   }
 
   private async installExtensions(): Promise<void> {
+    utilities.log(`SetUp - Started Install extensions...`);
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, `Terminal: Create New Terminal`, 5);
     //Run command to fins and install extensions
@@ -532,5 +535,8 @@ export class TestSetup {
       'Enter'
     ]);
     await utilities.pause(100);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 10);
+    utilities.log(`...SetUp - Finished Install extensions`);
   }
 }
