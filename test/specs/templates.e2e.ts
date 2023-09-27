@@ -40,10 +40,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Apex Class successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -116,10 +116,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Apex Trigger successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -192,10 +192,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Aura App successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -309,10 +309,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Aura Component successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -371,10 +371,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Aura Event successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -432,10 +432,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Aura Interface successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -509,10 +509,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Lightning Web Component successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -573,10 +573,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Visualforce Component successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -651,10 +651,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Visualforce Page successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 

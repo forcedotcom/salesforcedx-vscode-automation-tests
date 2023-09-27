@@ -31,10 +31,10 @@ describe('Deploy and Retrieve', async () => {
     ].join('\n');
     await utilities.createApexClass('MyClass', classText);
     const workbench = await (await browser.getWorkbench()).wait();
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Apex Class successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 

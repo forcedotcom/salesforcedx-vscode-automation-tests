@@ -45,10 +45,10 @@ describe('Push and Pull', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Apex Class successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -95,10 +95,10 @@ describe('Push and Pull', async () => {
 
     // At this point there should be no conflicts since this is a new class.
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Push Source to Default Org successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -120,10 +120,10 @@ describe('Push and Pull', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Push Source to Default Org successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -151,10 +151,10 @@ describe('Push and Pull', async () => {
     // Push the file.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    let successNotificationWasFound = await utilities.attemptToFindNotification(
+    let successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Push Source to Default Org successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -176,10 +176,10 @@ describe('Push and Pull', async () => {
     // An now push the changes.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    successNotificationWasFound = await utilities.attemptToFindNotification(
+    successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Push Source to Default Org successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -228,10 +228,10 @@ describe('Push and Pull', async () => {
 
     // At this point there should be no conflicts since there have been no changes.
 
-    let successNotificationWasFound = await utilities.attemptToFindNotification(
+    let successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Pull Source from Default Org successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -257,10 +257,10 @@ describe('Push and Pull', async () => {
     // And pull again.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
 
-    successNotificationWasFound = await utilities.attemptToFindNotification(
+    successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Pull Source from Default Org successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -291,10 +291,10 @@ describe('Push and Pull', async () => {
     // Pull the file.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Pull Source from Default Org successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -323,10 +323,10 @@ describe('Push and Pull', async () => {
     // An now pull the changes.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Pull Source from Default Org successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
