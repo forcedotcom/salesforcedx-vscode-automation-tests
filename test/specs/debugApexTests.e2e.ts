@@ -36,7 +36,7 @@ describe('Debug Apex Tests', async () => {
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Push Source to Default Org and Override Conflicts successfully ran',
-      utilities.FIFTEEN_MINUTES
+      utilities.TEN_MINUTES
     );
     expect(successPushNotificationWasFound).toBe(true);
   });
@@ -77,7 +77,7 @@ describe('Debug Apex Tests', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'Debug Test(s) successfully ran',
-      utilities.FIFTEEN_MINUTES
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -111,7 +111,7 @@ describe('Debug Apex Tests', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'Debug Test(s) successfully ran',
-      utilities.FIFTEEN_MINUTES
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -153,7 +153,7 @@ describe('Debug Apex Tests', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'Debug Test(s) successfully ran',
-      utilities.FIFTEEN_MINUTES
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -187,7 +187,7 @@ describe('Debug Apex Tests', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'Debug Test(s) successfully ran',
-      utilities.FIFTEEN_MINUTES
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 

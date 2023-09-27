@@ -401,7 +401,7 @@ describe('Push and Pull', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Set a Default Org successfully ran',
-      utilities.FIFTEEN_MINUTES
+      utilities.TEN_MINUTES
     );
     if (!successNotificationWasFound) {
       throw new Error(
