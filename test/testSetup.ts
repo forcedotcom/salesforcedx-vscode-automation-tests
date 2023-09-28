@@ -182,56 +182,56 @@ export class TestSetup {
     // Verify CLI Integration extension is present and running
     const coreExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
-      'salesforce.salesforcedx-vscode-core'
+      'salesforcedx-vscode-core'
     );
     expect(coreExtensionWasFound).toBe(true);
 
     // Verify Apex extension is present and running
     const apexExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
-      'salesforce.salesforcedx-vscode-apex'
+      'salesforcedx-vscode-apex'
     );
     expect(apexExtensionWasFound).toBe(true);
 
     // Verify Apex Replay Debugger extension is present and running
     const ardExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
-      'salesforce.salesforcedx-vscode-apex-replay-debugger'
+      'salesforcedx-vscode-apex-replay-debugger'
     );
     expect(ardExtensionWasFound).toBe(true);
 
     // Verify Apex Interactive Debugger extension is present and running
     const isvExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
-      'salesforce.salesforcedx-vscode-apex-debugger'
+      'salesforcedx-vscode-apex-debugger'
     );
     expect(isvExtensionWasFound).toBe(true);
 
     // Verify SOQL extension is present and running
     const soqlExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
-      'salesforce.salesforcedx-vscode-soql'
+      'salesforcedx-vscode-soql'
     );
     expect(soqlExtensionWasFound).toBe(true);
 
     // Verify Aura extension is present and running
     const auraExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
-      'salesforce.salesforcedx-vscode-lightning'
+      'salesforcedx-vscode-lightning'
     );
     expect(auraExtensionWasFound).toBe(true);
 
     // Verify Visualforce extension is present and running
     const vfExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
-      'salesforce.salesforcedx-vscode-visualforce'
+      'salesforcedx-vscode-visualforce'
     );
     expect(vfExtensionWasFound).toBe(true);
 
     // // Verify LWC extension is present and running
     // const lwcExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
     //   workbench,
-    //   'salesforce.salesforcedx-vscode-lwc'
+    //   'salesforcedx-vscode-lwc'
     // );
     // expect(lwcExtensionWasFound).toBe(true);
 
