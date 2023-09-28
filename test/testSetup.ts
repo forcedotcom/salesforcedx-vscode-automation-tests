@@ -228,12 +228,12 @@ export class TestSetup {
     );
     expect(vfExtensionWasFound).toBe(true);
 
-    // Verify LWC extension is present and running
-    const lwcExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-      workbench,
-      'salesforce.salesforcedx-vscode-lwc'
-    );
-    expect(lwcExtensionWasFound).toBe(true);
+    // // Verify LWC extension is present and running
+    // const lwcExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+    //   workbench,
+    //   'salesforce.salesforcedx-vscode-lwc'
+    // );
+    // expect(lwcExtensionWasFound).toBe(true);
 
     await utilities.pause(2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom In', 2);

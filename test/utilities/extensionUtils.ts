@@ -24,6 +24,8 @@ export async function findExtensionInRunningExtensionsList(
     await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
   }
   catch {
+    // Close the command prompt by hitting the Escape key
+    await browser.keys(['Escape']);
     log('No panel to close - command not found');
   }
   await runCommandFromCommandPrompt(workbench, 'Notifications: Clear All Notifications', 1);
