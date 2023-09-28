@@ -43,6 +43,7 @@ export class EnvironmentSettings {
     '..',
     'salesforcedx-vscode',
     'salesforcedx-vscode',
+    'salesforcedx-vscode',
     'extensions'
   );
   private _startTime = new Date(Date.now()).toLocaleTimeString([], { timeStyle: 'short' });
