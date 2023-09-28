@@ -22,6 +22,8 @@ export async function createApexClass(
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
   await browser.keys([CMD_KEY, 'Shift', 'p']);
   await pause(1);
+  await browser.keys(["SFDX: Create Apex Class"]);
+  await pause(1);
 
   // Set the name of the new Apex Class
   await browser.keys([name]);
