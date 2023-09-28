@@ -31,10 +31,10 @@ describe('Deploy and Retrieve', async () => {
     ].join('\n');
     await utilities.createApexClass('MyClass', classText);
     const workbench = await (await browser.getWorkbench()).wait();
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Apex Class successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -95,16 +95,12 @@ describe('Deploy and Retrieve', async () => {
     const editorView = await workbench.getEditorView();
     (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
+
     // At this point there should be no conflicts since this is a new class.
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -130,15 +126,11 @@ describe('Deploy and Retrieve', async () => {
     const editorView = await workbench.getEditorView();
     (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -173,15 +165,10 @@ describe('Deploy and Retrieve', async () => {
     // Deploy running SFDX: Deploy This Source to Org
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -211,16 +198,11 @@ describe('Deploy and Retrieve', async () => {
       'SFDX: Retrieve This Source from Org',
       5
     );
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Retrieve Source from Org',
-      utilities.FIVE_MINUTES
-    );
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Retrieve Source from Org successfully ran'
+      'SFDX: Retrieve Source from Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -257,16 +239,11 @@ describe('Deploy and Retrieve', async () => {
       5
     );
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Retrieve Source from Org',
-      utilities.FIVE_MINUTES
-    );
     await utilities.pause(3);
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Retrieve Source from Org successfully ran'
+      'SFDX: Retrieve Source from Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
     const textAfterRetrieve = await textEditor.getText();
@@ -335,17 +312,12 @@ describe('Deploy and Retrieve', async () => {
     await textEditor.setTextAtLine(2, `\t// let's trigger deploy`);
     await textEditor.save();
     await utilities.pause(5);
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
-    await utilities.pause(5);
+
     // At this point there should be no conflicts since this is a new class.
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -402,16 +374,12 @@ describe('Deploy and Retrieve', async () => {
     const editorView = await workbench.getEditorView();
     (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
+
     // At this point there should be no conflicts since this is a new class.
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -437,15 +405,11 @@ describe('Deploy and Retrieve', async () => {
     const editorView = await workbench.getEditorView();
     (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -480,15 +444,10 @@ describe('Deploy and Retrieve', async () => {
     // Deploy running SFDX: Deploy This Source to Org
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 

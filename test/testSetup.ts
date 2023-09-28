@@ -181,8 +181,7 @@ export class TestSetup {
     const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
     utilities.log(`${this.testSuiteSuffixName} - calling sfdx force:org:display...`);
     const sfdxForceOrgDisplayResult = await exec(
-      `sfdx force:org:display -u ${
-        EnvironmentSettings.getInstance().devHubAliasName
+      `sfdx force:org:display -u ${EnvironmentSettings.getInstance().devHubAliasName
       } --verbose --json`
     );
     const json = this.removedEscapedCharacters(sfdxForceOrgDisplayResult.stdout);
@@ -200,8 +199,7 @@ export class TestSetup {
       )
     ) {
       throw new Error(
-        `In authorizeDevHub(), sfdxSfdxUrlStoreResult does not contain "Successfully authorized ${
-          EnvironmentSettings.getInstance().devHubUserName
+        `In authorizeDevHub(), sfdxSfdxUrlStoreResult does not contain "Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName
         } with org ID"`
       );
     }
@@ -368,9 +366,10 @@ export class TestSetup {
     // they are looking for.
 
     // Look for the success notification.
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Set a Default Org successfully ran'
+      'SFDX: Set a Default Org successfully ran',
+      utilities.TEN_MINUTES
     );
     if (!successNotificationWasFound) {
       throw new Error(
@@ -412,9 +411,10 @@ export class TestSetup {
 
     await utilities.pause(3);
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Set a Default Org successfully ran'
+      'SFDX: Set a Default Org successfully ran',
+      utilities.TEN_MINUTES
     );
     if (!successNotificationWasFound) {
       throw new Error(
