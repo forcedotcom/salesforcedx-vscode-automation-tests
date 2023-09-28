@@ -42,6 +42,7 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
+    await this.verifyAllExtensionsAreRunning();
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
     await this.disableCommandCenter();
@@ -163,6 +164,83 @@ export class TestSetup {
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
     utilities.log('');
+  }
+
+  public async verifyAllExtensionsAreRunning(): Promise<void> {
+    utilities.log('');
+    utilities.log(`${this.testSuiteSuffixName} - Starting verifyAllExtensionsAreRunning()...`);
+
+    // Using the Command palette, run Developer: Show Running Extensions
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.showRunningExtensions(workbench);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    utilities.pause(10);
+
+    // Verify CLI Integration extension is present and running
+    const coreExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+      workbench,
+      'salesforce.salesforcedx-vscode-core'
+    );
+    expect(coreExtensionWasFound).toBe(true);
+
+    // Verify Apex extension is present and running
+    const apexExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+      workbench,
+      'salesforce.salesforcedx-vscode-apex'
+    );
+    expect(apexExtensionWasFound).toBe(true);
+
+    // Verify Apex Replay Debugger extension is present and running
+    const ardExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+      workbench,
+      'salesforce.salesforcedx-vscode-apex-replay-debugger'
+    );
+    expect(ardExtensionWasFound).toBe(true);
+
+    // Verify Apex Interactive Debugger extension is present and running
+    const isvExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+      workbench,
+      'salesforce.salesforcedx-vscode-apex-debugger'
+    );
+    expect(isvExtensionWasFound).toBe(true);
+
+    // Verify SOQL extension is present and running
+    const soqlExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+      workbench,
+      'salesforce.salesforcedx-vscode-soql'
+    );
+    expect(soqlExtensionWasFound).toBe(true);
+
+    // Verify Aura extension is present and running
+    const auraExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+      workbench,
+      'salesforce.salesforcedx-vscode-lightning'
+    );
+    expect(auraExtensionWasFound).toBe(true);
+
+    // Verify Visualforce extension is present and running
+    const vfExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+      workbench,
+      'salesforce.salesforcedx-vscode-visualforce'
+    );
+    expect(vfExtensionWasFound).toBe(true);
+
+    // Verify LWC extension is present and running
+    const lwcExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+      workbench,
+      'salesforce.salesforcedx-vscode-lwc'
+    );
+    expect(lwcExtensionWasFound).toBe(true);
+
+    utilities.pause(2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom In', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom In', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom In', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom In', 2);
+    utilities.pause(2);
   }
 
   public async authorizeDevHub(): Promise<void> {
