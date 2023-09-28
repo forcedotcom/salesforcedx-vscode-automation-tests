@@ -32,15 +32,11 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       'SFDX: Push Source to Default Org and Override Conflicts',
       1
     );
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+
+    const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Push Source to Default Org and Override Conflicts',
-      utilities.FIVE_MINUTES
-    );
-    const successPushNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Push Source to Default Org and Override Conflicts successfully ran'
+      'SFDX: Push Source to Default Org and Override Conflicts successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successPushNotificationWasFound).toBe(true);
   });
@@ -67,27 +63,10 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Processing test run',
-      utilities.FIVE_MINUTES,
-      false
-    );
-
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Run Apex Tests successfully ran'
+      'SFDX: Run Apex Tests successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -150,17 +129,11 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       10
     );
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Turn On Apex Debug Log for Replay Debugger',
-      utilities.FIVE_MINUTES
-    );
-
     // Look for the success notification that appears which says, "SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran'
+      'SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -184,27 +157,10 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Processing test run',
-      utilities.FIVE_MINUTES,
-      false
-    );
-
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Run Apex Tests successfully ran'
+      'SFDX: Run Apex Tests successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -228,7 +184,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.waitForNotificationToGoAway(
       workbench,
       'Getting Apex debug logs',
-      utilities.FIVE_MINUTES
+      utilities.TEN_MINUTES
     );
 
     // Select a log file
@@ -237,16 +193,10 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     expect(quickPicks.length).toBeGreaterThanOrEqual(1);
     await prompt.selectQuickPick('User User - ApexTestHandler');
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Get Apex Debug Logs',
-      utilities.FIVE_MINUTES
-    );
-
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Get Apex Debug Logs successfully ran'
+      'SFDX: Get Apex Debug Logs successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -303,15 +253,11 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       'SFDX: Push Source to Default Org and Override Conflicts',
       1
     );
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+
+    const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Push Source to Default Org and Override Conflicts',
-      utilities.FIVE_MINUTES
-    );
-    const successPushNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Push Source to Default Org and Override Conflicts successfully ran'
+      'SFDX: Push Source to Default Org and Override Conflicts successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successPushNotificationWasFound).toBe(true);
   });
@@ -325,27 +271,10 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Run Apex Tests',
-      utilities.FIVE_MINUTES
-    );
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Listening for streaming state changes...',
-      utilities.FIVE_MINUTES
-    );
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Run Apex Tests: Processing test run',
-      utilities.FIVE_MINUTES,
-      false
-    );
-
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Run Apex Tests successfully ran'
+      'SFDX: Run Apex Tests successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
