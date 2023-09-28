@@ -277,6 +277,7 @@ export const config: Options.Testrunner = {
     config.runnerEnv = { ...(config.runnerEnv ?? {}), JAVA_HOME: process.env.JAVA_HOME, PATH: process.env.PATH };
     console.error(`beforeSession - runnerEnv JAVA_HOME: ${config.runnerEnv?.JAVA_HOME}`);
     console.error(`beforeSession - runnerEnv PATH: ${config.runnerEnv?.PATH}`);
+    console.error(`beforeSession - extensions path ?? ${EnvironmentSettings.getInstance().extensionPath}`)
   },
   /**
    * Gets executed before test execution begins. At this point you can access to all global
