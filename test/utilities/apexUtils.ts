@@ -8,6 +8,7 @@
 import { TextEditor } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 import { pause } from './miscellaneous';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 export async function createApexClass(
   name: string,
@@ -16,22 +17,48 @@ export async function createApexClass(
 ): Promise<void> {
   const workbench = await (await browser.getWorkbench()).wait();
 
+  // Replace the commented out code below with the keyboard commands
+
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
-  let inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
+  await browser.keys([CMD_KEY, 'Shift', 'p']);
+  await pause(1);
 
   // Set the name of the new Apex Class
-  await inputBox.setText(name);
-  await inputBox.confirm();
+  await browser.keys([name]);
+  await pause(1);
+  await browser.keys(['Enter']);
+  await pause(1);
 
   // Select the default directory (press Enter/Return).
-  await inputBox.confirm();
+  await browser.keys(['Enter']);
   await pause(1);
 
   // Modify class content
-  inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-  await inputBox.setText(name + '.cls');
-  await inputBox.confirm();
+  await browser.keys([CMD_KEY, 'p']);
   await pause(1);
+  await browser.keys([name]);
+  await pause(1);
+  await browser.keys([".cls"]);
+  await pause(1);
+  await browser.keys(['Enter']);
+  await pause(1);
+
+  // // Using the Command palette, run SFDX: Create Apex Class to create the main class
+  // let inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
+
+  // // Set the name of the new Apex Class
+  // await inputBox.setText(name);
+  // await inputBox.confirm();
+
+  // // Select the default directory (press Enter/Return).
+  // await inputBox.confirm();
+  // await pause(1);
+
+  // // Modify class content
+  // inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+  // await inputBox.setText(name + '.cls');
+  // await inputBox.confirm();
+  // await pause(1);
 
   const editorView = workbench.getEditorView();
   const textEditor = (await editorView.openEditor(name + '.cls')) as TextEditor;
