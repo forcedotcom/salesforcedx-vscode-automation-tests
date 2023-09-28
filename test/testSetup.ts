@@ -196,7 +196,7 @@ export class TestSetup {
     // Verify Apex Replay Debugger extension is present and running
     const ardExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
-      'salesforce.salesforcedx-vscode-apex-replay-debugge'
+      'salesforce.salesforcedx-vscode-apex-replay-debugger'
     );
     expect(ardExtensionWasFound).toBe(true);
 

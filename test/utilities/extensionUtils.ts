@@ -30,10 +30,10 @@ export async function findExtensionInRunningExtensionsList(
   }
   await runCommandFromCommandPrompt(workbench, 'Notifications: Clear All Notifications', 1);
 
-  const extensionNameDivs = await $$('div.name');
+  const extensionNameDivs = await $$('div.monaco-list-row');
   let extensionWasFound = false;
   for (const extensionNameDiv of extensionNameDivs) {
-    const text = await extensionNameDiv.getText();
+    const text = await extensionNameDiv.getAttribute('aria-label');
     if (text.includes(extensionName)) {
       extensionWasFound = true;
     }
