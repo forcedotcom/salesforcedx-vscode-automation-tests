@@ -177,7 +177,7 @@ export class TestSetup {
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
-    utilities.pause(10);
+    await utilities.pause(10);
 
     // Verify CLI Integration extension is present and running
     const coreExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
@@ -235,12 +235,12 @@ export class TestSetup {
     );
     expect(lwcExtensionWasFound).toBe(true);
 
-    utilities.pause(2);
+    await utilities.pause(2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom In', 2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom In', 2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom In', 2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom In', 2);
-    utilities.pause(2);
+    await utilities.pause(2);
   }
 
   public async authorizeDevHub(): Promise<void> {

@@ -7,7 +7,7 @@
 
 import { Workbench } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
-import { pause } from './miscellaneous';
+import { pause, log } from './miscellaneous';
 
 export async function showRunningExtensions(workbench: Workbench): Promise<void> {
   await runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);
@@ -20,7 +20,12 @@ export async function findExtensionInRunningExtensionsList(
   // This function assumes the Extensions list was opened.
 
   // Close the panel and clear notifications so we can see as many of the running extensions as we can.
-  await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
+  try {
+    await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
+  }
+  catch {
+    log('No panel to close - command not found');
+  }
   await runCommandFromCommandPrompt(workbench, 'Notifications: Clear All Notifications', 1);
 
   const extensionNameDivs = await $$('div.name');
