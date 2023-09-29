@@ -180,10 +180,6 @@ export class TestSetup {
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
     utilities.log('');
-
-    // THROW ERROR HERE - remove when done
-    let x = 0;
-    expect(x).toBe(1);
   }
 
   public async verifyAllExtensionsAreRunning(): Promise<void> {
