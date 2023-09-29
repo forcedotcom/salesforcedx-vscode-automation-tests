@@ -128,13 +128,13 @@ export class TestSetup {
     // If you are not in a VSCode project, the Salesforce extensions are not running
     // Force the CLI integration extension to load before creating the project
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 10);
     await browser.keys(['Escape']);
 
     // Do not continue until we verify CLI Integration extension is present and running
     let coreExtensionWasFound = false;
     do {
-      await utilities.pause(5);
+      await utilities.pause(30);
 
       coreExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
         workbench,

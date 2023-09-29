@@ -19,8 +19,6 @@ export async function findExtensionInRunningExtensionsList(
 ): Promise<boolean> {
   // This function assumes the Extensions list was opened.
 
-  await browser.keys(['Escape']);
-  await pause(1);
   // Close the panel and clear notifications so we can see as many of the running extensions as we can.
   try {
     await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
@@ -28,11 +26,8 @@ export async function findExtensionInRunningExtensionsList(
   catch {
     // Close the command prompt by hitting the Escape key
     await browser.keys(['Escape']);
-    await pause(1);
     log('No panel to close - command not found');
   }
-  await browser.keys(['Escape']);
-  await pause(1);
   await runCommandFromCommandPrompt(workbench, 'Notifications: Clear All Notifications', 1);
 
   const extensionNameDivs = await $$('div.monaco-list-row');
