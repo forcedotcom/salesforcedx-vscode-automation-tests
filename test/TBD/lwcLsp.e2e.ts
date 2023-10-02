@@ -32,7 +32,7 @@ describe('LWC LSP', async () => {
     await utilities.enableLwcExtension();
 
     // Verify Lightning Web Components extension is present and running
-    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforce.salesforcedx-vscode-lwc');
+    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforcedx-vscode-lwc');
     expect(extensionWasFound).toBe(true);
   });
 
