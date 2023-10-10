@@ -113,11 +113,13 @@ describe('Push and Pull', async () => {
   });
 
   step('Push again (with no changes)', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
+
     // Clear the Output view first.
     const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    // await outputView.clearText();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
-    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
