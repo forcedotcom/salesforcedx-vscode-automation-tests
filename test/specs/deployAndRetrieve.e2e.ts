@@ -290,6 +290,12 @@ describe('Deploy and Retrieve', async () => {
     );
     await browser.keys(['prefer deploy']);
 
+    try {
+      await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', 2);
+    }
+    catch {
+      utilities.log('Panel is already closed');
+    }
     const preferDeployOnSaveBtn = await $(
       'div[title="salesforcedx-vscode-core.push-or-deploy-on-save.preferDeployOnSave"]'
     );
