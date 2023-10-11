@@ -40,7 +40,7 @@ export class TestSetup {
   public async setUp(scratchOrgEdition: string = 'Developer'): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
-    await this.installCodeCommandInPath();
+    // await this.installCodeCommandInPath();
     await this.installExtensions();
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
@@ -537,7 +537,7 @@ export class TestSetup {
     await utilities.runCommandFromCommandPrompt(workbench, `Terminal: Create New Terminal`, 5);
     //Run command to fins and install extensions
     await browser.keys([
-      `find ${pathToExtensions} -type f -name "*.vsix" -exec code --install-extension {} ;`,
+      `find ${pathToExtensions} -type f -name "*.vsix" -exec code --install-extension {} \;`,
       'Enter'
     ]);
     await utilities.pause(100);
