@@ -181,7 +181,8 @@ export class TestSetup {
     const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
     utilities.log(`${this.testSuiteSuffixName} - calling sfdx force:org:display...`);
     const sfdxForceOrgDisplayResult = await exec(
-      `sfdx force:org:display -u ${EnvironmentSettings.getInstance().devHubAliasName
+      `sfdx force:org:display -u ${
+        EnvironmentSettings.getInstance().devHubAliasName
       } --verbose --json`
     );
     const json = this.removedEscapedCharacters(sfdxForceOrgDisplayResult.stdout);
@@ -199,7 +200,8 @@ export class TestSetup {
       )
     ) {
       throw new Error(
-        `In authorizeDevHub(), sfdxSfdxUrlStoreResult does not contain "Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName
+        `In authorizeDevHub(), sfdxSfdxUrlStoreResult does not contain "Successfully authorized ${
+          EnvironmentSettings.getInstance().devHubUserName
         } with org ID"`
       );
     }
@@ -525,11 +527,15 @@ export class TestSetup {
   }
 
   private async installExtensions(): Promise<void> {
+    const pathToExtensions = path.join('..', 'salesforcedx-vscode', 'extensions');
     utilities.log(`SetUp - Started Install extensions...`);
     const workbench = await (await browser.getWorkbench()).wait();
+    const vamuavel = await exec(
+      `find ${pathToExtensions} -type f -name "*.vsix" -exec code --install-extension {} ;`
+    );
+    await utilities.log('vamuavel' + vamuavel.stdout);
     await utilities.runCommandFromCommandPrompt(workbench, `Terminal: Create New Terminal`, 5);
     //Run command to fins and install extensions
-    const pathToExtensions = path.join('..', 'salesforcedx-vscode', 'extensions');
     await browser.keys([
       `find ${pathToExtensions} -type f -name "*.vsix" -exec code --install-extension {} ;`,
       'Enter'
