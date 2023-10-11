@@ -530,10 +530,11 @@ export class TestSetup {
     const pathToExtensions = path.join('..', 'salesforcedx-vscode', 'extensions');
     utilities.log(`SetUp - Started Install extensions...`);
     const workbench = await (await browser.getWorkbench()).wait();
-    const vamuavel = await exec(
-      `find ${pathToExtensions} -type f -name "*.vsix" -exec code --install-extension {} ;`
+    const getExtensions = await exec(`gh release download -D ./extensions -p '*.vsix'`);
+    const installExtensions = await exec(
+      `find ./extensions -type f -name "*.vsix" -exec code --install-extension {} \;`
     );
-    await utilities.log('vamuavel' + vamuavel.stdout);
+    await utilities.log('installExtensions' + installExtensions.stdout);
     await utilities.runCommandFromCommandPrompt(workbench, `Terminal: Create New Terminal`, 5);
     //Run command to fins and install extensions
     await browser.keys([
