@@ -41,7 +41,7 @@ export class TestSetup {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
     // await this.installCodeCommandInPath();
-    await this.installExtensions();
+    // await this.installExtensions();
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
     await this.authorizeDevHub();
@@ -527,16 +527,27 @@ export class TestSetup {
   }
 
   private async installExtensions(): Promise<void> {
-    const pathToExtensions = path.join('..', 'salesforcedx-vscode', 'extensions');
+    const pathToExtensions = path.join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      '..',
+      'salesforcedx-vscode',
+      'salesforcedx-vscode',
+      'salesforcedx-vscode',
+      'extensions'
+    );
     utilities.log(`SetUp - Started Install extensions...`);
     const workbench = await (await browser.getWorkbench()).wait();
-    const getExtensions = await exec(`gh release download -D ./extensions -p '*.vsix'`);
     const installExtensions = await exec(
-      `find ./extensions -type f -name "*.vsix" -exec code --install-extension {} \;`
+      `find ${pathToExtensions} -type f -name "*.vsix" -exec code --install-extension {} \;`
     );
     await utilities.log('installExtensions' + installExtensions.stdout);
     await utilities.runCommandFromCommandPrompt(workbench, `Terminal: Create New Terminal`, 5);
     //Run command to fins and install extensions
+
+    utilities.log(`SetUp - Started Install extensions with browser keys...`);
     await browser.keys([
       `find ${pathToExtensions} -type f -name "*.vsix" -exec code --install-extension {} \;`,
       'Enter'

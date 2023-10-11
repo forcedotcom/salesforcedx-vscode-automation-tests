@@ -6,6 +6,7 @@
  */
 
 import type { Options } from '@wdio/types';
+import { join } from 'path';
 import type { VSCodeCapabilities } from 'wdio-vscode-service/dist/types';
 import {
   EnvironmentSettings
@@ -23,7 +24,18 @@ const capabilities: VSCodeCapabilities = {
   browserVersion: EnvironmentSettings.getInstance().vscodeVersion,
   'wdio:vscodeOptions': {
     // Point to the root directory of your project.
-    extensionPath: EnvironmentSettings.getInstance().extensionPath
+    extensionPath: EnvironmentSettings.getInstance().extensionPath,
+    vscodeArgs: {'install-extension': join(
+    __dirname,
+    '..',
+    '..',
+    '..',
+    '..',
+    'salesforcedx-vscode',
+    'salesforcedx-vscode',
+    'salesforcedx-vscode',
+    'extensions'
+  )}
   },
 
   acceptInsecureCerts: true
