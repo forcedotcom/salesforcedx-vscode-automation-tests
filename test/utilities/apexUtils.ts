@@ -21,16 +21,16 @@ export async function createApexClass(
 
   // Set the name of the new Apex Class
   await inputBox.setText(name);
-  await inputBox.confirm();
+  await browser.keys(['Enter']);
 
   // Select the default directory (press Enter/Return).
-  await inputBox.confirm();
+  await browser.keys(['Enter']);
   await pause(1);
 
   // Modify class content
   inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
   await inputBox.setText(name + '.cls');
-  await inputBox.confirm();
+  await browser.keys(['Enter']);
   await pause(1);
 
   const editorView = workbench.getEditorView();
@@ -116,8 +116,8 @@ export async function createAnonymousApexFile(): Promise<void> {
 
   // Set the name of the new Anonymous Apex file
   await inputBox.setText('Anonymous.apex');
-  await inputBox.confirm();
-  await inputBox.confirm();
+  await browser.keys(['Enter']);
+  await browser.keys(['Enter']);
 
   const textEditor = (await editorView.openEditor('Anonymous.apex')) as TextEditor;
   await textEditor.setText("System.debug('¡Hola mundo!');");
