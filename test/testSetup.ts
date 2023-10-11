@@ -40,8 +40,15 @@ export class TestSetup {
   public async setUp(scratchOrgEdition: string = 'Developer'): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
-    // await this.installCodeCommandInPath();
-    // await this.installExtensions();
+    const buttons = await $$('a.monaco-button.monaco-text-button');
+    for (const item of buttons) {
+      const text = await item.getText();
+      if (text.includes('Reload and Enable Extensions')) {
+        utilities.log('enableLwcExtension() - Reload and Enable Extensions');
+        await item.click();
+      }
+    }
+    await utilities.pause(5);
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
     await this.authorizeDevHub();
