@@ -34,7 +34,8 @@ const capabilities: VSCodeCapabilities = {
     'salesforcedx-vscode',
     'salesforcedx-vscode',
     'salesforcedx-vscode',
-    'extensions'
+    'extensions',
+    'salesforcedx-vscode-expanded-58.16.0.vsix'
   )}
   },
 
