@@ -89,8 +89,6 @@ export async function installExtensions(): Promise<void> {
   for (const extension of extensions) {
     await installExtension(extension);
   }
-  await runCommandFromCommandPrompt(workbench, 'Extensions: Focus on Installed View', 5);
-  throw Error();
-  await runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 2);
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 5);
+  await runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 5);
+  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
 }
