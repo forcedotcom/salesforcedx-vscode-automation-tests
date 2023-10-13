@@ -42,6 +42,10 @@ describe('LWC LSP', async () => {
     );
     // Get open text editor
     const workbench = await browser.getWorkbench();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('lwc1.js');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.js')) as TextEditor;
     await textEditor.moveCursor(3, 40);
@@ -60,6 +64,10 @@ describe('LWC LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition (HTML)`);
     // Get open text editor
     const workbench = await browser.getWorkbench();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('lwc1.html');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
     await textEditor.moveCursor(3, 52);
@@ -78,6 +86,10 @@ describe('LWC LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
     const workbench = await browser.getWorkbench();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('lwc1.html');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
     await textEditor.typeTextAt(3, 7, ' lwc');

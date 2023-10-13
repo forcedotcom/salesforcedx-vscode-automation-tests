@@ -46,6 +46,10 @@ describe('Manifest Builder', async () => {
     await inputBox.confirm();
     await inputBox.confirm();
 
+    const inputBox2 = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox2.setText('manifest.xml');
+    await inputBox2.confirm();
+    await utilities.pause(1);
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('manifest.xml')) as TextEditor;
     const content = [
@@ -120,6 +124,10 @@ describe('Manifest Builder', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - SFDX: Retrieve Source in Manifest from Org`);
     // Using the Command palette, run SFDX: Retrieve Source in Manifest from Org
     const workbench = await browser.getWorkbench();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('manifest.xml');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = workbench.getEditorView();
     await editorView.openEditor('manifest.xml');
     // Clear output before running the command

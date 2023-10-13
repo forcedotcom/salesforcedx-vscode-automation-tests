@@ -146,6 +146,10 @@ describe('Push and Pull', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Modify the file by adding a comment.
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('ExampleApexClass1.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ExampleApexClass1.cls')) as TextEditor;
     await textEditor.setTextAtLine(3, '        // sample comment');
@@ -285,6 +289,10 @@ describe('Push and Pull', async () => {
     const outputView = await utilities.openOutputView();
 
     // Modify the file by adding a comment.
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('ExampleApexClass1.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ExampleApexClass1.cls')) as TextEditor;
     await textEditor.setTextAtLine(3, '        // sample comment for the pull test');
@@ -319,6 +327,10 @@ describe('Push and Pull', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Now save the file.
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('ExampleApexClass1.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ExampleApexClass1.cls')) as TextEditor;
     await textEditor.save();

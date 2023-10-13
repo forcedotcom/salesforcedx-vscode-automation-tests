@@ -84,6 +84,10 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('Set Breakpoints and Checkpoints', async () => {
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('AccountService.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('AccountService.cls')) as TextEditor;
     await textEditor.moveCursor(8, 5);
@@ -241,6 +245,10 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('Push Fixed Metadata to Org', async () => {
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('AccountService.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('AccountService.cls')) as TextEditor;
     await textEditor.setTextAtLine(6, '\t\t\tTickerSymbol = tickerSymbol');

@@ -90,6 +90,10 @@ describe('Apex Replay Debugger', async () => {
   step('Run the Anonymous Apex Debugger with Currently Selected Text', async () => {
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('ExampleApexClassTest.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = workbench.getEditorView();
     (await editorView.openEditor('ExampleApexClassTest.cls')) as TextEditor;
 
