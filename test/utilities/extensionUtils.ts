@@ -8,6 +8,21 @@
 import { Workbench } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 import { log, pause } from './miscellaneous';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
+import path from 'path';
+
+const extensions: string[] = [
+  'salesforcedx-vscode',
+  'salesforcedx-vscode-apex',
+  'salesforcedx-vscode-apex-debugger',
+  'salesforcedx-vscode-apex-replay-debugger-',
+  'salesforcedx-vscode-core',
+  'salesforcedx-vscode-expanded',
+  'salesforcedx-vscode-lightning',
+  'salesforcedx-vscode-lwc',
+  'salesforcedx-vscode-soql',
+  'salesforcedx-vscode-visualforce'
+];
 
 export async function showRunningExtensions(workbench: Workbench): Promise<void> {
   await runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);
@@ -45,4 +60,34 @@ export async function reloadAndEnableExtensions(): Promise<void> {
     }
   }
   pause(5);
+}
+
+export async function installExtension(extension: string): Promise<void> {
+  const pathToExtensions = path.join(
+    __dirname,
+    '..',
+    '..',
+    '..',
+    '..',
+    'salesforcedx-vscode',
+    'salesforcedx-vscode',
+    'salesforcedx-vscode',
+    'extensions',
+    extension
+  );
+  log(`SetUp - Started Install extension ${extension}`);
+  const workbench = await (await browser.getWorkbench()).wait();
+  await runCommandFromCommandPrompt(workbench, 'Extensions: Install from VSIX...', 2);
+  await browser.keys([CMD_KEY, 'a']);
+  await browser.keys(pathToExtensions);
+  await pause(2);
+  await browser.keys(['Enter']);
+  await pause(2);
+  log(`...SetUp - Finished Install extension ${extension}`);
+}
+
+export async function installExtensions(): Promise<void> {
+  for (const extension of extensions) {
+    await installExtension(extension);
+  }
 }

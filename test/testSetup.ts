@@ -40,7 +40,7 @@ export class TestSetup {
   public async setUp(scratchOrgEdition: string = 'Developer'): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
-    await this.installExtensions();
+    await utilities.installExtensions();
     await utilities.reloadAndEnableExtensions();
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
@@ -513,27 +513,5 @@ export class TestSetup {
 
     await (await forceAppTreeItem.wait()).expand();
     utilities.log(`${this.testSuiteSuffixName} - Verifying project complete`);
-  }
-
-  private async installExtensions(): Promise<void> {
-    const pathToExtensions = path.join(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      '..',
-      'salesforcedx-vscode',
-      'salesforcedx-vscode',
-      'salesforcedx-vscode',
-      'extensions',
-      's'
-    );
-    utilities.log(`SetUp - Started Install extensions...`);
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Install from VSIX...', 2);
-    await browser.keys([CMD_KEY, 'a']);
-    await browser.keys(pathToExtensions);
-    throw Error();
-    utilities.log(`...SetUp - Finished Install extensions`);
   }
 }
