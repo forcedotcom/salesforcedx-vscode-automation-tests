@@ -83,6 +83,7 @@ export class TestSetup {
       3
     );
     await browser.keys(['Window: Command Center']);
+    await utilities.pause(3);
 
     const commandCenterBtn = await $('div[title="window.commandCenter"]');
     await commandCenterBtn.click();
@@ -134,7 +135,7 @@ export class TestSetup {
     // Do not continue until we verify CLI Integration extension is present and running
     let coreExtensionWasFound = false;
     do {
-      await utilities.pause(30);
+      await utilities.pause(10);
 
       coreExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
         workbench,
