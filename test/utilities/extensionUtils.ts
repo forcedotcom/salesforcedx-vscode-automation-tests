@@ -7,7 +7,7 @@
 
 import { Workbench } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
-import { pause } from './miscellaneous';
+import { log, pause } from './miscellaneous';
 
 export async function showRunningExtensions(workbench: Workbench): Promise<void> {
   await runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);
@@ -33,4 +33,16 @@ export async function findExtensionInRunningExtensionsList(
   }
 
   return extensionWasFound;
+}
+
+export async function reloadAndEnableExtensions(): Promise<void> {
+  const buttons = await $$('a.monaco-button.monaco-text-button');
+  for (const item of buttons) {
+    const text = await item.getText();
+    if (text.includes('Reload and Enable Extensions')) {
+      log('reloadAndEnableExtensions() - Reload and Enable Extensions');
+      await item.click();
+    }
+  }
+  pause(5);
 }

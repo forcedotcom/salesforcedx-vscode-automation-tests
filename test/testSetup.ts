@@ -40,15 +40,8 @@ export class TestSetup {
   public async setUp(scratchOrgEdition: string = 'Developer'): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
-    const buttons = await $$('a.monaco-button.monaco-text-button');
-    for (const item of buttons) {
-      const text = await item.getText();
-      if (text.includes('Reload and Enable Extensions')) {
-        utilities.log('enableLwcExtension() - Reload and Enable Extensions');
-        await item.click();
-      }
-    }
-    await utilities.pause(5);
+    await this.installExtensions();
+    await utilities.reloadAndEnableExtensions();
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
     await this.authorizeDevHub();
@@ -522,17 +515,6 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Verifying project complete`);
   }
 
-  private async installCodeCommandInPath(): Promise<void> {
-    utilities.log(`SetUp - Started Install code command in path...`);
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      `Shell Command: Install 'code' command in PATH`,
-      2
-    );
-    utilities.log(`...SetUp - Finished Install code command in path`);
-  }
-
   private async installExtensions(): Promise<void> {
     const pathToExtensions = path.join(
       __dirname,
@@ -543,25 +525,15 @@ export class TestSetup {
       'salesforcedx-vscode',
       'salesforcedx-vscode',
       'salesforcedx-vscode',
-      'extensions'
+      'extensions',
+      's'
     );
     utilities.log(`SetUp - Started Install extensions...`);
     const workbench = await (await browser.getWorkbench()).wait();
-    const installExtensions = await exec(
-      `find ${pathToExtensions} -type f -name "*.vsix" -exec code --install-extension {} \;`
-    );
-    await utilities.log('installExtensions' + installExtensions.stdout);
-    await utilities.runCommandFromCommandPrompt(workbench, `Terminal: Create New Terminal`, 5);
-    //Run command to fins and install extensions
-
-    utilities.log(`SetUp - Started Install extensions with browser keys...`);
-    await browser.keys([
-      `find ${pathToExtensions} -type f -name "*.vsix" -exec code --install-extension {} \;`,
-      'Enter'
-    ]);
-    await utilities.pause(100);
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 20);
-    await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 10);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Install from VSIX...', 2);
+    await browser.keys([CMD_KEY, 'a']);
+    await browser.keys(pathToExtensions);
+    throw Error();
     utilities.log(`...SetUp - Finished Install extensions`);
   }
 }

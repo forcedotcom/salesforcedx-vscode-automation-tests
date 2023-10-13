@@ -8,6 +8,7 @@
 import { TextEditor } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 import { log, pause } from './miscellaneous';
+import { reloadAndEnableExtensions } from './extensionUtils';
 
 export async function enableLwcExtension(): Promise<void> {
   // salesforce.salesforcedx-vscode-lwc extension is actually not loading automatically
@@ -31,14 +32,7 @@ export async function enableLwcExtension(): Promise<void> {
   await pause(20);
 
   log('enableLwcExtension() - getting buttons after reloading with selector');
-  buttons = await $$('a.monaco-button.monaco-text-button');
-  for (const item of buttons) {
-    const text = await item.getText();
-    if (text.includes('Reload and Enable Extensions')) {
-      log('enableLwcExtension() - Reload and Enable Extensions');
-      await item.click();
-    }
-  }
+  await reloadAndEnableExtensions();
   await pause(5);
 
   log('enableLwcExtension() - 1 - Running Developer: Reload Window');
