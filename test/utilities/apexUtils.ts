@@ -21,10 +21,10 @@ export async function createApexClass(
 
   // Set the name of the new Apex Class
   await inputBox.setText(name);
-  await browser.keys(['Enter']);
+  await inputBox.confirm();
 
   // Select the default directory (press Enter/Return).
-  await browser.keys(['Enter']);
+  await inputBox.confirm();
   await pause(1);
 
   // Modify class content
