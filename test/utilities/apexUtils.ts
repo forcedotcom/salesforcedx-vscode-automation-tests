@@ -30,7 +30,7 @@ export async function createApexClass(
   // Modify class content
   inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
   await inputBox.setText(name + '.cls');
-  await browser.keys(['Enter']);
+  await inputBox.confirm();
   await pause(1);
 
   const editorView = workbench.getEditorView();
