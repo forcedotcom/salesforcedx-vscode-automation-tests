@@ -65,13 +65,13 @@ export async function reloadAndEnableExtensions(): Promise<void> {
 export async function installExtension(extension: string): Promise<void> {
   const pathToExtensions = path.join(
     __dirname,
-    '..',
-    '..',
-    '..',
-    '..',
-    'salesforcedx-vscode',
-    'salesforcedx-vscode',
-    'salesforcedx-vscode',
+    // '..',
+    // '..',
+    // '..',
+    // '..',
+    // 'salesforcedx-vscode',
+    // 'salesforcedx-vscode',
+    // 'salesforcedx-vscode',
     'extensions',
     extension
   );
