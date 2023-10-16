@@ -44,6 +44,7 @@ export class TestSetup {
     await utilities.reloadAndEnableExtensions();
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
+    await utilities.reloadAndEnableExtensions();
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
     await this.disableCommandCenter();
