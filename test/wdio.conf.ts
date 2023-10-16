@@ -25,18 +25,6 @@ const capabilities: VSCodeCapabilities = {
   'wdio:vscodeOptions': {
     // Point to the root directory of your project.
     extensionPath: EnvironmentSettings.getInstance().extensionPath,
-    vscodeArgs: {'install-extension': join(
-    __dirname,
-    '..',
-    '..',
-    '..',
-    '..',
-    'salesforcedx-vscode',
-    'salesforcedx-vscode',
-    'salesforcedx-vscode',
-    'extensions',
-    'salesforcedx-vscode-expanded-59.0.0.vsix'
-  )}
   },
 
   acceptInsecureCerts: true
