@@ -40,8 +40,8 @@ export class TestSetup {
   public async setUp(scratchOrgEdition: string = 'Developer'): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
-    utilities.log(`bendito dirname ${__dirname}`);
     await utilities.installExtensions();
+    await utilities.reloadAndEnableExtensions();
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
     await this.authorizeDevHub();
