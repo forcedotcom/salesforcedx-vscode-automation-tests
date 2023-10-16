@@ -51,6 +51,7 @@ export async function findExtensionInRunningExtensionsList(
 }
 
 export async function reloadAndEnableExtensions(): Promise<void> {
+  const workbench = await (await browser.getWorkbench()).wait();
   const buttons = await $$('a.monaco-button.monaco-text-button');
   for (const item of buttons) {
     const text = await item.getText();
@@ -60,6 +61,7 @@ export async function reloadAndEnableExtensions(): Promise<void> {
     }
   }
   pause(20);
+  await showRunningExtensions(workbench);
 }
 
 export async function installExtension(extension: string): Promise<void> {
