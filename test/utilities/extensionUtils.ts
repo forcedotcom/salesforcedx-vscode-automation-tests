@@ -61,7 +61,6 @@ export async function reloadAndEnableExtensions(): Promise<void> {
     }
   }
   pause(20);
-  await showRunningExtensions(workbench);
 }
 
 export async function installExtension(extension: string): Promise<void> {
@@ -74,7 +73,6 @@ export async function installExtension(extension: string): Promise<void> {
     'extensions',
     extension
   );
-  log(`pathToExtensions = ${pathToExtensions}`);
   log(`SetUp - Started Install extension ${extension}`);
   const workbench = await (await browser.getWorkbench()).wait();
   await runCommandFromCommandPrompt(workbench, 'Extensions: Install from VSIX...', 2);

@@ -35,17 +35,6 @@ export class EnvironmentSettings {
   private _devHubUserName = 'svcideebot@salesforce.com';
   private _sfdxAuthUrl = process.env.SFDX_AUTH_URL;
   private _orgId = process.env.ORG_ID;
-  // private _extensionPath = join(
-  //   __dirname,
-  //   '..',
-  //   '..',
-  //   '..',
-  //   '..',
-  //   'salesforcedx-vscode',
-  //   'salesforcedx-vscode',
-  //   'salesforcedx-vscode',
-  //   'extensions'
-  // );
   private _extensionPath = join(__dirname, '..', '..', 'salesforcedx-vscode', 'extensions');
 
   private _startTime = new Date(Date.now()).toLocaleTimeString([], { timeStyle: 'short' });
