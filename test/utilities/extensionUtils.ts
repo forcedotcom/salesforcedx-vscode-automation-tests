@@ -64,21 +64,20 @@ export async function reloadAndEnableExtensions(): Promise<void> {
 
 export async function installExtension(extension: string): Promise<void> {
   const pathToExtensions = path.join(
-    // __dirname,
-    // '..',
-    // '..',
-    // '..',
-    // '..',
-    // 'salesforcedx-vscode',
-    // 'salesforcedx-vscode',
-    // 'salesforcedx-vscode',
+    __dirname,
+    '..',
+    '..',
+    '..',
+    'salesforcedx-vscode',
+    'salesforcedx-vscode',
+    'salesforcedx-vscode',
     'extensions',
     extension
   );
   log(`SetUp - Started Install extension ${extension}`);
   const workbench = await (await browser.getWorkbench()).wait();
   await runCommandFromCommandPrompt(workbench, 'Extensions: Install from VSIX...', 2);
-  // await browser.keys([CMD_KEY, 'a']);
+  await browser.keys([CMD_KEY, 'a']);
   await browser.keys(pathToExtensions);
   await pause(2);
   throw Error();
