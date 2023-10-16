@@ -107,7 +107,7 @@ describe('An Initial Suite', async () => {
     await testSetup.createProject('Developer');
   });
 
-  step('Verify our extensions are loaded after creating an SFDX project', async () => {
+  step('Verify our extensions are loaded after creating a SFDX project', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 3);
     await utilities.enableLwcExtension();
