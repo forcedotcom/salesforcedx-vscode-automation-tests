@@ -25,7 +25,7 @@ export async function runCommandFromCommandPrompt(
   durationInSeconds: number = 0
 ): Promise<InputBox | QuickOpenBox> {
   const prompt = await (await openCommandPromptWithCommand(workbench, command)).wait();
-  await findQuickPickItem(prompt, command, false, true);
+  await selectQuickPickItem(prompt, command);
 
   if (durationInSeconds > 0) {
     await pause(durationInSeconds);
@@ -51,6 +51,12 @@ export async function selectQuickPickItem(
   prompt: InputBox | QuickOpenBox,
   text: string
 ): Promise<void> {
+
+  // Type the text into the filter.  Do this in case the pick list is long and
+  // the target item is not visible (and one needs to scroll down to see it).
+  await prompt.setText(text);
+  await pause(1);
+
   const quickPicks = await prompt.getQuickPicks();
   for (const quickPick of quickPicks) {
     const label = await quickPick.getLabel();
