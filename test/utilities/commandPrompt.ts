@@ -52,6 +52,9 @@ export async function selectQuickPickItem(
   text: string
 ): Promise<void> {
 
+  log('--- enter selectQuickPickItem()');
+  log('--- text = ' + text);
+
   const quickPicks = await prompt.getQuickPicks();
   log('!!! quickPicks = ' + quickPicks);
   for (const quickPick of quickPicks) {
@@ -60,6 +63,7 @@ export async function selectQuickPickItem(
     if (label === text) {
       log('&&& Command Found!');
       await quickPick.select();
+      log ('&&& quick pick selected');
       return;
     }
   }
