@@ -25,11 +25,10 @@ export async function runCommandFromCommandPrompt(
   durationInSeconds: number = 0
 ): Promise<InputBox | QuickOpenBox> {
   const prompt = await (await openCommandPromptWithCommand(workbench, command)).wait();
-  await pause(2);
-  await selectQuickPickItem(prompt, command);
+  await findQuickPickItem(prompt, command, false, true);
 
   if (durationInSeconds > 0) {
-    await pause(durationInSeconds - 2);
+    await pause(durationInSeconds);
   }
 
   return prompt;
