@@ -67,6 +67,7 @@ export async function installExtension(extension: string): Promise<void> {
     __dirname,
     '..',
     '..',
+    '..',
     'salesforcedx-vscode',
     'extensions',
     extension
