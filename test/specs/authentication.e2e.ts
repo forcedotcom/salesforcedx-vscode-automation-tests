@@ -23,8 +23,18 @@ describe('Authentication', async () => {
   step('Set up the testing environment', async () => {
     tempFolderPath = getTempFolderPath();
     projectFolderPath = path.join(tempFolderPath, tempProjectName);
+    await utilities.installExtensions();
+    await utilities.reloadAndEnableExtensions();
     await testSetup.setUpTestingEnvironment();
     await testSetup.createProject('Standard');
+    await utilities.reloadAndEnableExtensions();
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Extensions: Show Enabled Extensions',
+      5
+    );
+    throw Error();
   });
 
   step('Run SFDX: Authorize a Dev Hub', async () => {

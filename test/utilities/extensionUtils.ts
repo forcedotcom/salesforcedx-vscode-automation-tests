@@ -7,7 +7,7 @@
 
 import { Workbench } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
-import { log, pause } from './miscellaneous';
+import { FIVE_MINUTES, log, pause } from './miscellaneous';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import path from 'path';
 
@@ -88,8 +88,8 @@ export async function installExtensions(): Promise<void> {
   for (const extension of extensions) {
     await installExtension(extension);
   }
-  await pause(180);
+  await pause(FIVE_MINUTES);
   await runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 5);
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
+  // await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+  // await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
 }
