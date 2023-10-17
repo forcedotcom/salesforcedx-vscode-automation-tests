@@ -60,7 +60,7 @@ export async function reloadAndEnableExtensions(): Promise<void> {
       await item.click();
     }
   }
-  pause(100);
+  pause(50);
 }
 
 export async function installExtension(extension: string): Promise<void> {
@@ -89,6 +89,6 @@ export async function installExtensions(): Promise<void> {
     await installExtension(extension);
   }
   await runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 5);
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 5);
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 5);
+  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
 }
