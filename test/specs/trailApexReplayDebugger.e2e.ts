@@ -99,7 +99,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // it does not complete the 6 steps but only 4.
     // Reloading the window forces the extensions to be reloaded and this seems to fix the issue.
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
-    testSetup.verifyAllExtensionsAreRunning();
+    await testSetup.verifyAllExtensionsAreRunning();
 
     // Verify checkpoint is present
     const breakpoints = await $$('.codicon-debug-breakpoint-conditional');

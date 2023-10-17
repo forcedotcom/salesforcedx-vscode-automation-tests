@@ -59,7 +59,7 @@ describe('Apex Replay Debugger', async () => {
     // Reloading the window forces the extensions to be reloaded and this seems to fix
     // the issue.
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
-    testSetup.verifyAllExtensionsAreRunning();
+    await testSetup.verifyAllExtensionsAreRunning();
 
     // Clear output before running the command
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
