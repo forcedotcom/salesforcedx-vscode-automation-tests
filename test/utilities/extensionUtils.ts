@@ -61,6 +61,7 @@ export async function reloadAndEnableExtensions(): Promise<void> {
     }
   }
   pause(20);
+  await runCommandFromCommandPrompt(workbench, 'Extensions: Show Enabled Extensions', 5);
 }
 
 export async function installExtension(extension: string): Promise<void> {
