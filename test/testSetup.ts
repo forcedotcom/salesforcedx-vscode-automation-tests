@@ -131,6 +131,8 @@ export class TestSetup {
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
     await browser.keys(['Escape']);
+    await utilities.pause(1);
+    await browser.keys(['Escape']);
 
     // Do not continue until we verify CLI Integration extension is present and running
     let coreExtensionWasFound = false;
