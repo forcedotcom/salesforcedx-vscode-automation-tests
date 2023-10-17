@@ -22,6 +22,12 @@ describe('Templates', async () => {
     projectName = testSetup.tempProjectName.toUpperCase();
   });
 
+  step('Show running extensions', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
+    utilities.showRunningExtensions(workbench);
+    expect(1).toBe(2);
+  });
+
   // Apex Class
   step('Create an Apex Class', async () => {
     // Using the Command palette, run SFDX: Create Apex Class.
