@@ -80,6 +80,7 @@ export async function installExtension(extension: string): Promise<void> {
   await browser.keys(pathToExtensions);
   await pause(2);
   await browser.keys(['Enter']);
+  throw Error();
   log(`...SetUp - Finished Install extension ${extension}`);
 }
 
