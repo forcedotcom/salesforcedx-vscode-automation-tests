@@ -60,7 +60,7 @@ export async function reloadAndEnableExtensions(): Promise<void> {
       await item.click();
     }
   }
-  pause(50);
+  pause(20);
 }
 
 export async function installExtension(extension: string): Promise<void> {
