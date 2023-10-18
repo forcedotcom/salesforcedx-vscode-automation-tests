@@ -118,7 +118,7 @@ describe('An Initial Suite', async () => {
   step('Verify our extensions are loaded after creating a SFDX project', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 3);
-    await utilities.enableLwcExtension();
+    // await utilities.enableLwcExtension();
     // Close panel and clear all notifications so all extensions can be seen
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
     await utilities.runCommandFromCommandPrompt(

@@ -73,7 +73,7 @@ describe('Visualforce LSP', async () => {
     // Verify Visualforce extension is present and running
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
-      'salesforce.salesforcedx-vscode-visualforce'
+      'salesforcedx-vscode-visualforce'
     );
     expect(extensionWasFound).toBe(true);
   });
