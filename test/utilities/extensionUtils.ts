@@ -75,12 +75,12 @@ export async function installExtension(extension: string): Promise<void> {
   );
   log(`SetUp - Started Install extension ${extension}`);
   const workbench = await (await browser.getWorkbench()).wait();
-  await runCommandFromCommandPrompt(workbench, 'Extensions: Install from VSIX...', 2);
+  await runCommandFromCommandPrompt(workbench, 'Extensions: Install from VSIX...', 5);
+  throw Error();
   await browser.keys([CMD_KEY, 'a']);
   await browser.keys(pathToExtensions);
   await pause(2);
   await browser.keys(['Enter']);
-  throw Error();
   log(`...SetUp - Finished Install extension ${extension}`);
 }
 
