@@ -45,13 +45,6 @@ export class TestSetup {
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
     await utilities.reloadAndEnableExtensions();
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Extensions: Show Enabled Extensions',
-      5
-    );
-    throw Error();
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
     await this.disableCommandCenter();
