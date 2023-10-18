@@ -28,7 +28,7 @@ describe('Aura LSP', async () => {
     // Using the Command palette, run Developer: Show Running Extensions
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.showRunningExtensions(workbench);
-    await utilities.enableLwcExtension();
+    // await utilities.enableLwcExtension();
 
     // Verify Aura Components extension is present and running.
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
