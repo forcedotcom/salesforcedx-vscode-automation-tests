@@ -34,7 +34,7 @@ describe('Apex LSP', async () => {
     // Verify Apex extension is present and running
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
-      'salesforce.salesforcedx-vscode-apex'
+      'salesforcedx-vscode-apex'
     );
     expect(extensionWasFound).toBe(true);
   });
