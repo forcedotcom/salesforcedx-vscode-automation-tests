@@ -90,7 +90,7 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy with SFDX: Deploy This Source to Org - ST enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
+    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
     await inputBox.setText('MyClass.cls');
@@ -125,7 +125,7 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy again (with no changes) - ST enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
+    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
     await inputBox.setText('MyClass.cls');
@@ -161,7 +161,7 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and deploy again - ST enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
+    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Modify the file by adding a comment.
@@ -201,7 +201,7 @@ describe('Deploy and Retrieve', async () => {
   step('Retrieve with SFDX: Retrieve This Source from Org', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
+    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
     await inputBox.setText('MyClass.cls');
@@ -239,7 +239,7 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and retrieve again', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
+    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Modify the file by changing the comment.
@@ -400,7 +400,7 @@ describe('Deploy and Retrieve', async () => {
       1
     );
     // Clear the Output view first.
-    const outputView = await (await utilities.openOutputView()).wait();
+    await (await utilities.openOutputView()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
     await inputBox.setText('MyClass.cls');
@@ -435,7 +435,7 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy again (with no changes) - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
+    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
     await inputBox.setText('MyClass.cls');
@@ -471,7 +471,7 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and deploy again - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
+    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Modify the file by adding a comment.

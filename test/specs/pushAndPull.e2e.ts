@@ -116,7 +116,7 @@ describe('Push and Pull', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
 
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
+    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
@@ -142,7 +142,7 @@ describe('Push and Pull', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
 
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
+    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Modify the file by adding a comment.
@@ -227,7 +227,7 @@ describe('Push and Pull', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
 
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
+    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
@@ -286,7 +286,8 @@ describe('Push and Pull', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
 
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Modify the file by adding a comment.
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
@@ -323,7 +324,7 @@ describe('Push and Pull', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
 
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
+    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Now save the file.
