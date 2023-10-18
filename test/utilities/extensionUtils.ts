@@ -28,6 +28,7 @@ export async function findExtensionInRunningExtensionsList(
     await browser.keys(['Escape']);
     log('No panel to close - command not found');
   }
+  pause(1);
   await runCommandFromCommandPrompt(workbench, 'Notifications: Clear All Notifications', 1);
 
   const extensionNameDivs = await $$('div.monaco-list-row');
