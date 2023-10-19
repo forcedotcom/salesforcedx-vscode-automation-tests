@@ -254,12 +254,10 @@ export class TestSetup {
     // );
     // expect(lwcExtensionWasFound).toBe(true);
 
-    await utilities.pause(2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom In', 2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom In', 2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom In', 2);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom In', 2);
-    await utilities.pause(2);
   }
 
   public async authorizeDevHub(): Promise<void> {
