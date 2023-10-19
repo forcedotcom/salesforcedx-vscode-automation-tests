@@ -101,6 +101,14 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
     await testSetup.verifyAllExtensionsAreRunning();
 
+    // Switch back to the AccountService.cls tab
+    const inputBox2 = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox2.setText('AccountService.cls');
+    await inputBox2.confirm();
+    await utilities.pause(1);
+    const editorView2 = workbench.getEditorView();
+    (await editorView2.openEditor('AccountService.cls')) as TextEditor;
+
     // Verify checkpoint is present
     const breakpoints = await $$('.codicon-debug-breakpoint-conditional');
     expect(breakpoints.length).toEqual(1);
