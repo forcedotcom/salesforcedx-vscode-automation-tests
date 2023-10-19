@@ -24,7 +24,7 @@ describe('Push and Pull', async () => {
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('PushAndPull', false);
-    await testSetup.setUp('Enterprise');
+    await testSetup.setUp();
     projectName = testSetup.tempProjectName.toUpperCase();
   });
 
