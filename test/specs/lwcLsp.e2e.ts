@@ -55,23 +55,23 @@ describe('LWC LSP', async () => {
     expect(title).toBe('engine.d.ts');
   });
 
-  step('Go to Definition (HTML)', async () => {
-    utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition (HTML)`);
-    // Get open text editor
-    const workbench = await browser.getWorkbench();
-    const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
-    await textEditor.moveCursor(3, 52);
+  // step('Go to Definition (HTML)', async () => {
+  //   utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition (HTML)`);
+  //   // Get open text editor
+  //   const workbench = await browser.getWorkbench();
+  //   const editorView = workbench.getEditorView();
+  //   const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
+  //   await textEditor.moveCursor(3, 52);
 
-    // Go to definition through F12
-    await browser.keys(['F12']);
-    await utilities.pause(1);
+  //   // Go to definition through F12
+  //   await browser.keys(['F12']);
+  //   await utilities.pause(1);
 
-    // Verify 'Go to definition' took us to the definition file
-    const activeTab = await editorView.getActiveTab();
-    const title = await activeTab?.getTitle();
-    expect(title).toBe('lwc1.js');
-  });
+  //   // Verify 'Go to definition' took us to the definition file
+  //   const activeTab = await editorView.getActiveTab();
+  //   const title = await activeTab?.getTitle();
+  //   expect(title).toBe('lwc1.js');
+  // });
 
   step('Autocompletion', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);

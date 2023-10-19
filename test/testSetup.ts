@@ -42,13 +42,6 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
     await utilities.installExtensions();
     await utilities.reloadAndEnableExtensions();
-    // const workbench = await (await browser.getWorkbench()).wait();
-    // await utilities.runCommandFromCommandPrompt(
-    //   workbench,
-    //   'Extensions: Show Enabled Extensions',
-    //   5
-    // );
-    // throw Error();
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
     await utilities.reloadAndEnableExtensions();
