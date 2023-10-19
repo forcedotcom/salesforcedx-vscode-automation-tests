@@ -103,30 +103,7 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 3);
-    await utilities.enableLwcExtension();
-    // Close panel and clear all notifications so all extensions can be seen
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Notifications: Clear All Notifications',
-      1
-    );
-
-    let matchesFound = 0;
-    const extensionNameDivs = await $$('div.name');
-    for (const extensionNameDiv of extensionNameDivs) {
-      const text = await extensionNameDiv.getText();
-
-      if (text.startsWith('salesforce.salesforcedx-vscode-')) {
-        matchesFound++;
-        utilities.log(`AnInitialSuite - extension ${text} is loaded`);
-      }
-    }
-
-    // 7 are in the list, but sometimes only 6 are visible.
-    expect(matchesFound).toBeGreaterThanOrEqual(6);
+    testSetup.verifyAllExtensionsAreRunning();
   });
 
   step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
