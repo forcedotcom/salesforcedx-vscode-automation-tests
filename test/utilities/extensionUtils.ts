@@ -7,7 +7,7 @@
 
 import { Workbench } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
-import { pause, log } from './miscellaneous';
+import { log, pause } from './miscellaneous';
 
 export async function showRunningExtensions(workbench: Workbench): Promise<void> {
   await runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);

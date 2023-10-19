@@ -22,9 +22,7 @@ describe('LWC LSP', async () => {
   });
 
   step('Verify Extension is Running', async () => {
-    utilities.log(
-      `${testSetup.testSuiteSuffixName} - Verify Extension is Running`
-    );
+    utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 
     // Using the Command palette, run Developer: Show Running Extensions
     const workbench = await browser.getWorkbench();
@@ -32,14 +30,15 @@ describe('LWC LSP', async () => {
     await utilities.enableLwcExtension();
 
     // Verify Lightning Web Components extension is present and running
-    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(workbench, 'salesforcedx-vscode-lwc');
+    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+      workbench,
+      'salesforcedx-vscode-lwc'
+    );
     expect(extensionWasFound).toBe(true);
   });
 
   step('Go to Definition (JavaScript)', async () => {
-    utilities.log(
-      `${testSetup.testSuiteSuffixName} - Go to Definition (Javascript)`
-    );
+    utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition (Javascript)`);
     // Get open text editor
     const workbench = await browser.getWorkbench();
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
@@ -96,15 +95,9 @@ describe('LWC LSP', async () => {
     await utilities.pause(2);
 
     // Verify autocompletion options are present
-    const autocompletionOptions = await $$(
-      'textarea.inputarea.monaco-mouse-cursor-text'
-    );
-    expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe(
-      'true'
-    );
-    expect(
-      await autocompletionOptions[0].getAttribute('aria-autocomplete')
-    ).toBe('list');
+    const autocompletionOptions = await $$('textarea.inputarea.monaco-mouse-cursor-text');
+    expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe('true');
+    expect(await autocompletionOptions[0].getAttribute('aria-autocomplete')).toBe('list');
 
     // Verify autocompletion options can be selected and therefore automatically inserted into the file
     await browser.keys(['Enter']);

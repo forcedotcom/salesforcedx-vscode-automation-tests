@@ -52,7 +52,7 @@ describe('Aura LSP', async () => {
     // Move cursor to the middle of "simpleNewContact"
     await browser.keys([CMD_KEY, 'f']);
     await utilities.pause(1);
-    await browser.keys(["!v.sim"]);
+    await browser.keys(['!v.sim']);
     await browser.keys(['Escape']);
     await browser.keys(['ArrowRight']);
     await utilities.pause(1);
