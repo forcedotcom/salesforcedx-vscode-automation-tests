@@ -105,6 +105,7 @@ describe('An Initial Suite', async () => {
   step('Verify our extensions are loaded after creating an SFDX project', async () => {
     testSetup.verifyAllExtensionsAreRunning();
     browser.keys(['Escape']);
+    await utilities.pause(1);
   });
 
   step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
