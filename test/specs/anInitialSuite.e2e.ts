@@ -103,17 +103,13 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {
-    utilities.log('1');
     testSetup.verifyAllExtensionsAreRunning();
-    utilities.log('2');
+    browser.keys(['Escape']);
   });
 
   step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
-    // throw error to see screenshot - remove this later
-    let x = 0;
-    expect(x).toBe(5);
     const quickPicks = await prompt.getQuickPicks();
     const commands: string[] = [];
     for (const quickPick of quickPicks) {
