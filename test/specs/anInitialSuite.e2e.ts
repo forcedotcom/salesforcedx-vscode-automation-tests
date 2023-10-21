@@ -114,9 +114,6 @@ describe('An Initial Suite', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
     const quickPicks = await prompt.getQuickPicks();
-    // throw error for screenshot
-    let x = 0;
-    expect(x).toBe(2);
     const commands: string[] = [];
     for (const quickPick of quickPicks) {
       commands.push(await quickPick.getLabel());
