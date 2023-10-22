@@ -84,7 +84,6 @@ export async function installExtension(extension: string): Promise<void> {
   await runCommandFromCommandPrompt(workbench, 'Extensions: Install from VSIX...', 10);
   await browser.keys([CMD_KEY, 'a']);
   await browser.keys(pathToExtensions);
-  throw Error();
   await pause(2);
   await browser.keys(['Enter']);
   log(`...SetUp - Finished Install extension ${extension}`);
