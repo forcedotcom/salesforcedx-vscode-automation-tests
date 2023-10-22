@@ -42,6 +42,10 @@ describe('Aura LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('aura1.cmp');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('aura1.cmp')) as TextEditor;
 
@@ -67,6 +71,10 @@ describe('Aura LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('aura1.cmp');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('aura1.cmp')) as TextEditor;
     await textEditor.typeTextAt(2, 1, '<aura');
