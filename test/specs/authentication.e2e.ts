@@ -41,8 +41,9 @@ describe('Authentication', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Reloading the window forces the extensions to be reloaded and this seems to fix
     // the issue.
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
-    await utilities.pause(20);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
+    await utilities.verifyAllExtensionsAreRunning();
+
     // In the initial state, the org picker button should be set to "No Default Org Set".
     let noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
       workbench,

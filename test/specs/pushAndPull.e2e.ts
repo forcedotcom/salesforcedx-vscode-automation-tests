@@ -24,7 +24,7 @@ describe('Push and Pull', async () => {
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('PushAndPull', false);
-    await testSetup.setUp('Enterprise');
+    await testSetup.setUp();
     projectName = testSetup.tempProjectName.toUpperCase();
   });
 
@@ -113,11 +113,12 @@ describe('Push and Pull', async () => {
   });
 
   step('Push again (with no changes)', async () => {
-    // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
-
     const workbench = await (await browser.getWorkbench()).wait();
+
+    // Clear the Output view first.
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -138,12 +139,17 @@ describe('Push and Pull', async () => {
   });
 
   step('Modify the file and push the changes', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
+
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Modify the file by adding a comment.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('ExampleApexClass1.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ExampleApexClass1.cls')) as TextEditor;
     await textEditor.setTextAtLine(3, '        // sample comment');
@@ -168,7 +174,7 @@ describe('Push and Pull', async () => {
     expect(outputPanelText).toContain('No results found');
 
     // Clear the Output view again.
-    await outputView.clearText();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Now save the file.
     await textEditor.save();
@@ -218,12 +224,12 @@ describe('Push and Pull', async () => {
 
   step('Pull the Apex class', async () => {
     // With this test, it's going to pull twice...
+    const workbench = await (await browser.getWorkbench()).wait();
 
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
-    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
 
     // At this point there should be no conflicts since there have been no changes.
@@ -252,7 +258,7 @@ describe('Push and Pull', async () => {
 
     // Second pull...
     // Clear the output again.
-    await outputView.clearText();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // And pull again.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
@@ -277,12 +283,17 @@ describe('Push and Pull', async () => {
   });
 
   step("Modify the file (but don't save), then pull", async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
+
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Modify the file by adding a comment.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('ExampleApexClass1.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ExampleApexClass1.cls')) as TextEditor;
     await textEditor.setTextAtLine(3, '        // sample comment for the pull test');
@@ -310,12 +321,17 @@ describe('Push and Pull', async () => {
   });
 
   step('Save the modified file, then pull', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
+
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Now save the file.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('ExampleApexClass1.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ExampleApexClass1.cls')) as TextEditor;
     await textEditor.save();
