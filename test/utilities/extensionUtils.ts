@@ -66,7 +66,7 @@ export async function reloadAndEnableExtensions(): Promise<void> {
       await item.click();
     }
   }
-  pause(30);
+  pause(50);
   const workbench = await (await browser.getWorkbench()).wait();
   await runCommandFromCommandPrompt(workbench, 'Extensions: Show Enabled Extensions', 5);
   throw Error();
