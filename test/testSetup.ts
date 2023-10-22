@@ -42,10 +42,10 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
     await utilities.installExtensions();
     await utilities.reloadAndEnableExtensions();
-    await utilities.verifyAllExtensionsAreRunning();
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
     await utilities.reloadAndEnableExtensions();
+    await utilities.verifyAllExtensionsAreRunning();
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
     await this.disableCommandCenter();
