@@ -67,6 +67,9 @@ export async function reloadAndEnableExtensions(): Promise<void> {
     }
   }
   pause(30);
+  const workbench = await (await browser.getWorkbench()).wait();
+  await runCommandFromCommandPrompt(workbench, 'Extensions: Show Enabled Extensions', 5);
+  throw Error();
 }
 
 export async function installExtension(extension: string): Promise<void> {
