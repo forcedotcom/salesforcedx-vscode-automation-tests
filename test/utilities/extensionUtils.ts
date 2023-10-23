@@ -59,14 +59,18 @@ export async function findExtensionInRunningExtensionsList(
 
 export async function reloadAndEnableExtensions(): Promise<void> {
   const buttons = await $$('a.monaco-button.monaco-text-button');
+  let extraPause = false;
   for (const item of buttons) {
     const text = await item.getText();
     if (text.includes('Reload and Enable Extensions')) {
       log('reloadAndEnableExtensions() - Reload and Enable Extensions');
       await item.click();
+      extraPause = true;
     }
   }
-  pause(30);
+  if (extraPause) {
+    pause(30);
+  }
 }
 
 export async function installExtension(extension: string): Promise<void> {
@@ -81,7 +85,7 @@ export async function installExtension(extension: string): Promise<void> {
   );
   log(`SetUp - Started Install extension ${extension}`);
   const workbench = await (await browser.getWorkbench()).wait();
-  await runCommandFromCommandPrompt(workbench, 'Extensions: Install from VSIX...', 10);
+  await runCommandFromCommandPrompt(workbench, 'Extensions: Install from VSIX...', 5);
   await browser.keys([CMD_KEY, 'a']);
   await browser.keys(pathToExtensions);
   await pause(2);
@@ -96,7 +100,7 @@ export async function installExtensions(): Promise<void> {
   }
   await pause(FIVE_MINUTES);
   await runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 5);
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 50);
 }
 
 export async function verifyAllExtensionsAreRunning(): Promise<void> {
