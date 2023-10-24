@@ -58,7 +58,7 @@ describe('Apex Replay Debugger', async () => {
     // Calling SFDX: Turn On Apex Debug Log for Replay Debugger fails on some machines.
     // Reloading the window forces the extensions to be reloaded and this seems to fix
     // the issue.
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
     await utilities.verifyAllExtensionsAreRunning();
 
     // Clear output before running the command

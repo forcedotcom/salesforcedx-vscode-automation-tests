@@ -107,7 +107,8 @@ describe('An Initial Suite', async () => {
     // just call setUpTestingEnvironment() and createProject().
     await testSetup.setUpTestingEnvironment();
     await testSetup.createProject('Developer');
-    await utilities.reloadAndEnableExtensions();
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
   });
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {

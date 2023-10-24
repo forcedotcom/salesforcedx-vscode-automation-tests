@@ -8,41 +8,6 @@
 import { TextEditor } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 import { log, pause } from './miscellaneous';
-import { reloadAndEnableExtensions } from './extensionUtils';
-
-export async function enableLwcExtension(): Promise<void> {
-  // salesforce.salesforcedx-vscode-lwc extension is actually not loading automatically
-  // because it depends on ESLint and it's not installed by default, so we need to
-  // Install it, reload and enable extensions to get them both running.
-
-  log('');
-  log('utilities.enableLwcExtension()');
-  log('enableLwcExtension() - calling browser.getWorkbench()');
-  const workbench = await (await browser.getWorkbench()).wait();
-
-  log('enableLwcExtension() - getting buttons with selector');
-  let buttons = await $$('a.monaco-button.monaco-text-button');
-  for (const item of buttons) {
-    const text = await item.getText();
-    if (text.includes('Install and Reload')) {
-      log('enableLwcExtension() - Install and Reload');
-      await item.click();
-    }
-  }
-  await pause(20);
-
-  log('enableLwcExtension() - getting buttons after reloading with selector');
-  await reloadAndEnableExtensions();
-  await pause(5);
-
-  log('enableLwcExtension() - 1 - Running Developer: Reload Window');
-  log('');
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 5);
-  // Reload again and wait to get the extensions to show up
-  log('enableLwcExtension() - 2 - Running Developer: Reload Window');
-  log('');
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
-}
 
 export async function createLwc(name: string): Promise<void> {
   log('createLwc() - calling browser.getWorkbench()');
