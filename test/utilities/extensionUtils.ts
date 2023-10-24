@@ -100,7 +100,7 @@ export async function installExtensions(): Promise<void> {
   }
   await pause(FIVE_MINUTES);
   await runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 5);
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 50);
+  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 60);
 }
 
 export async function verifyAllExtensionsAreRunning(): Promise<void> {
