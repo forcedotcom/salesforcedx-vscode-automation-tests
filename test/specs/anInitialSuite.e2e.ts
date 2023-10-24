@@ -37,8 +37,6 @@ describe('An Initial Suite', async () => {
     await utilities.installExtensions();
     await utilities.reloadAndEnableExtensions();
     await utilities.reloadAndEnableExtensions();
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
   });
 
   step('Verify our extensions are not initially loaded', async () => {

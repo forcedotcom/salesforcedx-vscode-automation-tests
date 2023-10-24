@@ -28,12 +28,6 @@ describe('Authentication', async () => {
     await testSetup.setUpTestingEnvironment();
     await testSetup.createProject('Standard');
     await utilities.reloadAndEnableExtensions();
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Extensions: Show Enabled Extensions',
-      5
-    );
     await utilities.verifyAllExtensionsAreRunning();
   });
 
