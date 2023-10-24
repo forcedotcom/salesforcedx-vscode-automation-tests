@@ -51,6 +51,7 @@ export async function findExtensionInRunningExtensionsList(
     const text = await extensionNameDiv.getAttribute('aria-label');
     if (text.includes(extensionName)) {
       extensionWasFound = true;
+      log(`extension ${extensionName} was found`);
     }
   }
 
@@ -100,7 +101,7 @@ export async function installExtensions(): Promise<void> {
   }
   await pause(FIVE_MINUTES);
   await runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 5);
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 70);
+  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 30);
 }
 
 export async function verifyAllExtensionsAreRunning(): Promise<void> {
@@ -109,6 +110,8 @@ export async function verifyAllExtensionsAreRunning(): Promise<void> {
 
   // Using the Command palette, run Developer: Show Running Extensions
   const workbench = await (await browser.getWorkbench()).wait();
+  await runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 5);
+  await runCommandFromCommandPrompt(workbench, 'Extensions: Show Enabled Extensions', 5);
   await showRunningExtensions(workbench);
   await runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
   await runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
@@ -165,12 +168,12 @@ export async function verifyAllExtensionsAreRunning(): Promise<void> {
   );
   expect(vfExtensionWasFound).toBe(true);
 
-  // // Verify LWC extension is present and running
-  // const lwcExtensionWasFound = await findExtensionInRunningExtensionsList(
-  //   workbench,
-  //   'salesforcedx-vscode-lwc'
-  // );
-  // expect(lwcExtensionWasFound).toBe(true);
+  // Verify LWC extension is present and running
+  const lwcExtensionWasFound = await findExtensionInRunningExtensionsList(
+    workbench,
+    'salesforcedx-vscode-lwc'
+  );
+  expect(lwcExtensionWasFound).toBe(true);
 
   await runCommandFromCommandPrompt(workbench, 'View: Zoom In', 2);
   await runCommandFromCommandPrompt(workbench, 'View: Zoom In', 2);
