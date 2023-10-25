@@ -17,7 +17,7 @@ const extensions: string[] = [
   'salesforcedx-vscode-core',
   'salesforcedx-vscode-apex',
   'salesforcedx-vscode-apex-debugger',
-  'salesforcedx-vscode-apex-replay-debugger-',
+  'salesforcedx-vscode-apex-replay-debugger',
   'salesforcedx-vscode-lightning',
   'salesforcedx-vscode-lwc',
   'salesforcedx-vscode-soql',
