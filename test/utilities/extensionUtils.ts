@@ -14,13 +14,13 @@ import path from 'path';
 const extensions: string[] = [
   'salesforcedx-vscode',
   'salesforcedx-vscode-expanded',
+  'salesforcedx-vscode-soql',
   'salesforcedx-vscode-core',
   'salesforcedx-vscode-apex',
   'salesforcedx-vscode-apex-debugger',
   'salesforcedx-vscode-apex-replay-debugger',
   'salesforcedx-vscode-lightning',
   'salesforcedx-vscode-lwc',
-  'salesforcedx-vscode-soql',
   'salesforcedx-vscode-visualforce'
 ];
 
@@ -134,7 +134,7 @@ export async function findExtensionsWithTimeout(): Promise<void> {
   const workbench = await (await browser.getWorkbench()).wait();
   let forcedWait = 0;
   let extensionWasFound = false;
-  for (const extension of extensions.slice(-8)) {
+  for (const extension of extensions.slice(-7)) {
     log(`Verifying extension ${extension}`);
     do {
       await pause(7);
