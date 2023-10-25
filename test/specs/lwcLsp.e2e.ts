@@ -8,6 +8,7 @@ import { step } from 'mocha-steps';
 import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 describe('LWC LSP', async () => {
   let testSetup: TestSetup;
@@ -58,27 +59,27 @@ describe('LWC LSP', async () => {
     expect(title).toBe('engine.d.ts');
   });
 
-  // step('Go to Definition (HTML)', async () => {
-  //   utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition (HTML)`);
-  //   // Get open text editor
-  //   const workbench = await browser.getWorkbench();
-  //   const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-  //   await inputBox.setText('lwc1.html');
-  //   await inputBox.confirm();
-  //   await utilities.pause(1);
-  //   const editorView = workbench.getEditorView();
-  //   const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
-  //   await textEditor.moveCursor(3, 52);
+  step('Go to Definition (HTML)', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition (HTML)`);
+    // Get open text editor
+    const workbench = await browser.getWorkbench();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('lwc1.html');
+    await inputBox.confirm();
+    await utilities.pause(1);
+    const editorView = workbench.getEditorView();
+    const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
+    await textEditor.moveCursor(3, 52);
 
-  //   // Go to definition through F12
-  //   await browser.keys(['F12']);
-  //   await utilities.pause(1);
+    // Go to definition through F12
+    await browser.keys(['F12']);
+    await utilities.pause(1);
 
-  //   // Verify 'Go to definition' took us to the definition file
-  //   const activeTab = await editorView.getActiveTab();
-  //   const title = await activeTab?.getTitle();
-  //   expect(title).toBe('lwc1.js');
-  // });
+    // Verify 'Go to definition' took us to the definition file
+    const activeTab = await editorView.getActiveTab();
+    const title = await activeTab?.getTitle();
+    expect(title).toBe('lwc1.js');
+  });
 
   step('Autocompletion', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
@@ -90,7 +91,14 @@ describe('LWC LSP', async () => {
     await utilities.pause(1);
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
-    await textEditor.typeTextAt(3, 7, ' lwc');
+
+    // Move cursor to the right of the first "div"
+    await browser.keys([CMD_KEY, 'f']);
+    await utilities.pause(1);
+    await browser.keys(['<div']);
+    await browser.keys(['Escape']);
+    await browser.keys(['ArrowRight']);
+    await browser.keys([' ', 'lwc']);
     await utilities.pause(2);
 
     // Verify autocompletion options are present

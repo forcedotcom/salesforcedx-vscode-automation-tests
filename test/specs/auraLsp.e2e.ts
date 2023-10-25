@@ -37,6 +37,16 @@ describe('Aura LSP', async () => {
     expect(extensionWasFound).toBe(true);
   });
 
+  step('Verify LSP finished indexing', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
+
+    // Get output text from the LSP
+    const outputViewText = await utilities.getOutputViewText('Aura Language Server');
+    expect(outputViewText).toContain('language server started');
+    utilities.log('Output view text');
+    utilities.log(outputViewText);
+  });
+
   step('Go to Definition', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
