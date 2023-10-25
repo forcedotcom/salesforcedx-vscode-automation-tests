@@ -14,10 +14,10 @@ import path from 'path';
 const extensions: string[] = [
   'salesforcedx-vscode',
   'salesforcedx-vscode-expanded',
+  'salesforcedx-vscode-core',
   'salesforcedx-vscode-apex',
   'salesforcedx-vscode-apex-debugger',
   'salesforcedx-vscode-apex-replay-debugger-',
-  'salesforcedx-vscode-core',
   'salesforcedx-vscode-lightning',
   'salesforcedx-vscode-lwc',
   'salesforcedx-vscode-soql',
