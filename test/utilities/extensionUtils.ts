@@ -142,7 +142,7 @@ export async function findExtensionsWithTimeout(): Promise<void> {
       forcedWait += 10;
     } while (extensionWasFound === false && forcedWait < 100);
     log(`extension ${extension} was found: ${extensionWasFound}`);
+    forcedWait = 0;
     expect(extensionWasFound).toBe(true);
   }
-  forcedWait = 0;
 }
