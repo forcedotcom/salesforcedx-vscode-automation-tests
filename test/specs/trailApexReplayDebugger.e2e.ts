@@ -95,12 +95,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Run SFDX: Toggle Checkpoint.
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Toggle Checkpoint', 1);
 
-    // // Calling SFDX: Update Checkpoints in Org fails if the org has been recently created,
-    // // it does not complete the 6 steps but only 4.
-    // // Reloading the window forces the extensions to be reloaded and this seems to fix the issue.
-    // await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
-    // await utilities.verifyAllExtensionsAreRunning();
-
     // Switch back to the AccountService.cls tab
     const inputBox2 = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
     await inputBox2.setText('AccountService.cls');

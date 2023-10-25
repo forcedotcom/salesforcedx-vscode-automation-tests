@@ -25,14 +25,6 @@ suite does run, it needs to run first.
 describe('An Initial Suite', async () => {
   let testSetup: TestSetup;
 
-  step('Countdown', async () => {
-    utilities.log('About to start the e2e tests...');
-    for (let i = 10; i > 0; i--) {
-      utilities.log(`${i}...`);
-      await utilities.pause(1);
-    }
-  });
-
   step('Install extensions', async () => {
     await utilities.installExtensions();
     await utilities.reloadAndEnableExtensions();
@@ -106,19 +98,12 @@ describe('An Initial Suite', async () => {
     // Don't call testSetup.setUp() b/c we don't need to authorize a scratch org,
     // just call setUpTestingEnvironment() and createProject().
     await testSetup.setUpTestingEnvironment();
-    await testSetup.createProject('Developer');
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
+    await testSetup.createProject('Standard');
+    await utilities.reloadAndEnableExtensions();
   });
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {
     utilities.verifyAllExtensionsAreRunning();
-    // const workbench = await (await browser.getWorkbench()).wait();
-    // const soqlExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-    //   workbench,
-    //   'salesforcedx-vscode-soql'
-    // );
-    // expect(soqlExtensionWasFound).toBe(true);
     browser.keys(['Escape']);
     await utilities.pause(1);
     browser.keys(['Escape']);
