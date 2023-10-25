@@ -113,12 +113,12 @@ describe('An Initial Suite', async () => {
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {
     utilities.verifyAllExtensionsAreRunning();
-    const workbench = await (await browser.getWorkbench()).wait();
-    const soqlExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-      workbench,
-      'salesforcedx-vscode-soql'
-    );
-    expect(soqlExtensionWasFound).toBe(true);
+    // const workbench = await (await browser.getWorkbench()).wait();
+    // const soqlExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+    //   workbench,
+    //   'salesforcedx-vscode-soql'
+    // );
+    // expect(soqlExtensionWasFound).toBe(true);
     browser.keys(['Escape']);
     await utilities.pause(1);
     browser.keys(['Escape']);

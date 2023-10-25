@@ -128,6 +128,8 @@ export async function verifyAllExtensionsAreRunning(): Promise<void> {
   await runCommandFromCommandPrompt(workbench, 'View: Zoom In', 1);
   await runCommandFromCommandPrompt(workbench, 'View: Zoom In', 1);
   await runCommandFromCommandPrompt(workbench, 'View: Zoom In', 1);
+  log(`... Finished verifyAllExtensionsAreRunning()`);
+  log('');
 }
 
 export async function findExtensionsWithTimeout(): Promise<void> {
