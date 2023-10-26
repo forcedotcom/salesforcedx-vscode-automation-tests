@@ -136,7 +136,7 @@ export async function findExtensionsWithTimeout(): Promise<void> {
   const workbench = await (await browser.getWorkbench()).wait();
   let forcedWait = 0;
   let extensionWasFound = false;
-  for (const extension of extensions.slice(-7)) {
+  for (const extension of extensions.slice(-8)) {
     log(`Verifying extension ${extension}`);
     do {
       await pause(7);
