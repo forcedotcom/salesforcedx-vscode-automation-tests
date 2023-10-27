@@ -86,7 +86,7 @@ describe('Aura LSP', async () => {
     await utilities.pause(1);
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('aura1.cmp')) as TextEditor;
-    await textEditor.typeTextAt(2, 1, '<aura');
+    await textEditor.typeTextAt(2, 1, '<aura:appl');
     await utilities.pause(1);
 
     // Verify autocompletion options are present
