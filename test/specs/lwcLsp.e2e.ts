@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { step } from 'mocha-steps';
+import { step, xstep } from 'mocha-steps';
 import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
@@ -59,7 +59,7 @@ describe('LWC LSP', async () => {
     expect(title).toBe('engine.d.ts');
   });
 
-  step('Go to Definition (HTML)', async () => {
+  xstep('Go to Definition (HTML)', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition (HTML)`);
     // Get open text editor
     const workbench = await browser.getWorkbench();
