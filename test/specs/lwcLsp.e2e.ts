@@ -91,14 +91,7 @@ describe('LWC LSP', async () => {
     await utilities.pause(1);
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
-
-    // Move cursor to the right of the first "div"
-    await browser.keys([CMD_KEY, 'f']);
-    await utilities.pause(1);
-    await browser.keys(['<div']);
-    await browser.keys(['Escape']);
-    await browser.keys(['ArrowRight']);
-    await browser.keys([' ', 'lwc']);
+    await textEditor.typeTextAt(3, 7, ' lwc');
     await utilities.pause(2);
 
     // Verify autocompletion options are present
