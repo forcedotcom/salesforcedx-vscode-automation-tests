@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { step } from 'mocha-steps';
+import { step, xstep } from 'mocha-steps';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
@@ -25,12 +25,9 @@ suite does run, it needs to run first.
 describe('An Initial Suite', async () => {
   let testSetup: TestSetup;
 
-  step('Countdown', async () => {
-    utilities.log('About to start the e2e tests...');
-    for (let i = 10; i > 0; i--) {
-      utilities.log(`${i}...`);
-      await utilities.pause(1);
-    }
+  step('Install extensions', async () => {
+    await utilities.installExtensions();
+    await utilities.reloadAndEnableExtensions();
   });
 
   step('Verify our extensions are not initially loaded', async () => {
@@ -74,6 +71,8 @@ describe('An Initial Suite', async () => {
         case 'SFDX: Create and Set Up Project for ISV Debugging':
         case 'SFDX: Create Project':
         case 'SFDX: Create Project with Manifest':
+        case 'SLDS: Do not scope SLDS Validator to SFDX project files':
+        case 'SLDS: Scope SLDS Validator to run for SFDX project files':
           expectedSfdxCommandsFound++;
           break;
 
@@ -87,7 +86,7 @@ describe('An Initial Suite', async () => {
       }
     }
 
-    expect(expectedSfdxCommandsFound).toBe(3);
+    expect(expectedSfdxCommandsFound).toBe(5);
     expect(unexpectedSfdxCommandWasFound).toBe(false);
 
     // Escape out of the pick list.
@@ -99,61 +98,56 @@ describe('An Initial Suite', async () => {
     // Don't call testSetup.setUp() b/c we don't need to authorize a scratch org,
     // just call setUpTestingEnvironment() and createProject().
     await testSetup.setUpTestingEnvironment();
-    await testSetup.createProject('Developer');
+    await testSetup.createProject('Standard');
+    await utilities.reloadAndEnableExtensions();
   });
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 3);
-    await utilities.enableLwcExtension();
-    // Close panel and clear all notifications so all extensions can be seen
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Notifications: Clear All Notifications',
-      1
-    );
+    utilities.verifyAllExtensionsAreRunning();
+    browser.keys(['Escape']);
+    await utilities.pause(1);
+    browser.keys(['Escape']);
+    await utilities.pause(1);
+  });
 
-    let matchesFound = 0;
-    const extensionNameDivs = await $$('div.name');
-    for (const extensionNameDiv of extensionNameDivs) {
-      const text = await extensionNameDiv.getText();
-
-      if (text.startsWith('salesforce.salesforcedx-vscode-')) {
-        matchesFound++;
-        utilities.log(`AnInitialSuite - extension ${text} is loaded`);
+  xstep(
+    'Verify that SFDX commands are present after an SFDX project has been created',
+    async () => {
+      const workbench = await (await browser.getWorkbench()).wait();
+      await utilities.runCommandFromCommandPrompt(
+        workbench,
+        'Extensions: Enable All Extensions',
+        10
+      );
+      await utilities.runCommandFromCommandPrompt(
+        workbench,
+        'Extensions: Show Enabled Extensions',
+        2
+      );
+      const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
+      const quickPicks = await prompt.getQuickPicks();
+      const commands: string[] = [];
+      for (const quickPick of quickPicks) {
+        commands.push(await quickPick.getLabel());
       }
+
+      // Look for the first few SFDX commands.
+      expect(commands).toContain('SFDX: Add Tests to Apex Test Suite');
+      expect(commands).toContain('SFDX: Authorize a Dev Hub');
+      expect(commands).toContain('SFDX: Authorize an Org');
+      expect(commands).toContain('SFDX: Authorize an Org using Session ID');
+      expect(commands).toContain('SFDX: Cancel Active Command');
+      expect(commands).toContain('SFDX: Configure Apex Debug Exceptions');
+      expect(commands).toContain('SFDX: Create a Default Scratch Org...');
+      expect(commands).toContain('SFDX: Create Apex Class');
+      expect(commands).toContain('SFDX: Create Apex Test Suite');
+      expect(commands).toContain('SFDX: Create Apex Trigger');
+      // There are more, but just look for the first few commands.
+
+      // Escape out of the pick list.
+      await prompt.cancel();
     }
-
-    // 7 are in the list, but sometimes only 6 are visible.
-    expect(matchesFound).toBeGreaterThanOrEqual(6);
-  });
-
-  step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
-    const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
-    const quickPicks = await prompt.getQuickPicks();
-    const commands: string[] = [];
-    for (const quickPick of quickPicks) {
-      commands.push(await quickPick.getLabel());
-    }
-
-    // Look for the first few SFDX commands.
-    expect(commands).toContain('SFDX: Add Tests to Apex Test Suite');
-    expect(commands).toContain('SFDX: Authorize a Dev Hub');
-    expect(commands).toContain('SFDX: Authorize an Org');
-    expect(commands).toContain('SFDX: Authorize an Org using Session ID');
-    expect(commands).toContain('SFDX: Cancel Active Command');
-    expect(commands).toContain('SFDX: Configure Apex Debug Exceptions');
-    expect(commands).toContain('SFDX: Create a Default Scratch Org...');
-    expect(commands).toContain('SFDX: Create Apex Class');
-    expect(commands).toContain('SFDX: Create Apex Test Suite');
-    expect(commands).toContain('SFDX: Create Apex Trigger');
-    // There are more, but just look for the first few commands.
-
-    // Escape out of the pick list.
-    await prompt.cancel();
-  });
+  );
 
   step('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();

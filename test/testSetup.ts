@@ -40,8 +40,12 @@ export class TestSetup {
   public async setUp(scratchOrgEdition: string = 'Developer'): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
+    await utilities.installExtensions();
+    await utilities.reloadAndEnableExtensions();
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
+    await utilities.reloadAndEnableExtensions();
+    await utilities.verifyAllExtensionsAreRunning();
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
     await this.disableCommandCenter();
@@ -82,6 +86,7 @@ export class TestSetup {
       3
     );
     await browser.keys(['Window: Command Center']);
+    await utilities.pause(3);
 
     const commandCenterBtn = await $('div[title="window.commandCenter"]');
     await commandCenterBtn.click();
@@ -123,15 +128,32 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
 
     const workbench = await (await browser.getWorkbench()).wait();
-    this.prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Create Project',
-      50
-    );
+
+    // If you are not in a VSCode project, the Salesforce extensions are not running
+    // Force the CLI integration extension to load before creating the project
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
+    await browser.keys(['Escape']);
+    await utilities.pause(1);
+    await browser.keys(['Escape']);
+
+    // Do not continue until we verify CLI Integration extension is present and running
+    let coreExtensionWasFound = false;
+    do {
+      await utilities.pause(10);
+
+      coreExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+        workbench,
+        'salesforcedx-vscode-core'
+      );
+    } while (coreExtensionWasFound === false);
+    utilities.log(`${this.testSuiteSuffixName} - Ready to create the standard project`);
+
+    this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
 
     // Select the "Standard" project type.
-    await utilities.selectQuickPickWithText(this.prompt, 'Standard');
+    await utilities.selectQuickPickItem(this.prompt, 'Standard');
 
     // Enter the project's name.
     await this.prompt.setText(this.tempProjectName);
@@ -366,9 +388,10 @@ export class TestSetup {
     // they are looking for.
 
     // Look for the success notification.
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Set a Default Org successfully ran'
+      'SFDX: Set a Default Org successfully ran',
+      utilities.TEN_MINUTES
     );
     if (!successNotificationWasFound) {
       throw new Error(
@@ -410,9 +433,10 @@ export class TestSetup {
 
     await utilities.pause(3);
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Set a Default Org successfully ran'
+      'SFDX: Set a Default Org successfully ran',
+      utilities.TEN_MINUTES
     );
     if (!successNotificationWasFound) {
       throw new Error(

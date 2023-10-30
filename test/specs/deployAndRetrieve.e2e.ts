@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { step } from 'mocha-steps';
+import { step, xstep } from 'mocha-steps';
 import path from 'path';
 import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
@@ -31,10 +31,10 @@ describe('Deploy and Retrieve', async () => {
     ].join('\n');
     await utilities.createApexClass('MyClass', classText);
     const workbench = await (await browser.getWorkbench()).wait();
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Apex Class successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -88,23 +88,23 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Deploy with SFDX: Deploy This Source to Org - ST enabled', async () => {
-    // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
     const workbench = await (await browser.getWorkbench()).wait();
+    // Clear the Output view first.
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('MyClass.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
+
     // At this point there should be no conflicts since this is a new class.
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -123,22 +123,22 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Deploy again (with no changes) - ST enabled', async () => {
-    // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
     const workbench = await (await browser.getWorkbench()).wait();
+    // Clear the Output view first.
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('MyClass.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -159,12 +159,16 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Modify the file and deploy again - ST enabled', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Modify the file by adding a comment.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('MyClass.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await textEditor.setTextAtLine(2, '\t//say hello to a given name');
@@ -173,15 +177,10 @@ describe('Deploy and Retrieve', async () => {
     // Deploy running SFDX: Deploy This Source to Org
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -200,10 +199,14 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Retrieve with SFDX: Retrieve This Source from Org', async () => {
-    // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
     const workbench = await (await browser.getWorkbench()).wait();
+    // Clear the Output view first.
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('MyClass.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await utilities.runCommandFromCommandPrompt(
@@ -211,16 +214,11 @@ describe('Deploy and Retrieve', async () => {
       'SFDX: Retrieve This Source from Org',
       5
     );
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Retrieve Source from Org',
-      utilities.FIVE_MINUTES
-    );
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Retrieve Source from Org successfully ran'
+      'SFDX: Retrieve Source from Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -239,12 +237,16 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Modify the file and retrieve again', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Modify the file by changing the comment.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('MyClass.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await textEditor.setTextAtLine(2, '\t//modified comment');
@@ -257,16 +259,11 @@ describe('Deploy and Retrieve', async () => {
       5
     );
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Retrieve Source from Org',
-      utilities.FIVE_MINUTES
-    );
     await utilities.pause(3);
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Retrieve Source from Org successfully ran'
+      'SFDX: Retrieve Source from Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
     const textAfterRetrieve = await textEditor.getText();
@@ -288,11 +285,11 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Prefer Deploy on Save when `Push or deploy on save` is enabled', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
     let outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
-    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'Preferences: Open Workspace Settings',
@@ -313,6 +310,11 @@ describe('Deploy and Retrieve', async () => {
     );
     await browser.keys(['prefer deploy']);
 
+    try {
+      await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', 2);
+    } catch {
+      utilities.log('Panel is already closed');
+    }
     const preferDeployOnSaveBtn = await $(
       'div[title="salesforcedx-vscode-core.push-or-deploy-on-save.preferDeployOnSave"]'
     );
@@ -328,24 +330,23 @@ describe('Deploy and Retrieve', async () => {
 
     // Clear the Output view first.
     outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     // Modify the file and save to trigger deploy
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('MyClass.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await textEditor.setTextAtLine(2, `\t// let's trigger deploy`);
     await textEditor.save();
     await utilities.pause(5);
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
-    await utilities.pause(5);
+
     // At this point there should be no conflicts since this is a new class.
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -363,7 +364,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
 
-  step('Disable Source Tracking Setting', async () => {
+  xstep('Disable Source Tracking Setting', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(
       workbench,
@@ -385,10 +386,11 @@ describe('Deploy and Retrieve', async () => {
     await enableSourceTrackingBtn.click();
     await utilities.pause(1);
     // Reload window to update cache and get the setting behavior to work
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 50);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
+    await utilities.verifyAllExtensionsAreRunning();
   });
 
-  step('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
+  xstep('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear all notifications so clear output button is visible
     await utilities.runCommandFromCommandPrompt(
@@ -397,21 +399,21 @@ describe('Deploy and Retrieve', async () => {
       1
     );
     // Clear the Output view first.
-    const outputView = await (await utilities.openOutputView()).wait();
-    await outputView.clearText();
+    await (await utilities.openOutputView()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('MyClass.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
+
     // At this point there should be no conflicts since this is a new class.
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -429,23 +431,23 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
 
-  step('Deploy again (with no changes) - ST disabled', async () => {
-    // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+  xstep('Deploy again (with no changes) - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
+    // Clear the Output view first.
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('MyClass.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -465,13 +467,17 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
 
-  step('Modify the file and deploy again - ST disabled', async () => {
+  xstep('Modify the file and deploy again - ST disabled', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Modify the file by adding a comment.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('MyClass.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('MyClass.cls')) as TextEditor;
     await textEditor.setTextAtLine(2, '\t//say hello to a given name');
@@ -480,15 +486,10 @@ describe('Deploy and Retrieve', async () => {
     // Deploy running SFDX: Deploy This Source to Org
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 

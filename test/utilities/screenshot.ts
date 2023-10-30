@@ -26,7 +26,10 @@ export async function saveFailedTestScreenshot(
 function getScreenshotSavePath(saveDir: string, testTitle: string): string {
   const sanitizedTestTitle = sanitizePath(testTitle);
   const sanitizedTestRunStartTime = EnvironmentSettings.getInstance().startTime.replace(':', '.');
-  return join(saveDir, `${sanitizedTestRunStartTime} - ${sanitizedTestTitle}.png`);
+  return join(
+    saveDir,
+    `${sanitizedTestRunStartTime} - ${process.platform} - ${sanitizedTestTitle}.png`
+  );
 }
 
 function sanitizePath(dir: string): string {

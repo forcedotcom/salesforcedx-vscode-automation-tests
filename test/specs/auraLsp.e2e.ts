@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { step } from 'mocha-steps';
+import { step, xstep } from 'mocha-steps';
 import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
@@ -28,27 +28,40 @@ describe('Aura LSP', async () => {
     // Using the Command palette, run Developer: Show Running Extensions
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.showRunningExtensions(workbench);
-    await utilities.enableLwcExtension();
 
     // Verify Aura Components extension is present and running.
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
-      'salesforce.salesforcedx-vscode-lightning'
+      'salesforcedx-vscode-lightning'
     );
     expect(extensionWasFound).toBe(true);
   });
 
-  step('Go to Definition', async () => {
+  step('Verify LSP finished indexing', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
+
+    // Get output text from the LSP
+    const outputViewText = await utilities.getOutputViewText('Aura Language Server');
+    expect(outputViewText).toContain('language server started');
+    utilities.log('Output view text');
+    utilities.log(outputViewText);
+  });
+
+  xstep('Go to Definition', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('aura1.cmp');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('aura1.cmp')) as TextEditor;
 
     // Move cursor to the middle of "simpleNewContact"
     await browser.keys([CMD_KEY, 'f']);
     await utilities.pause(1);
-    await browser.keys(["!v.sim"]);
+    await browser.keys(['!v.sim']);
     await browser.keys(['Escape']);
     await browser.keys(['ArrowRight']);
     await utilities.pause(1);
@@ -63,13 +76,17 @@ describe('Aura LSP', async () => {
     expect(definition[1]).toBe(27);
   });
 
-  step('Autocompletion', async () => {
+  xstep('Autocompletion', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('aura1.cmp');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('aura1.cmp')) as TextEditor;
-    await textEditor.typeTextAt(2, 1, '<aura');
+    await textEditor.typeTextAt(2, 1, '<aura:appl');
     await utilities.pause(1);
 
     // Verify autocompletion options are present

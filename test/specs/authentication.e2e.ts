@@ -23,16 +23,17 @@ describe('Authentication', async () => {
   step('Set up the testing environment', async () => {
     tempFolderPath = getTempFolderPath();
     projectFolderPath = path.join(tempFolderPath, tempProjectName);
+    await utilities.installExtensions();
+    await utilities.reloadAndEnableExtensions();
     await testSetup.setUpTestingEnvironment();
     await testSetup.createProject('Standard');
+    await utilities.reloadAndEnableExtensions();
+    await utilities.verifyAllExtensionsAreRunning();
   });
 
   step('Run SFDX: Authorize a Dev Hub', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
-    // Reloading the window forces the extensions to be reloaded and this seems to fix
-    // the issue.
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
-    await utilities.pause(20);
+
     // In the initial state, the org picker button should be set to "No Default Org Set".
     let noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
       workbench,
@@ -103,9 +104,10 @@ describe('Authentication', async () => {
     await utilities.pause(5);
 
     // Look for the notification that appears which says, "SFDX: Set a Default Org successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Set a Default Org successfully ran'
+      'SFDX: Set a Default Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -156,20 +158,16 @@ describe('Authentication', async () => {
     // Press Enter/Return.
     await prompt.confirm();
 
-    await utilities.waitForNotificationToGoAway(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'Running SFDX: Create a Default Scratch Org...',
-      utilities.FIVE_MINUTES
-    );
-
-    const successNotificationWasFound = await utilities.notificationIsPresent(
-      workbench,
-      'SFDX: Create a Default Scratch Org... successfully ran'
+      'SFDX: Create a Default Scratch Org... successfully ran',
+      utilities.TEN_MINUTES
     );
     if (successNotificationWasFound !== true) {
-      const failureNotificationWasFound = await utilities.notificationIsPresent(
+      const failureNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
         workbench,
-        'SFDX: Create a Default Scratch Org... failed to run'
+        'SFDX: Create a Default Scratch Org... failed to run',
+        utilities.TEN_MINUTES
       );
       if (failureNotificationWasFound === true) {
         if (
@@ -236,9 +234,10 @@ describe('Authentication', async () => {
 
     await utilities.pause(3);
 
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Set a Default Org successfully ran'
+      'SFDX: Set a Default Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 

@@ -46,6 +46,10 @@ describe('Manifest Builder', async () => {
     await inputBox.confirm();
     await inputBox.confirm();
 
+    const inputBox2 = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 2);
+    await inputBox2.setText('manifest.xml');
+    await inputBox2.confirm();
+    await utilities.pause(1);
     const editorView = workbench.getEditorView();
     const textEditor = (await editorView.openEditor('manifest.xml')) as TextEditor;
     const content = [
@@ -77,17 +81,11 @@ describe('Manifest Builder', async () => {
       1
     );
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Deploy Source to Org',
-      utilities.FIVE_MINUTES
-    );
-
     // Look for the success notification that appears which says, "SFDX: Deploy Source to Org successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran'
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -126,6 +124,10 @@ describe('Manifest Builder', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - SFDX: Retrieve Source in Manifest from Org`);
     // Using the Command palette, run SFDX: Retrieve Source in Manifest from Org
     const workbench = await browser.getWorkbench();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('manifest.xml');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = workbench.getEditorView();
     await editorView.openEditor('manifest.xml');
     // Clear output before running the command
@@ -136,17 +138,11 @@ describe('Manifest Builder', async () => {
       1
     );
 
-    // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      workbench,
-      'Running SFDX: Retrieve Source from Org',
-      utilities.FIVE_MINUTES
-    );
-
     // Look for the success notification that appears which says, "SFDX: Retrieve Source from Org successfully ran".
-    const successNotificationWasFound = await utilities.notificationIsPresent(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Retrieve Source from Org successfully ran'
+      'SFDX: Retrieve Source from Org successfully ran',
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 

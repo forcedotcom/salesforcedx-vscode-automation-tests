@@ -40,10 +40,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Apex Class successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -91,6 +91,10 @@ describe('Templates', async () => {
       '}'
     ].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('ApexClass1.cls');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ApexClass1.cls')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
@@ -116,10 +120,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Apex Trigger successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -167,6 +171,10 @@ describe('Templates', async () => {
     // Verify the default trigger.
     const expectedText = ['trigger ApexTrigger1 on SOBJECT (before insert) {', '', '}'].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('ApexTrigger1.trigger');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('ApexTrigger1.trigger')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
@@ -192,10 +200,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Aura App successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -285,6 +293,10 @@ describe('Templates', async () => {
     // Verify the default code for an Aura App.
     const expectedText = ['<aura:application>', '', '</aura:application>'].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('AuraApp1.app');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('AuraApp1.app')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
@@ -309,10 +321,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Aura Component successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -347,6 +359,10 @@ describe('Templates', async () => {
   step('Verify the contents of the Aura Component', async () => {
     const expectedText = ['<aura:component>', '', '</aura:component>'].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('auraComponent1.cmp');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('auraComponent1.cmp')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
@@ -371,10 +387,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Aura Event successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -407,6 +423,10 @@ describe('Templates', async () => {
       '\n'
     );
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('auraEvent1.evt');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('auraEvent1.evt')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
@@ -432,10 +452,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Aura Interface successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -485,6 +505,10 @@ describe('Templates', async () => {
       '</aura:interface>'
     ].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('AuraInterface1.intf');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('AuraInterface1.intf')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
@@ -509,10 +533,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Lightning Web Component successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -548,6 +572,10 @@ describe('Templates', async () => {
       'export default class LightningWebComponent1 extends LightningElement {}'
     ].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('lightningWebComponent1.js');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('lightningWebComponent1.js')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
@@ -573,10 +601,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Visualforce Component successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -626,6 +654,10 @@ describe('Templates', async () => {
       '</apex:component>'
     ].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('VisualforceCmp1.component');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('VisualforceCmp1.component')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
@@ -651,10 +683,10 @@ describe('Templates', async () => {
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();
 
-    const successNotificationWasFound = await utilities.attemptToFindNotification(
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Visualforce Page successfully ran',
-      10
+      utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
@@ -704,6 +736,10 @@ describe('Templates', async () => {
       '</apex:page>'
     ].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    await inputBox.setText('VisualforcePage1.page');
+    await inputBox.confirm();
+    await utilities.pause(1);
     const editorView = await workbench.getEditorView();
     const textEditor = (await editorView.openEditor('VisualforcePage1.page')) as TextEditor;
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
