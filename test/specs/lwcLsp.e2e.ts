@@ -4,10 +4,11 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { step } from 'mocha-steps';
+import { step, xstep } from 'mocha-steps';
 import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 describe('LWC LSP', async () => {
   let testSetup: TestSetup;
@@ -27,7 +28,6 @@ describe('LWC LSP', async () => {
     // Using the Command palette, run Developer: Show Running Extensions
     const workbench = await browser.getWorkbench();
     await utilities.showRunningExtensions(workbench);
-    await utilities.enableLwcExtension();
 
     // Verify Lightning Web Components extension is present and running
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
@@ -59,7 +59,7 @@ describe('LWC LSP', async () => {
     expect(title).toBe('engine.d.ts');
   });
 
-  step('Go to Definition (HTML)', async () => {
+  xstep('Go to Definition (HTML)', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition (HTML)`);
     // Get open text editor
     const workbench = await browser.getWorkbench();

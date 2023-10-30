@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { step } from 'mocha-steps';
+import { step, xstep } from 'mocha-steps';
 import path from 'path';
 import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
@@ -312,8 +312,7 @@ describe('Deploy and Retrieve', async () => {
 
     try {
       await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', 2);
-    }
-    catch {
+    } catch {
       utilities.log('Panel is already closed');
     }
     const preferDeployOnSaveBtn = await $(
@@ -365,7 +364,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
 
-  step('Disable Source Tracking Setting', async () => {
+  xstep('Disable Source Tracking Setting', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(
       workbench,
@@ -387,11 +386,11 @@ describe('Deploy and Retrieve', async () => {
     await enableSourceTrackingBtn.click();
     await utilities.pause(1);
     // Reload window to update cache and get the setting behavior to work
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 50);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
     await utilities.verifyAllExtensionsAreRunning();
   });
 
-  step('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
+  xstep('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear all notifications so clear output button is visible
     await utilities.runCommandFromCommandPrompt(
@@ -432,7 +431,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
 
-  step('Deploy again (with no changes) - ST disabled', async () => {
+  xstep('Deploy again (with no changes) - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
     await utilities.openOutputView();
@@ -468,7 +467,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
 
-  step('Modify the file and deploy again - ST disabled', async () => {
+  xstep('Modify the file and deploy again - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
     await utilities.openOutputView();

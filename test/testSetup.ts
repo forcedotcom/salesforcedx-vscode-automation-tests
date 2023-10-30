@@ -40,8 +40,11 @@ export class TestSetup {
   public async setUp(scratchOrgEdition: string = 'Developer'): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
+    await utilities.installExtensions();
+    await utilities.reloadAndEnableExtensions();
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
+    await utilities.reloadAndEnableExtensions();
     await utilities.verifyAllExtensionsAreRunning();
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
@@ -143,8 +146,7 @@ export class TestSetup {
         workbench,
         'salesforcedx-vscode-core'
       );
-    }
-    while (coreExtensionWasFound === false);
+    } while (coreExtensionWasFound === false);
     utilities.log(`${this.testSuiteSuffixName} - Ready to create the standard project`);
 
     this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
@@ -199,7 +201,8 @@ export class TestSetup {
     const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
     utilities.log(`${this.testSuiteSuffixName} - calling sfdx force:org:display...`);
     const sfdxForceOrgDisplayResult = await exec(
-      `sfdx force:org:display -u ${EnvironmentSettings.getInstance().devHubAliasName
+      `sfdx force:org:display -u ${
+        EnvironmentSettings.getInstance().devHubAliasName
       } --verbose --json`
     );
     const json = this.removedEscapedCharacters(sfdxForceOrgDisplayResult.stdout);
@@ -217,7 +220,8 @@ export class TestSetup {
       )
     ) {
       throw new Error(
-        `In authorizeDevHub(), sfdxSfdxUrlStoreResult does not contain "Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName
+        `In authorizeDevHub(), sfdxSfdxUrlStoreResult does not contain "Successfully authorized ${
+          EnvironmentSettings.getInstance().devHubUserName
         } with org ID"`
       );
     }

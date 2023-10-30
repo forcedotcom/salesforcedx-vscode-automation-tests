@@ -46,7 +46,7 @@ describe('Manifest Builder', async () => {
     await inputBox.confirm();
     await inputBox.confirm();
 
-    const inputBox2 = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+    const inputBox2 = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 2);
     await inputBox2.setText('manifest.xml');
     await inputBox2.confirm();
     await utilities.pause(1);
