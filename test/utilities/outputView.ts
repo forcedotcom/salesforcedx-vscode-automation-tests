@@ -12,39 +12,17 @@ import { pause } from './miscellaneous';
 import { dismissAllNotifications } from './notifications';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 
-export async function selectOutputChannel(outputView: OutputView, name: string): Promise<void> {
+export async function selectOutputChannel(name: string): Promise<void> {
   // Wait for all notifications to go away.  If there is a notification that is overlapping and hiding the Output channel's
   // dropdown menu, calling select.click() doesn't work, so dismiss all notifications first before clicking the dropdown
   // menu and opening it.
   await dismissAllNotifications();
 
-  // Find the channel the Output view is current set to.
-  const dropDownMenu = await outputView.parent.$('select.monaco-select-box');
-  const currentChannelName = await dropDownMenu.getValue();
-  if (currentChannelName === name) {
-    // If the output channel is already set, don't do anything and just return.
-    return;
-  }
-
-  // Open the Output panel's dropdown menu.
-  await dropDownMenu.click();
-
-  // Click the target channel.
-  const channels = await dropDownMenu.$$('option');
-  for (const channel of channels) {
-    const val = await channel.getValue();
-    if (val === name) {
-      await channel.click();
-
-      // eslint-disable-next-line wdio/no-pause
-      await browser.pause(200);
-      await browser.keys(['Escape']);
-      await pause(1);
-      return;
-    }
-  }
-
-  throw new Error(`Channel ${name} not found`);
+  // Find the given channel in the Output view
+  const workbench = await (await browser.getWorkbench()).wait();
+  await runCommandFromCommandPrompt(workbench, 'Output: Show Output Channels...', 1);
+  await browser.keys([name, 'Enter']);
+  await pause(2);
 }
 
 export async function openOutputView(): Promise<void> {
@@ -56,23 +34,19 @@ export async function openOutputView(): Promise<void> {
 export async function getOutputViewText(outputChannelName: string = ''): Promise<string> {
   const workbench = await (await browser.getWorkbench()).wait();
   await runCommandFromCommandPrompt(workbench, 'View: Toggle Output', 1);
-  const bottomBar = await workbench.getBottomBar(); // selector is 'div[id="workbench.parts.panel"]'
-  const outputView = await bottomBar.openOutputView(); // selector is 'div[id="workbench.panel.output"]'
 
   // Set the output channel, but only if the value is passed in.
   if (outputChannelName) {
-    await selectOutputChannel(outputView, outputChannelName);
+    await selectOutputChannel(outputChannelName);
   }
 
   // Set focus to the contents in the Output panel.
-  await (await outputView.elem).click();
-  await pause(1);
+  await runCommandFromCommandPrompt(workbench, 'Output: Focus on Output View', 2);
 
   // Select all of the text within the panel.
   await browser.keys([CMD_KEY, 'a', 'c']);
-  // Should be able to use Keys.Ctrl, but Keys is not exported from webdriverio
-  // See https://webdriver.io/docs/api/browser/keys/
 
+  // Get text from the clipboard
   const outputPanelText = await clipboard.read();
 
   return outputPanelText;
@@ -86,9 +60,9 @@ export async function attemptToFindOutputPanelText(
 ): Promise<string | undefined> {
   const workbench = await (await browser.getWorkbench()).wait();
   await runCommandFromCommandPrompt(workbench, 'View: Toggle Output', 1);
-  const bottomBar = await workbench.getBottomBar(); // selector is 'div[id="workbench.parts.panel"]'
-  const outputView = await bottomBar.openOutputView(); // selector is 'div[id="workbench.panel.output"]'
-  await selectOutputChannel(outputView, outputChannelName);
+  const bottomBar = await workbench.getBottomBar().wait(); // selector is 'div[id="workbench.parts.panel"]'
+  const outputView = await (await bottomBar.openOutputView()).wait(); // selector is 'div[id="workbench.panel.output"]'
+  await selectOutputChannel(outputChannelName);
 
   while (attempts > 0) {
     const outputViewText = await getOutputViewText();

@@ -41,17 +41,10 @@ export function transformedUserName(): string {
   return currentOsUserName().replace('.', '_');
 }
 
-export async function findLabel(labelText: string): Promise<WebdriverIO.Element> {
-  let labels = await $$('span.monaco-highlighted-label');
-  let labelElement: WebdriverIO.Element;
-  for (const label of labels) {
-    labelElement = label;
-    const text = await label.getText();
-
-    log(`${labelText} found`);
-    if (text === labelText) {
-      break;
-    }
-  }
+export async function findLabel(
+  elementType: string,
+  labelText: string
+): Promise<WebdriverIO.Element> {
+  let labelElement = await $(`${elementType}[aria-label="${labelText}"]`);
   return labelElement!;
 }
