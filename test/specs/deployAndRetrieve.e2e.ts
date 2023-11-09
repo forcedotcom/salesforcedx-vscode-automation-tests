@@ -287,7 +287,7 @@ describe('Deploy and Retrieve', async () => {
   step('Prefer Deploy on Save when `Push or deploy on save` is enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    let outputView = await utilities.openOutputView();
+    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     await utilities.runCommandFromCommandPrompt(
@@ -329,7 +329,7 @@ describe('Deploy and Retrieve', async () => {
     );
 
     // Clear the Output view first.
-    outputView = await utilities.openOutputView();
+    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     // Modify the file and save to trigger deploy
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
@@ -399,7 +399,7 @@ describe('Deploy and Retrieve', async () => {
       1
     );
     // Clear the Output view first.
-    await (await utilities.openOutputView()).wait();
+    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
     await inputBox.setText('MyClass.cls');

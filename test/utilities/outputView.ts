@@ -10,6 +10,7 @@ import { OutputView } from 'wdio-vscode-service';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { pause } from './miscellaneous';
 import { dismissAllNotifications } from './notifications';
+import { runCommandFromCommandPrompt } from './commandPrompt';
 
 export async function selectOutputChannel(outputView: OutputView, name: string): Promise<void> {
   // Wait for all notifications to go away.  If there is a notification that is overlapping and hiding the Output channel's
@@ -46,17 +47,17 @@ export async function selectOutputChannel(outputView: OutputView, name: string):
   throw new Error(`Channel ${name} not found`);
 }
 
-export async function openOutputView(): Promise<OutputView> {
+export async function openOutputView(): Promise<void> {
   const workbench = await (await browser.getWorkbench()).wait();
-  const bottomBar = await workbench.getBottomBar(); // selector is 'div[id="workbench.parts.panel"]'
-  const outputView = await bottomBar.openOutputView(); // selector is 'div[id="workbench.panel.output"]'
+  await runCommandFromCommandPrompt(workbench, 'View: Toggle Output', 1);
   await pause(2);
-
-  return outputView;
 }
 
 export async function getOutputViewText(outputChannelName: string = ''): Promise<string> {
-  const outputView = await openOutputView();
+  const workbench = await (await browser.getWorkbench()).wait();
+  await runCommandFromCommandPrompt(workbench, 'View: Toggle Output', 1);
+  const bottomBar = await workbench.getBottomBar(); // selector is 'div[id="workbench.parts.panel"]'
+  const outputView = await bottomBar.openOutputView(); // selector is 'div[id="workbench.panel.output"]'
 
   // Set the output channel, but only if the value is passed in.
   if (outputChannelName) {
@@ -83,7 +84,10 @@ export async function attemptToFindOutputPanelText(
   searchString: string,
   attempts: number
 ): Promise<string | undefined> {
-  const outputView = await openOutputView();
+  const workbench = await (await browser.getWorkbench()).wait();
+  await runCommandFromCommandPrompt(workbench, 'View: Toggle Output', 1);
+  const bottomBar = await workbench.getBottomBar(); // selector is 'div[id="workbench.parts.panel"]'
+  const outputView = await bottomBar.openOutputView(); // selector is 'div[id="workbench.panel.output"]'
   await selectOutputChannel(outputView, outputChannelName);
 
   while (attempts > 0) {

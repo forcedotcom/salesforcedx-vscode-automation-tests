@@ -71,8 +71,8 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Click the "Run All Tests" code lens at the top of the class
     const codeLens = await textEditor.getCodeLens('Run All Tests');
@@ -120,8 +120,8 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Click the "Run Test" code lens at the top of one of the test methods
     const codeLens = await textEditor.getCodeLens('Run Test');
@@ -157,11 +157,11 @@ describe('Run Apex Tests', async () => {
   step('Run Tests via Command Palette', async () => {
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.openOutputView();
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Run SFDX: Run Apex tests.
-    const workbench = await (await browser.getWorkbench()).wait();
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
 
     // Select the "ExampleApexClass1Test" file
@@ -270,8 +270,8 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Click the run tests button on the top right corner of the Test sidebar
     await apexTestsSection.elem.click();
@@ -332,8 +332,8 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Click the run test button that is shown to the right when you hover a test class name on the Test sidebar
     const apexTestItem = (await apexTestsSection.findItem('ExampleApexClass2Test')) as TreeItem;
@@ -391,8 +391,8 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Hover a test name under one of the test class sections and click the run button that is shown to the right of the test name on the Test sidebar
     const apexTestItem = (await apexTestsSection.findItem('validateSayHello')) as TreeItem;
@@ -457,8 +457,8 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
+    await utilities.openOutputView();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Run SFDX: Run Apex tests.
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
@@ -514,7 +514,7 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await outputView.clearText();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Run SFDX: Run Apex tests to verify fix
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
@@ -602,10 +602,9 @@ describe('Run Apex Tests', async () => {
   step('Run Apex Test Suite', async () => {
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    const outputView = await utilities.openOutputView();
-    await outputView.clearText();
-
+    await utilities.openOutputView();
     const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Run SFDX: Run Apex Test Suite.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Test Suite', 1);
