@@ -90,14 +90,8 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy with SFDX: Deploy This Source to Org - ST enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('MyClass.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    (await editorView.openEditor('MyClass.cls')) as TextEditor;
+    await utilities.getTextEditor(workbench, 'MyClass.cls');
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
 
     // At this point there should be no conflicts since this is a new class.
@@ -125,14 +119,8 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy again (with no changes) - ST enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('MyClass.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    (await editorView.openEditor('MyClass.cls')) as TextEditor;
+    await utilities.getTextEditor(workbench, 'MyClass.cls');
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -161,16 +149,10 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and deploy again - ST enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Modify the file by adding a comment.
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('MyClass.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('MyClass.cls')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
     await textEditor.setTextAtLine(2, '\t//say hello to a given name');
     await textEditor.save();
 
@@ -201,14 +183,8 @@ describe('Deploy and Retrieve', async () => {
   step('Retrieve with SFDX: Retrieve This Source from Org', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('MyClass.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    (await editorView.openEditor('MyClass.cls')) as TextEditor;
+    await utilities.getTextEditor(workbench, 'MyClass.cls');
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Retrieve This Source from Org',
@@ -239,16 +215,10 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and retrieve again', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Modify the file by changing the comment.
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('MyClass.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('MyClass.cls')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
     await textEditor.setTextAtLine(2, '\t//modified comment');
     await textEditor.save();
 
@@ -287,7 +257,6 @@ describe('Deploy and Retrieve', async () => {
   step('Prefer Deploy on Save when `Push or deploy on save` is enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     await utilities.runCommandFromCommandPrompt(
@@ -329,15 +298,9 @@ describe('Deploy and Retrieve', async () => {
     );
 
     // Clear the Output view first.
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     // Modify the file and save to trigger deploy
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('MyClass.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('MyClass.cls')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
     await textEditor.setTextAtLine(2, `\t// let's trigger deploy`);
     await textEditor.save();
     await utilities.pause(5);
@@ -399,14 +362,8 @@ describe('Deploy and Retrieve', async () => {
       1
     );
     // Clear the Output view first.
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('MyClass.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    (await editorView.openEditor('MyClass.cls')) as TextEditor;
+    await utilities.getTextEditor(workbench, 'MyClass.cls');
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
 
     // At this point there should be no conflicts since this is a new class.
@@ -434,14 +391,8 @@ describe('Deploy and Retrieve', async () => {
   xstep('Deploy again (with no changes) - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('MyClass.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    (await editorView.openEditor('MyClass.cls')) as TextEditor;
+    await utilities.getTextEditor(workbench, 'MyClass.cls');
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -470,16 +421,10 @@ describe('Deploy and Retrieve', async () => {
   xstep('Modify the file and deploy again - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Modify the file by adding a comment.
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('MyClass.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('MyClass.cls')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
     await textEditor.setTextAtLine(2, '\t//say hello to a given name');
     await textEditor.save();
 

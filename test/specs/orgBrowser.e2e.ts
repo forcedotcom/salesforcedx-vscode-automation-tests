@@ -56,17 +56,19 @@ describe('Org Browser', async () => {
 
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Get text editor
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('MyClass.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    (await editorView.openEditor('MyClass.cls')) as TextEditor;
+    await utilities.getTextEditor(workbench, 'MyClass.cls');
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
+
+    // Verify the deploy was successful
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+      workbench,
+      'SFDX: Deploy Source to Org successfully ran',
+      utilities.TEN_MINUTES
+    );
+    expect(successNotificationWasFound).toBe(true);
   });
 
   step('Refresh Apex Classes', async () => {

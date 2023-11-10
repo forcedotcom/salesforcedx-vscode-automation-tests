@@ -7,7 +7,7 @@
 
 import { TextEditor } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
-import { pause } from './miscellaneous';
+import { getTextEditor, pause } from './miscellaneous';
 
 export async function createVisualforcePage(): Promise<void> {
   const workbench = await browser.getWorkbench();
@@ -24,13 +24,7 @@ export async function createVisualforcePage(): Promise<void> {
   await pause(1);
 
   // Modify page content
-  inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-  await inputBox.setText('FooPage');
-  await inputBox.confirm();
-  await pause(1);
-
-  const editorView = workbench.getEditorView();
-  const textEditor = (await editorView.openEditor('FooPage.page')) as TextEditor;
+  const textEditor = await getTextEditor(workbench, 'FooPage.page');
   const pageText = [
     `<apex:page controller="myController" tabStyle="Account">`,
     `\t<apex:form>`,

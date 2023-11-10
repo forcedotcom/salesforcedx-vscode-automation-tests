@@ -32,15 +32,13 @@ export async function openOutputView(): Promise<void> {
 }
 
 export async function getOutputViewText(outputChannelName: string = ''): Promise<string> {
-  const workbench = await (await browser.getWorkbench()).wait();
-  await runCommandFromCommandPrompt(workbench, 'View: Toggle Output', 1);
-
   // Set the output channel, but only if the value is passed in.
   if (outputChannelName) {
     await selectOutputChannel(outputChannelName);
   }
 
   // Set focus to the contents in the Output panel.
+  const workbench = await (await browser.getWorkbench()).wait();
   await runCommandFromCommandPrompt(workbench, 'Output: Focus on Output View', 2);
 
   // Select all of the text within the panel.
@@ -58,10 +56,6 @@ export async function attemptToFindOutputPanelText(
   searchString: string,
   attempts: number
 ): Promise<string | undefined> {
-  const workbench = await (await browser.getWorkbench()).wait();
-  await runCommandFromCommandPrompt(workbench, 'View: Toggle Output', 1);
-  const bottomBar = await workbench.getBottomBar().wait(); // selector is 'div[id="workbench.parts.panel"]'
-  const outputView = await (await bottomBar.openOutputView()).wait(); // selector is 'div[id="workbench.panel.output"]'
   await selectOutputChannel(outputChannelName);
 
   while (attempts > 0) {

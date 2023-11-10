@@ -7,7 +7,7 @@
 
 import { TextEditor } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
-import { log, pause } from './miscellaneous';
+import { getTextEditor, log, pause } from './miscellaneous';
 
 export async function createLwc(name: string): Promise<void> {
   log('createLwc() - calling browser.getWorkbench()');
@@ -34,13 +34,7 @@ export async function createLwc(name: string): Promise<void> {
 
   log('createLwc() - Modify js content');
   // Modify js content
-  inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-  await inputBox.setText(name + '.js');
-  await inputBox.confirm();
-  await pause(1);
-
-  const editorView = workbench.getEditorView();
-  let textEditor = (await editorView.openEditor(name + '.js')) as TextEditor;
+  let textEditor = await getTextEditor(workbench, name + '.js');
   const jsText = [
     `import { LightningElement } from 'lwc';`,
     ``,
@@ -55,11 +49,7 @@ export async function createLwc(name: string): Promise<void> {
   log('createLwc() - Modify html content');
   log('');
   // Modify html content
-  inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-  await inputBox.setText(name + '.html');
-  await inputBox.confirm();
-  await pause(1);
-
+  textEditor = await getTextEditor(workbench, name + '.js');
   const htmlText = [
     `<template>`,
     `\t<lightning-card title="${name}" icon-name="custom:custom14">`,
@@ -95,13 +85,7 @@ export async function createAura(name: string): Promise<void> {
 
   log('createAura() - Modify html content');
   // Modify html content
-  inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-  await inputBox.setText(name + '.cmp');
-  await inputBox.confirm();
-  await pause(1);
-
-  const editorView = workbench.getEditorView();
-  let textEditor = (await editorView.openEditor(name + '.cmp')) as TextEditor;
+  const textEditor = await getTextEditor(workbench, name + '.cmp');
   const htmlText = [
     '<aura:component>',
     '\t',

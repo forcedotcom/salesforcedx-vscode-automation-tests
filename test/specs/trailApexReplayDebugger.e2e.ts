@@ -84,24 +84,14 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('Set Breakpoints and Checkpoints', async () => {
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('AccountService.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('AccountService.cls')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'AccountService.cls');
     await textEditor.moveCursor(8, 5);
 
     // Run SFDX: Toggle Checkpoint.
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Toggle Checkpoint', 1);
 
     // Switch back to the AccountService.cls tab
-    const inputBox2 = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox2.setText('AccountService.cls');
-    await inputBox2.confirm();
-    await utilities.pause(1);
-    const editorView2 = workbench.getEditorView();
-    (await editorView2.openEditor('AccountService.cls')) as TextEditor;
+    await utilities.getTextEditor(workbench, 'AccountService.cls');
 
     // Verify checkpoint is present
     const breakpoints = await $$('.codicon-debug-breakpoint-conditional');
@@ -248,12 +238,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('Push Fixed Metadata to Org', async () => {
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('AccountService.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('AccountService.cls')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'AccountService.cls');
     await textEditor.setTextAtLine(6, '\t\t\tTickerSymbol = tickerSymbol');
     await textEditor.save();
     await utilities.pause(2);

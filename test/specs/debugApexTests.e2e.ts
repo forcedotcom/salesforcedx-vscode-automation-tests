@@ -56,16 +56,7 @@ describe('Debug Apex Tests', async () => {
 
   step('Debug All Tests via Apex Class', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
-
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('ExampleApexClass1Test.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-
-    const editorView = workbench.getEditorView();
-
-    // Open an existing apex test
-    const textEditor = (await editorView.openEditor('ExampleApexClass1Test.cls')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass1Test.cls');
 
     // Click the "Debug All Tests" code lens at the top of the class
     const codeLens = await textEditor.getCodeLens(0);
@@ -90,16 +81,7 @@ describe('Debug Apex Tests', async () => {
 
   step('Debug Single Test via Apex Class', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
-
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('ExampleApexClass2Test.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-
-    const editorView = workbench.getEditorView();
-
-    // Open an existing apex test
-    const textEditor = (await editorView.openEditor('ExampleApexClass2Test.cls')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass2Test.cls');
 
     // Click the "Debug Test" code lens at the top of one of the test methods
     const codeLens = await textEditor.getCodeLens(1);
