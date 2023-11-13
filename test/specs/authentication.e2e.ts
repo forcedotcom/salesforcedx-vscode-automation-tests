@@ -249,29 +249,8 @@ describe('Authentication', async () => {
     expect(scratchOrgStatusBarItem).toBeDefined();
   });
 
-  step('Tear down', async () => {
-    if (scratchOrgAliasName) {
-      const workbench = await (await browser.getWorkbench()).wait();
-      await utilities.executeCommand(
-        workbench,
-        `sfdx force:org:delete -u ${scratchOrgAliasName} --noprompt`
-      );
-    }
-
-    // This used to work...
-    // const tempFolderPath = getTempFolderPath();
-    // if (tempFolderPath) {
-    //   await utilities.removeFolder(tempFolderPath);
-    // }
-    // ...but something recently changed and now, removing the folder while VS Code has the folder open
-    // causes VS Code to get into a funky state.  The next time a project is created, we get the
-    // following error:
-    //   07:45:19.65 Starting SFDX: Create Project
-    //   ENOENT: no such file or directory, uv_cwd
-    //
-    // Not deleting the folder that was created is OK, b/c it is deleted in setUpTestingEnvironment()
-    // the next time the test suite runs.  I'm going to leave this in for now in case this gets fixed
-    // and this code can be added back in.
+  step('Tear down and clean up the testing environment', async () => {
+    await testSetup.tearDown();
   });
 
   function getTempFolderPath(): string {
