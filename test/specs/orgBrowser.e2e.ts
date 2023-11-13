@@ -93,9 +93,6 @@ describe('Org Browser', async () => {
     console.log('retrieve source button', retrieveSourceButton);
     retrieveSourceButton.click();
 
-    // Confirm overwrite
-    await browser.keys(['Enter']);
-
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Retrieve Source from Org successfully ran',
