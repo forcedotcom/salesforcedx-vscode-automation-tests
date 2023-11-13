@@ -81,6 +81,7 @@ describe('Org Browser', async () => {
     );
     refreshButton.click();
     utilities.pause(5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Refresh Components', 5);
     const apexClassesLabel = await utilities.findLabel('div', 'MyClass');
     expect(apexClassesLabel).toBeTruthy();
   });
