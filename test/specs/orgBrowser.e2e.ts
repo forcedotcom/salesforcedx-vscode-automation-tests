@@ -24,20 +24,20 @@ describe('Org Browser', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Show Org Browser', 5);
 
-    const orgBrowserLabel = await utilities.findLabel('div', testSetup.scratchOrgAliasName!);
+    const orgBrowserLabelEl = await utilities.findLabel('div', testSetup.scratchOrgAliasName!);
     utilities.log(`${testSetup.testSuiteSuffixName} - Org Browser is connected to target org`);
-    expect(orgBrowserLabel).toBe(testSetup.scratchOrgAliasName);
+    expect(orgBrowserLabelEl).toBeTruthy();
   });
 
   step('Verify there are no Apex Classes available', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify there are no Apex Classes available`);
     // Check there are no classes displayed
-    const apexClassesLabel = await utilities.findLabel('div', 'Apex Classes');
-    apexClassesLabel.click();
+    const apexClassesLabelEl = await utilities.findLabel('div', 'Apex Classes');
+    apexClassesLabelEl.click();
     utilities.pause(5);
-    const noCompsAvailableLabel = await utilities.findLabel('div', 'No components available');
+    const noCompsAvailableLabelEl = await utilities.findLabel('div', 'No components available');
 
-    expect(noCompsAvailableLabel).toBe('No components available');
+    expect(noCompsAvailableLabelEl).toBeTruthy();
   });
 
   step('Create Apex Class and deploy to org', async () => {
