@@ -43,12 +43,9 @@ export function transformedUserName(): string {
   return currentOsUserName().replace('.', '_');
 }
 
-export async function findLabel(
-  elementType: string,
-  labelText: string
-): Promise<WebdriverIO.Element> {
-  let labelElement = await $(`${elementType}[aria-label="${labelText}"]`);
-  return labelElement!;
+export async function findLabel(elementType: string, labelText: string): Promise<string> {
+  let label = (await $(`${elementType}[aria-label="${labelText}"]`)).getAttribute('aria-label');
+  return label!;
 }
 /**
  * @param operation identifies if it's a pull or push operation
