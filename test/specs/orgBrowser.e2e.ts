@@ -71,12 +71,14 @@ describe('Org Browser', async () => {
     expect(successNotificationWasFound).toBe(true);
   });
 
-  step('Refresh Apex Classes', async () => {
+  step('Refresh Org Browser', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Refresh Apex Classes`);
     // Check MyClass is present under Apex Classes section
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Show Org Browser', 5);
-    const refreshButton = await utilities.findLabel('a', 'Refresh Types');
+    const refreshButton = (await utilities.findLabel('div', 'Apex Classes')).$(
+      'li[title="Refresh Components"]'
+    );
     refreshButton.click();
     utilities.pause(5);
     const apexClassesLabel = await utilities.findLabel('div', 'MyClass');
