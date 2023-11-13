@@ -7,7 +7,7 @@
 import { step } from 'mocha-steps';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
-import { TextEditor } from 'wdio-vscode-service';
+import { TextEditor, TreeItem } from 'wdio-vscode-service';
 
 describe('Org Browser', async () => {
   let testSetup: TestSetup;
@@ -87,12 +87,22 @@ describe('Org Browser', async () => {
   });
 
   step('Retrieve Source from Org', async () => {
+    // const apexClassesLabel = await utilities.findLabel('div', 'MyClass');
+    // const retrieveSourceButton = await apexClassesLabel.$('li[title="Retrieve Source from Org"]');
+    // retrieveSourceButton.click();
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve Source from Org`);
     const workbench = await (await browser.getWorkbench()).wait();
-    const apexClassesLabel = await utilities.findLabel('div', 'MyClass');
-    const retrieveSourceButton = await apexClassesLabel.$('li[title="Retrieve Source from Org"]');
-    console.log('retrieve source button', retrieveSourceButton);
-    retrieveSourceButton.click();
+    const sidebar = workbench.getSideBar();
+    const sidebarView = sidebar.getContent();
+    const orgBrowser = await sidebarView.getSection(testSetup.scratchOrgAliasName!);
+
+    await orgBrowser.elem.click();
+    const apexClassesTreeItem = (await orgBrowser.findItem('Apex Classes')) as TreeItem;
+    await apexClassesTreeItem.select();
+    await browser.keys(['Escape']);
+    const myClassTreeItem = (await apexClassesTreeItem.findChildItem('MyClass')) as TreeItem;
+    const retrieveAction = await myClassTreeItem.getActionButton('Retrieve Source from Org');
+    await retrieveAction!.elem.click();
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -107,7 +117,6 @@ describe('Org Browser', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const apexClassesLabel = await utilities.findLabel('div', 'MyClass');
     const retrieveAndOpenButton = await apexClassesLabel.$('li[title="Retrieve and Open Source"]');
-    console.log('retrieve and open button', retrieveAndOpenButton);
     retrieveAndOpenButton.click();
 
     // Confirm overwrite
