@@ -7,7 +7,7 @@
 import { step } from 'mocha-steps';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
-import { TextEditor, TreeItem } from 'wdio-vscode-service';
+import { TextEditor, TreeItem, ViewItem } from 'wdio-vscode-service';
 
 describe('Org Browser', async () => {
   let testSetup: TestSetup;
@@ -66,7 +66,7 @@ describe('Org Browser', async () => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Deploy Source to Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
   });
@@ -81,69 +81,45 @@ describe('Org Browser', async () => {
     );
     refreshButton.click();
     utilities.pause(5);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Refresh Components', 5);
     const apexClassesLabel = await utilities.findLabel('div', 'MyClass');
     expect(apexClassesLabel).toBeTruthy();
   });
 
-  step('Expand Org Browser view', async () => {
-    utilities.log(`${testSetup.testSuiteSuffixName} - Expand Org Browser view`);
-
-    // The scratch's org name is too long and it needs to be fully visible to get the org browser tree item element
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Org Browser: Focus on Metadata View',
-      1
-    );
-    await utilities.runCommandFromCommandPrompt(workbench, 'Increase Current View Size', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'Increase Current View Size', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'Increase Current View Size', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'Increase Current View Size', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'Increase Current View Size', 1);
-  });
-
   step('Retrieve Source from Org', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve Source from Org`);
+    const apexClassesLabel = await utilities.findLabel('div', 'MyClass');
+    const retrieveSourceButton = await apexClassesLabel
+      .$('div.actions')
+      .$('div.monaco-action-bar')
+      .$('ul.actions-container')
+      .$('li[title="Retrieve Source from Org"]');
+    retrieveSourceButton.click();
+
     const workbench = await (await browser.getWorkbench()).wait();
-    const sidebar = workbench.getSideBar();
-    const sidebarView = sidebar.getContent();
-    const orgBrowser = await sidebarView.getSection(testSetup.scratchOrgAliasName!);
-
-    await orgBrowser.elem.click();
-    const apexClassesTreeItem = (await orgBrowser.findItem('Apex Classes')) as TreeItem;
-    await apexClassesTreeItem.select();
-    await browser.keys(['Escape']);
-    const myClassTreeItem = (await apexClassesTreeItem.findChildItem('MyClass')) as TreeItem;
-    const retrieveAction = await myClassTreeItem.getActionButton('Retrieve Source from Org');
-    await retrieveAction!.elem.click();
-
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Retrieve Source from Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
   });
 
   step('Retrieve and Open Source', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve and Open Source`);
+    const apexClassesLabel = await utilities.findLabel('div', 'MyClass');
+    const retrieveAndOpenButton = await apexClassesLabel
+      .$('div.actions')
+      .$('div.monaco-action-bar')
+      .$('ul.actions-container')
+      .$('li[title="Retrieve and Open Source"]');
+    retrieveAndOpenButton.click();
+
     const workbench = await (await browser.getWorkbench()).wait();
-    const sidebar = workbench.getSideBar();
-    const sidebarView = sidebar.getContent();
-    const orgBrowser = await sidebarView.getSection(testSetup.scratchOrgAliasName!);
-
-    await orgBrowser.elem.click();
-    const apexClassesTreeItem = (await orgBrowser.findItem('Apex Classes')) as TreeItem;
-    await apexClassesTreeItem.select();
-    await browser.keys(['Escape']);
-    const myClassTreeItem = (await apexClassesTreeItem.findChildItem('MyClass')) as TreeItem;
-    const retrieveAction = await myClassTreeItem.getActionButton('Retrieve and Open Source');
-    await retrieveAction!.elem.click();
-
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Retrieve Source from Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
 
