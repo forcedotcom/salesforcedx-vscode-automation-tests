@@ -6,7 +6,7 @@
  */
 
 import os from 'os';
-import { EditorView, TextEditor, Workbench, sleep } from 'wdio-vscode-service';
+import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings';
 import { attemptToFindOutputPanelText } from './outputView';
 import { runCommandFromCommandPrompt } from './commandPrompt';
@@ -43,6 +43,12 @@ export function transformedUserName(): string {
   return currentOsUserName().replace('.', '_');
 }
 
+/**
+ * @param type type of html tag we want to find
+ * @param attribute attribute that holds the given text
+ * @param labelText text of the element we want to find
+ * @returns element that contains the given text
+ */
 export async function findElementByText(
   type: string,
   attribute: string,
@@ -51,6 +57,7 @@ export async function findElementByText(
   let element = await $(`${type}[${attribute}="${labelText}"]`);
   return element!;
 }
+
 /**
  * @param operation identifies if it's a pull or push operation
  * @param changes indicates if changes are expected or not
@@ -83,6 +90,11 @@ export async function verifyPushAndPullOutputText(
   return outputPanelText;
 }
 
+/**
+ * @param workbench page object representing the custom VSCode title bar
+ * @param fileName name of the file we want to open and use
+ * @returns editor for the given file name
+ */
 export async function getTextEditor(workbench: Workbench, fileName: string): Promise<TextEditor> {
   const inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
   await inputBox.setText(fileName);
