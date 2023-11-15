@@ -81,8 +81,10 @@ describe('Deploy and Retrieve', async () => {
       1
     );
 
-    const enableSourceTrackingBtn = await $(
-      'div[title="salesforcedx-vscode-core.experimental.enableSourceTrackingForDeployAndRetrieve"]'
+    const enableSourceTrackingBtn = await utilities.findElementByText(
+      'div',
+      'title',
+      'salesforcedx-vscode-core.experimental.enableSourceTrackingForDeployAndRetrieve'
     );
     expect(await enableSourceTrackingBtn.getAttribute('aria-checked')).toBe('true');
   });
@@ -266,8 +268,10 @@ describe('Deploy and Retrieve', async () => {
     );
     await browser.keys(['push on save']);
 
-    const pushOrDeployOnSaveBtn = await $(
-      'div[title="salesforcedx-vscode-core.push-or-deploy-on-save.enabled"]'
+    const pushOrDeployOnSaveBtn = await utilities.findElementByText(
+      'div',
+      'title',
+      'salesforcedx-vscode-core.push-or-deploy-on-save.enabled'
     );
     await pushOrDeployOnSaveBtn.click();
     await utilities.pause(3);
@@ -284,8 +288,10 @@ describe('Deploy and Retrieve', async () => {
     } catch {
       utilities.log('Panel is already closed');
     }
-    const preferDeployOnSaveBtn = await $(
-      'div[title="salesforcedx-vscode-core.push-or-deploy-on-save.preferDeployOnSave"]'
+    const preferDeployOnSaveBtn = await utilities.findElementByText(
+      'div',
+      'title',
+      'salesforcedx-vscode-core.push-or-deploy-on-save.preferDeployOnSave'
     );
     await preferDeployOnSaveBtn.click();
     await utilities.pause(3);
@@ -343,8 +349,10 @@ describe('Deploy and Retrieve', async () => {
       1
     );
 
-    const enableSourceTrackingBtn = await $(
-      'div[title="salesforcedx-vscode-core.experimental.enableSourceTrackingForDeployAndRetrieve"]'
+    const enableSourceTrackingBtn = await utilities.findElementByText(
+      'div',
+      'title',
+      'salesforcedx-vscode-core.experimental.enableSourceTrackingForDeployAndRetrieve'
     );
     await enableSourceTrackingBtn.click();
     await utilities.pause(1);

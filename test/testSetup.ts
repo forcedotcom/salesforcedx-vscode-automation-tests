@@ -88,7 +88,11 @@ export class TestSetup {
     await browser.keys(['Window: Command Center']);
     await utilities.pause(3);
 
-    const commandCenterBtn = await $('div[title="window.commandCenter"]');
+    const commandCenterBtn = await utilities.findElementByText(
+      'div',
+      'title',
+      'window.commandCenter'
+    );
     await commandCenterBtn.click();
     await utilities.pause(3);
 
