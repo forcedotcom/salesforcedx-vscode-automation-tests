@@ -82,7 +82,7 @@ describe('Org Browser', async () => {
     expect(successNotificationWasFound).toBe(true);
   });
 
-  xstep('Refresh Org Browser and check MyClass is there', async () => {
+  step('Refresh Org Browser and check MyClass is there', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Refresh Apex Classes`);
     // Check MyClass is present under Apex Classes section
     const workbench = await (await browser.getWorkbench()).wait();
@@ -97,14 +97,14 @@ describe('Org Browser', async () => {
     expect(myClassLabelEl).toBeTruthy();
   });
 
-  xstep('Retrieve Source from Org', async () => {
+  step('Retrieve Source from Org', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve Source from Org`);
     const myClassLabelEl = await utilities.findElementByText('div', 'aria-label', 'MyClass');
     await myClassLabelEl.click();
     await utilities.pause(2);
     const retrieveSourceButton = await utilities.findElementByText(
-      'li',
-      'title',
+      'a',
+      'aria-label',
       'Retrieve Source from Org'
     );
     console.log('button 1', retrieveSourceButton);
@@ -125,8 +125,8 @@ describe('Org Browser', async () => {
     myClassLabelEl.click();
     utilities.pause(2);
     const retrieveAndOpenButton = await utilities.findElementByText(
-      'li',
-      'title',
+      'a',
+      'aria-label',
       'Retrieve and Open Source'
     );
     console.log('button 2', retrieveAndOpenButton);
