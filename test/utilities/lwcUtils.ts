@@ -49,7 +49,7 @@ export async function createLwc(name: string): Promise<void> {
   log('createLwc() - Modify html content');
   log('');
   // Modify html content
-  textEditor = await getTextEditor(workbench, name + '.js');
+  textEditor = await getTextEditor(workbench, name + '.html');
   const htmlText = [
     `<template>`,
     `\t<lightning-card title="${name}" icon-name="custom:custom14">`,
