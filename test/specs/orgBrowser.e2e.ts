@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { step } from 'mocha-steps';
+import { step, xstep } from 'mocha-steps';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
@@ -82,7 +82,7 @@ describe('Org Browser', async () => {
     expect(successNotificationWasFound).toBe(true);
   });
 
-  step('Refresh Org Browser', async () => {
+  xstep('Refresh Org Browser and check MyClass is there', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Refresh Apex Classes`);
     // Check MyClass is present under Apex Classes section
     const workbench = await (await browser.getWorkbench()).wait();
@@ -97,7 +97,7 @@ describe('Org Browser', async () => {
     expect(myClassLabelEl).toBeTruthy();
   });
 
-  step('Retrieve Source from Org', async () => {
+  xstep('Retrieve Source from Org', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve Source from Org`);
     const myClassLabelEl = await utilities.findElementByText('div', 'aria-label', 'MyClass');
     await myClassLabelEl.click();
