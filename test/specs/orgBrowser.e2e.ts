@@ -7,7 +7,6 @@
 import { step } from 'mocha-steps';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
-import { TextEditor, TreeItem, ViewItem } from 'wdio-vscode-service';
 
 describe('Org Browser', async () => {
   let testSetup: TestSetup;
@@ -24,7 +23,11 @@ describe('Org Browser', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Show Org Browser', 5);
 
-    const orgBrowserLabelEl = await utilities.findLabel('div', testSetup.scratchOrgAliasName!);
+    const orgBrowserLabelEl = await utilities.findElementByText(
+      'div',
+      'aria-label',
+      testSetup.scratchOrgAliasName!
+    );
     utilities.log(`${testSetup.testSuiteSuffixName} - Org Browser is connected to target org`);
     expect(orgBrowserLabelEl).toBeTruthy();
   });
@@ -32,10 +35,18 @@ describe('Org Browser', async () => {
   step('Verify there are no Apex Classes available', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify there are no Apex Classes available`);
     // Check there are no classes displayed
-    const apexClassesLabelEl = await utilities.findLabel('div', 'Apex Classes');
+    const apexClassesLabelEl = await utilities.findElementByText(
+      'div',
+      'aria-label',
+      'Apex Classes'
+    );
     apexClassesLabelEl.click();
     utilities.pause(5);
-    const noCompsAvailableLabelEl = await utilities.findLabel('div', 'No components available');
+    const noCompsAvailableLabelEl = await utilities.findElementByText(
+      'div',
+      'aria-label',
+      'No components available'
+    );
 
     expect(noCompsAvailableLabelEl).toBeTruthy();
   });
@@ -76,25 +87,28 @@ describe('Org Browser', async () => {
     // Check MyClass is present under Apex Classes section
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Show Org Browser', 5);
-    const refreshButton = (await utilities.findLabel('div', 'Apex Classes')).$(
-      'li[title="Refresh Components"]'
-    );
-    refreshButton.click();
-    utilities.pause(5);
+    const refreshButton = await (
+      await utilities.findElementByText('div', 'aria-label', 'Apex Classes')
+    ).$('li[title="Refresh Components"]');
+    await refreshButton.click();
+    await utilities.pause(5);
     await utilities.runCommandFromCommandPrompt(workbench, 'Refresh Components', 5);
-    const myClassLabelEl = await utilities.findLabel('div', 'MyClass');
+    const myClassLabelEl = await utilities.findElementByText('div', 'aria-label', 'MyClass');
     expect(myClassLabelEl).toBeTruthy();
   });
 
   step('Retrieve Source from Org', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve Source from Org`);
-    const myClassLabelEl = await utilities.findLabel('div', 'MyClass');
-    myClassLabelEl.click();
-    utilities.pause(2);
-    const retrieveSourceButton = (await utilities.findLabel('div', 'MyClass')).$(
-      'li[title="Retrieve Source from Org"]'
+    const myClassLabelEl = await utilities.findElementByText('div', 'aria-label', 'MyClass');
+    await myClassLabelEl.click();
+    await utilities.pause(2);
+    const retrieveSourceButton = await utilities.findElementByText(
+      'li',
+      'title',
+      'Retrieve Source from Org'
     );
-    retrieveSourceButton.click();
+    console.log('button 1', retrieveSourceButton);
+    await retrieveSourceButton.click();
 
     const workbench = await (await browser.getWorkbench()).wait();
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -107,13 +121,16 @@ describe('Org Browser', async () => {
 
   step('Retrieve and Open Source', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve and Open Source`);
-    const myClassLabelEl = await utilities.findLabel('div', 'MyClass');
+    const myClassLabelEl = await utilities.findElementByText('div', 'aria-label', 'MyClass');
     myClassLabelEl.click();
     utilities.pause(2);
-    const retrieveAndOpenButton = (await utilities.findLabel('div', 'MyClass')).$(
-      'li[title="Retrieve and Open Source"]'
+    const retrieveAndOpenButton = await utilities.findElementByText(
+      'li',
+      'title',
+      'Retrieve and Open Source'
     );
-    retrieveAndOpenButton.click();
+    console.log('button 2', retrieveAndOpenButton);
+    await retrieveAndOpenButton.click();
 
     const workbench = await (await browser.getWorkbench()).wait();
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
