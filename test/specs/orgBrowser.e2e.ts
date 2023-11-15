@@ -88,12 +88,10 @@ describe('Org Browser', async () => {
 
   step('Retrieve Source from Org', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve Source from Org`);
-    const retrieveSourceButton = (await utilities.findLabel('div', 'MyClass')).$(
-      'li[title="Retrieve Source from Org"]'
-    );
-    // .$('div.actions')
-    // .$('div.monaco-action-bar')
-    // .$('ul.actions-container')
+    const myClassLabelEl = await utilities.findLabel('div', 'MyClass');
+    await myClassLabelEl.click();
+    utilities.pause(2);
+    const retrieveSourceButton = await myClassLabelEl.$('li[title="Retrieve Source from Org"]');
     retrieveSourceButton.click();
 
     const workbench = await (await browser.getWorkbench()).wait();
@@ -108,10 +106,9 @@ describe('Org Browser', async () => {
   step('Retrieve and Open Source', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve and Open Source`);
     const myClassLabelEl = await utilities.findLabel('div', 'MyClass');
+    await myClassLabelEl.click();
+    utilities.pause(2);
     const retrieveAndOpenButton = await myClassLabelEl.$('li[title="Retrieve and Open Source"]');
-    // .$('div.actions')
-    // .$('div.monaco-action-bar')
-    // .$('ul.actions-container')
     retrieveAndOpenButton.click();
 
     const workbench = await (await browser.getWorkbench()).wait();
