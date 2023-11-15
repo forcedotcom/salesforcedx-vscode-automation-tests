@@ -82,18 +82,18 @@ describe('Org Browser', async () => {
     refreshButton.click();
     utilities.pause(5);
     await utilities.runCommandFromCommandPrompt(workbench, 'Refresh Components', 5);
-    const apexClassesLabel = await utilities.findLabel('div', 'MyClass');
-    expect(apexClassesLabel).toBeTruthy();
+    const myClassLabelEl = await utilities.findLabel('div', 'MyClass');
+    expect(myClassLabelEl).toBeTruthy();
   });
 
   step('Retrieve Source from Org', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve Source from Org`);
-    const apexClassesLabel = await utilities.findLabel('div', 'MyClass');
-    const retrieveSourceButton = await apexClassesLabel
-      .$('div.actions')
-      .$('div.monaco-action-bar')
-      .$('ul.actions-container')
-      .$('li[title="Retrieve Source from Org"]');
+    const retrieveSourceButton = (await utilities.findLabel('div', 'MyClass')).$(
+      'li[title="Retrieve Source from Org"]'
+    );
+    // .$('div.actions')
+    // .$('div.monaco-action-bar')
+    // .$('ul.actions-container')
     retrieveSourceButton.click();
 
     const workbench = await (await browser.getWorkbench()).wait();
@@ -107,12 +107,11 @@ describe('Org Browser', async () => {
 
   step('Retrieve and Open Source', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve and Open Source`);
-    const apexClassesLabel = await utilities.findLabel('div', 'MyClass');
-    const retrieveAndOpenButton = await apexClassesLabel
-      .$('div.actions')
-      .$('div.monaco-action-bar')
-      .$('ul.actions-container')
-      .$('li[title="Retrieve and Open Source"]');
+    const myClassLabelEl = await utilities.findLabel('div', 'MyClass');
+    const retrieveAndOpenButton = await myClassLabelEl.$('li[title="Retrieve and Open Source"]');
+    // .$('div.actions')
+    // .$('div.monaco-action-bar')
+    // .$('ul.actions-container')
     retrieveAndOpenButton.click();
 
     const workbench = await (await browser.getWorkbench()).wait();
