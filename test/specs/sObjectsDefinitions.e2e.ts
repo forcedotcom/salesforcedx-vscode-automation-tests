@@ -227,7 +227,6 @@ describe('SObjects Definitions', async () => {
 
   step('Refresh SObject Definitions for All SObjects', async () => {
     // Clear the output for correct test validation.
-    await utilities.openOutputView();
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 

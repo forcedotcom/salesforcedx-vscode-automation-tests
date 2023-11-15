@@ -25,12 +25,6 @@ export async function selectOutputChannel(name: string): Promise<void> {
   await pause(2);
 }
 
-export async function openOutputView(): Promise<void> {
-  const workbench = await (await browser.getWorkbench()).wait();
-  await runCommandFromCommandPrompt(workbench, 'View: Toggle Output', 1);
-  await pause(2);
-}
-
 export async function getOutputViewText(outputChannelName: string = ''): Promise<string> {
   // Set the output channel, but only if the value is passed in.
   if (outputChannelName) {

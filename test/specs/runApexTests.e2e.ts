@@ -62,7 +62,6 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Click the "Run All Tests" code lens at the top of the class
@@ -102,7 +101,6 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Click the "Run Test" code lens at the top of one of the test methods
@@ -139,7 +137,6 @@ describe('Run Apex Tests', async () => {
   step('Run Tests via Command Palette', async () => {
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await utilities.openOutputView();
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
@@ -244,7 +241,6 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Click the run tests button on the top right corner of the Test sidebar
@@ -306,7 +302,6 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Click the run test button that is shown to the right when you hover a test class name on the Test sidebar
@@ -365,7 +360,6 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Hover a test name under one of the test class sections and click the run button that is shown to the right of the test name on the Test sidebar
@@ -431,7 +425,6 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await utilities.openOutputView();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Run SFDX: Run Apex tests.
@@ -570,7 +563,6 @@ describe('Run Apex Tests', async () => {
   step('Run Apex Test Suite', async () => {
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await utilities.openOutputView();
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
