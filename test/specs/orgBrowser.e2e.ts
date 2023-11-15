@@ -76,7 +76,7 @@ describe('Org Browser', async () => {
     // Check MyClass is present under Apex Classes section
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Show Org Browser', 5);
-    const refreshButton = (await utilities.findLabel('div', 'Apex Classes')).$(
+    const refreshButton = await (await utilities.findLabel('div', 'Apex Classes')).$(
       'li[title="Refresh Components"]'
     );
     refreshButton.click();
@@ -91,7 +91,9 @@ describe('Org Browser', async () => {
     const myClassLabelEl = await utilities.findLabel('div', 'MyClass');
     await myClassLabelEl.click();
     utilities.pause(2);
-    const retrieveSourceButton = await myClassLabelEl.$('li[title="Retrieve Source from Org"]');
+    const retrieveSourceButton = await (await utilities.findLabel('div', 'MyClass')).$(
+      'li[title="Retrieve Source from Org"]'
+    );
     retrieveSourceButton.click();
 
     const workbench = await (await browser.getWorkbench()).wait();
@@ -108,7 +110,9 @@ describe('Org Browser', async () => {
     const myClassLabelEl = await utilities.findLabel('div', 'MyClass');
     await myClassLabelEl.click();
     utilities.pause(2);
-    const retrieveAndOpenButton = await myClassLabelEl.$('li[title="Retrieve and Open Source"]');
+    const retrieveAndOpenButton = await (await utilities.findLabel('div', 'MyClass')).$(
+      'li[title="Retrieve and Open Source"]'
+    );
     retrieveAndOpenButton.click();
 
     const workbench = await (await browser.getWorkbench()).wait();
