@@ -33,6 +33,27 @@ describe('Org Browser', async () => {
     expect(orgBrowserLabelEl).toBeTruthy();
   });
 
+  step('Check some metadata types are available', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Check some metadata types are available`);
+    const metadataTypes = [
+      'Apex Classes',
+      'Apex Triggers',
+      'App Menus',
+      'Assignment Rules',
+      'Aura Components',
+      'Auth Providers',
+      'Apex Test Suites',
+      'Communities',
+      'Connected Apps',
+      'Certificates',
+      'Custom Applications'
+    ];
+    for (const type of metadataTypes) {
+      const element = await utilities.findElementByText('div', 'aria-label', type);
+      expect(element).toBeTruthy();
+    }
+  });
+
   step('Verify there are no Apex Classes available', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify there are no Apex Classes available`);
     // Check there are no classes displayed
