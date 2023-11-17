@@ -112,12 +112,14 @@ describe('Org Browser', async () => {
     // Check MyClass is present under Apex Classes section
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Show Org Browser', 5);
-    const refreshButton = await (
+    const refreshComponentsButton = await (
       await utilities.findElementByText('div', 'aria-label', 'Apex Classes')
     ).$('li[title="Refresh Components"]');
-    await refreshButton.click();
+    await refreshComponentsButton.click();
     await utilities.pause(5);
-    await utilities.runCommandFromCommandPrompt(workbench, 'Refresh Components', 5);
+    const refreshTypesButton = await utilities.findElementByText('li', 'title', 'Refresh Types');
+    await refreshTypesButton.click();
+    await utilities.pause(5);
     const myClassLabelEl = await utilities.findElementByText('div', 'aria-label', 'MyClass');
     expect(myClassLabelEl).toBeTruthy();
   });
