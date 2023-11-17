@@ -50,7 +50,6 @@ describe('LWC LSP', async () => {
     await browser.keys(['Escape']);
     await browser.keys(['ArrowRight', 'ArrowLeft', 'ArrowLeft']);
     await utilities.pause(1);
-    // await textEditor.moveCursor(3, 40);
 
     // Go to definition through F12
     await browser.keys(['F12']);

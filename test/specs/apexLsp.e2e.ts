@@ -65,7 +65,16 @@ describe('Apex LSP', async () => {
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
     const textEditor = await utilities.getTextEditor(workbench, 'ExampleClassTest.cls');
-    await textEditor.moveCursor(6, 20);
+
+    // Move cursor to the middle of "ExampleClass.SayHello() call"
+    await browser.keys([CMD_KEY, 'f']);
+    await utilities.pause(1);
+    await browser.keys(['.SayHello']);
+    await browser.keys(['Escape']);
+    await browser.keys(['ArrowRight']);
+    await browser.keys(['ArrowLeft']);
+    await browser.keys(['ArrowLeft']);
+    await utilities.pause(1);
 
     // Go to definition through F12
     await browser.keys(['F12']);
