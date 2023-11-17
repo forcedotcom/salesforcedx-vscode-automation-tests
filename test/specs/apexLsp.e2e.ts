@@ -96,11 +96,12 @@ describe('Apex LSP', async () => {
     // Move cursor to line 7 and type ExampleClass.s
     await browser.keys([CMD_KEY, 'f']);
     await utilities.pause(1);
-    await browser.keys(["SayHello('Cody');"]);
+    await browser.keys(['System.debug']);
     await browser.keys(['Escape']);
-    await browser.keys(['ArrowRight']);
-    await browser.keys(['ArrowRight']);
-    await browser.keys('\tExampleClass.say');
+    await browser.keys(['ArrowLeft']);
+    await browser.keys(['ArrowDown']);
+    await browser.keys(['ArrowDown']);
+    await browser.keys('ExampleClass.say');
     await utilities.pause(1);
 
     // Verify autocompletion options are present
