@@ -92,7 +92,15 @@ describe('Apex LSP', async () => {
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
     const textEditor = await utilities.getTextEditor(workbench, 'ExampleClassTest.cls');
-    await textEditor.typeTextAt(7, 1, '\tExampleClass.s');
+
+    // Move cursor to line 7 and type ExampleClass.s
+    await browser.keys([CMD_KEY, 'f']);
+    await utilities.pause(1);
+    await browser.keys(["SayHello('Cody');"]);
+    await browser.keys(['Escape']);
+    await browser.keys(['ArrowRight']);
+    await browser.keys(['ArrowRight']);
+    await browser.keys('\tExampleClass.say');
     await utilities.pause(1);
 
     // Verify autocompletion options are present
