@@ -81,12 +81,11 @@ export async function verifyPushAndPullOutputText(
       expect(outputPanelText).toContain(`${type}  ExampleApexClass1  ApexClass`);
     } else {
       expect(outputPanelText).toContain(`${type}  Admin`);
-      expect(outputPanelText).toContain('ended with exit code 0');
     }
   } else {
     expect(outputPanelText).toContain('No results found');
   }
-
+  expect(outputPanelText).toContain('ended with exit code 0');
   return outputPanelText;
 }
 

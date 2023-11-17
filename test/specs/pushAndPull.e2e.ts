@@ -166,7 +166,6 @@ describe('Push and Pull', async () => {
 
     // Check the output.
     const outputPanelText = await utilities.verifyPushAndPullOutputText('Push', 'Changed');
-    expect(outputPanelText).toContain('ended with exit code 0');
     expect(outputPanelText).toContain(
       path.join(
         'e2e-temp',
@@ -231,7 +230,6 @@ describe('Push and Pull', async () => {
 
     // Check the output.
     outputPanelText = await utilities.verifyPushAndPullOutputText('Pull');
-    expect(outputPanelText).toContain('ended with exit code 0');
     expect(outputPanelText).not.toContain('Created  Admin');
   });
 
@@ -258,7 +256,6 @@ describe('Push and Pull', async () => {
 
     // Check the output.
     const outputPanelText = await utilities.verifyPushAndPullOutputText('Pull');
-    expect(outputPanelText).toContain('ended with exit code 0');
   });
 
   step('Save the modified file, then pull', async () => {
@@ -282,7 +279,6 @@ describe('Push and Pull', async () => {
     expect(successNotificationWasFound).toBe(true);
 
     const outputPanelText = await utilities.verifyPushAndPullOutputText('Pull');
-    expect(outputPanelText).toContain('ended with exit code 0');
   });
 
   step('Create an additional system admin user', async () => {
