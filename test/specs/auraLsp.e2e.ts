@@ -51,12 +51,7 @@ describe('Aura LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('aura1.cmp');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('aura1.cmp')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'aura1.cmp');
 
     // Move cursor to the middle of "simpleNewContact"
     await browser.keys([CMD_KEY, 'f']);
@@ -80,12 +75,7 @@ describe('Aura LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('aura1.cmp');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('aura1.cmp')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'aura1.cmp');
     await textEditor.typeTextAt(2, 1, '<aura:appl');
     await utilities.pause(1);
 

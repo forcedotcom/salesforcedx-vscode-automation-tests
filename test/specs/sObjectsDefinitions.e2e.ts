@@ -18,66 +18,54 @@ describe('SObjects Definitions', async () => {
     await testSetup.setUp();
     projectName = testSetup.tempProjectName.toUpperCase();
 
-    utilities.log(
-      `${testSetup.testSuiteSuffixName} - calling createCustomObjects()`
-    );
+    utilities.log(`${testSetup.testSuiteSuffixName} - calling createCustomObjects()`);
     await utilities.createCustomObjects(testSetup);
   });
 
-  step(
-    'Check Custom Objects Customer and Product are within objects folder',
-    async () => {
-      const workbench = await (await browser.getWorkbench()).wait();
-      const sidebar = workbench.getSideBar();
-      const content = sidebar.getContent();
+  step('Check Custom Objects Customer and Product are within objects folder', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
+    const sidebar = workbench.getSideBar();
+    const content = sidebar.getContent();
 
-      const treeViewSection = await content.getSection(projectName);
-      expect(treeViewSection).not.toEqual(undefined);
+    const treeViewSection = await content.getSection(projectName);
+    expect(treeViewSection).not.toEqual(undefined);
 
-      const objectTreeItem = (await treeViewSection.findItem(
-        'objects'
-      )) as DefaultTreeItem;
-      expect(objectTreeItem).not.toEqual(undefined);
-      await objectTreeItem.select();
+    const objectTreeItem = (await treeViewSection.findItem('objects')) as DefaultTreeItem;
+    expect(objectTreeItem).not.toEqual(undefined);
+    await objectTreeItem.select();
 
-      const customerObjectFolder = (await objectTreeItem.findChildItem(
-        'Customer__c'
-      )) as DefaultTreeItem;
-      expect(customerObjectFolder).not.toEqual(undefined);
+    const customerObjectFolder = (await objectTreeItem.findChildItem(
+      'Customer__c'
+    )) as DefaultTreeItem;
+    expect(customerObjectFolder).not.toEqual(undefined);
 
-      await customerObjectFolder?.expand();
-      expect(await customerObjectFolder?.isExpanded()).toBe(true);
+    await customerObjectFolder?.expand();
+    expect(await customerObjectFolder?.isExpanded()).toBe(true);
 
-      const customerCustomObject = await utilities.getVisibleChild(
-        customerObjectFolder,
-        'Customer__c.object-meta.xml'
-      );
-      expect(customerCustomObject).not.toEqual(undefined);
+    const customerCustomObject = await utilities.getVisibleChild(
+      customerObjectFolder,
+      'Customer__c.object-meta.xml'
+    );
+    expect(customerCustomObject).not.toEqual(undefined);
 
-      const productObjectFolder = (await objectTreeItem.findChildItem(
-        'Product__c'
-      )) as DefaultTreeItem;
-      expect(productObjectFolder).not.toEqual(undefined);
+    const productObjectFolder = (await objectTreeItem.findChildItem(
+      'Product__c'
+    )) as DefaultTreeItem;
+    expect(productObjectFolder).not.toEqual(undefined);
 
-      await productObjectFolder?.expand();
-      expect(await productObjectFolder?.isExpanded()).toBe(true);
+    await productObjectFolder?.expand();
+    expect(await productObjectFolder?.isExpanded()).toBe(true);
 
-      const productCustomObject = await utilities.getVisibleChild(
-        productObjectFolder,
-        'Product__c.object-meta.xml'
-      );
-      expect(productCustomObject).not.toEqual(undefined);
-
-    }
-  );
+    const productCustomObject = await utilities.getVisibleChild(
+      productObjectFolder,
+      'Product__c.object-meta.xml'
+    );
+    expect(productCustomObject).not.toEqual(undefined);
+  });
 
   step('Push Source to Org', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Push Source to Default Org',
-      5
-    );
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
     await utilities.pause(1);
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -122,9 +110,7 @@ describe('SObjects Definitions', async () => {
     expect(outputPanelText).not.toBeUndefined();
 
     // Search for 'Processed xxx Custom sObjects'
-    const matchedResults = outputPanelText?.match(
-      /Processed [0-9]{1,} Custom sObjects/gm
-    );
+    const matchedResults = outputPanelText?.match(/Processed [0-9]{1,} Custom sObjects/gm);
     expect(matchedResults).not.toBe(undefined);
     expect(matchedResults!.length).toBe(1);
     const customObjectCount = parseInt(
@@ -140,28 +126,21 @@ describe('SObjects Definitions', async () => {
     expect(treeViewSection).not.toEqual(undefined);
 
     // Verify if '.sfdx' folder is in side panel
-    const sfdxTreeItem = (await treeViewSection.findItem(
-      '.sfdx'
-    )) as DefaultTreeItem;
+    const sfdxTreeItem = (await treeViewSection.findItem('.sfdx')) as DefaultTreeItem;
     expect(sfdxTreeItem).not.toEqual(undefined);
     await sfdxTreeItem.expand();
     expect(await sfdxTreeItem.isExpanded()).toBe(true);
     await utilities.pause(1);
 
     // Verify if 'tools' folder is within '.sfdx'
-    const toolsTreeItem = (await sfdxTreeItem.findChildItem(
-      'tools'
-    )) as TreeItem;
+    const toolsTreeItem = (await sfdxTreeItem.findChildItem('tools')) as TreeItem;
     expect(toolsTreeItem).not.toEqual(undefined);
     await toolsTreeItem.expand();
     expect(await toolsTreeItem.isExpanded()).toBe(true);
     await utilities.pause(1);
 
     // Verify if 'sobjects' folder is within 'tools'
-    let sobjectsTreeItem = await utilities.getVisibleChild(
-      sfdxTreeItem,
-      'sobjects'
-    );
+    let sobjectsTreeItem = await utilities.getVisibleChild(sfdxTreeItem, 'sobjects');
     expect(sobjectsTreeItem).not.toEqual(undefined);
     sobjectsTreeItem = sobjectsTreeItem!;
 
@@ -170,10 +149,7 @@ describe('SObjects Definitions', async () => {
     await utilities.pause(1);
 
     // Verify if 'customObjects' folder is within 'sobjects'
-    let customObjectsTreeItem = await utilities.getVisibleChild(
-      sfdxTreeItem,
-      'customObjects'
-    );
+    let customObjectsTreeItem = await utilities.getVisibleChild(sfdxTreeItem, 'customObjects');
     expect(customObjectsTreeItem).not.toEqual(undefined);
     customObjectsTreeItem = customObjectsTreeItem!;
 
@@ -182,13 +158,9 @@ describe('SObjects Definitions', async () => {
     await utilities.pause(1);
 
     // Verify if custom Objects Customer__c and Product__c are within 'customObjects' folder
-    const customerCustomObject = await treeViewSection.findItem(
-      'Customer__c.cls'
-    );
+    const customerCustomObject = await treeViewSection.findItem('Customer__c.cls');
     expect(customerCustomObject).not.toBe(undefined);
-    const productCustomObject = await treeViewSection.findItem(
-      'Product__c.cls'
-    );
+    const productCustomObject = await treeViewSection.findItem('Product__c.cls');
     expect(productCustomObject).not.toBe(undefined);
   });
 
@@ -219,9 +191,7 @@ describe('SObjects Definitions', async () => {
     expect(outputPanelText).not.toBeUndefined();
 
     // Search for 'Processed xxx Standard sObjects'
-    const matchedResults = outputPanelText?.match(
-      /Processed [0-9]{1,} Standard sObjects/gm
-    );
+    const matchedResults = outputPanelText?.match(/Processed [0-9]{1,} Standard sObjects/gm);
     expect(matchedResults).not.toBe(undefined);
     expect(matchedResults!.length).toBeGreaterThanOrEqual(2);
     const sObjectCount = parseInt(
@@ -246,9 +216,7 @@ describe('SObjects Definitions', async () => {
     const accountSObject = await treeViewSection.findItem('Account.cls');
     expect(accountSObject).not.toBe(undefined);
 
-    const accountCleanInfoSObject = await treeViewSection.findItem(
-      'AccountCleanInfo.cls'
-    );
+    const accountCleanInfoSObject = await treeViewSection.findItem('AccountCleanInfo.cls');
     expect(accountCleanInfoSObject).not.toBe(undefined);
 
     const acceptedEventRelationSObject = await treeViewSection.findItem(
@@ -259,10 +227,9 @@ describe('SObjects Definitions', async () => {
 
   step('Refresh SObject Definitions for All SObjects', async () => {
     // Clear the output for correct test validation.
-    const outputView = await utilities.openOutputView();
-    outputView.clearText();
-
     const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+
     const prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Refresh SObject Definitions',
@@ -293,20 +260,14 @@ describe('SObjects Definitions', async () => {
     );
     expect(matchedStandardResults).not.toBe(undefined);
     expect(matchedStandardResults!.length).toBe(1);
-    const standardObjectCount = parseInt(
-      matchedStandardResults![0].match(/[0-9]{1,}/)![0]
-    );
+    const standardObjectCount = parseInt(matchedStandardResults![0].match(/[0-9]{1,}/)![0]);
     expect(standardObjectCount).toBeGreaterThan(400);
 
     // Search for 'Processed xxx Custom sObjects'
-    const matchedCustomResults = outputPanelText?.match(
-      /Processed [0-9]{1,} Custom sObjects/gm
-    );
+    const matchedCustomResults = outputPanelText?.match(/Processed [0-9]{1,} Custom sObjects/gm);
     expect(matchedCustomResults).not.toBe(undefined);
     expect(matchedCustomResults!.length).toBe(1);
-    const customObjectCount = parseInt(
-      matchedCustomResults![0].match(/[0-9]{1,}/)![0]
-    );
+    const customObjectCount = parseInt(matchedCustomResults![0].match(/[0-9]{1,}/)![0]);
     expect(customObjectCount).toBe(2);
   });
 

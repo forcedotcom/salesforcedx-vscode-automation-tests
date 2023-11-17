@@ -7,7 +7,7 @@
 
 import { TextEditor } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
-import { pause } from './miscellaneous';
+import { getTextEditor, pause } from './miscellaneous';
 
 export async function createApexClass(
   name: string,
@@ -30,13 +30,7 @@ export async function createApexClass(
   await pause(1);
 
   // Modify class content
-  inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-  await inputBox.setText(name + '.cls');
-  await inputBox.confirm();
-  await pause(1);
-
-  const editorView = workbench.getEditorView();
-  const textEditor = (await editorView.openEditor(name + '.cls')) as TextEditor;
+  const textEditor = await getTextEditor(workbench, name + '.cls');
   await textEditor.setText(classText);
   await textEditor.save();
   if (breakpoint) {

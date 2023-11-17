@@ -46,12 +46,7 @@ describe('Manifest Builder', async () => {
     await inputBox.confirm();
     await inputBox.confirm();
 
-    const inputBox2 = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 2);
-    await inputBox2.setText('manifest.xml');
-    await inputBox2.confirm();
-    await utilities.pause(1);
-    const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('manifest.xml')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'manifest.xml');
     const content = [
       `<?xml version="1.0" encoding="UTF-8"?>`,
       `<Package xmlns="http://soap.sforce.com/2006/04/metadata">`,
@@ -124,12 +119,7 @@ describe('Manifest Builder', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - SFDX: Retrieve Source in Manifest from Org`);
     // Using the Command palette, run SFDX: Retrieve Source in Manifest from Org
     const workbench = await browser.getWorkbench();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('manifest.xml');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = workbench.getEditorView();
-    await editorView.openEditor('manifest.xml');
+    await utilities.getTextEditor(workbench, 'manifest.xml');
     // Clear output before running the command
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     await utilities.runCommandFromCommandPrompt(

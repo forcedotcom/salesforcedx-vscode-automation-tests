@@ -23,7 +23,7 @@ export class TestSetup {
   public tempFolderPath: string | undefined = undefined;
   public projectFolderPath: string | undefined = undefined;
   private prompt: QuickOpenBox | InputBox | undefined;
-  private scratchOrgAliasName: string | undefined;
+  public scratchOrgAliasName: string | undefined;
 
   public constructor(testSuiteSuffixName: string, reuseScratchOrg: boolean) {
     this.testSuiteSuffixName = testSuiteSuffixName;
@@ -88,7 +88,11 @@ export class TestSetup {
     await browser.keys(['Window: Command Center']);
     await utilities.pause(3);
 
-    const commandCenterBtn = await $('div[title="window.commandCenter"]');
+    const commandCenterBtn = await utilities.findElementByText(
+      'div',
+      'title',
+      'window.commandCenter'
+    );
     await commandCenterBtn.click();
     await utilities.pause(3);
 

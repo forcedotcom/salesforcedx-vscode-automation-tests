@@ -91,12 +91,7 @@ describe('Templates', async () => {
       '}'
     ].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('ApexClass1.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('ApexClass1.cls')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'ApexClass1.cls');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
@@ -171,12 +166,7 @@ describe('Templates', async () => {
     // Verify the default trigger.
     const expectedText = ['trigger ApexTrigger1 on SOBJECT (before insert) {', '', '}'].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('ApexTrigger1.trigger');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('ApexTrigger1.trigger')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'ApexTrigger1.trigger');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
@@ -293,12 +283,7 @@ describe('Templates', async () => {
     // Verify the default code for an Aura App.
     const expectedText = ['<aura:application>', '', '</aura:application>'].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('AuraApp1.app');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('AuraApp1.app')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'AuraApp1.app');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
@@ -359,12 +344,7 @@ describe('Templates', async () => {
   step('Verify the contents of the Aura Component', async () => {
     const expectedText = ['<aura:component>', '', '</aura:component>'].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('auraComponent1.cmp');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('auraComponent1.cmp')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'auraComponent1.cmp');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
@@ -423,12 +403,7 @@ describe('Templates', async () => {
       '\n'
     );
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('auraEvent1.evt');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('auraEvent1.evt')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'auraEvent1.evt');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
@@ -505,12 +480,7 @@ describe('Templates', async () => {
       '</aura:interface>'
     ].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('AuraInterface1.intf');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('AuraInterface1.intf')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'AuraInterface1.intf');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
@@ -572,12 +542,7 @@ describe('Templates', async () => {
       'export default class LightningWebComponent1 extends LightningElement {}'
     ].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('lightningWebComponent1.js');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('lightningWebComponent1.js')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'lightningWebComponent1.js');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
@@ -654,12 +619,7 @@ describe('Templates', async () => {
       '</apex:component>'
     ].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('VisualforceCmp1.component');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('VisualforceCmp1.component')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'VisualforceCmp1.component');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
@@ -736,12 +696,7 @@ describe('Templates', async () => {
       '</apex:page>'
     ].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('VisualforcePage1.page');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = await workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('VisualforcePage1.page')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'VisualforcePage1.page');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     expect(textGeneratedFromTemplate).toEqual(expectedText);
   });

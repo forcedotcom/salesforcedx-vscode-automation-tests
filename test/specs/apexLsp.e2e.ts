@@ -64,12 +64,7 @@ describe('Apex LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('ExampleClassTest.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('ExampleClassTest.cls')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'ExampleClassTest.cls');
     await textEditor.moveCursor(6, 20);
 
     // Go to definition through F12
@@ -77,6 +72,7 @@ describe('Apex LSP', async () => {
     await utilities.pause(1);
 
     // Verify 'Go to definition' took us to the definition file
+    const editorView = await workbench.getEditorView();
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
     expect(title).toBe('ExampleClass.cls');
@@ -86,12 +82,7 @@ describe('Apex LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('ExampleClassTest.cls');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('ExampleClassTest.cls')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'ExampleClassTest.cls');
     await textEditor.typeTextAt(7, 1, '\tExampleClass.s');
     await utilities.pause(1);
 

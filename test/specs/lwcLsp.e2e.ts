@@ -41,19 +41,23 @@ describe('LWC LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition (Javascript)`);
     // Get open text editor
     const workbench = await browser.getWorkbench();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('lwc1.js');
-    await inputBox.confirm();
+    const textEditor = await utilities.getTextEditor(workbench, 'lwc1.js');
+
+    // Move cursor to the middle of "greeting"
+    await browser.keys([CMD_KEY, 'f']);
     await utilities.pause(1);
-    const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('lwc1.js')) as TextEditor;
-    await textEditor.moveCursor(3, 40);
+    await browser.keys(['greeting']);
+    await browser.keys(['Escape']);
+    await browser.keys(['ArrowRight', 'ArrowLeft', 'ArrowLeft']);
+    await utilities.pause(1);
+    // await textEditor.moveCursor(3, 40);
 
     // Go to definition through F12
     await browser.keys(['F12']);
     await utilities.pause(1);
 
     // Verify 'Go to definition' took us to the definition file
+    const editorView = await workbench.getEditorView();
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
     expect(title).toBe('engine.d.ts');
@@ -63,12 +67,7 @@ describe('LWC LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition (HTML)`);
     // Get open text editor
     const workbench = await browser.getWorkbench();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('lwc1.html');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'lwc1.html');
     await textEditor.moveCursor(3, 52);
 
     // Go to definition through F12
@@ -76,6 +75,7 @@ describe('LWC LSP', async () => {
     await utilities.pause(1);
 
     // Verify 'Go to definition' took us to the definition file
+    const editorView = await workbench.getEditorView();
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
     expect(title).toBe('lwc1.js');
@@ -85,12 +85,7 @@ describe('LWC LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
     const workbench = await browser.getWorkbench();
-    const inputBox = await utilities.runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
-    await inputBox.setText('lwc1.html');
-    await inputBox.confirm();
-    await utilities.pause(1);
-    const editorView = workbench.getEditorView();
-    const textEditor = (await editorView.openEditor('lwc1.html')) as TextEditor;
+    const textEditor = await utilities.getTextEditor(workbench, 'lwc1.html');
     await textEditor.typeTextAt(3, 7, ' lwc');
     await utilities.pause(2);
 

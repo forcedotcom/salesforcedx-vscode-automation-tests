@@ -6,12 +6,10 @@
  */
 
 import os from 'os';
-import {
-  sleep
-} from 'wdio-vscode-service';
-import {
-  EnvironmentSettings
-} from '../environmentSettings';
+import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
+import { EnvironmentSettings } from '../environmentSettings';
+import { attemptToFindOutputPanelText } from './outputView';
+import { runCommandFromCommandPrompt } from './commandPrompt';
 
 export const FIVE_MINUTES = 5 * 60;
 export const TEN_MINUTES = 10 * 60;
@@ -25,7 +23,8 @@ export function log(message: string) {
 }
 
 export function currentOsUserName(): string {
-  const userName = os.userInfo().username ||
+  const userName =
+    os.userInfo().username ||
     process.env.SUDO_USER ||
     process.env.C9_USER ||
     process.env.LOGNAME ||
@@ -42,4 +41,65 @@ export function currentOsUserName(): string {
 // the periods with an underscore.
 export function transformedUserName(): string {
   return currentOsUserName().replace('.', '_');
+}
+
+/**
+ * @param type type of html tag we want to find
+ * @param attribute attribute that holds the given text
+ * @param labelText text of the element we want to find
+ * @returns element that contains the given text
+ */
+export async function findElementByText(
+  type: string,
+  attribute: string,
+  labelText: string
+): Promise<WebdriverIO.Element> {
+  let element = await $(`${type}[${attribute}="${labelText}"]`);
+  return element!;
+}
+
+/**
+ * @param operation identifies if it's a pull or push operation
+ * @param changes indicates if changes are expected or not
+ * @param type indicates if the metadata is expected to have been created, changed or deleted
+ * @returns the output panel text after
+ */
+export async function verifyPushAndPullOutputText(
+  operation: string,
+  type?: string
+): Promise<string | undefined> {
+  // Check the output.
+  const outputPanelText = await attemptToFindOutputPanelText(
+    `Salesforce CLI`,
+    `=== ${operation}ed Source`,
+    10
+  );
+  expect(outputPanelText).not.toBeUndefined();
+  // expect(outputPanelText).toContain('ended with exit code 0');
+  if (type) {
+    if (operation === 'Push') {
+      expect(outputPanelText).toContain(`${type}  ExampleApexClass1  ApexClass`);
+    } else {
+      expect(outputPanelText).toContain(`${type}  Admin`);
+    }
+  } else {
+    expect(outputPanelText).toContain('No results found');
+  }
+  expect(outputPanelText).toContain('ended with exit code 0');
+  return outputPanelText;
+}
+
+/**
+ * @param workbench page object representing the custom VSCode title bar
+ * @param fileName name of the file we want to open and use
+ * @returns editor for the given file name
+ */
+export async function getTextEditor(workbench: Workbench, fileName: string): Promise<TextEditor> {
+  const inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+  await inputBox.setText(fileName);
+  await inputBox.confirm();
+  await pause(1);
+  const editorView = await workbench.getEditorView();
+  const textEditor = (await editorView.openEditor(fileName)) as TextEditor;
+  return textEditor;
 }
