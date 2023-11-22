@@ -124,17 +124,11 @@ describe('Org Browser', async () => {
     expect(myClassLabelEl).toBeTruthy();
   });
 
-  xstep('Retrieve Source from Org', async () => {
+  step('Retrieve Source from Org - Apex Classes', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve Source from Org`);
-    const myClassLabelEl = await utilities.findElementByText('div', 'aria-label', 'MyClass');
-    await myClassLabelEl.click();
-    await utilities.pause(2);
-    const retrieveSourceButton = await utilities.findElementByText(
-      'li',
-      'title',
-      'Retrieve Source from Org'
-    );
-    console.log('button 1', retrieveSourceButton);
+    const retrieveSourceButton = await (
+      await utilities.findElementByText('div', 'aria-label', 'Apex Classes')
+    ).$('li[title="Retrieve Source from Org"]');
     await retrieveSourceButton.click();
 
     const workbench = await (await browser.getWorkbench()).wait();
@@ -146,17 +140,27 @@ describe('Org Browser', async () => {
     expect(successNotificationWasFound).toBe(true);
   });
 
-  xstep('Retrieve and Open Source', async () => {
+  step('Retrieve Source from Org - MyClass', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve Source from Org`);
+    const myClassLabelEl = await utilities.findElementByText('div', 'aria-label', 'MyClass');
+    await myClassLabelEl.click();
+    await utilities.pause(2);
+    const retrieveSourceButton = await myClassLabelEl.$('li[title="Retrieve Source from Org"]');
+    await retrieveSourceButton.click();
+
+    const workbench = await (await browser.getWorkbench()).wait();
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+      workbench,
+      'SFDX: Retrieve Source from Org successfully ran',
+      utilities.FIVE_MINUTES
+    );
+    expect(successNotificationWasFound).toBe(true);
+  });
+
+  step('Retrieve and Open Source - MyClass', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve and Open Source`);
     const myClassLabelEl = await utilities.findElementByText('div', 'aria-label', 'MyClass');
-    myClassLabelEl.click();
-    utilities.pause(2);
-    const retrieveAndOpenButton = await utilities.findElementByText(
-      'li',
-      'title',
-      'Retrieve and Open Source'
-    );
-    console.log('button 2', retrieveAndOpenButton);
+    const retrieveAndOpenButton = await myClassLabelEl.$('li[title="Retrieve and Open Source"]');
     await retrieveAndOpenButton.click();
 
     const workbench = await (await browser.getWorkbench()).wait();
