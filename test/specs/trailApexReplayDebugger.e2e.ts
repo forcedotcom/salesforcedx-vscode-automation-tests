@@ -8,6 +8,7 @@ import { step } from 'mocha-steps';
 import { InputBox, QuickOpenBox, TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 /**
  * This test suite walks through the same steps performed in the "Find and Fix Bugs with Apex Replay Debugger" Trailhead Module;
@@ -84,8 +85,15 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('Set Breakpoints and Checkpoints', async () => {
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
-    const textEditor = await utilities.getTextEditor(workbench, 'AccountService.cls');
-    await textEditor.moveCursor(8, 5);
+    await utilities.getTextEditor(workbench, 'AccountService.cls');
+
+    // Move cursor to return line
+    await browser.keys([CMD_KEY, 'f']);
+    await utilities.pause(1);
+    await browser.keys(['return']);
+    await browser.keys(['Escape']);
+    await browser.keys(['ArrowRight']);
+    await utilities.pause(1);
 
     // Run SFDX: Toggle Checkpoint.
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Toggle Checkpoint', 1);
