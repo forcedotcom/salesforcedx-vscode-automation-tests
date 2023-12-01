@@ -26,7 +26,7 @@ describe('An Initial Suite', async () => {
   let testSetup: TestSetup;
 
   step('Install extensions', async () => {
-    await utilities.installExtensions();
+    // await utilities.installExtensions();
     await utilities.reloadAndEnableExtensions();
   });
 

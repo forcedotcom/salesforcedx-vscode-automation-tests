@@ -27,7 +27,7 @@ const capabilities: VSCodeCapabilities = {
             extensionPath: EnvironmentSettings.getInstance().extensionPath,
             vscodeArgs: {
                 force: true,
-                // installExtension: EnvironmentSettings.getInstance().extensionPath,
+                installExtension: EnvironmentSettings.getInstance().extensionPath,
                 extensionsDir: EnvironmentSettings.getInstance().extensionPath
             },
         } as VSCodeOptions,
