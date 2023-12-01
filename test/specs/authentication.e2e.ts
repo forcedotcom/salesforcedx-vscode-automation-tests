@@ -24,7 +24,7 @@ describe('Authentication', async () => {
     tempFolderPath = getTempFolderPath();
     projectFolderPath = path.join(tempFolderPath, tempProjectName);
     await utilities.installExtensions();
-    // await utilities.reloadAndEnableExtensions();
+    await utilities.reloadAndEnableExtensions();
     await testSetup.setUpTestingEnvironment();
     await testSetup.createProject('Standard');
     // await utilities.reloadAndEnableExtensions();
