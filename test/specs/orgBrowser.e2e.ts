@@ -114,10 +114,14 @@ describe('Org Browser', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Show Org Browser', 5);
     const refreshComponentsButton = await (
       await utilities.findElementByText('div', 'aria-label', 'Apex Classes')
-    ).$('li[title="Refresh Components"]');
+    ).$('li[title="SFDX: Refresh Components"]');
     await refreshComponentsButton.click();
     await utilities.pause(5);
-    const refreshTypesButton = await utilities.findElementByText('li', 'title', 'Refresh Types');
+    const refreshTypesButton = await utilities.findElementByText(
+      'li',
+      'title',
+      'SFDX: Refresh Types'
+    );
     await refreshTypesButton.click();
     await utilities.pause(5);
     const myClassLabelEl = await utilities.findElementByText('div', 'aria-label', 'MyClass');

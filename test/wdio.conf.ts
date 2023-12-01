@@ -23,11 +23,11 @@ const capabilities: VSCodeCapabilities = {
   browserName: 'vscode',
   browserVersion: EnvironmentSettings.getInstance().vscodeVersion,
   'wdio:vscodeOptions': {
-            // extensionPath is required
+            // extensionPath is required, but has no effect actually
             extensionPath: EnvironmentSettings.getInstance().extensionPath,
             vscodeArgs: {
                 force: true,
-                installExtension: EnvironmentSettings.getInstance().extensionPath,
+                // installExtension: EnvironmentSettings.getInstance().extensionPath,
                 extensionsDir: EnvironmentSettings.getInstance().extensionPath
             },
         } as VSCodeOptions,

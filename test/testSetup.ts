@@ -40,11 +40,11 @@ export class TestSetup {
   public async setUp(scratchOrgEdition: string = 'Developer'): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
-    await utilities.installExtensions();
-    await utilities.reloadAndEnableExtensions();
+    // await utilities.installExtensions();
+    // await utilities.reloadAndEnableExtensions();
     await this.setUpTestingEnvironment();
     await this.createProject(scratchOrgEdition);
-    await utilities.reloadAndEnableExtensions();
+    // await utilities.reloadAndEnableExtensions();
     await utilities.verifyAllExtensionsAreRunning();
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
