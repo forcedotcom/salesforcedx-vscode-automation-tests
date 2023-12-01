@@ -27,7 +27,7 @@ describe('Authentication', async () => {
     await utilities.reloadAndEnableExtensions();
     await testSetup.setUpTestingEnvironment();
     await testSetup.createProject('Standard');
-    // await utilities.reloadAndEnableExtensions();
+    await utilities.reloadAndEnableExtensions();
     await utilities.verifyAllExtensionsAreRunning();
   });
 

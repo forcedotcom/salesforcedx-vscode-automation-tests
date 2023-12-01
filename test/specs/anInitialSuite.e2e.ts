@@ -99,7 +99,7 @@ describe('An Initial Suite', async () => {
     // just call setUpTestingEnvironment() and createProject().
     await testSetup.setUpTestingEnvironment();
     await testSetup.createProject('Standard');
-    // await utilities.reloadAndEnableExtensions();
+    await utilities.reloadAndEnableExtensions();
   });
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {
