@@ -6,7 +6,6 @@
  */
 
 import clipboard from 'clipboardy';
-import { OutputView } from 'wdio-vscode-service';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { pause } from './miscellaneous';
 import { dismissAllNotifications } from './notifications';

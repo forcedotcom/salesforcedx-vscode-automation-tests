@@ -193,7 +193,7 @@ describe('SObjects Definitions', async () => {
     // Search for 'Processed xxx Standard sObjects'
     const matchedResults = outputPanelText?.match(/Processed [0-9]{1,} Standard sObjects/gm);
     expect(matchedResults).not.toBe(undefined);
-    expect(matchedResults!.length).toBeGreaterThanOrEqual(2);
+    expect(matchedResults!.length).toBe(1);
     const sObjectCount = parseInt(
       matchedResults![matchedResults!.length - 1].match(/[0-9]{1,}/)![0]
     );
