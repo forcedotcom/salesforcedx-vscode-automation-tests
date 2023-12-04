@@ -70,6 +70,7 @@ export async function reloadAndEnableExtensions(): Promise<void> {
     }
   }
   if (extraPause) {
+    log('reloadAndEnableExtensions() - extra pause');
     pause(30);
   }
 }
@@ -89,7 +90,6 @@ export async function installExtension(extension: string): Promise<void> {
   await runCommandFromCommandPrompt(workbench, 'Extensions: Install from VSIX...', 5);
   await browser.keys([CMD_KEY, 'a']);
   await browser.keys(pathToExtensions);
-  await pause(2);
   await browser.keys(['Enter']);
   log(`...SetUp - Finished Install extension ${extension}`);
 }
@@ -102,7 +102,6 @@ export async function installExtensions(): Promise<void> {
   await pause(FIVE_MINUTES);
   await runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 5);
   await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 50);
 }
 
 export async function verifyAllExtensionsAreRunning(): Promise<void> {

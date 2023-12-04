@@ -7,7 +7,7 @@
 
 import type { Options } from '@wdio/types';
 import { join } from 'path';
-import type { VSCodeCapabilities } from 'wdio-vscode-service/dist/types';
+import type { VSCodeCapabilities, VSCodeOptions } from 'wdio-vscode-service/dist/types';
 import {
   EnvironmentSettings
 } from './environmentSettings';
@@ -23,9 +23,14 @@ const capabilities: VSCodeCapabilities = {
   browserName: 'vscode',
   browserVersion: EnvironmentSettings.getInstance().vscodeVersion,
   'wdio:vscodeOptions': {
-    // Point to the root directory of your project.
-    extensionPath: EnvironmentSettings.getInstance().extensionPath
-  },
+    // extensionPath is required, but has no effect actually
+    extensionPath: EnvironmentSettings.getInstance().extensionPath,
+    vscodeArgs: {
+      force: true,
+      installExtension: EnvironmentSettings.getInstance().extensionPath,
+      extensionsDir: EnvironmentSettings.getInstance().extensionPath
+    }
+  } as VSCodeOptions,
 
   acceptInsecureCerts: true
   // If outputDir is provided WebdriverIO can capture driver session logs
