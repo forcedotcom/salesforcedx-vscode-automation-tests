@@ -86,6 +86,7 @@ describe('SObjects Definitions', async () => {
 
   step('Refresh SObject Definitions for Custom SObjects', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     const prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Refresh SObject Definitions',
@@ -166,6 +167,7 @@ describe('SObjects Definitions', async () => {
 
   step('Refresh SObject Definitions for Standard SObjects', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     const prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Refresh SObject Definitions',
@@ -193,8 +195,7 @@ describe('SObjects Definitions', async () => {
     // Search for 'Processed xxx Standard sObjects'
     const matchedResults = outputPanelText?.match(/Processed [0-9]{1,} Standard sObjects/gm);
     expect(matchedResults).not.toBe(undefined);
-    // Length is 2 on windows and 1 on macOS and ubuntu
-    expect(matchedResults!.length).toBe(process.platform === 'win32' ? 2 : 1);
+    expect(matchedResults!.length).toBe(1);
     const sObjectCount = parseInt(
       matchedResults![matchedResults!.length - 1].match(/[0-9]{1,}/)![0]
     );
