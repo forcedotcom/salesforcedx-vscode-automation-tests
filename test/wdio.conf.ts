@@ -23,14 +23,14 @@ const capabilities: VSCodeCapabilities = {
   browserName: 'vscode',
   browserVersion: EnvironmentSettings.getInstance().vscodeVersion,
   'wdio:vscodeOptions': {
-            // extensionPath is required, but has no effect actually
-            extensionPath: EnvironmentSettings.getInstance().extensionPath,
-            vscodeArgs: {
-                force: true,
-                installExtension: EnvironmentSettings.getInstance().extensionPath,
-                extensionsDir: EnvironmentSettings.getInstance().extensionPath
-            },
-        } as VSCodeOptions,
+    // extensionPath is required, but has no effect actually
+    extensionPath: EnvironmentSettings.getInstance().extensionPath,
+    vscodeArgs: {
+      force: true,
+      installExtension: EnvironmentSettings.getInstance().extensionPath,
+      extensionsDir: EnvironmentSettings.getInstance().extensionPath
+    }
+  } as VSCodeOptions,
 
   acceptInsecureCerts: true
   // If outputDir is provided WebdriverIO can capture driver session logs
