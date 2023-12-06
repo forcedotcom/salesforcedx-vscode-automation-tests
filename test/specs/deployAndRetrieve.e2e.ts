@@ -333,7 +333,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
 
-  xstep('Disable Source Tracking Setting', async () => {
+  step('Disable Source Tracking Setting', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(
       workbench,
@@ -361,7 +361,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.verifyAllExtensionsAreRunning();
   });
 
-  xstep('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
+  step('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear all notifications so clear output button is visible
     await utilities.runCommandFromCommandPrompt(
@@ -396,7 +396,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
 
-  xstep('Deploy again (with no changes) - ST disabled', async () => {
+  step('Deploy again (with no changes) - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
@@ -426,7 +426,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
 
-  xstep('Modify the file and deploy again - ST disabled', async () => {
+  step('Modify the file and deploy again - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
