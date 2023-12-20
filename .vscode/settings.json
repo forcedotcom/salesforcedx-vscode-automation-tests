@@ -13,6 +13,5 @@
   "typescript.tsdk": "./node_modules/typescript/lib",
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
-  "rewrap.wrappingColumn": 80,
-  "salesforcedx-vscode-core.push-or-deploy-on-save.enabled": true
+  "rewrap.wrappingColumn": 80
 }
