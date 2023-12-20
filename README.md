@@ -46,7 +46,7 @@ The following is a list of environment variables that are used with this project
 
   - Default value: `{cwd}/../../salesforcedx-vscode/extensions`
 
-    Note: If your folder structure does not match the folder structure shown above in Getting Started section, `EXTENSION_PATH` will need to be set to the relative path to 'salesforcedx-vscode/extensions'. If it does match, then no changes are needed for.
+    Note: If your folder structure does not match the folder structure shown above in Getting Started section, `EXTENSION_PATH` will need to be set to the relative path to 'salesforcedx-vscode/extensions'. If it does match, then no changes are needed.
 
 - THROTTLE_FACTOR
   - Default value: `1`
