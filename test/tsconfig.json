@@ -9,7 +9,6 @@
             "wdio-vscode-service"
         ],
         "target": "es2019",
-        "moduleResolution": "node",
         "esModuleInterop": true,
         "strict": true
     }
