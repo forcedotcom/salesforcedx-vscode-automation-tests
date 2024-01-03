@@ -7,7 +7,7 @@
 
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
-import { EnvironmentSettings } from '../environmentSettings';
+import { EnvironmentSettings } from '../environmentSettings.js';
 
 export async function saveFailedTestScreenshot(
   specTitle: string,

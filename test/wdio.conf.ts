@@ -5,10 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Options } from '@wdio/types';
+import type { Options } from '@wdio/types';
 import { VSCodeCapabilities, VSCodeOptions } from 'wdio-vscode-service/dist/types';
-import { EnvironmentSettings } from './environmentSettings';
-import { saveFailedTestScreenshot } from './utilities/screenshot';
+import { EnvironmentSettings } from './environmentSettings.js';
+import { saveFailedTestScreenshot } from './utilities/screenshot.js';
 
 const capabilities: VSCodeCapabilities = {
   // maxInstances can get overwritten per capability. So if you have an in-house Selenium

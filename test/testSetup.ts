@@ -10,7 +10,7 @@ import fs from 'fs';
 import path from 'path';
 import util from 'util';
 import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
-import { EnvironmentSettings } from './environmentSettings';
+import { EnvironmentSettings } from './environmentSettings.js';
 import * as utilities from './utilities';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
