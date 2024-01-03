@@ -9,6 +9,7 @@
       "wdio-vscode-service"
     ],
     "target": "es2019",
+    "module": "ESNext",
     "esModuleInterop": true,
     "strict": true
   }
