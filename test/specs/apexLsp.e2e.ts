@@ -9,7 +9,7 @@ import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
-import { EnvironmentSettings } from '../environmentSettings';
+import { EnvironmentSettings } from '../environmentSettings.js';
 
 describe('Apex LSP', async () => {
   let testSetup: TestSetup;

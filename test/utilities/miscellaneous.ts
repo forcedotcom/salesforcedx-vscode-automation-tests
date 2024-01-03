@@ -7,7 +7,7 @@
 
 import os from 'os';
 import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
-import { EnvironmentSettings } from '../environmentSettings';
+import { EnvironmentSettings } from '../environmentSettings.js';
 import { attemptToFindOutputPanelText } from './outputView';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 

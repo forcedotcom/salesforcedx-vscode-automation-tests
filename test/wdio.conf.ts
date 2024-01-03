@@ -6,7 +6,7 @@
  */
 
 import type { Options } from '@wdio/types';
-import { VSCodeCapabilities, VSCodeOptions } from 'wdio-vscode-service/dist/types';
+import type { VSCodeCapabilities, VSCodeOptions } from 'wdio-vscode-service/dist/types';
 import { EnvironmentSettings } from './environmentSettings.js';
 import { saveFailedTestScreenshot } from './utilities/screenshot.js';
 

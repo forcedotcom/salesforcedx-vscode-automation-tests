@@ -8,7 +8,7 @@
 import { step } from 'mocha-steps';
 import path from 'path';
 import { InputBox, QuickOpenBox } from 'wdio-vscode-service';
-import { EnvironmentSettings } from '../environmentSettings';
+import { EnvironmentSettings } from '../environmentSettings.js';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 

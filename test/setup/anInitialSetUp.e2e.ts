@@ -9,7 +9,7 @@ import child_process from 'child_process';
 import fs from 'fs';
 import { step } from 'mocha-steps';
 import util from 'util';
-import { EnvironmentSettings } from '../environmentSettings';
+import { EnvironmentSettings } from '../environmentSettings.js';
 import * as utilities from '../utilities';
 
 const exec = util.promisify(child_process.exec);
