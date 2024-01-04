@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step } from 'mocha-steps';
-import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
@@ -34,7 +33,7 @@ describe('Apex LSP', async () => {
     // Verify Apex extension is present and running
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
-      'salesforcedx-vscode-apex'
+      'salesforcedx-vscode-apex',
     );
     expect(extensionWasFound).toBe(true);
   });
@@ -49,7 +48,7 @@ describe('Apex LSP', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const statusBar = await utilities.getStatusBarItemWhichIncludes(
       workbench,
-      'Editor Language Status'
+      'Editor Language Status',
     );
     await statusBar.click();
     expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
@@ -64,7 +63,7 @@ describe('Apex LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
-    const textEditor = await utilities.getTextEditor(workbench, 'ExampleClassTest.cls');
+    await utilities.getTextEditor(workbench, 'ExampleClassTest.cls');
 
     // Move cursor to the middle of "ExampleClass.SayHello() call"
     await browser.keys([CMD_KEY, 'f']);
@@ -123,7 +122,7 @@ describe('Apex LSP', async () => {
 
   step('Tear down and clean up the testing environment', async () => {
     utilities.log(
-      `${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`
+      `${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`,
     );
     await testSetup.tearDown();
   });

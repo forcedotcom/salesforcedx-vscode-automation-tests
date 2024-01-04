@@ -82,7 +82,7 @@ export async function getVisibleChildren(defaultTreeItem: DefaultTreeItem): Prom
       rows.map(async (row) => (
           new DefaultTreeItem(
             defaultTreeItem.locatorMap,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
             row as any,
             defaultTreeItem.viewPart
           ).wait()
@@ -95,11 +95,10 @@ export async function getVisibleChildren(defaultTreeItem: DefaultTreeItem): Prom
 // Replicate TreeItem.getChildItems()
 // This function returns a list of all visible items within the tree, and not just the children of a node.
 export async function getVisibleItems(treeItem: TreeItem, locator: string): Promise<WebdriverIO.Element[]> {
-  const items: WebdriverIO.Element[] = [];
   await treeItem.expand();
   const rows = await treeItem.parent.$$(locator);
 
-  return rows;
+  return [...rows.values()];;
 }
 
 export async function retrieveAllApexTestItemsFromSidebar(expectedNumTests: number, apexTestsSection: ViewSection): Promise<TreeItem[]> {

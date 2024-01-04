@@ -10,15 +10,16 @@ import path from 'path';
 import { InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings';
 import { TestSetup } from '../testSetup';
-import * as utilities from '../utilities';
+import * as utilities from '../utilities'
 
 describe('Authentication', async () => {
   const tempProjectName = 'TempProject-Authentication';
   let tempFolderPath: string;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let projectFolderPath: string;
   let prompt: QuickOpenBox | InputBox;
   let scratchOrgAliasName: string;
-  let testSetup = new TestSetup('Authentication', false);
+  const testSetup = new TestSetup('Authentication', false);
 
   step('Set up the testing environment', async () => {
     tempFolderPath = getTempFolderPath();

@@ -5,11 +5,11 @@
       "jsx": true
     }
   },
-  "extends": [
-    "prettier"
-  ],
   "env": {
     "es6": true,
     "node": true
-  }
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": ["plugin:@typescript-eslint/recommended", "prettier"]
 }

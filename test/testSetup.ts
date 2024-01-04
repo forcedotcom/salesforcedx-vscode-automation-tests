@@ -252,6 +252,7 @@ export class TestSetup {
     const execResult = await exec('sfdx org list --json');
     const sfdxForceOrgListJson = this.removedEscapedCharacters(execResult.stdout);
     const sfdxForceOrgListResult = JSON.parse(sfdxForceOrgListJson).result;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const nonScratchOrgs = sfdxForceOrgListResult.nonScratchOrgs as any[];
 
     for (let i = 0; i < nonScratchOrgs.length; i++) {

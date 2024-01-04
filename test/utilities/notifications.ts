@@ -20,7 +20,7 @@ export async function waitForNotificationToGoAway(
   await pause(5);
   const startDate = new Date();
   while (true) {
-    let notificationWasFound = await notificationIsPresent(
+    const notificationWasFound = await notificationIsPresent(
       workbench,
       notificationMessage,
       matchExactString

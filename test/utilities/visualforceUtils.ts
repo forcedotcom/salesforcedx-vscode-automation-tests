@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { TextEditor } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 import { getTextEditor, pause } from './miscellaneous';
 
@@ -13,7 +12,7 @@ export async function createVisualforcePage(): Promise<void> {
   const workbench = await browser.getWorkbench();
 
   // Using the Command palette, run SFDX: Create Visualforce Page
-  let inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Visualforce Page', 1);
+  const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Visualforce Page', 1);
 
   // Set the name of the new Visualforce Page
   await inputBox.setText('FooPage');

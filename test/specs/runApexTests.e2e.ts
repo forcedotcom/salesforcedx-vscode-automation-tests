@@ -5,9 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step } from 'mocha-steps';
-import { InputBox, QuickOpenBox, SideBarView, TextEditor, TreeItem } from 'wdio-vscode-service';
+import { InputBox, QuickOpenBox, SideBarView, TreeItem } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
+import { expect } from '@wdio/globals';
 
 describe('Run Apex Tests', async () => {
   let prompt: QuickOpenBox | InputBox;
@@ -228,7 +229,7 @@ describe('Run Apex Tests', async () => {
     const apexTestsSection = await sidebarView.getSection('APEX TESTS');
     expect(apexTestsSection.elem).toBePresent();
 
-    let apexTestsItems = await utilities.retrieveAllApexTestItemsFromSidebar(6, apexTestsSection);
+    const apexTestsItems = await utilities.retrieveAllApexTestItemsFromSidebar(6, apexTestsSection);
 
     // Make sure all the tests are present in the sidebar
     expect(apexTestsItems.length).toBe(6);

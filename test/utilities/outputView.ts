@@ -11,6 +11,13 @@ import { pause } from './miscellaneous';
 import { dismissAllNotifications } from './notifications';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 
+type TimeParts = {
+  hours: string;
+  minutes: string;
+  seconds: string;
+  secondFraction: string;
+};
+
 export async function selectOutputChannel(name: string): Promise<void> {
   // Wait for all notifications to go away.  If there is a notification that is overlapping and hiding the Output channel's
   // dropdown menu, calling select.click() doesn't work, so dismiss all notifications first before clicking the dropdown
@@ -47,7 +54,7 @@ export async function getOutputViewText(outputChannelName: string = ''): Promise
 export async function attemptToFindOutputPanelText(
   outputChannelName: string,
   searchString: string,
-  attempts: number
+  attempts: number,
 ): Promise<string | undefined> {
   await selectOutputChannel(outputChannelName);
 
@@ -65,38 +72,53 @@ export async function attemptToFindOutputPanelText(
 }
 
 export async function getOperationTime(outputText: string): Promise<string> {
-  const initialTime = outputText.substring(
-    outputText.indexOf('.') - 8,
-    outputText.indexOf('.') + 4
+  const tRegex = /((?<hours>\d+):(?<minutes>\d+):(?<seconds>\d+)(?<secondFraction>\.\d+))/g;
+  let matches;
+  const groups: TimeParts[] = [];
+  while ((matches = tRegex.exec(outputText)) !== null) {
+    groups.push(matches.groups);
+  }
+  const [startTime, endTime] = groups.map((group) =>
+    Object.entries(group)
+      .map(([key, value]) => ({ [key]: Number(value) }))
+      .reduce(
+        (acc, curr, index) => {
+          switch (index) {
+            case 0:
+              acc.setHours(curr.hours);
+              break;
+            case 1:
+              acc.setMinutes(curr.minutes);
+              break;
+            case 2:
+              acc.setSeconds(curr.seconds);
+              break;
+            case 3:
+              acc.setMilliseconds(curr.secondFraction * 1000);
+              break;
+            default:
+              break;
+          }
+          return acc;
+        },
+        new Date(1970, 0, 1),
+      ),
   );
-  const endTime = outputText.substring(
-    outputText.lastIndexOf('.') - 8,
-    outputText.lastIndexOf('.') + 4
-  );
-  let [hours1, minutes1, seconds1, milliseconds1] = initialTime.split(':').map(Number);
-  let [hours2, minutes2, seconds2, milliseconds2] = endTime.split(':').map(Number);
-  [seconds1, milliseconds1] = seconds1
-    .toString()
-    .split('.')
-    .map(Number);
-  [seconds2, milliseconds2] = seconds2
-    .toString()
-    .split('.')
-    .map(Number);
-  const totalMilliseconds1 =
-    milliseconds1 + seconds1 * 1000 + minutes1 * 60 * 1000 + hours1 * 60 * 60 * 1000;
-  const totalMilliseconds2 =
-    milliseconds2 + seconds2 * 1000 + minutes2 * 60 * 1000 + hours2 * 60 * 60 * 1000;
+  let diff = endTime.getTime() - startTime.getTime();
+  // Convert the difference to hours, minutes, and seconds
+  const hours = Math.floor(diff / 1000 / 60 / 60);
+  diff -= hours * 1000 * 60 * 60;
+  const minutes = Math.floor(diff / 1000 / 60);
+  diff -= minutes * 1000 * 60;
+  const seconds = Math.floor(diff / 1000);
+  diff -= seconds * 1000;
+  const milliseconds = diff;
 
-  const differenceMilliseconds = totalMilliseconds2 - totalMilliseconds1;
+  // return `${hours}:${minutes}:${seconds}.${milliseconds}`;
 
-  const hoursDiff = Math.floor(differenceMilliseconds / (60 * 60 * 1000));
-  const minutesDiff = Math.floor((differenceMilliseconds % (60 * 60 * 1000)) / (60 * 1000));
-  const secondsDiff = Math.floor((differenceMilliseconds % (60 * 1000)) / 1000);
-  const millisecondsDiff = differenceMilliseconds % 1000;
-  return `${formatTimeComponent(hoursDiff)}:${formatTimeComponent(
-    minutesDiff
-  )}:${formatTimeComponent(secondsDiff)}.${formatTimeComponent(millisecondsDiff, 3)}`;
+  return `${formatTimeComponent(hours)}:${formatTimeComponent(minutes)}:${formatTimeComponent(
+    seconds,
+  )}.${formatTimeComponent(milliseconds, 3)}`;
 }
 
 function formatTimeComponent(component: number, padLength: number = 2): string {

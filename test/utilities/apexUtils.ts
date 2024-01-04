@@ -17,7 +17,7 @@ export async function createApexClass(
   const workbench = await (await browser.getWorkbench()).wait();
 
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
-  let inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
+  const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
 
   // Set the name of the new Apex Class
   await inputBox.setText(name);
@@ -108,7 +108,7 @@ export async function createAnonymousApexFile(): Promise<void> {
   const editorView = workbench.getEditorView();
 
   // Using the Command palette, run File: New File...
-  let inputBox = await runCommandFromCommandPrompt(workbench, 'Create: New File...', 1);
+  const inputBox = await runCommandFromCommandPrompt(workbench, 'Create: New File...', 1);
 
   // Set the name of the new Anonymous Apex file
   await inputBox.setText('Anonymous.apex');

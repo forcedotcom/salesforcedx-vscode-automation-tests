@@ -14,7 +14,7 @@ export async function getStatusBarItemWhichIncludes(
 ): Promise<WebdriverIO.Element> {
   const retries = 10;
   for (let i = retries; i > 0; i--) {
-    let statusBar = await workbench.getStatusBar().wait();
+    const statusBar = await workbench.getStatusBar().wait();
     const items = await statusBar.item$$;
     for (const item of items) {
       const itemTitle = await item.getAttribute(statusBar.locators.itemTitle);
