@@ -29,8 +29,8 @@
     "wdio-wait-for": "^2.2.6"
   },
   "scripts": {
-    "automation-tests": "ts-node --esm test/wdio.conf.ts",
-    "setup": "ts-node --esm test/wdio.conf.ts --spec test/setup/anInitialSetUp.e2e.ts",
+    "automation-tests": "wdio run test/wdio.conf.ts",
+    "setup": "wdio run test/wdio.conf.ts --spec test/setup/anInitialSetUp.e2e.ts",
     "commit": "git-cz",
     "lint": "eslint ./test --ext .ts"
   },
