@@ -54,7 +54,7 @@ export async function findElementByText(
   attribute: string,
   labelText: string
 ): Promise<WebdriverIO.Element> {
-  let element = await $(`${type}[${attribute}="${labelText}"]`);
+  const element = await $(`${type}[${attribute}="${labelText}"]`);
   return element!;
 }
 

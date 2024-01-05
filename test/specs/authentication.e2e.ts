@@ -15,10 +15,11 @@ import * as utilities from '../utilities';
 describe('Authentication', async () => {
   const tempProjectName = 'TempProject-Authentication';
   let tempFolderPath: string;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let projectFolderPath: string;
   let prompt: QuickOpenBox | InputBox;
   let scratchOrgAliasName: string;
-  let testSetup = new TestSetup('Authentication', false);
+  const testSetup = new TestSetup('Authentication', false);
 
   step('Set up the testing environment', async () => {
     tempFolderPath = getTempFolderPath();
@@ -88,7 +89,7 @@ describe('Authentication', async () => {
 
     if (expectedSfdxCommands.length !== foundSfdxCommands.length) {
       // Something is wrong - the count of matching menus isn't what we expected.
-      expectedSfdxCommands.forEach(expectedSfdxCommand => {
+      expectedSfdxCommands.forEach((expectedSfdxCommand) => {
         expect(foundSfdxCommands).toContain(expectedSfdxCommand);
       });
     }

@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step, xstep } from 'mocha-steps';
-import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
@@ -41,7 +40,7 @@ describe('LWC LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition (Javascript)`);
     // Get open text editor
     const workbench = await browser.getWorkbench();
-    const textEditor = await utilities.getTextEditor(workbench, 'lwc1.js');
+    await utilities.getTextEditor(workbench, 'lwc1.js');
 
     // Move cursor to the middle of "greeting"
     await browser.keys([CMD_KEY, 'f']);

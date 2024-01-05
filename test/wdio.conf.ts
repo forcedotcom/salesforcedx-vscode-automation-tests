@@ -6,15 +6,11 @@
  */
 
 import type { Options } from '@wdio/types';
-import { join } from 'path';
 import type { VSCodeCapabilities, VSCodeOptions } from 'wdio-vscode-service/dist/types';
-import {
-  EnvironmentSettings
-} from './environmentSettings';
+import { EnvironmentSettings } from './environmentSettings';
 import { saveFailedTestScreenshot } from './utilities/screenshot';
 
 const capabilities: VSCodeCapabilities = {
-
   // maxInstances can get overwritten per capability. So if you have an in-house Selenium
   // grid with only 5 firefox instances available you can make sure that not more than
   // 5 instances get started at a time.
@@ -277,10 +273,15 @@ export const config: Options.Testrunner = {
    * @param {Array.<String>} specs List of spec file paths that are to be run
    * @param {String} cid worker id (e.g. 0-0)
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   beforeSession: function (config, capabilities, specs, cid) {
     console.error(`beforeSession JAVA_HOME: ${process.env.JAVA_HOME}`);
     console.error(`beforeSession PATH: ${process.env.PATH}`);
-    config.runnerEnv = { ...(config.runnerEnv ?? {}), JAVA_HOME: process.env.JAVA_HOME, PATH: process.env.PATH };
+    config.runnerEnv = {
+      ...(config.runnerEnv ?? {}),
+      JAVA_HOME: process.env.JAVA_HOME,
+      PATH: process.env.PATH
+    };
     console.error(`beforeSession - runnerEnv JAVA_HOME: ${config.runnerEnv?.JAVA_HOME}`);
     console.error(`beforeSession - runnerEnv PATH: ${config.runnerEnv?.PATH}`);
   },
@@ -340,7 +341,7 @@ export const config: Options.Testrunner = {
     }
 
     await saveFailedTestScreenshot(test.parent, test.title);
-  },
+  }
 
   /**
    * Hook that gets executed after the suite has ended

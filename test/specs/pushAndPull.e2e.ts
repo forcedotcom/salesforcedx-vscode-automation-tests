@@ -10,7 +10,6 @@ import fs from 'fs';
 import { step } from 'mocha-steps';
 import path from 'path';
 import util from 'util';
-import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
@@ -255,7 +254,7 @@ describe('Push and Pull', async () => {
     expect(successNotificationWasFound).toBe(true);
 
     // Check the output.
-    const outputPanelText = await utilities.verifyPushAndPullOutputText('Pull');
+    await utilities.verifyPushAndPullOutputText('Pull');
   });
 
   step('Save the modified file, then pull', async () => {
@@ -278,7 +277,7 @@ describe('Push and Pull', async () => {
     );
     expect(successNotificationWasFound).toBe(true);
 
-    const outputPanelText = await utilities.verifyPushAndPullOutputText('Pull');
+    await utilities.verifyPushAndPullOutputText('Pull');
   });
 
   step('Create an additional system admin user', async () => {

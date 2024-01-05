@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step } from 'mocha-steps';
-import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
@@ -64,7 +63,7 @@ describe('Apex LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
-    const textEditor = await utilities.getTextEditor(workbench, 'ExampleClassTest.cls');
+    await utilities.getTextEditor(workbench, 'ExampleClassTest.cls');
 
     // Move cursor to the middle of "ExampleClass.SayHello() call"
     await browser.keys([CMD_KEY, 'f']);

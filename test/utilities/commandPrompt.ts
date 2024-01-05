@@ -51,7 +51,6 @@ export async function selectQuickPickItem(
   prompt: InputBox | QuickOpenBox,
   text: string
 ): Promise<void> {
-
   const quickPicks = await prompt.getQuickPicks();
   for (const quickPick of quickPicks) {
     const label = await quickPick.getLabel();
@@ -103,7 +102,7 @@ export async function clickFilePathOkButton(): Promise<void> {
   const okButton = await $('*:not([style*="display: none"]).quick-input-action .monaco-button');
   await okButton.click();
   await pause(1);
-  let buttons = await $$('a.monaco-button.monaco-text-button');
+  const buttons = await $$('a.monaco-button.monaco-text-button');
   for (const item of buttons) {
     const text = await item.getText();
     if (text.includes('Overwrite')) {

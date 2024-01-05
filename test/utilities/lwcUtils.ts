@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { TextEditor } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 import { getTextEditor, log, pause } from './miscellaneous';
 
@@ -15,7 +14,7 @@ export async function createLwc(name: string): Promise<void> {
 
   log('createLwc() - Running SFDX: Create Lightning Web Component');
   // Using the Command palette, run SFDX: Create Lightning Web Component.
-  let inputBox = await runCommandFromCommandPrompt(
+  const inputBox = await runCommandFromCommandPrompt(
     workbench,
     'SFDX: Create Lightning Web Component',
     1
@@ -70,7 +69,7 @@ export async function createAura(name: string): Promise<void> {
   const workbench = await (await browser.getWorkbench()).wait();
 
   log('createAura() - Running SFDX: Create Aura Component');
-  let inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Aura Component', 1);
+  const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Aura Component', 1);
 
   log('createAura() - Set the name of the new component');
   // Set the name of the new component

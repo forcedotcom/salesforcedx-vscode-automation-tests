@@ -26,21 +26,9 @@ export function removeFolder(folderPath: string): ChildProcess {
 export async function createCustomObjects(testSetup: TestSetup): Promise<void> {
   const projectPath = testSetup.projectFolderPath;
   const tempFolderPath = testSetup.tempFolderPath;
-  const source = path.join(
-    tempFolderPath!,
-    '..',
-    'test',
-    'testData',
-    'CustomSObjects'
-  );
-  const destination = path.join(
-    projectPath!,
-    'force-app',
-    'main',
-    'default',
-    'objects'
-  );
-  fs.copy(source, destination, { recursive: true }, async error => {
+  const source = path.join(tempFolderPath!, '..', 'test', 'testData', 'CustomSObjects');
+  const destination = path.join(projectPath!, 'force-app', 'main', 'default', 'objects');
+  fs.copy(source, destination, { recursive: true }, async (error) => {
     if (error) {
       log(`Failed in copying custom objects ${error.message}`);
       log(`source was: '${source}'`);

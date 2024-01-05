@@ -7,7 +7,6 @@
 
 import { step } from 'mocha-steps';
 import path from 'path';
-import { TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 

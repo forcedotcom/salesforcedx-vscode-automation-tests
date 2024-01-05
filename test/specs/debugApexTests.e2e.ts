@@ -5,9 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step } from 'mocha-steps';
-import { TextEditor, TreeItem } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
+import { TreeItem } from 'wdio-vscode-service';
 
 describe('Debug Apex Tests', async () => {
   let testSetup: TestSetup;
@@ -114,7 +114,7 @@ describe('Debug Apex Tests', async () => {
     const apexTestsSection = await sidebarView.getSection('APEX TESTS');
     expect(apexTestsSection.elem).toBePresent();
 
-    let apexTestsItems = await utilities.retrieveAllApexTestItemsFromSidebar(4, apexTestsSection);
+    const apexTestsItems = await utilities.retrieveAllApexTestItemsFromSidebar(4, apexTestsSection);
 
     // Make sure all the tests are present in the sidebar
     expect(apexTestsItems.length).toBe(4);
