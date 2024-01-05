@@ -33,7 +33,7 @@ describe('Apex LSP', async () => {
     // Verify Apex extension is present and running
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
-      'salesforcedx-vscode-apex',
+      'salesforcedx-vscode-apex'
     );
     expect(extensionWasFound).toBe(true);
   });
@@ -48,7 +48,7 @@ describe('Apex LSP', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const statusBar = await utilities.getStatusBarItemWhichIncludes(
       workbench,
-      'Editor Language Status',
+      'Editor Language Status'
     );
     await statusBar.click();
     expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
@@ -122,7 +122,7 @@ describe('Apex LSP', async () => {
 
   step('Tear down and clean up the testing environment', async () => {
     utilities.log(
-      `${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`,
+      `${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`
     );
     await testSetup.tearDown();
   });

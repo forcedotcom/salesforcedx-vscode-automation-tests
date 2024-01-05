@@ -31,7 +31,7 @@ describe('LWC LSP', async () => {
     // Verify Lightning Web Components extension is present and running
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
-      'salesforcedx-vscode-lwc',
+      'salesforcedx-vscode-lwc'
     );
     expect(extensionWasFound).toBe(true);
   });
@@ -102,7 +102,7 @@ describe('LWC LSP', async () => {
 
   step('Tear down and clean up the testing environment', async () => {
     utilities.log(
-      `${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`,
+      `${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`
     );
     await testSetup.tearDown();
   });

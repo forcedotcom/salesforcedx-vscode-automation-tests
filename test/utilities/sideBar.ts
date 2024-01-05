@@ -5,53 +5,61 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import {
-  DefaultTreeItem,
-  TreeItem,
-  ViewItem,
-  Workbench,
-  ViewSection
-} from 'wdio-vscode-service';
+import { DefaultTreeItem, TreeItem, ViewItem, Workbench, ViewSection } from 'wdio-vscode-service';
 import { pause } from './miscellaneous';
 
-export async function getFilteredVisibleTreeViewItems(workbench: Workbench, projectName: string, searchString: string): Promise<DefaultTreeItem[]> {
+export async function getFilteredVisibleTreeViewItems(
+  workbench: Workbench,
+  projectName: string,
+  searchString: string
+): Promise<DefaultTreeItem[]> {
   const sidebar = workbench.getSideBar();
   const treeViewSection = await sidebar.getContent().getSection(projectName);
   await treeViewSection.expand();
 
   // Warning, we can only retrieve the items which are visible.
   const visibleItems = (await treeViewSection.getVisibleItems()) as DefaultTreeItem[];
-  const filteredItems = await visibleItems.reduce(async (previousPromise: Promise<DefaultTreeItem[]>, currentItem: DefaultTreeItem) => {
-    const results = await previousPromise;
-    const label = await currentItem.getLabel();
-    if (label.startsWith(searchString)) {
-      results.push(currentItem);
-    }
+  const filteredItems = await visibleItems.reduce(
+    async (previousPromise: Promise<DefaultTreeItem[]>, currentItem: DefaultTreeItem) => {
+      const results = await previousPromise;
+      const label = await currentItem.getLabel();
+      if (label.startsWith(searchString)) {
+        results.push(currentItem);
+      }
 
-    return results;
-  }, Promise.resolve([]));
+      return results;
+    },
+    Promise.resolve([])
+  );
 
   return filteredItems;
 }
 
 // It's a tree, but it's also a list.  Everything in the view is actually flat
 // and returned from the call to visibleItems.reduce().
-export async function getFilteredVisibleTreeViewItemLabels(workbench: Workbench, projectName: string, searchString: string): Promise<string[]> {
+export async function getFilteredVisibleTreeViewItemLabels(
+  workbench: Workbench,
+  projectName: string,
+  searchString: string
+): Promise<string[]> {
   const sidebar = workbench.getSideBar();
   const treeViewSection = await sidebar.getContent().getSection(projectName);
   await treeViewSection.expand();
 
   // Warning, we can only retrieve the items which are visible.
   const visibleItems = (await treeViewSection.getVisibleItems()) as DefaultTreeItem[];
-  const filteredItems = (await visibleItems.reduce(async (previousPromise: Promise<string[]>, currentItem: ViewItem) => {
-    const results = await previousPromise;
-    const label = await (currentItem as TreeItem).getLabel();
-    if (label.startsWith(searchString)) {
-      results.push(label);
-    }
+  const filteredItems = (await visibleItems.reduce(
+    async (previousPromise: Promise<string[]>, currentItem: ViewItem) => {
+      const results = await previousPromise;
+      const label = await (currentItem as TreeItem).getLabel();
+      if (label.startsWith(searchString)) {
+        results.push(label);
+      }
 
-    return results;
-  }, Promise.resolve([])) as string[]);
+      return results;
+    },
+    Promise.resolve([])
+  )) as string[];
 
   return filteredItems;
 }
@@ -59,9 +67,12 @@ export async function getFilteredVisibleTreeViewItemLabels(workbench: Workbench,
 // There is a bug in DefaultTreeItem.findChildItem().
 // When possible, use DefaultTreeItem.findChildItem() but if this doesn't work on
 // everyone's machine, use getVisibleChild() instead.
-export async function getVisibleChild(defaultTreeItem: DefaultTreeItem, name: string): Promise<TreeItem | undefined> {
+export async function getVisibleChild(
+  defaultTreeItem: DefaultTreeItem,
+  name: string
+): Promise<TreeItem | undefined> {
   const children = await getVisibleChildren(defaultTreeItem);
-  for(let i=0; i<children.length; i++) {
+  for (let i = 0; i < children.length; i++) {
     const child = children[i];
     const label = await child.getLabel();
     if (label === name) {
@@ -76,17 +87,20 @@ export async function getVisibleChild(defaultTreeItem: DefaultTreeItem, name: st
 // getVisibleChildren() is very much like DefaultTreeItem.getChildren(), except it calls
 // getVisibleItems().
 export async function getVisibleChildren(defaultTreeItem: DefaultTreeItem): Promise<TreeItem[]> {
-  const rows = await getVisibleItems(defaultTreeItem, defaultTreeItem.locatorMap.DefaultTreeSection.itemRow as string);
+  const rows = await getVisibleItems(
+    defaultTreeItem,
+    defaultTreeItem.locatorMap.DefaultTreeSection.itemRow as string
+  );
 
   const items = await Promise.all(
-      rows.map(async (row) => (
-          new DefaultTreeItem(
-            defaultTreeItem.locatorMap,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
-            row as any,
-            defaultTreeItem.viewPart
-          ).wait()
-      ))
+    rows.map(async (row) =>
+      new DefaultTreeItem(
+        defaultTreeItem.locatorMap,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+        row as any,
+        defaultTreeItem.viewPart
+      ).wait()
+    )
   );
 
   return items;
@@ -94,15 +108,20 @@ export async function getVisibleChildren(defaultTreeItem: DefaultTreeItem): Prom
 
 // Replicate TreeItem.getChildItems()
 // This function returns a list of all visible items within the tree, and not just the children of a node.
-export async function getVisibleItems(treeItem: TreeItem, locator: string): Promise<WebdriverIO.Element[]> {
+export async function getVisibleItems(
+  treeItem: TreeItem,
+  locator: string
+): Promise<WebdriverIO.Element[]> {
   await treeItem.expand();
   const rows = await treeItem.parent.$$(locator);
 
-  return [...rows.values()];;
+  return [...rows.values()];
 }
 
-export async function retrieveAllApexTestItemsFromSidebar(expectedNumTests: number, apexTestsSection: ViewSection): Promise<TreeItem[]> {
-
+export async function retrieveAllApexTestItemsFromSidebar(
+  expectedNumTests: number,
+  apexTestsSection: ViewSection
+): Promise<TreeItem[]> {
   let apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
   await browser.keys(['Escape']);
 
@@ -114,8 +133,7 @@ export async function retrieveAllApexTestItemsFromSidebar(expectedNumTests: numb
       await refreshAction!.elem.click();
       pause(10);
       apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
-    }
-    else if (apexTestsItems.length === expectedNumTests) {
+    } else if (apexTestsItems.length === expectedNumTests) {
       break;
     }
   }

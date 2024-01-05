@@ -51,7 +51,6 @@ export async function selectQuickPickItem(
   prompt: InputBox | QuickOpenBox,
   text: string
 ): Promise<void> {
-
   const quickPicks = await prompt.getQuickPicks();
   for (const quickPick of quickPicks) {
     const label = await quickPick.getLabel();

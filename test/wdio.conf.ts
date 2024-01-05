@@ -24,11 +24,11 @@ const capabilities: VSCodeCapabilities = {
     vscodeArgs: {
       force: true,
       installExtension: EnvironmentSettings.getInstance().extensionPath,
-      extensionsDir: EnvironmentSettings.getInstance().extensionPath,
-    },
+      extensionsDir: EnvironmentSettings.getInstance().extensionPath
+    }
   } as VSCodeOptions,
 
-  acceptInsecureCerts: true,
+  acceptInsecureCerts: true
   // If outputDir is provided WebdriverIO can capture driver session logs
   // it is possible to configure which logTypes to include/exclude.
   // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
@@ -62,8 +62,8 @@ export const config: Options.Testrunner = {
     // for all available options
     tsNodeOpts: {
       transpileOnly: true,
-      project: 'test/tsconfig.json',
-    },
+      project: 'test/tsconfig.json'
+    }
     // tsconfig-paths is only used if "tsConfigPathsOpts" are provided, if you
     // do please make sure "tsconfig-paths" is installed as dependency
     // tsConfigPathsOpts: {
@@ -95,7 +95,7 @@ export const config: Options.Testrunner = {
     // Place inside the array to run sequentially.
     [
       // Either define the test suites to run in EnvironmentSettings...
-      ...EnvironmentSettings.getInstance().specFiles,
+      ...EnvironmentSettings.getInstance().specFiles
       //
       // ...or use *.e2e.ts here...
       // './test/specs/**/*.e2e.ts'
@@ -117,7 +117,7 @@ export const config: Options.Testrunner = {
       // './test/specs/**/templates.e2e.ts',
       // './test/specs/**/trailApexReplayDebugger.e2e.ts',
       // './test/specs/**/visualforceLsp.e2e.ts'
-    ],
+    ]
   ],
 
   // Patterns to exclude.
@@ -228,7 +228,7 @@ export const config: Options.Testrunner = {
     // timeout: 180000
     // timeout: 240000
     // timeout: 30 0000
-    timeout: 2_400_000,
+    timeout: 2_400_000
   },
   //
   // =====
@@ -280,7 +280,7 @@ export const config: Options.Testrunner = {
     config.runnerEnv = {
       ...(config.runnerEnv ?? {}),
       JAVA_HOME: process.env.JAVA_HOME,
-      PATH: process.env.PATH,
+      PATH: process.env.PATH
     };
     console.error(`beforeSession - runnerEnv JAVA_HOME: ${config.runnerEnv?.JAVA_HOME}`);
     console.error(`beforeSession - runnerEnv PATH: ${config.runnerEnv?.PATH}`);
@@ -341,7 +341,7 @@ export const config: Options.Testrunner = {
     }
 
     await saveFailedTestScreenshot(test.parent, test.title);
-  },
+  }
 
   /**
    * Hook that gets executed after the suite has ended

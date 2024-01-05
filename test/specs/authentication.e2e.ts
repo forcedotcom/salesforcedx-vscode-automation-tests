@@ -10,7 +10,7 @@ import path from 'path';
 import { InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings';
 import { TestSetup } from '../testSetup';
-import * as utilities from '../utilities'
+import * as utilities from '../utilities';
 
 describe('Authentication', async () => {
   const tempProjectName = 'TempProject-Authentication';
@@ -89,7 +89,7 @@ describe('Authentication', async () => {
 
     if (expectedSfdxCommands.length !== foundSfdxCommands.length) {
       // Something is wrong - the count of matching menus isn't what we expected.
-      expectedSfdxCommands.forEach(expectedSfdxCommand => {
+      expectedSfdxCommands.forEach((expectedSfdxCommand) => {
         expect(foundSfdxCommands).toContain(expectedSfdxCommand);
       });
     }

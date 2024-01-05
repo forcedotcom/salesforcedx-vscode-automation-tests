@@ -108,9 +108,8 @@ describe('Visualforce LSP', async () => {
     const ariaHasPopupAttribute = await autocompletionOptions[0].getAttribute('aria-haspopup');
     expect(ariaHasPopupAttribute).toBe('true');
 
-    const ariaAutocompleteAttribute = await autocompletionOptions[0].getAttribute(
-      'aria-autocomplete'
-    );
+    const ariaAutocompleteAttribute =
+      await autocompletionOptions[0].getAttribute('aria-autocomplete');
     expect(ariaAutocompleteAttribute).toBe('list');
 
     // Verify autocompletion options can be selected and therefore automatically inserted into the file

@@ -67,7 +67,6 @@ export async function notificationIsPresentWithTimeout(
   durationInSeconds: number,
   matchExactString: boolean = true
 ): Promise<boolean> {
-
   // Change timeout from seconds to milliseconds
   durationInSeconds *= 1000;
 
@@ -77,7 +76,6 @@ export async function notificationIsPresentWithTimeout(
 
   // Keep on searching for the notification until it is found or the timeout is reached
   while (secondsPassed < durationInSeconds) {
-
     // Get a list of all the notifications that are currently present
     const notifications = await workbench.getNotifications();
 
@@ -107,7 +105,6 @@ export async function notificationIsPresentWithTimeout(
     // Get the amount of time that passed
     currentDate = new Date();
     secondsPassed = Math.abs(currentDate.getTime() - startDate.getTime()) / 1000;
-
   }
 
   return false;
@@ -123,7 +120,7 @@ export async function dismissNotification(
     const message = await notification.getMessage();
     if (matchExactString) {
       if (message === notificationMessage) {
-        await(notification.dismiss());
+        await notification.dismiss();
       }
     }
   }
@@ -153,9 +150,10 @@ export async function dismissAllNotifications(): Promise<void> {
     for (const notification of notifications) {
       try {
         await notification.dismiss();
-      }
-      catch {
-        log('ERROR: Can\'t call $ on element with selector ".notification-toast-container" because element wasn\'t found');
+      } catch {
+        log(
+          'ERROR: Can\'t call $ on element with selector ".notification-toast-container" because element wasn\'t found'
+        );
       }
     }
     return !(await workbench.hasNotifications());

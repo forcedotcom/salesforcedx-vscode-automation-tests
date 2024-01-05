@@ -54,7 +54,7 @@ export async function getOutputViewText(outputChannelName: string = ''): Promise
 export async function attemptToFindOutputPanelText(
   outputChannelName: string,
   searchString: string,
-  attempts: number,
+  attempts: number
 ): Promise<string | undefined> {
   await selectOutputChannel(outputChannelName);
 
@@ -101,8 +101,8 @@ export async function getOperationTime(outputText: string): Promise<string> {
           }
           return acc;
         },
-        new Date(1970, 0, 1),
-      ),
+        new Date(1970, 0, 1)
+      )
   );
   let diff = endTime.getTime() - startTime.getTime();
   // Convert the difference to hours, minutes, and seconds
@@ -117,7 +117,7 @@ export async function getOperationTime(outputText: string): Promise<string> {
   // return `${hours}:${minutes}:${seconds}.${milliseconds}`;
 
   return `${formatTimeComponent(hours)}:${formatTimeComponent(minutes)}:${formatTimeComponent(
-    seconds,
+    seconds
   )}.${formatTimeComponent(milliseconds, 3)}`;
 }
 
