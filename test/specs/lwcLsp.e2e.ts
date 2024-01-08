@@ -42,7 +42,7 @@ describe('LWC LSP', async () => {
     const workbench = await browser.getWorkbench();
     await utilities.getTextEditor(workbench, 'lwc1.js');
 
-    // Move cursor to the middle of "greeting"
+    // Move cursor to the middle of "LightningElement"
     await browser.keys([CMD_KEY, 'f']);
     await utilities.pause(1);
     await browser.keys(['LightningElement']);
@@ -55,7 +55,7 @@ describe('LWC LSP', async () => {
     await utilities.pause(1);
 
     // Verify 'Go to definition' took us to the definition file
-    const editorView = await workbench.getEditorView();
+    const editorView = workbench.getEditorView();
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
     expect(title).toBe('engine.d.ts');
@@ -65,15 +65,22 @@ describe('LWC LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition (HTML)`);
     // Get open text editor
     const workbench = await browser.getWorkbench();
-    const textEditor = await utilities.getTextEditor(workbench, 'lwc1.html');
-    await textEditor.moveCursor(3, 52);
+    await utilities.getTextEditor(workbench, 'lwc1.html');
+
+    // Move cursor to the middle of "greeting"
+    await browser.keys([CMD_KEY, 'f']);
+    await utilities.pause(1);
+    await browser.keys(['greeting']);
+    await browser.keys(['Escape']);
+    await browser.keys(['ArrowRight', 'ArrowLeft', 'ArrowLeft']);
+    await utilities.pause(1);
 
     // Go to definition through F12
     await browser.keys(['F12']);
     await utilities.pause(1);
 
     // Verify 'Go to definition' took us to the definition file
-    const editorView = await workbench.getEditorView();
+    const editorView = workbench.getEditorView();
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
     expect(title).toBe('lwc1.js');
