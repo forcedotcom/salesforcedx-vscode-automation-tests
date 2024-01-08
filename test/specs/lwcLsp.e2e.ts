@@ -91,7 +91,16 @@ describe('LWC LSP', async () => {
     // Get open text editor
     const workbench = await browser.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'lwc1.html');
-    await textEditor.typeTextAt(3, 7, ' lwc');
+
+    // Move cursor to an empty space and type "lwc"
+    await browser.keys([CMD_KEY, 'f']);
+    await utilities.pause(1);
+    await browser.keys(['div']);
+    await browser.keys(['Enter']);
+    await browser.keys(['Escape']);
+    await browser.keys(['ArrowLeft', 'ArrowLeft', 'ArrowLeft', 'ArrowLeft']);
+    await utilities.pause(1);
+    await browser.keys(['lwc']);
     await utilities.pause(2);
 
     // Verify autocompletion options are present
