@@ -60,7 +60,7 @@ export class TestSetup {
       // await utilities.executeCommand(workbench, `sfdx force:org:delete -u ${this.scratchOrgAliasName} --noprompt`);
 
       // The Terminal view can be a bit unreliable, so directly call exec() instead:
-      await exec(`sfdx force:org:delete -u ${this.scratchOrgAliasName} --noprompt`);
+      await exec(`sfdx org:scratch:delete --target-org ${this.scratchOrgAliasName} --no-prompt`);
     }
 
     // This used to work...
@@ -203,9 +203,9 @@ export class TestSetup {
 
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
     const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
-    utilities.log(`${this.testSuiteSuffixName} - calling sfdx force:org:display...`);
+    utilities.log(`${this.testSuiteSuffixName} - calling sfdx org:display...`);
     const sfdxForceOrgDisplayResult = await exec(
-      `sfdx force:org:display -u ${
+      `sfdx org:display --target-org ${
         EnvironmentSettings.getInstance().devHubAliasName
       } --verbose --json`
     );
