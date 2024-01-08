@@ -325,11 +325,11 @@ export class TestSetup {
     const startDate = Date.now();
     const durationDays = 1;
 
-    utilities.log(`${this.testSuiteSuffixName} - calling "sfdx force:org:create"...`);
+    utilities.log(`${this.testSuiteSuffixName} - calling "sfdx org:create:scratch"...`);
     const sfdxForceOrgCreateResult = await exec(
-      `sfdx force:org:create -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`
+      `sfdx org:create:scratch -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`
     );
-    utilities.log(`${this.testSuiteSuffixName} - ..."sfdx force:org:create" finished`);
+    utilities.log(`${this.testSuiteSuffixName} - ..."sfdx org:create:scratch" finished`);
 
     utilities.log(`${this.testSuiteSuffixName} - calling removedEscapedCharacters()...`);
     const json = this.removedEscapedCharacters(sfdxForceOrgCreateResult.stdout);
