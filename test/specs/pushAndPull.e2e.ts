@@ -311,7 +311,7 @@ describe('Push and Pull', async () => {
     fs.writeFileSync(systemAdminUserDefPath, JSON.stringify(systemAdminUserDef), 'utf8');
 
     const sfdxForceOrgCreateResult = await exec(
-      `sfdx org:create:user --definition-file ${systemAdminUserDefPath}`
+      `sfdx org:create:user --definition-file ${systemAdminUserDefPath} --target-org ${testSetup.scratchOrgAliasName}`
     );
     expect(sfdxForceOrgCreateResult.stdout).toContain(
       `Successfully created user "${adminEmailAddress}"`
