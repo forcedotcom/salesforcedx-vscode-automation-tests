@@ -215,9 +215,9 @@ export class TestSetup {
     fs.writeFileSync(authFilePath, json);
     utilities.log(`${this.testSuiteSuffixName} - finished writing the file...`);
 
-    // Call auth:sfdxurl:store and read in the JSON that was just created.
-    utilities.log(`${this.testSuiteSuffixName} - calling sfdx auth:sfdxurl:store...`);
-    const sfdxSfdxUrlStoreResult = await exec(`sfdx auth:sfdxurl:store -d -f ${authFilePath}`);
+    // Call org:login:sfdx-url and read in the JSON that was just created.
+    utilities.log(`${this.testSuiteSuffixName} - calling sfdx org:login:sfdx-url...`);
+    const sfdxSfdxUrlStoreResult = await exec(`sfdx org:login:sfdx-url -d -f ${authFilePath}`);
     if (
       !sfdxSfdxUrlStoreResult.stdout.includes(
         `Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID`
