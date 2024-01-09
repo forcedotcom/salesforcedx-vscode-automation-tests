@@ -249,7 +249,7 @@ export class TestSetup {
       throw new Error('Error: devHubUserName was not set.');
     }
 
-    const execResult = await exec('sfdx org list --json');
+    const execResult = await exec('sfdx org:list --json');
     const sfdxForceOrgListJson = this.removedEscapedCharacters(execResult.stdout);
     const sfdxForceOrgListResult = JSON.parse(sfdxForceOrgListJson).result;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -280,7 +280,7 @@ export class TestSetup {
     if (this.reuseScratchOrg) {
       utilities.log(`${this.testSuiteSuffixName} - looking for a scratch org to reuse...`);
 
-      const sfdxForceOrgListResult = await exec('sfdx force:org:list --json');
+      const sfdxForceOrgListResult = await exec('sfdx org:list --json');
       const resultJson = sfdxForceOrgListResult.stdout
         .replace(/\u001B\[\d\dm/g, '')
         .replace(/\\n/g, '');

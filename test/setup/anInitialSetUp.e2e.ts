@@ -38,12 +38,12 @@ describe('An Initial SetUp', async () => {
 
     // For sfdx -> sf, remove the two lines below this comment block and uncomment the following line instead
     // await exec(`sf org login sfdx-url --sfdx-url-file ${authFilePath} --set-default --alias ${devHubAliasName}`);
-    const authorizeOrg = await exec(`sfdx auth:sfdxurl:store -d -f ${authFilePath}`);
+    const authorizeOrg = await exec(`sfdx org:login:sfdx-url -d -f ${authFilePath}`);
     expect(authorizeOrg.stdout).toContain(
       `Successfully authorized ${devHubUserName} with org ID ${orgId}`
     );
 
-    const setAlias = await exec(`sfdx alias set ${devHubAliasName}=${devHubUserName}`);
+    const setAlias = await exec(`sfdx alias:set ${devHubAliasName}=${devHubUserName}`);
     expect(setAlias.stdout).toContain(devHubAliasName);
     expect(setAlias.stdout).toContain(devHubUserName);
     expect(setAlias.stdout).toContain('true');
