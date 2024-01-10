@@ -327,7 +327,7 @@ export class TestSetup {
 
     utilities.log(`${this.testSuiteSuffixName} - calling "sfdx org:create:scratch"...`);
     const sfdxForceOrgCreateResult = await exec(
-      `sfdx org:create:scratch --edition developer --definition-file ${definitionFile} --alias ${this.scratchOrgAliasName} --duration-days ${durationDays} --json`
+      `sfdx org:create:scratch --edition developer --definition-file ${definitionFile} --alias ${this.scratchOrgAliasName} --duration-days ${durationDays} --set-default --json`
     );
     utilities.log(`${this.testSuiteSuffixName} - ..."sfdx org:create:scratch" finished`);
 
