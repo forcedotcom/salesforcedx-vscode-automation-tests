@@ -92,7 +92,7 @@ describe('LWC LSP', async () => {
     const workbench = await browser.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'lwc1.html');
 
-    // Move cursor to an empty space and type "lwc"
+    // Move cursor to right after the first 'div' tag and type ' lwc'
     await browser.keys([CMD_KEY, 'f']);
     await utilities.pause(1);
     await browser.keys(['div']);
