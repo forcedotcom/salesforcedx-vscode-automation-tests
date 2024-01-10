@@ -60,7 +60,7 @@ export class TestSetup {
       // await utilities.executeCommand(workbench, `sfdx force:org:delete -u ${this.scratchOrgAliasName} --noprompt`);
 
       // The Terminal view can be a bit unreliable, so directly call exec() instead:
-      await exec(`sfdx org:scratch:delete --target-org ${this.scratchOrgAliasName} --no-prompt`);
+      await exec(`sfdx org:delete:scratch --target-org ${this.scratchOrgAliasName} --no-prompt`);
     }
 
     // This used to work...
