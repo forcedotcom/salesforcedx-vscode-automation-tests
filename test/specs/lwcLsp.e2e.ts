@@ -96,7 +96,6 @@ describe('LWC LSP', async () => {
     await browser.keys([CMD_KEY, 'f']);
     await utilities.pause(1);
     await browser.keys(['div']);
-    await browser.keys(['Enter']);
     await browser.keys(['Escape']);
     await browser.keys(['ArrowRight']);
     await utilities.pause(1);
