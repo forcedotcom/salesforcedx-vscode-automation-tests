@@ -55,27 +55,9 @@ export class TestSetup {
 
   public async tearDown(): Promise<void> {
     if (this.scratchOrgAliasName && !this.reuseScratchOrg) {
-      // To use VS Code's Terminal view to delete the scratch org, use:
-      // const workbench = await (await browser.getWorkbench()).wait();
-      // await utilities.executeCommand(workbench, `sfdx force:org:delete -u ${this.scratchOrgAliasName} --noprompt`);
-
       // The Terminal view can be a bit unreliable, so directly call exec() instead:
       await exec(`sfdx org:delete:scratch --target-org ${this.scratchOrgAliasName} --no-prompt`);
     }
-
-    // This used to work...
-    // if (this.projectFolderPath) {
-    //   await utilities.removeFolder(this.projectFolderPath);
-    // }
-    // ...but something recently changed and now, removing the folder while VS Code has the folder open
-    // causes VS Code to get into a funky state.  The next time a project is created, we get the
-    // following error:
-    //   07:45:19.65 Starting SFDX: Create Project
-    //   ENOENT: no such file or directory, uv_cwd
-    //
-    // Not deleting the folder that was created is OK, b/c it is deleted in setUpTestingEnvironment()
-    // the next time the test suite runs.  I'm going to leave this in for now in case this gets fixed
-    // and this code can be added back in.
   }
 
   public async disableCommandCenter(): Promise<void> {
