@@ -70,7 +70,7 @@ describe('LWC LSP', async () => {
     // Move cursor to the middle of "greeting"
     await browser.keys([CMD_KEY, 'f']);
     await utilities.pause(1);
-    await browser.keys(['greeting','Escape','ArrowRight', 'ArrowLeft', 'ArrowLeft']);
+    await browser.keys(['greeting', 'Escape', 'ArrowRight', 'ArrowLeft', 'ArrowLeft']);
     await utilities.pause(1);
 
     // Go to definition through F12
@@ -93,9 +93,7 @@ describe('LWC LSP', async () => {
     // Move cursor to right after the first 'div' tag and type ' lwc'
     await browser.keys([CMD_KEY, 'f']);
     await utilities.pause(1);
-    await browser.keys(['div']);
-    await browser.keys(['Escape']);
-    await browser.keys(['ArrowRight']);
+    await browser.keys(['div', 'Escape', 'ArrowRight']);
     await utilities.pause(1);
     await browser.keys([' lwc']);
     await utilities.pause(2);
