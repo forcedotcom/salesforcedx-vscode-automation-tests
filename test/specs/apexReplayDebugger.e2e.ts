@@ -180,7 +180,7 @@ describe('Apex Replay Debugger', async () => {
   step('SFDX: Launch Apex Replay Debugger with Last Log File', async () => {
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
-    const editorView = await workbench.getEditorView();
+    const editorView = workbench.getEditorView();
 
     // Get file path from open text editor
     const activeTab = await editorView.getActiveTab();

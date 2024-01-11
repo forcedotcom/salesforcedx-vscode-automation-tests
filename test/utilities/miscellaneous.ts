@@ -99,7 +99,7 @@ export async function getTextEditor(workbench: Workbench, fileName: string): Pro
   await inputBox.setText(fileName);
   await inputBox.confirm();
   await pause(1);
-  const editorView = await workbench.getEditorView();
+  const editorView = workbench.getEditorView();
   const textEditor = (await editorView.openEditor(fileName)) as TextEditor;
   return textEditor;
 }

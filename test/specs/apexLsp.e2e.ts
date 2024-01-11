@@ -80,7 +80,7 @@ describe('Apex LSP', async () => {
     await utilities.pause(1);
 
     // Verify 'Go to definition' took us to the definition file
-    const editorView = await workbench.getEditorView();
+    const editorView = workbench.getEditorView();
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
     expect(title).toBe('ExampleClass.cls');

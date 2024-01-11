@@ -55,27 +55,9 @@ export class TestSetup {
 
   public async tearDown(): Promise<void> {
     if (this.scratchOrgAliasName && !this.reuseScratchOrg) {
-      // To use VS Code's Terminal view to delete the scratch org, use:
-      // const workbench = await (await browser.getWorkbench()).wait();
-      // await utilities.executeCommand(workbench, `sfdx force:org:delete -u ${this.scratchOrgAliasName} --noprompt`);
-
       // The Terminal view can be a bit unreliable, so directly call exec() instead:
-      await exec(`sfdx force:org:delete -u ${this.scratchOrgAliasName} --noprompt`);
+      await exec(`sfdx org:delete:scratch --target-org ${this.scratchOrgAliasName} --no-prompt`);
     }
-
-    // This used to work...
-    // if (this.projectFolderPath) {
-    //   await utilities.removeFolder(this.projectFolderPath);
-    // }
-    // ...but something recently changed and now, removing the folder while VS Code has the folder open
-    // causes VS Code to get into a funky state.  The next time a project is created, we get the
-    // following error:
-    //   07:45:19.65 Starting SFDX: Create Project
-    //   ENOENT: no such file or directory, uv_cwd
-    //
-    // Not deleting the folder that was created is OK, b/c it is deleted in setUpTestingEnvironment()
-    // the next time the test suite runs.  I'm going to leave this in for now in case this gets fixed
-    // and this code can be added back in.
   }
 
   public async disableCommandCenter(): Promise<void> {
@@ -203,9 +185,9 @@ export class TestSetup {
 
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
     const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
-    utilities.log(`${this.testSuiteSuffixName} - calling sfdx force:org:display...`);
+    utilities.log(`${this.testSuiteSuffixName} - calling sfdx org:display...`);
     const sfdxForceOrgDisplayResult = await exec(
-      `sfdx force:org:display -u ${
+      `sfdx org:display --target-org ${
         EnvironmentSettings.getInstance().devHubAliasName
       } --verbose --json`
     );
@@ -215,9 +197,9 @@ export class TestSetup {
     fs.writeFileSync(authFilePath, json);
     utilities.log(`${this.testSuiteSuffixName} - finished writing the file...`);
 
-    // Call auth:sfdxurl:store and read in the JSON that was just created.
-    utilities.log(`${this.testSuiteSuffixName} - calling sfdx auth:sfdxurl:store...`);
-    const sfdxSfdxUrlStoreResult = await exec(`sfdx auth:sfdxurl:store -d -f ${authFilePath}`);
+    // Call org:login:sfdx-url and read in the JSON that was just created.
+    utilities.log(`${this.testSuiteSuffixName} - calling sfdx org:login:sfdx-url...`);
+    const sfdxSfdxUrlStoreResult = await exec(`sfdx org:login:sfdx-url -d -f ${authFilePath}`);
     if (
       !sfdxSfdxUrlStoreResult.stdout.includes(
         `Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID`
@@ -249,7 +231,7 @@ export class TestSetup {
       throw new Error('Error: devHubUserName was not set.');
     }
 
-    const execResult = await exec('sfdx org list --json');
+    const execResult = await exec('sfdx org:list --json');
     const sfdxForceOrgListJson = this.removedEscapedCharacters(execResult.stdout);
     const sfdxForceOrgListResult = JSON.parse(sfdxForceOrgListJson).result;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -280,7 +262,7 @@ export class TestSetup {
     if (this.reuseScratchOrg) {
       utilities.log(`${this.testSuiteSuffixName} - looking for a scratch org to reuse...`);
 
-      const sfdxForceOrgListResult = await exec('sfdx force:org:list --json');
+      const sfdxForceOrgListResult = await exec('sfdx org:list --json');
       const resultJson = sfdxForceOrgListResult.stdout
         .replace(/\u001B\[\d\dm/g, '')
         .replace(/\\n/g, '');
@@ -325,11 +307,11 @@ export class TestSetup {
     const startDate = Date.now();
     const durationDays = 1;
 
-    utilities.log(`${this.testSuiteSuffixName} - calling "sfdx force:org:create"...`);
+    utilities.log(`${this.testSuiteSuffixName} - calling "sfdx org:create:scratch"...`);
     const sfdxForceOrgCreateResult = await exec(
-      `sfdx force:org:create -f ${definitionFile} --setalias ${this.scratchOrgAliasName} --durationdays ${durationDays} --setdefaultusername --json --loglevel fatal`
+      `sfdx org:create:scratch --edition developer --definition-file ${definitionFile} --alias ${this.scratchOrgAliasName} --duration-days ${durationDays} --set-default --json`
     );
-    utilities.log(`${this.testSuiteSuffixName} - ..."sfdx force:org:create" finished`);
+    utilities.log(`${this.testSuiteSuffixName} - ..."sfdx org:create:scratch" finished`);
 
     utilities.log(`${this.testSuiteSuffixName} - calling removedEscapedCharacters()...`);
     const json = this.removedEscapedCharacters(sfdxForceOrgCreateResult.stdout);
