@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { step, xstep } from 'mocha-steps';
+import { step } from 'mocha-steps';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
@@ -29,7 +29,6 @@ describe('Apex LSP', async () => {
     // Using the Command palette, run Developer: Show Running Extensions
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.showRunningExtensions(workbench);
-    utilities.log('finished showing running extensions');
 
     // Verify Apex extension is present and running
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
@@ -37,11 +36,9 @@ describe('Apex LSP', async () => {
       'salesforcedx-vscode-apex'
     );
     expect(extensionWasFound).toBe(true);
-    utilities.log('all extensions are found');
-    utilities.log('exit Verify Extension is Running');
   });
 
-  xstep('Verify LSP finished indexing', async () => {
+  step('Verify LSP finished indexing', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
 
     // Close running extensions view
@@ -62,7 +59,7 @@ describe('Apex LSP', async () => {
     utilities.log(outputViewText);
   });
 
-  xstep('Go to Definition', async () => {
+  step('Go to Definition', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
@@ -89,7 +86,7 @@ describe('Apex LSP', async () => {
     expect(title).toBe('ExampleClass.cls');
   });
 
-  xstep('Autocompletion', async () => {
+  step('Autocompletion', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
