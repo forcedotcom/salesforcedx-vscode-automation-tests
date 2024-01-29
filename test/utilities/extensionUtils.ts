@@ -49,8 +49,11 @@ export async function findExtensionInRunningExtensionsList(
   log('closed panel and cleared notifications');
 
   const extensionNameDivs = await $$('div.monaco-list-row');
+  log('extensionNameDivs = ' + extensionNameDivs.toString());
   let extensionWasFound = false;
+  log('enter for loop');
   for (const extensionNameDiv of extensionNameDivs) {
+    log('extensionNameDiv = ' + extensionNameDiv.toString());
     const text = await extensionNameDiv.getAttribute('aria-label');
     log(`looking for ${extensionName}`);
     if (text.includes(extensionName)) {
