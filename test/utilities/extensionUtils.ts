@@ -34,6 +34,8 @@ export async function findExtensionInRunningExtensionsList(
 ): Promise<boolean> {
   // This function assumes the Extensions list was opened.
 
+  log('&&& enter findExtensionInRunningExtensionsList()');
+
   // Close the panel and clear notifications so we can see as many of the running extensions as we can.
   try {
     await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
@@ -44,17 +46,20 @@ export async function findExtensionInRunningExtensionsList(
     log('No panel or notifs to close - command not found');
   }
   pause(1);
+  log('closed panel and cleared notifications');
 
   const extensionNameDivs = await $$('div.monaco-list-row');
   let extensionWasFound = false;
   for (const extensionNameDiv of extensionNameDivs) {
     const text = await extensionNameDiv.getAttribute('aria-label');
+    log(`looking for ${extensionName}`);
     if (text.includes(extensionName)) {
       extensionWasFound = true;
       log(`extension ${extensionName} was found`);
     }
   }
 
+  log('&&& exit findExtensionInRunningExtensionsList()');
   return extensionWasFound;
 }
 
