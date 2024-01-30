@@ -26,13 +26,13 @@ describe('Apex Replay Debugger', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(
       workbench,
-      'SFDX: Push Source to Default Org and Override Conflicts',
+      'SFDX: Push Source to Default Org and Ignore Conflicts',
       1
     );
 
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Push Source to Default Org and Override Conflicts successfully ran',
+      'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
       utilities.TEN_MINUTES
     );
     expect(successPushNotificationWasFound).toBe(true);
