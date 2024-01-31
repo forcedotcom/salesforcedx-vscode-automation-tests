@@ -52,6 +52,7 @@ export async function findExtensionInRunningExtensionsList(
     if (text.includes(extensionName)) {
       extensionWasFound = true;
       log(`extension ${extensionName} was found`);
+      break;
     }
   }
 
