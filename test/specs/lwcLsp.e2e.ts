@@ -61,7 +61,7 @@ describe('LWC LSP', async () => {
     expect(title).toBe('engine.d.ts');
   });
 
-  xstep('Go to Definition (HTML)', async () => {
+  step('Go to Definition (HTML)', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition (HTML)`);
     // Get open text editor
     const workbench = await browser.getWorkbench();
