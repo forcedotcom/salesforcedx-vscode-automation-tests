@@ -46,7 +46,7 @@ describe('Aura LSP', async () => {
     utilities.log(outputViewText);
   });
 
-  xstep('Go to Definition', async () => {
+  step('Go to Definition', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
