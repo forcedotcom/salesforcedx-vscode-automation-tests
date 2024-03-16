@@ -6,8 +6,8 @@
  */
 import { step } from 'mocha-steps';
 import path from 'path';
-import { TestSetup } from '../testSetup';
-import * as utilities from '../utilities';
+import { TestSetup } from '../testSetup.ts';
+import * as utilities from '../utilities/index.ts';
 
 describe('Manifest Builder', async () => {
   let testSetup: TestSetup;

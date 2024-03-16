@@ -5,15 +5,16 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-export * from './apexUtils';
-export * from './commandPrompt';
-export * from './extensionUtils';
-export * from './fileSystem';
-export * from './lwcUtils';
-export * from './miscellaneous';
-export * from './notifications';
-export * from './outputView';
-export * from './sideBar';
-export * from './statusBar';
-export * from './terminalView';
-export * from './visualforceUtils';
+export * from './apexUtils.ts';
+export * from './commandPrompt.ts';
+export * from './extensionUtils.ts';
+export * from './fileSystem.ts';
+export * from './lwcUtils.ts';
+export * from './miscellaneous.ts';
+export * from './notifications.ts';
+export * from './outputView.ts';
+export * from './sideBar.ts';
+export * from './statusBar.ts';
+export * from './terminalView.ts';
+export * from './screenshot.ts';
+export * from './visualforceUtils.ts';

@@ -6,9 +6,12 @@
  */
 import { step } from 'mocha-steps';
 import { InputBox, QuickOpenBox, TextEditor } from 'wdio-vscode-service';
-import { TestSetup } from '../testSetup';
-import * as utilities from '../utilities';
-import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
+import { TestSetup } from '../testSetup.ts';
+import * as utilities from '../utilities/index.ts';
+// import { CMD_KEY } from 'wdio-vscode-service/dist/constants.ts';
+
+import { Key } from 'webdriverio';
+const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 /**
  * This test suite walks through the same steps performed in the "Find and Fix Bugs with Apex Replay Debugger" Trailhead Module;

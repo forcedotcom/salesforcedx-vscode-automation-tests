@@ -5,8 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { runCommandFromCommandPrompt } from './commandPrompt';
-import { getTextEditor, pause } from './miscellaneous';
+import { runCommandFromCommandPrompt } from './commandPrompt.ts';
+import { getTextEditor, pause } from './miscellaneous.ts';
 
 export async function createVisualforcePage(): Promise<void> {
   const workbench = await browser.getWorkbench();

@@ -8,9 +8,11 @@
             "node",
             "wdio-vscode-service"
         ],
-        "target": "es2019",
-        "moduleResolution": "node",
+        "target": "es2022",
+        "module": "ESNext",
         "esModuleInterop": true,
+        "allowImportingTsExtensions": true,
+        "noEmit": true, 
         "strict": true
     }
 }

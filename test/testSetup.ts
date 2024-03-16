@@ -9,10 +9,17 @@ import child_process from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import util from 'util';
-import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
-import { EnvironmentSettings } from './environmentSettings';
-import * as utilities from './utilities';
-import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
+import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench} from 'wdio-vscode-service';
+import { EnvironmentSettings } from './environmentSettings.ts';
+import * as utilities from './utilities/index.ts';
+// import { CMD_KEY } from 'wdio-vscode-service/dist/constants.js';
+
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+import { Key } from 'webdriverio';
+const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 const exec = util.promisify(child_process.exec);
 
@@ -72,7 +79,7 @@ export class TestSetup {
 
     const commandCenterBtn = await utilities.findElementByText(
       'div',
-      'title',
+      'aria-label',
       'window.commandCenter'
     );
     await commandCenterBtn.click();

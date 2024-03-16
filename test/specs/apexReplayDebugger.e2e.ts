@@ -7,9 +7,12 @@
 import { step } from 'mocha-steps';
 import path from 'path';
 import { InputBox, QuickOpenBox, TextEditor } from 'wdio-vscode-service';
-import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
-import { TestSetup } from '../testSetup';
-import * as utilities from '../utilities';
+// import { CMD_KEY } from 'wdio-vscode-service/dist/constants.ts';
+import { TestSetup } from '../testSetup.ts';
+import * as utilities from '../utilities/index.ts';
+
+import { Key } from 'webdriverio';
+const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Apex Replay Debugger', async () => {
   let prompt: QuickOpenBox | InputBox;

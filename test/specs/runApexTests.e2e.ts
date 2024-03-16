@@ -6,8 +6,8 @@
  */
 import { step } from 'mocha-steps';
 import { InputBox, QuickOpenBox, SideBarView, TreeItem } from 'wdio-vscode-service';
-import { TestSetup } from '../testSetup';
-import * as utilities from '../utilities';
+import { TestSetup } from '../testSetup.ts';
+import * as utilities from '../utilities/index.ts';
 
 describe('Run Apex Tests', async () => {
   let prompt: QuickOpenBox | InputBox;

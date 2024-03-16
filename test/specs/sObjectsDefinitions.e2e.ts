@@ -6,8 +6,8 @@
  */
 import { step } from 'mocha-steps';
 import { DefaultTreeItem, TreeItem } from 'wdio-vscode-service';
-import { TestSetup } from '../testSetup';
-import * as utilities from '../utilities';
+import { TestSetup } from '../testSetup.ts';
+import * as utilities from '../utilities/index.ts';
 
 describe('SObjects Definitions', async () => {
   let testSetup: TestSetup;

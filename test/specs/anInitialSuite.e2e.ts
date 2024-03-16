@@ -5,8 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step, xstep } from 'mocha-steps';
-import { TestSetup } from '../testSetup';
-import * as utilities from '../utilities';
+import { TestSetup } from '../testSetup.ts';
+import * as utilities from '../utilities/index.ts';
 
 /*
 anInitialSuite.e2e.ts is a special case.  We want to validate that the Salesforce extensions and

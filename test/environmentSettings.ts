@@ -6,33 +6,39 @@
  */
 
 import { join } from 'path';
+import path from 'path';
+
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export class EnvironmentSettings {
   private static _instance: EnvironmentSettings;
 
-  private _vscodeVersion = 'stable'; //  or 'insiders' or '1.77.3'
+  private _vscodeVersion = 'stable';
   private _specFiles = [
-    './test/specs/**/*.e2e.ts'
+    './specs/**/*.e2e.ts'
     // OR
-    // './test/specs/**/anInitialSuite.e2e.ts',
-    // './test/specs/**/apexLsp.e2e.ts',
-    // './test/specs/**/apexReplayDebugger.e2e.ts',
-    // './test/specs/**/auraLsp.e2e.ts',
-    // './test/specs/**/authentication.e2e.ts',
-    // './test/specs/**/debugApexTests.e2e.ts',
-    // './test/specs/**/deployAndRetrieve.e2e.ts',
-    // './test/specs/**/lwcLsp.e2e.ts',
-    // './test/specs/**/manifestBuilder.e2e.ts',
-    // './test/specs/**/orgBrowser.e2e.ts',
-    // './test/specs/**/pushAndPull.e2e.ts',
-    // './test/specs/**/runApexTests.e2e.ts',
-    // './test/specs/**/sObjectsDefinitions.e2e.ts',
-    // './test/specs/**/templates.e2e.ts',
-    // './test/specs/**/trailApexReplayDebugger.e2e.ts',
-    // './test/specs/**/visualforceLsp.e2e.ts'
+    // './specs/**/anInitialSuite.e2e.ts',
+    // './specs/**/apexLsp.e2e.ts', 
+    // './specs/**/apexReplayDebugger.e2e.ts',
+    // './specs/**/auraLsp.e2e.ts', 
+    // './specs/**/authentication.e2e.ts', 
+    // './specs/**/debugApexTests.e2e.ts', 
+    // './specs/**/deployAndRetrieve.e2e.ts',
+    // './specs/**/lwcLsp.e2e.ts', 
+    // './specs/**/manifestBuilder.e2e.ts',
+    // './specs/**/orgBrowser.e2e.ts', 
+    // './specs/**/pushAndPull.e2e.ts', 
+    // './specs/**/runApexTests.e2e.ts', 
+    // './specs/**/sObjectsDefinitions.e2e.ts', 
+    // './specs/**/templates.e2e.ts',
+    // './specs/**/trailApexReplayDebugger.e2e.ts', 
+    // './specs/**/visualforceLsp.e2e.ts', 
+    // './specs/**/runEinsteinForDeveloper.e2e.ts'
   ];
   private _devHubAliasName = 'vscodeOrg';
-  private _devHubUserName = 'svcideebot@salesforce.com';
+  private _devHubUserName = 'svcideebot@salesforce.com'; 
   private _sfdxAuthUrl = process.env.SFDX_AUTH_URL;
   private _orgId = process.env.ORG_ID;
   private _extensionPath = join(__dirname, '..', '..', 'salesforcedx-vscode', 'extensions');

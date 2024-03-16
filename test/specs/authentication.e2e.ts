@@ -8,9 +8,13 @@
 import { step } from 'mocha-steps';
 import path from 'path';
 import { InputBox, QuickOpenBox } from 'wdio-vscode-service';
-import { EnvironmentSettings } from '../environmentSettings';
-import { TestSetup } from '../testSetup';
-import * as utilities from '../utilities';
+import { EnvironmentSettings } from '../environmentSettings.ts';
+import { TestSetup } from '../testSetup.ts';
+import * as utilities from '../utilities/index.ts';
+
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 describe('Authentication', async () => {
   const tempProjectName = 'TempProject-Authentication';

@@ -7,8 +7,11 @@
 
 import clipboard from 'clipboardy';
 import { TerminalView, Workbench } from 'wdio-vscode-service';
-import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
-import { log, pause } from './miscellaneous';
+// import { CMD_KEY } from 'wdio-vscode-service/dist/constants.ts';
+import { log, pause } from './miscellaneous.ts';
+
+import { Key } from 'webdriverio';
+const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 export async function getTerminalView(workbench: Workbench): Promise<TerminalView> {
   const bottomBar = await workbench.getBottomBar().wait();

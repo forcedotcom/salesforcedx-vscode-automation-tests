@@ -6,8 +6,8 @@
  */
 
 import { TextEditor } from 'wdio-vscode-service';
-import { runCommandFromCommandPrompt } from './commandPrompt';
-import { getTextEditor, pause } from './miscellaneous';
+import { runCommandFromCommandPrompt } from './commandPrompt.ts';
+import { getTextEditor, pause } from './miscellaneous.ts';
 
 export async function createApexClass(
   name: string,

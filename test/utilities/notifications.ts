@@ -6,7 +6,7 @@
  */
 
 import { Workbench } from 'wdio-vscode-service';
-import { log, pause } from './miscellaneous';
+import { log, pause } from './miscellaneous.ts';
 
 export async function waitForNotificationToGoAway(
   workbench: Workbench,
