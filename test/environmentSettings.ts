@@ -17,7 +17,7 @@ export class EnvironmentSettings {
 
   private _vscodeVersion = 'stable';
   private _specFiles = [
-    './test/specs/**/*.e2e.ts'
+    './specs/**/*.e2e.ts'
     // OR
     // './specs/**/anInitialSuite.e2e.ts',
     // './specs/**/apexLsp.e2e.ts',
@@ -57,7 +57,7 @@ export class EnvironmentSettings {
         process.env.VSCODE_VERSION || EnvironmentSettings._instance._vscodeVersion;
 
       if (process.env.SPEC_FILES) {
-        EnvironmentSettings._instance._specFiles = ['./test/specs/**/' + process.env.SPEC_FILES];
+        EnvironmentSettings._instance._specFiles = ['./specs/**/' + process.env.SPEC_FILES];
       }
 
       EnvironmentSettings._instance._devHubAliasName =
