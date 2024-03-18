@@ -18,14 +18,14 @@ const extensions: string[] = [
   'salesforcedx-vscode',
   'salesforcedx-vscode-expanded',
   'salesforcedx-vscode-soql',
+  'salesforcedx-einstein-gpt',
   'salesforcedx-vscode-core',
   'salesforcedx-vscode-apex',
   'salesforcedx-vscode-apex-debugger',
   'salesforcedx-vscode-apex-replay-debugger',
   'salesforcedx-vscode-lightning',
   'salesforcedx-vscode-lwc',
-  'salesforcedx-vscode-visualforce',
-  'salesforcedx-einstein-gpt'
+  'salesforcedx-vscode-visualforce'
 ];
 
 export async function showRunningExtensions(workbench: Workbench): Promise<void> {
