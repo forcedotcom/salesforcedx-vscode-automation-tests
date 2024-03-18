@@ -9,7 +9,7 @@
     "@commitlint/config-conventional": "19.0.3",
     "@salesforce/eslint-plugin-aura": "2.1.0",
     "@types/fs-extra": "11.0.4",
-    "@types/node": "^20.11.24",
+    "@types/node": "^20",
     "@typescript-eslint/eslint-plugin": "7.1.1",
     "@typescript-eslint/parser": "7.1.1",
     "@wdio/cli": "8.32.4",
