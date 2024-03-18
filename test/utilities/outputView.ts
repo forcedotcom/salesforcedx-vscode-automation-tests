@@ -6,10 +6,13 @@
  */
 
 import clipboard from 'clipboardy';
-import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
-import { pause } from './miscellaneous';
-import { dismissAllNotifications } from './notifications';
-import { runCommandFromCommandPrompt } from './commandPrompt';
+// import { CMD_KEY } from 'wdio-vscode-service/dist/constants.ts';
+import { pause } from './miscellaneous.ts';
+import { dismissAllNotifications } from './notifications.ts';
+import { runCommandFromCommandPrompt } from './commandPrompt.ts';
+
+import { Key } from 'webdriverio';
+const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 type TimeParts = {
   hours: string;
@@ -76,7 +79,8 @@ export async function getOperationTime(outputText: string): Promise<string> {
   let matches;
   const groups: TimeParts[] = [];
   while ((matches = tRegex.exec(outputText)) !== null) {
-    groups.push(matches.groups);
+    const group = matches.groups as TimeParts; // Type assertion
+    groups.push(group);
   }
   const [startTime, endTime] = groups.map((group) =>
     Object.entries(group)

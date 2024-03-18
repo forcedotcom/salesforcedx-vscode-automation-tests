@@ -6,15 +6,19 @@
  */
 
 import { Workbench } from 'wdio-vscode-service';
-import { runCommandFromCommandPrompt } from './commandPrompt';
-import { FIVE_MINUTES, log, pause } from './miscellaneous';
-import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
+import { runCommandFromCommandPrompt } from './commandPrompt.ts';
+import { FIVE_MINUTES, log, pause } from './miscellaneous.ts';
+// import { CMD_KEY } from 'wdio-vscode-service/dist/constants.ts';
 import path from 'path';
+
+import { Key } from 'webdriverio';
+const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 const extensions: string[] = [
   'salesforcedx-vscode',
   'salesforcedx-vscode-expanded',
   'salesforcedx-vscode-soql',
+  'salesforcedx-einstein-gpt',
   'salesforcedx-vscode-core',
   'salesforcedx-vscode-apex',
   'salesforcedx-vscode-apex-debugger',
@@ -77,6 +81,7 @@ export async function reloadAndEnableExtensions(): Promise<void> {
 }
 
 export async function installExtension(extension: string): Promise<void> {
+  const __dirname = new URL('.', import.meta.url).pathname;
   const pathToExtensions = path.join(
     __dirname,
     '..',
@@ -91,6 +96,7 @@ export async function installExtension(extension: string): Promise<void> {
   await runCommandFromCommandPrompt(workbench, 'Extensions: Install from VSIX...', 5);
   await browser.keys([CMD_KEY, 'a']);
   await browser.keys(pathToExtensions);
+
   await browser.keys(['Enter']);
   log(`...SetUp - Finished Install extension ${extension}`);
 }

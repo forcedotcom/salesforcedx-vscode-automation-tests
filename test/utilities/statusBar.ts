@@ -6,7 +6,7 @@
  */
 
 import { Workbench } from 'wdio-vscode-service';
-import { pause } from './miscellaneous';
+import { pause } from './miscellaneous.ts';
 
 export async function getStatusBarItemWhichIncludes(
   workbench: Workbench,

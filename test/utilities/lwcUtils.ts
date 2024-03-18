@@ -5,8 +5,8 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { runCommandFromCommandPrompt } from './commandPrompt';
-import { getTextEditor, log, pause } from './miscellaneous';
+import { runCommandFromCommandPrompt } from './commandPrompt.ts';
+import { getTextEditor, log, pause } from './miscellaneous.ts';
 
 export async function createLwc(name: string): Promise<void> {
   log('createLwc() - calling browser.getWorkbench()');

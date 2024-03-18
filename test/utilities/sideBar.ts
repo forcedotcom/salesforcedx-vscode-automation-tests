@@ -6,7 +6,7 @@
  */
 
 import { DefaultTreeItem, TreeItem, ViewItem, Workbench, ViewSection } from 'wdio-vscode-service';
-import { pause } from './miscellaneous';
+import { pause } from './miscellaneous.ts';
 
 export async function getFilteredVisibleTreeViewItems(
   workbench: Workbench,

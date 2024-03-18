@@ -7,9 +7,9 @@
 
 import os from 'os';
 import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
-import { EnvironmentSettings } from '../environmentSettings';
-import { attemptToFindOutputPanelText } from './outputView';
-import { runCommandFromCommandPrompt } from './commandPrompt';
+import { EnvironmentSettings } from '../environmentSettings.ts';
+import { attemptToFindOutputPanelText } from './outputView.ts';
+import { runCommandFromCommandPrompt } from './commandPrompt.ts';
 
 export const FIVE_MINUTES = 5 * 60;
 export const TEN_MINUTES = 10 * 60;

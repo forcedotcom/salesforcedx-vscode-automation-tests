@@ -10,8 +10,8 @@ import fs from 'fs';
 import { step } from 'mocha-steps';
 import path from 'path';
 import util from 'util';
-import { TestSetup } from '../testSetup';
-import * as utilities from '../utilities';
+import { TestSetup } from '../testSetup.ts';
+import * as utilities from '../utilities/index.ts';
 
 const exec = util.promisify(child_process.exec);
 

@@ -7,7 +7,12 @@
 
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
-import { EnvironmentSettings } from '../environmentSettings';
+import path from 'path';
+import { EnvironmentSettings } from '../environmentSettings.ts';
+
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export async function saveFailedTestScreenshot(
   specTitle: string,

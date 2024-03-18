@@ -7,8 +7,8 @@
 
 import type { Options } from '@wdio/types';
 import type { VSCodeCapabilities, VSCodeOptions } from 'wdio-vscode-service/dist/types';
-import { EnvironmentSettings } from './environmentSettings';
-import { saveFailedTestScreenshot } from './utilities/screenshot';
+import { EnvironmentSettings } from './environmentSettings.ts';
+import { saveFailedTestScreenshot } from './utilities/screenshot.ts';
 
 const capabilities: VSCodeCapabilities = {
   // maxInstances can get overwritten per capability. So if you have an in-house Selenium
@@ -95,7 +95,7 @@ export const config: Options.Testrunner = {
     // Place inside the array to run sequentially.
     [
       // Either define the test suites to run in EnvironmentSettings...
-      ...EnvironmentSettings.getInstance().specFiles
+     ...EnvironmentSettings.getInstance().specFiles
       //
       // ...or use *.e2e.ts here...
       // './test/specs/**/*.e2e.ts'
@@ -146,7 +146,7 @@ export const config: Options.Testrunner = {
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
   // https://saucelabs.com/platform/platform-configurator
   //
-  capabilities: [capabilities],
+  capabilities: [capabilities],  
   //
   // ===================
   // Test Configurations
