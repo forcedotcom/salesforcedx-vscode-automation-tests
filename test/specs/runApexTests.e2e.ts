@@ -134,7 +134,44 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
   });
 
-  step('Run Tests via Command Palette', async () => {
+  step('Run All Tests via Command Palette', async () => {
+    // Clear the Output view.
+    await utilities.dismissAllNotifications();
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+
+    // Run SFDX: Run Apex tests.
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
+
+    // Select the "All Tests" option
+    await prompt.selectQuickPick('All Tests');
+
+    // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+      workbench,
+      'SFDX: Run Apex Tests successfully ran',
+      utilities.TEN_MINUTES
+    );
+    expect(successNotificationWasFound).toBe(true);
+
+    // Verify test results are listed on vscode's Output section
+    // Also verify that all tests pass
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Apex',
+      '=== Test Results',
+      10
+    );
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('=== Test Summary');
+    expect(outputPanelText).toContain('Outcome              Passed');
+    expect(outputPanelText).toContain('Tests Ran            3');
+    expect(outputPanelText).toContain('Pass Rate            100%');
+    expect(outputPanelText).toContain('TEST NAME');
+    expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
+    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
+  });
+
+  step('Run Single Class via Command Palette', async () => {
     // Clear the Output view.
     await utilities.dismissAllNotifications();
     const workbench = await (await browser.getWorkbench()).wait();
