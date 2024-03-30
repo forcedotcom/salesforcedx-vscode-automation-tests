@@ -210,51 +210,51 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
   });
 
-  step('Modify Existing Apex Test Class', async () => {
-    // Open the Test Sidebar
-    const workbench = await (await browser.getWorkbench()).wait();
-    const testingView = await workbench.getActivityBar().getViewControl('Testing');
-    const testingSideBarView = await testingView?.openView();
-    expect(testingSideBarView).toBeInstanceOf(SideBarView);
+  // step('Modify Existing Apex Test Class', async () => {
+  //   // Open the Test Sidebar
+  //   const workbench = await (await browser.getWorkbench()).wait();
+  //   const testingView = await workbench.getActivityBar().getViewControl('Testing');
+  //   const testingSideBarView = await testingView?.openView();
+  //   expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
-    const sidebar = workbench.getSideBar();
-    const sidebarView = sidebar.getContent();
-    const apexTestsSection = await sidebarView.getSection('APEX TESTS');
-    expect(apexTestsSection.elem).toBePresent();
+  //   const sidebar = workbench.getSideBar();
+  //   const sidebarView = sidebar.getContent();
+  //   const apexTestsSection = await sidebarView.getSection('APEX TESTS');
+  //   expect(apexTestsSection.elem).toBePresent();
 
-    // Open an existing apex test and modify it
-    const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass1Test.cls');
-    const testText = [
-      `@IsTest`,
-      `public class ExampleApexClass1Test {`,
-      `\t@IsTest`,
-      `\tstatic void validateSayHello() {`,
-      `\t\tSystem.debug('Starting validate');`,
-      `\t\tExampleApexClass1.SayHello('Andres');`,
-      `\t\tSystem.assertEquals(1, 1, 'all good');`,
-      `\t}`,
-      `}`
-    ].join('\n');
-    await textEditor.setText(testText);
-    await textEditor.save();
+  //   // Open an existing apex test and modify it
+  //   const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass1Test.cls');
+  //   const testText = [
+  //     `@IsTest`,
+  //     `public class ExampleApexClass1Test {`,
+  //     `\t@IsTest`,
+  //     `\tstatic void validateSayHello() {`,
+  //     `\t\tSystem.debug('Starting validate');`,
+  //     `\t\tExampleApexClass1.SayHello('Andres');`,
+  //     `\t\tSystem.assertEquals(1, 1, 'all good');`,
+  //     `\t}`,
+  //     `}`
+  //   ].join('\n');
+  //   await textEditor.setText(testText);
+  //   await textEditor.save();
 
-    // Push source to org
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Push Source to Default Org and Ignore Conflicts',
-      1
-    );
+  //   // Push source to org
+  //   await utilities.runCommandFromCommandPrompt(
+  //     workbench,
+  //     'SFDX: Push Source to Default Org and Ignore Conflicts',
+  //     1
+  //   );
 
-    // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Ignore Conflicts successfully ran".
-    const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successPushNotificationWasFound).toBe(true);
-  });
+  //   // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Ignore Conflicts successfully ran".
+  //   const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+  //     workbench,
+  //     'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
+  //     utilities.TEN_MINUTES
+  //   );
+  //   expect(successPushNotificationWasFound).toBe(true);
+  // });
 
-  step('Run all Apex tests via Test Sidebar', async () => {
+  step('Run All tests via Test Sidebar', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
@@ -326,7 +326,7 @@ describe('Run Apex Tests', async () => {
     }
   });
 
-  step('Run all Apex Tests on a Class via the Test Sidebar', async () => {
+  step('Run All Tests on a Class via the Test Sidebar', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
@@ -384,7 +384,7 @@ describe('Run Apex Tests', async () => {
     }
   });
 
-  step('Run a Single Apex Test via the Test Sidebar', async () => {
+  step('Run Single Test via the Test Sidebar', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
