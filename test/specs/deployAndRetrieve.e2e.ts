@@ -459,6 +459,60 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
   });
 
+  step('SFDX: Delete This from Project and Org', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
+    // Clear the Output view first.
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+
+    // Run command SFDX: Delete This from Project and Org
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Delete This from Project and Org',
+      2
+    );
+
+    // Make sure we get a confirmation dialog
+    const confirmationDialogText =
+      'Deleting source files deletes the files from your computer and removes the corresponding metadata from your default org. Are you sure you want to delete this source from your project and your org?, source: Salesforce CLI Integration, notification, Inspect the response in the accessible view with Option+F2';
+    const confirmationDialogEl = await utilities.findElementByText(
+      'div',
+      'aria-label',
+      confirmationDialogText
+    );
+    expect(confirmationDialogEl).toBeTruthy();
+
+    // Confirm deletion
+    const deleteSourceBtn = await utilities.findElementByText(
+      'a',
+      'class',
+      'monaco-button monaco-text-button'
+    );
+    await deleteSourceBtn.click();
+    await utilities.pause(3);
+
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+      workbench,
+      'SFDX: Delete from Project and Org successfully ran',
+      utilities.TEN_MINUTES
+    );
+    expect(successNotificationWasFound).toBe(true);
+
+    // Verify Output tab
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      'Starting SFDX: Delete from Project and Org',
+      10
+    );
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('*** Deleting with SOAP API ***');
+    expect(outputPanelText).toContain('Status: Succeeded | 1/1 Components');
+    expect(outputPanelText).toContain(`=== Deleted Source`);
+    expect(outputPanelText).toContain(`changes   ApexClass ${pathToClass}.cls`);
+    expect(outputPanelText).toContain(`changes   ApexClass ${pathToClass}.cls-meta.xml`);
+    expect(outputPanelText).toContain('Updating source tracking... done');
+    expect(outputPanelText).toContain('ended with exit code 0');
+  });
+
   step('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
