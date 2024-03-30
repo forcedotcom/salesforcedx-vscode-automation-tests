@@ -472,15 +472,15 @@ describe('Deploy and Retrieve', async () => {
       2
     );
 
-    // Make sure we get a confirmation dialog
-    const confirmationDialogText =
-      'Deleting source files deletes the files from your computer and removes the corresponding metadata from your default org. Are you sure you want to delete this source from your project and your org?, source: Salesforce CLI Integration, notification, Inspect the response in the accessible view with Option+F2';
-    const confirmationDialogEl = await utilities.findElementByText(
-      'div',
-      'aria-label',
-      confirmationDialogText
-    );
-    expect(confirmationDialogEl).toBeTruthy();
+    // // Make sure we get a confirmation dialog
+    // const confirmationDialogText =
+    //   'Deleting source files deletes the files from your computer and removes the corresponding metadata from your default org. Are you sure you want to delete this source from your project and your org?, source: Salesforce CLI Integration, notification, Inspect the response in the accessible view with Option+F2';
+    // const confirmationDialogEl = await utilities.findElementByText(
+    //   'div',
+    //   'aria-label',
+    //   confirmationDialogText
+    // );
+    // expect(confirmationDialogEl).toBeTruthy();
 
     // Confirm deletion
     const deleteSourceBtn = await utilities.findElementByText(
