@@ -465,6 +465,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Run command SFDX: Delete This from Project and Org
+    await utilities.getTextEditor(workbench, 'MyClass.cls');
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Delete This from Project and Org',
