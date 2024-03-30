@@ -168,6 +168,8 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('Pass Rate            100%');
     expect(outputPanelText).toContain('TEST NAME');
     expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
+    expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello  Pass');
+    expect(outputPanelText).toContain('ExampleApexClass3Test.validateSayHello  Pass');
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
   });
 
