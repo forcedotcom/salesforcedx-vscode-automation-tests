@@ -70,9 +70,9 @@ describe('Aura LSP', async () => {
 
     // Verify 'Go to definition'
     const definition = await textEditor.getCoordinates();
-    // expect(definition[0]).toBe(3);
-    // expect(definition[1]).toBe(27);
-    expect(definition).toEqual([3, 27]);
+    utilities.log('{auraLsp.e2e.ts Go to Definition} typeof(definition) = [' + typeof(definition) + ']');
+    expect(definition[0]).toBe(3);
+    expect(definition[1]).toBe(27);
   });
 
   step('Autocompletion', async () => {
