@@ -74,7 +74,7 @@ describe('Aura LSP', async () => {
     expect(definition[1]).toBe(27);
   });
 
-  xstep('Autocompletion', async () => {
+  step('Autocompletion', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
