@@ -36,8 +36,7 @@ describe('An Initial SetUp', async () => {
     // create and write in a text file
     fs.writeFileSync(authFilePath, sfdxAuthUrl);
 
-    const authorizeOrg = await exec(`sf org login sfdx-url -d -f ${authFilePath}`);
-    // const authorizeOrg = await exec(`sfdx org:login:sfdx-url -d -f ${authFilePath}`);
+    const authorizeOrg = await exec(`sf org:login:sfdx-url -d -f ${authFilePath}`);
     expect(authorizeOrg.stdout).toContain(
       `Successfully authorized ${devHubUserName} with org ID ${orgId}`
     );
