@@ -472,8 +472,6 @@ describe('Deploy and Retrieve', async () => {
       2
     );
 
-    expect(1).toBe(2);
-
     // // Make sure we get a confirmation dialog
     // const confirmationDialogText =
     //   'Deleting source files deletes the files from your computer and removes the corresponding metadata from your default org. Are you sure you want to delete this source from your project and your org?, source: Salesforce CLI Integration, notification, Inspect the response in the accessible view with Option+F2';
@@ -485,12 +483,21 @@ describe('Deploy and Retrieve', async () => {
     // expect(confirmationDialogEl).toBeTruthy();
 
     // Confirm deletion
-    const deleteSourceBtn = await utilities.findElementByText(
-      'a',
-      'class',
-      'monaco-button monaco-text-button'
-    );
-    await deleteSourceBtn.click();
+    // const deleteSourceBtn = await utilities.findElementByText(
+    //   'a',
+    //   'class',
+    //   'monaco-button monaco-text-button'
+    // );
+    // await deleteSourceBtn.click();
+    const buttons = await $$('a.monaco-button.monaco-text-button');
+    for (const button of buttons) {
+      const text = await button.getText();
+      if (text.includes('Delete Source')) {
+        utilities.log('SFDX: Delete This from Project and Org - Delete Source button found');
+        await button.click();
+        break;
+      }
+    }
     await utilities.pause(3);
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
