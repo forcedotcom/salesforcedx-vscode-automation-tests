@@ -305,10 +305,7 @@ describe('Run Apex Tests', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Click the run test button that is shown to the right when you hover a test class name on the Test sidebar
-    // const apexTestItem = (await apexTestsSection.findItem('ExampleApexClass2Test')) as TreeItem;
-    // await apexTestItem.select();
-    // const runTestsAction = await apexTestItem.getActionButton('Run Tests');
-    // await runTestsAction!.elem.click();
+    const apexTestItem = (await apexTestsSection.findItem('ExampleApexClass2Test')) as TreeItem;
     const apexClassEl = await utilities.findElementByText(
       'div',
       'aria-label',
@@ -373,8 +370,8 @@ describe('Run Apex Tests', async () => {
     // Hover a test name under one of the test class sections and click the run button that is shown to the right of the test name on the Test sidebar
     const apexTestItem = (await apexTestsSection.findItem('validateSayHello')) as TreeItem;
     await apexTestItem.select();
-    const runTestAction = await apexTestItem.getActionButton('Run Single Test');
-    await runTestAction!.elem.click();
+    const runTestAction = await (await apexTestItem.elem).$('a[aria-label="Run Single Test"]');
+    await runTestAction.click();
 
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
