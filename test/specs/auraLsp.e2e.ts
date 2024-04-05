@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { step, xstep } from 'mocha-steps';
+import { step } from 'mocha-steps';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
@@ -87,7 +87,15 @@ describe('Aura LSP', async () => {
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
     const textEditor = await utilities.getTextEditor(workbench, 'aura1.cmp');
-    await textEditor.typeTextAt(2, 1, '<aura:appl');
+    // Workaround for `coordinates is not iterable` error is needed here too because `textEditor.typeTextAt()` uses coordinates.
+    await browser.keys([CMD_KEY, 'f']);
+    await utilities.pause(1);
+    await browser.keys('aura:attribute');
+    await browser.keys(['Escape']);
+    await browser.keys(['ArrowRight']);
+    await browser.keys(['ArrowUp']);
+    await browser.keys('<aura:appl');
+    // await textEditor.typeTextAt(2, 1, '<aura:appl');
     await utilities.pause(1);
 
     // Verify autocompletion options are present
