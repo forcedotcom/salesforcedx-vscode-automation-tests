@@ -127,8 +127,8 @@ describe('Debug Apex Tests', async () => {
     await apexTestsSection.elem.click();
     const apexTestItem = (await apexTestsSection.findItem('ExampleApexClass1Test')) as TreeItem;
     await apexTestItem.select();
-    const runTestsAction = await apexTestItem.getActionButton('Debug Tests');
-    await runTestsAction!.elem.click();
+    const debugTestsAction = await (await apexTestItem.elem).$('a[aria-label="Debug Tests"]');
+    await debugTestsAction.click();
     await utilities.pause(1);
 
     // Look for the success notification that appears which says, "Debug Test(s) successfully ran".
@@ -161,8 +161,8 @@ describe('Debug Apex Tests', async () => {
     await apexTestsSection.elem.click();
     const apexTestItem = (await apexTestsSection.findItem('validateSayHello')) as TreeItem;
     await apexTestItem.select();
-    const runTestAction = await apexTestItem.getActionButton('Debug Single Test');
-    await runTestAction!.elem.click();
+    const debugTestAction = await (await apexTestItem.elem).$('a[aria-label="Debug Single Test"]');
+    await debugTestAction.click();
     await utilities.pause(1);
 
     // Look for the success notification that appears which says, "Debug Test(s) successfully ran".

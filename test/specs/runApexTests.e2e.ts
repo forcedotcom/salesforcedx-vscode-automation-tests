@@ -306,14 +306,9 @@ describe('Run Apex Tests', async () => {
 
     // Click the run test button that is shown to the right when you hover a test class name on the Test sidebar
     const apexTestItem = (await apexTestsSection.findItem('ExampleApexClass2Test')) as TreeItem;
-    const apexClassEl = await utilities.findElementByText(
-      'div',
-      'aria-label',
-      'ExampleApexClass2Test'
-    );
-    await apexClassEl.click();
-    const runTestsBtn = await apexClassEl.$('a[aria-label="Run Tests"]');
-    await runTestsBtn.click();
+    await apexTestItem.select();
+    const runTestsAction = await (await apexTestItem.elem).$('a[aria-label="Run Tests"]');
+    await runTestsAction.click();
 
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
