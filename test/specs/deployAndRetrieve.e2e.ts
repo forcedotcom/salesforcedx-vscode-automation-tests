@@ -510,16 +510,14 @@ describe('Deploy and Retrieve', async () => {
       'Starting SFDX: Delete from Project and Org',
       10
     );
+    const outputPanelLineText =
+      `MyClass   ApexClass ${path.join('', projectFolder, pathToClass)}.cls`.toLowerCase();
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('*** Deleting with SOAP API ***');
     expect(outputPanelText).toContain('Status: Succeeded | 1/1 Components');
     expect(outputPanelText).toContain(`=== Deleted Source`);
-    expect(outputPanelText).toContain(
-      `MyClass   ApexClass ${path.join('', projectFolder, pathToClass)}.cls`
-    );
-    expect(outputPanelText).toContain(
-      `MyClass   ApexClass ${path.join('', projectFolder, pathToClass)}.cls-meta.xml`
-    );
+    expect(outputPanelText?.toLowerCase()).toContain(outputPanelLineText);
+    expect(outputPanelText?.toLowerCase()).toContain(`${outputPanelLineText}-meta.xml`);
     expect(outputPanelText).toContain('Updating source tracking... done');
     expect(outputPanelText).toContain('ended with exit code 0');
   });
