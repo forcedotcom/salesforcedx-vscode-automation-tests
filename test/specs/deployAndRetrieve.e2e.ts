@@ -223,7 +223,7 @@ describe('Deploy and Retrieve', async () => {
     await textEditor.setTextAtLine(2, '\t//modified comment');
     await textEditor.save();
 
-    // Deploy running SFDX: Retrieve This Source from Org
+    // Retrieve running SFDX: Retrieve This Source from Org
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Retrieve This Source from Org',
@@ -461,11 +461,16 @@ describe('Deploy and Retrieve', async () => {
 
   step('SFDX: Delete This from Project and Org', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.getTextEditor(workbench, 'MyClass.cls');
+    // Retrieve running SFDX: Retrieve This Source from Org to be in sync with remote
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Retrieve This Source from Org',
+      10
+    );
     // Clear the Output view first.
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
-    // Run command SFDX: Delete This from Project and Org
-    await utilities.getTextEditor(workbench, 'MyClass.cls');
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Delete This from Project and Org',
@@ -489,17 +494,6 @@ describe('Deploy and Retrieve', async () => {
       'monaco-button monaco-text-button'
     );
     await deleteSourceBtn.click();
-    // const buttons = await $$('a.monaco-button.monaco-text-button');
-    // for (const button of buttons) {
-    //   const text = await button.getText();
-    //   if (text.includes('Delete Source')) {
-    //     utilities.log('SFDX: Delete This from Project and Org - Delete Source button found');
-    //     await button.click();
-    //     break;
-    //   }
-    // }
-    await utilities.pause(10);
-    expect(1).toBe(2);
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
