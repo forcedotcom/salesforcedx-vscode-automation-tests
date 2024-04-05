@@ -512,8 +512,8 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('*** Deleting with SOAP API ***');
     expect(outputPanelText).toContain('Status: Succeeded | 1/1 Components');
     expect(outputPanelText).toContain(`=== Deleted Source`);
-    expect(outputPanelText).toContain(`changes   ApexClass ${pathToClass}.cls`);
-    expect(outputPanelText).toContain(`changes   ApexClass ${pathToClass}.cls-meta.xml`);
+    expect(outputPanelText).toContain(`MyClass   ApexClass ${pathToClass}.cls`);
+    expect(outputPanelText).toContain(`MyClass   ApexClass ${pathToClass}.cls-meta.xml`);
     expect(outputPanelText).toContain('Updating source tracking... done');
     expect(outputPanelText).toContain('ended with exit code 0');
   });
