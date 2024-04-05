@@ -69,10 +69,17 @@ describe('Aura LSP', async () => {
     await utilities.pause(1);
 
     // Verify 'Go to definition'
-    const definition = await textEditor.getCoordinates();
-    utilities.log('{auraLsp.e2e.ts Go to Definition} typeof(definition) = [' + typeof(definition) + ']');
-    expect(definition[0]).toBe(3);
-    expect(definition[1]).toBe(27);
+    // This workaround types text in the place where the cursor is located after the Go to Definition is complete, and then verifies that the added text is present in the correct location.
+    await browser.keys('elephant');
+    await browser.keys([CMD_KEY, 's']);
+    await utilities.pause(1);
+    const line3Text = await textEditor.getTextAtLine(2);
+    expect(line3Text).toContain('name="elephantsimpleNewContact"');
+
+    // The following code uses WDIO's provided function to get the position of the cursor, but `textEditor.getCoordinates();` causes a `coordinates is not iterable` error in Ubuntu. Thus we have to use the workaround above instead.
+    // const definition = await textEditor.getCoordinates();
+    // expect(definition[0]).toBe(3);
+    // expect(definition[1]).toBe(27);
   });
 
   step('Autocompletion', async () => {
