@@ -462,10 +462,10 @@ describe('Deploy and Retrieve', async () => {
   step('SFDX: Delete This from Project and Org', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.getTextEditor(workbench, 'MyClass.cls');
-    // Retrieve running SFDX: Retrieve This Source from Org to be in sync with remote
+    // Run SFDX: Push Source to Default Org and Ignore Conflicts to be in sync with remote
     await utilities.runCommandFromCommandPrompt(
       workbench,
-      'SFDX: Retrieve This Source from Org',
+      'SFDX: Push Source to Default Org and Ignore Conflicts',
       10
     );
     // Clear the Output view first.
