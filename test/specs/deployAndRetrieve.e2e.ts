@@ -12,12 +12,14 @@ import * as utilities from '../utilities';
 describe('Deploy and Retrieve', async () => {
   let testSetup: TestSetup;
   let projectName: string;
+  let projectFolder: string;
   const pathToClass = path.join('force-app', 'main', 'default', 'classes', 'MyClass');
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('DeployAndRetrieve', false);
     await testSetup.setUp();
     projectName = testSetup.tempProjectName.toUpperCase();
+    projectFolder = testSetup.projectFolderPath!;
 
     // Create Apex Class
     const classText = [
@@ -512,8 +514,12 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('*** Deleting with SOAP API ***');
     expect(outputPanelText).toContain('Status: Succeeded | 1/1 Components');
     expect(outputPanelText).toContain(`=== Deleted Source`);
-    expect(outputPanelText).toContain(`MyClass   ApexClass ${pathToClass}.cls`);
-    expect(outputPanelText).toContain(`MyClass   ApexClass ${pathToClass}.cls-meta.xml`);
+    expect(outputPanelText).toContain(
+      `MyClass   ApexClass ${path.join('', projectFolder, pathToClass)}.cls`
+    );
+    expect(outputPanelText).toContain(
+      `MyClass   ApexClass ${path.join('', projectFolder, pathToClass)}.cls-meta.xml`
+    );
     expect(outputPanelText).toContain('Updating source tracking... done');
     expect(outputPanelText).toContain('ended with exit code 0');
   });
