@@ -73,7 +73,7 @@ describe('Aura LSP', async () => {
     await browser.keys('elephant');
     await browser.keys([CMD_KEY, 's']);
     await utilities.pause(1);
-    const line3Text = await textEditor.getTextAtLine(2);
+    const line3Text = await textEditor.getTextAtLine(3);
     expect(line3Text).toContain('name="elephantsimpleNewContact"');
 
     // The following code uses WDIO's provided function to get the position of the cursor, but `textEditor.getCoordinates();` causes a `coordinates is not iterable` error in Ubuntu. Thus we have to use the workaround above instead.
