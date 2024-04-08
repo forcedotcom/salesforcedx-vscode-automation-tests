@@ -12,12 +12,14 @@ import * as utilities from '../utilities';
 describe('Deploy and Retrieve', async () => {
   let testSetup: TestSetup;
   let projectName: string;
+  let projectFolder: string;
   const pathToClass = path.join('force-app', 'main', 'default', 'classes', 'MyClass');
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('DeployAndRetrieve', false);
     await testSetup.setUp();
     projectName = testSetup.tempProjectName.toUpperCase();
+    projectFolder = testSetup.projectFolderPath!;
 
     // Create Apex Class
     const classText = [
@@ -223,7 +225,7 @@ describe('Deploy and Retrieve', async () => {
     await textEditor.setTextAtLine(2, '\t//modified comment');
     await textEditor.save();
 
-    // Deploy running SFDX: Retrieve This Source from Org
+    // Retrieve running SFDX: Retrieve This Source from Org
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Retrieve This Source from Org',
@@ -457,6 +459,67 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain(`Changed  MyClass    ApexClass  ${pathToClass}.cls`);
     expect(outputPanelText).toContain(`Changed  MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
     expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
+  });
+
+  step('SFDX: Delete This from Project and Org', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.getTextEditor(workbench, 'MyClass.cls');
+    // Run SFDX: Push Source to Default Org and Ignore Conflicts to be in sync with remote
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Push Source to Default Org and Ignore Conflicts',
+      10
+    );
+    // Clear the Output view first.
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Delete This from Project and Org',
+      2
+    );
+
+    // Make sure we get a confirmation dialog
+    const confirmationDialogText =
+      'Deleting source files deletes the files from your computer and removes the corresponding metadata from your default org. Are you sure you want to delete this source from your project and your org?, source: Salesforce CLI Integration, notification, Inspect the response in the accessible view with Option+F2';
+    const confirmationDialogEl = await utilities.findElementByText(
+      'div',
+      'aria-label',
+      confirmationDialogText
+    );
+    expect(confirmationDialogEl).toBeTruthy();
+
+    // Confirm deletion
+    const deleteSourceBtn = await utilities.findElementByText(
+      'a',
+      'class',
+      'monaco-button monaco-text-button'
+    );
+    await deleteSourceBtn.click();
+
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+      workbench,
+      'SFDX: Delete from Project and Org successfully ran',
+      utilities.TEN_MINUTES
+    );
+    expect(successNotificationWasFound).toBe(true);
+
+    // Verify Output tab
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      'Starting SFDX: Delete from Project and Org',
+      10
+    );
+    const outputPanelLineText =
+      `MyClass   ApexClass ${path.join('', projectFolder, pathToClass)}.cls`.toLowerCase();
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('*** Deleting with SOAP API ***');
+    expect(outputPanelText).toContain('Status: Succeeded | 1/1 Components');
+    expect(outputPanelText).toContain(`=== Deleted Source`);
+    expect(outputPanelText?.toLowerCase()).toContain(outputPanelLineText);
+    expect(outputPanelText?.toLowerCase()).toContain(`${outputPanelLineText}-meta.xml`);
+    expect(outputPanelText).toContain('Updating source tracking... done');
+    expect(outputPanelText).toContain('ended with exit code 0');
   });
 
   step('Tear down and clean up the testing environment', async () => {
