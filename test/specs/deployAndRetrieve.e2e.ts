@@ -12,14 +12,12 @@ import * as utilities from '../utilities';
 describe('Deploy and Retrieve', async () => {
   let testSetup: TestSetup;
   let projectName: string;
-  let projectFolder: string;
   const pathToClass = path.join('force-app', 'main', 'default', 'classes', 'MyClass');
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('DeployAndRetrieve', false);
     await testSetup.setUp();
     projectName = testSetup.tempProjectName.toUpperCase();
-    projectFolder = testSetup.projectFolderPath!;
 
     // Create Apex Class
     const classText = [
@@ -510,8 +508,7 @@ describe('Deploy and Retrieve', async () => {
       'Starting SFDX: Delete from Project and Org',
       10
     );
-    const outputPanelLineText =
-      `MyClass   ApexClass ${path.join('', projectFolder, pathToClass)}.cls`.toLowerCase();
+    const outputPanelLineText = `MyClass   ApexClass ${path.join(pathToClass)}.cls`.toLowerCase();
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain('*** Deleting with SOAP API ***');
     expect(outputPanelText).toContain('Status: Succeeded | 1/1 Components');
