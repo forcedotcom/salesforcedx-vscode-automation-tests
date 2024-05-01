@@ -114,7 +114,11 @@ describe('Debug Apex Tests', async () => {
     const apexTestsSection = await sidebarView.getSection('APEX TESTS');
     expect(apexTestsSection.elem).toBePresent();
 
-    const apexTestsItems = await utilities.retrieveAllApexTestItemsFromSidebar(4, apexTestsSection);
+    const apexTestsItems = await utilities.retrieveAllTestItemsFromSidebar(
+      4,
+      apexTestsSection,
+      'Refresh Tests'
+    );
 
     // Make sure all the tests are present in the sidebar
     expect(apexTestsItems.length).toBe(4);

@@ -17,16 +17,14 @@ export async function getTerminalView(workbench: Workbench): Promise<TerminalVie
   return terminalView;
 }
 
-export async function getTerminalViewText(
-  terminalView: TerminalView,
-  seconds: number
-): Promise<string> {
+export async function getTerminalViewText(seconds: number): Promise<string> {
   for (let i = 0; i < seconds; i++) {
     await pause(1);
 
     // const terminalText = await terminalView.getText();
     // terminalView.getText() no longer works and the code which follows
-    // is a workaround.  If getText() is fixed, remove the following code
+    // is a workaround.  If getText() is fixed, remove the following code,
+    // add the parameter terminalView: TerminalView back
     // and just call await terminalView.getText().
 
     await browser.keys([CMD_KEY, 'a', 'c']);
