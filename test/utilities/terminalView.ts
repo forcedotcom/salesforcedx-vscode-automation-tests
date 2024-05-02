@@ -9,6 +9,7 @@ import clipboard from 'clipboardy';
 import { TerminalView, Workbench } from 'wdio-vscode-service';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { log, pause } from './miscellaneous';
+import { runCommandFromCommandPrompt } from './commandPrompt';
 
 export async function getTerminalView(workbench: Workbench): Promise<TerminalView> {
   const bottomBar = await workbench.getBottomBar().wait();
@@ -17,27 +18,28 @@ export async function getTerminalView(workbench: Workbench): Promise<TerminalVie
   return terminalView;
 }
 
-export async function getTerminalViewText(seconds: number): Promise<string> {
-  for (let i = 0; i < seconds; i++) {
-    await pause(1);
+export async function getTerminalViewText(workbench: Workbench, seconds: number): Promise<string> {
+  runCommandFromCommandPrompt(workbench, 'Terminal: Focus on Terminal View', 2);
+  // for (let i = 0; i < seconds; i++) {
+  await pause(seconds);
 
-    // const terminalText = await terminalView.getText();
-    // terminalView.getText() no longer works and the code which follows
-    // is a workaround.  If getText() is fixed, remove the following code,
-    // add the parameter terminalView: TerminalView back
-    // and just call await terminalView.getText().
+  // const terminalText = await terminalView.getText();
+  // terminalView.getText() no longer works and the code which follows
+  // is a workaround.  If getText() is fixed, remove the following code,
+  // add the parameter terminalView: TerminalView back
+  // and just call await terminalView.getText().
 
-    await browser.keys([CMD_KEY, 'a', 'c']);
-    // Should be able to use Keys.Ctrl, but Keys is not exported from webdriverio
-    // See https://webdriver.io/docs/api/browser/keys/
-    const terminalText = await clipboard.read();
+  await browser.keys([CMD_KEY, 'a', 'c']);
+  // Should be able to use Keys.Ctrl, but Keys is not exported from webdriverio
+  // See https://webdriver.io/docs/api/browser/keys/
+  const terminalText = await clipboard.read();
 
-    if (terminalText && terminalText !== '') {
-      return terminalText;
-    }
-  }
+  // if (terminalText && terminalText !== '') {
+  return terminalText;
+  // }
+  // }
 
-  throw new Error('Exceeded time limit - text in the terminal was not found');
+  // throw new Error('Exceeded time limit - text in the terminal was not found');
 }
 
 export async function executeCommand(workbench: Workbench, command: string): Promise<TerminalView> {

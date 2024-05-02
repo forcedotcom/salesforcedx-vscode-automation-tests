@@ -62,6 +62,43 @@ export async function createLwc(name: string): Promise<void> {
   await textEditor.setText(htmlText);
   await textEditor.save();
   await pause(1);
+
+  log('createLwc() - Modify test content');
+  log('');
+  textEditor = await getTextEditor(workbench, name + '.test.js');
+  const nameCapitalized = name.charAt(0).toUpperCase() + name.slice(1);
+  const testText = [
+    `import { createElement } from 'lwc';`,
+    `import ${nameCapitalized} from 'c/${name}';`,
+    '',
+    `describe('c-${name}', () => {`,
+    `    afterEach(() => {`,
+    `        while (document.body.firstChild) {`,
+    `            document.body.removeChild(document.body.firstChild);`,
+    `        }`,
+    `    });`,
+    ``,
+    `    it('displays greeting', () => {`,
+    `        const element = createElement('c-${name}', {`,
+    `            is: ${nameCapitalized}`,
+    `        });`,
+    `        document.body.appendChild(element);`,
+    `        const div = element.shadowRoot.querySelector('div');`,
+    `        expect(div.textContent).toBe('Hello, World!');`,
+    `    });`,
+    ``,
+    `    it('is accessible', async () => {`,
+    `        const element = createElement('c-${name}', {`,
+    `            is: ${nameCapitalized}`,
+    `        });`,
+    `        document.body.appendChild(element);`,
+    `        await expect(element).toBeAccessible();`,
+    `    });`,
+    `});`
+  ].join('\n');
+  await textEditor.setText(testText);
+  await textEditor.save();
+  await pause(1);
 }
 
 export async function createAura(name: string): Promise<void> {
