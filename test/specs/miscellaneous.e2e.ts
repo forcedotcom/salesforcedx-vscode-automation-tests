@@ -21,7 +21,7 @@ describe('Miscellaneous', async () => {
     // Using the Command palette, run Snippets: Configure User Snippets
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'Snippets: Configure User Snippets', 1);
-    await browser.keys(['apex.json', 'Enter']);
+    await browser.keys(['New Global Snippets file...', 'Enter', 'apex.json', 'Enter']);
 
     const apexSnippet = [
       `{`,
@@ -36,7 +36,7 @@ describe('Miscellaneous', async () => {
     ].join('\n');
 
     // Modify file content
-    const textEditor = await utilities.getTextEditor(workbench, 'apex.json');
+    const textEditor = await utilities.getTextEditor(workbench, 'apex.json.code-snippets');
     await textEditor.setText(apexSnippet);
     await textEditor.save();
 
