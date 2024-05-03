@@ -4,11 +4,15 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
+import child_process from 'child_process';
 import { step } from 'mocha-steps';
 import { SideBarView, TreeItem } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import path from 'path';
+import util from 'util';
+
+const exec = util.promisify(child_process.exec);
 
 describe('Run LWC Tests', async () => {
   let testSetup: TestSetup;
@@ -24,6 +28,9 @@ describe('Run LWC Tests', async () => {
 
     // Create LWC2 and test
     await utilities.createLwc('lwc2');
+
+    // Install @salesforce/sfdx-lwc-jest
+    await exec('npm install -g @salesforce/sfdx-lwc-jest');
   });
 
   step('Verify Extension is Running', async () => {
