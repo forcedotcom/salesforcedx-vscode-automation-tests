@@ -33,6 +33,7 @@ describe('Run LWC Tests', async () => {
     await exec(`npm install @salesforce/sfdx-lwc-jest --save-dev`, {
       cwd: testSetup.projectFolderPath
     });
+    await utilities.pause(20);
   });
 
   step('Verify Extension is Running', async () => {
