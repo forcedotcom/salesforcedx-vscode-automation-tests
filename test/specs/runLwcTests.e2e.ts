@@ -62,7 +62,7 @@ describe('Run LWC Tests', async () => {
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
-    const terminalText = await utilities.getTerminalViewText(workbench, 10);
+    const terminalText = await utilities.getTerminalViewText(workbench, 20);
     expect(terminalText).not.toBeUndefined();
     expect(terminalText).toContain(
       `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
@@ -175,7 +175,7 @@ describe('Run LWC Tests', async () => {
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
-    const terminalText = await utilities.getTerminalViewText(workbench, 10);
+    const terminalText = await utilities.getTerminalViewText(workbench, 15);
     expect(terminalText).not.toBeUndefined();
     expect(terminalText).toContain(
       `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
@@ -229,7 +229,7 @@ describe('Run LWC Tests', async () => {
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
-    const terminalText = await utilities.getTerminalViewText(workbench, 10);
+    const terminalText = await utilities.getTerminalViewText(workbench, 15);
     expect(terminalText).not.toBeUndefined();
     expect(terminalText).toContain(
       `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
@@ -279,7 +279,7 @@ describe('Run LWC Tests', async () => {
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
-    const terminalText = await utilities.getTerminalViewText(workbench, 10);
+    const terminalText = await utilities.getTerminalViewText(workbench, 15);
     expect(terminalText).not.toBeUndefined();
     expect(terminalText).toContain(
       `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
@@ -325,7 +325,7 @@ describe('Run LWC Tests', async () => {
 
     // Verify test results are listed on vscode's Output section
     // Also verify that all tests pass
-    const terminalText = await utilities.getTerminalViewText(workbench, 10);
+    const terminalText = await utilities.getTerminalViewText(workbench, 15);
     expect(terminalText).not.toBeUndefined();
     expect(terminalText).toContain(
       `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
@@ -354,7 +354,7 @@ describe('Run LWC Tests', async () => {
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
-    const terminalText = await utilities.getTerminalViewText(workbench, 10);
+    const terminalText = await utilities.getTerminalViewText(workbench, 15);
     expect(terminalText).not.toBeUndefined();
     expect(terminalText).toContain(
       `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
@@ -383,7 +383,7 @@ describe('Run LWC Tests', async () => {
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
-    const terminalText = await utilities.getTerminalViewText(workbench, 10);
+    const terminalText = await utilities.getTerminalViewText(workbench, 15);
     expect(terminalText).not.toBeUndefined();
     expect(terminalText).toContain(
       `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
