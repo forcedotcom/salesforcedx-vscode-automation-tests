@@ -21,7 +21,9 @@ describe('Miscellaneous', async () => {
     // Using the Command palette, run Snippets: Configure User Snippets
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'Snippets: Configure User Snippets', 1);
-    await browser.keys(['New Global Snippets file...', 'Enter', 'apex.json', 'Enter']);
+    await browser.keys(['New Global Snippets file...', 'Enter']);
+    await utilities.pause(1);
+    await browser.keys(['apex.json', 'Enter']);
 
     const apexSnippet = [
       `{`,
