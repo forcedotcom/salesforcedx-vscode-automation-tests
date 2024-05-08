@@ -29,8 +29,8 @@ describe('Run LWC Tests', async () => {
     // Create LWC2 and test
     await utilities.createLwc('lwc2');
 
-    // Install @salesforce/sfdx-lwc-jest
-    await exec(`npm install @salesforce/sfdx-lwc-jest --save-dev`, {
+    // Install Jest unit testing tools for LWC
+    await exec(`sf force:lightning:lwc:test:setup`, {
       cwd: testSetup.projectFolderPath
     });
   });
