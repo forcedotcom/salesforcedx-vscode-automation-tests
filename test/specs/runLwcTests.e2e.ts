@@ -155,9 +155,12 @@ describe('Run LWC Tests', async () => {
       lwcTestsSection,
       'SFDX: Refresh Lightning Web Component Test Explorer'
     );
+    // Expand LWC tests
+    await (await lwcTestsItems[0].elem).$('div[class="monaco-tl-twistie"]').click();
+    await (await lwcTestsItems[1].elem).$('div[class="monaco-tl-twistie"]').click();
 
     // Make sure all the tests are present in the sidebar
-    expect(lwcTestsItems.length).toBe(4);
+    expect(lwcTestsItems.length).toBe(2);
     expect(await lwcTestsSection.findItem('lwc1')).toBeTruthy();
     expect(await lwcTestsSection.findItem('lwc2')).toBeTruthy();
     expect(await lwcTestsItems[0].getLabel()).toBe('lwc1');
