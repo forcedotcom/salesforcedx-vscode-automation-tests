@@ -41,6 +41,14 @@ describe('Miscellaneous', async () => {
     const textEditor = await utilities.getTextEditor(workbench, 'apex.json.code-snippets');
     await textEditor.setText(apexSnippet);
     await textEditor.save();
+
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Preferences: Open Workspace Settings',
+      5
+    );
+    await browser.keys(['snippets']);
+
     expect(1).toBe(2);
 
     // Create anonymous apex file
