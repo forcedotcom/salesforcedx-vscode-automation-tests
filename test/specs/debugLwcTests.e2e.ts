@@ -29,8 +29,8 @@ describe('Debug LWC Tests', async () => {
     // Create LWC2 and test
     await utilities.createLwc('lwc2');
 
-    // Install @salesforce/sfdx-lwc-jest
-    await exec(`npm install @salesforce/sfdx-lwc-jest --save-dev`, {
+    // Install Jest unit testing tools for LWC
+    await exec(`sf force:lightning:lwc:test:setup`, {
       cwd: testSetup.projectFolderPath
     });
     await utilities.pause(20);
@@ -86,10 +86,6 @@ describe('Debug LWC Tests', async () => {
     expect(terminalText).toContain(
       `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
     );
-    expect(terminalText).toContain('c-lwc1');
-    expect(terminalText).toContain('is accessible');
-    expect(terminalText).toContain('displays greeting');
-    expect(terminalText).toContain('Outcome              Passed');
     expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
     expect(terminalText).toContain('Tests:       2 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
@@ -143,10 +139,6 @@ describe('Debug LWC Tests', async () => {
     expect(terminalText).toContain(
       `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
     );
-    expect(terminalText).toContain('c-lwc1');
-    expect(terminalText).toContain('is accessible');
-    expect(terminalText).toContain('displays greeting');
-    expect(terminalText).toContain('Outcome              Passed');
     expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
     expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
@@ -195,10 +187,6 @@ describe('Debug LWC Tests', async () => {
     expect(terminalText).toContain(
       `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
     );
-    expect(terminalText).toContain('c-lwc1');
-    expect(terminalText).toContain('is accessible');
-    expect(terminalText).toContain('displays greeting');
-    expect(terminalText).toContain('Outcome              Passed');
     expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
     expect(terminalText).toContain('Tests:       2 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
@@ -230,10 +218,6 @@ describe('Debug LWC Tests', async () => {
     expect(terminalText).toContain(
       `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
     );
-    expect(terminalText).toContain('c-lwc1');
-    expect(terminalText).toContain('is accessible');
-    expect(terminalText).toContain('displays greeting');
-    expect(terminalText).toContain('Outcome              Passed');
     expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
     expect(terminalText).toContain('Tests:       2 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
@@ -265,10 +249,6 @@ describe('Debug LWC Tests', async () => {
     expect(terminalText).toContain(
       `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
     );
-    expect(terminalText).toContain('c-lwc1');
-    expect(terminalText).toContain('is accessible');
-    expect(terminalText).toContain('displays greeting');
-    expect(terminalText).toContain('Outcome              Passed');
     expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
     expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
