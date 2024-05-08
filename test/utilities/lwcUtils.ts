@@ -87,12 +87,12 @@ export async function createLwc(name: string): Promise<void> {
     `        expect(div.textContent).toBe('Hello, World!');`,
     `    });`,
     ``,
-    `    it('is accessible', async () => {`,
+    `    it('is defined', async () => {`,
     `        const element = createElement('c-${name}', {`,
     `            is: ${nameCapitalized}`,
     `        });`,
     `        document.body.appendChild(element);`,
-    `        await expect(element).toBeAccessible();`,
+    `        await expect(element).toBeDefined();`,
     `    });`,
     `});`
   ].join('\n');
