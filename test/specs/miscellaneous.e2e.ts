@@ -47,7 +47,7 @@ describe('Miscellaneous', async () => {
       'Preferences: Open Workspace Settings',
       5
     );
-    await browser.keys(['snippets']);
+    await browser.keys(['snippets', 'Enter']);
 
     expect(1).toBe(2);
 
