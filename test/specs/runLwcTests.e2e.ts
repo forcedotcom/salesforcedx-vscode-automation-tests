@@ -156,8 +156,8 @@ describe('Run LWC Tests', async () => {
       'SFDX: Refresh Lightning Web Component Test Explorer'
     );
     // Expand LWC tests
-    await (await lwcTestsItems[0].elem).$('div[class="monaco-tl-twistie"]').click();
-    await (await lwcTestsItems[1].elem).$('div[class="monaco-tl-twistie"]').click();
+    await lwcTestsItems[0].expand();
+    await lwcTestsItems[1].expand();
 
     // Make sure all the tests are present in the sidebar
     expect(lwcTestsItems.length).toBe(2);
