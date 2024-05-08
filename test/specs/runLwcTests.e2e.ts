@@ -78,12 +78,14 @@ describe('Run LWC Tests', async () => {
 
   step('SFDX: Refresh Lightning Web Component Test Explorer', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 1);
     // Run command SFDX: Refresh Lightning Web Component Test Explorer
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Refresh Lightning Web Component Test Explorer',
       2
     );
+    // Open the Tests Sidebar
     const sidebar = workbench.getSideBar();
     const sidebarView = sidebar.getContent();
     const lwcTestsSection = await sidebarView.getSection('LWC TESTS');
