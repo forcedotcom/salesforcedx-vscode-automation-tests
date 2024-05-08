@@ -53,12 +53,12 @@ export async function createLwc(name: string): Promise<void> {
     `<template>`,
     `\t<lightning-card title="${name}" icon-name="custom:custom14">`,
     `\t\t<div class="slds-var-m-around_medium">Hello, {greeting}!</div>`,
-    `\t\t<c-view-source source="lwc/hello" slot="footer">`,
-    `\t\t\tBind an HTML element to a component property.`,
-    `\t\t</c-view-source>`,
     `\t</lightning-card>`,
     `</template>`
   ].join('\n');
+  // `\t\t<c-view-source source="lwc/hello" slot="footer">`,
+  // `\t\t\tBind an HTML element to a component property.`,
+  // `\t\t</c-view-source>`,
   await textEditor.setText(htmlText);
   await textEditor.save();
   await pause(1);
