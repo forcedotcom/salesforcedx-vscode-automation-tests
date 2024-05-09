@@ -41,6 +41,7 @@ describe('Miscellaneous', async () => {
     const textEditor = await utilities.getTextEditor(workbench, 'apex.json.code-snippets');
     await textEditor.setText(apexSnippet);
     await textEditor.save();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 50);
 
     await utilities.runCommandFromCommandPrompt(
       workbench,
