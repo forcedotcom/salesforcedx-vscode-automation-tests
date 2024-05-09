@@ -34,6 +34,7 @@ describe('Miscellaneous', async () => {
     await browser.keys(['ArrowRight', 'Enter']);
     await browser.keys(['isb']);
     await utilities.pause(2);
+    expect(1).toBe(2);
     await browser.keys(['Enter']);
     await textEditor.save();
     const fileContent = await textEditor.getText();
