@@ -56,8 +56,8 @@ describe('Miscellaneous', async () => {
     expect(fileContent).toContain('[SELECT field1, field2 FROM SobjectName WHERE clause];');
   });
 
-  step('Use out-of-the-box LWC Snippets', async () => {
-    utilities.log(`${testSetup.testSuiteSuffixName} - Use out-of-the-box LWC Snippets`);
+  step('Use out-of-the-box LWC Snippets - HTML', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Use out-of-the-box LWC Snippets - HTML`);
     const workbench = await (await browser.getWorkbench()).wait();
 
     const lwcSnippet = [
@@ -92,6 +92,33 @@ describe('Miscellaneous', async () => {
       .join('\n');
 
     expect(fileContentWithoutTrailingSpaces).toContain(lwcSnippet);
+  });
+
+  step('Use out-of-the-box LWC Snippets - JS', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Use out-of-the-box LWC Snippets - JS`);
+    const workbench = await (await browser.getWorkbench()).wait();
+
+    const lwcSnippet = 'this.dispatchEvent(new CustomEvent("event-name"));';
+
+    // Create simple lwc.js file
+    const inputBox = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Create: New File...',
+      1
+    );
+    await inputBox.setText('lwc.js');
+    await browser.keys(['Enter']);
+    await browser.keys(['Enter']);
+
+    // Type snippet "lwc", select "lwc-event" and check it inserted the right thing
+    const textEditor = await utilities.getTextEditor(workbench, 'lwc.js');
+    await browser.keys(['lwc']);
+    await utilities.pause(2);
+    await browser.keys(['ArrowDown', 'ArrowDown']);
+    await browser.keys(['Enter']);
+    const fileContent = await textEditor.getText();
+
+    expect(fileContent).toContain(lwcSnippet);
   });
 
   step('Tear down and clean up the testing environment', async () => {
