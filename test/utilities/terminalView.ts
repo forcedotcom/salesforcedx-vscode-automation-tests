@@ -30,6 +30,7 @@ export async function getTerminalViewText(workbench: Workbench, seconds: number)
   // and just call await terminalView.getText().
 
   await browser.keys([CMD_KEY, 'a', 'c']);
+  runCommandFromCommandPrompt(workbench, 'Terminal: Copy Last Command Output', 2);
   // Should be able to use Keys.Ctrl, but Keys is not exported from webdriverio
   // See https://webdriver.io/docs/api/browser/keys/
   const terminalText = await clipboard.read();
