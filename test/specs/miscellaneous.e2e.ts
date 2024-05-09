@@ -15,6 +15,7 @@ describe('Miscellaneous', async () => {
     testSetup = new TestSetup('Miscellaneous', false);
     await testSetup.setUp();
   });
+
   step('Use out-of-the-box Apex Snippets', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Use out-of-the-box Apex Snippets`);
 
@@ -53,6 +54,37 @@ describe('Miscellaneous', async () => {
     await browser.keys(['Enter']);
     const fileContent = await textEditor.getText();
     expect(fileContent).toContain('[SELECT field1, field2 FROM SobjectName WHERE clause];');
+  });
+
+  step('Use out-of-the-box LWC Snippets', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Use out-of-the-box LWC Snippets`);
+    const workbench = await (await browser.getWorkbench()).wait();
+
+    const lwcSnippet = [
+      '<lightning-button',
+      '  variant="base"',
+      '  label="Button Label"',
+      '  onclick={handleClick}',
+      '></lightning-button>'
+    ].join('\n');
+
+    // Create simple lwc.html file
+    const inputBox = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Create: New File...',
+      1
+    );
+    await inputBox.setText('lwc.html');
+    await browser.keys(['Enter']);
+    await browser.keys(['Enter']);
+
+    // Type snippet "lwc-button" and check it inserted the right lwc
+    const textEditor = await utilities.getTextEditor(workbench, 'lwc.html');
+    await browser.keys(['lwc-button']);
+    await utilities.pause(2);
+    await browser.keys(['Enter']);
+    const fileContent = await textEditor.getText();
+    expect(fileContent).toContain(lwcSnippet);
   });
 
   step('Tear down and clean up the testing environment', async () => {
