@@ -51,6 +51,9 @@ describe('Run LWC Tests', async () => {
   });
 
   step('SFDX: Run All Lightning Web Component Tests from Command Palette', async () => {
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - SFDX: Run All Lightning Web Component Tests from Command Palette`
+    );
     const workbench = await (await browser.getWorkbench()).wait();
 
     // Run SFDX: Run All Lightning Web Component Tests.
@@ -77,6 +80,9 @@ describe('Run LWC Tests', async () => {
   });
 
   step('SFDX: Refresh Lightning Web Component Test Explorer', async () => {
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - SFDX: Refresh Lightning Web Component Test Explorer`
+    );
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 1);
     // Run command SFDX: Refresh Lightning Web Component Test Explorer
@@ -138,6 +144,7 @@ describe('Run LWC Tests', async () => {
   });
 
   step('Run All tests via Test Sidebar', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Run All tests via Test Sidebar`);
     const workbench = await (await browser.getWorkbench()).wait();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
@@ -202,6 +209,7 @@ describe('Run LWC Tests', async () => {
   });
 
   step('Run All Tests on a LWC via the Test Sidebar', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Run All Tests on a LWC via the Test Sidebar`);
     const workbench = await (await browser.getWorkbench()).wait();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
@@ -248,6 +256,7 @@ describe('Run LWC Tests', async () => {
   });
 
   step('Run Single Test via the Test Sidebar', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Run Single Test via the Test Sidebar`);
     const workbench = await (await browser.getWorkbench()).wait();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
@@ -301,6 +310,9 @@ describe('Run LWC Tests', async () => {
   });
 
   step('SFDX: Run Current Lightning Web Component Test File', async () => {
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - SFDX: Run Current Lightning Web Component Test File`
+    );
     const workbench = await (await browser.getWorkbench()).wait();
 
     // Run SFDX: Run Current Lightning Web Component Test File
@@ -326,6 +338,7 @@ describe('Run LWC Tests', async () => {
   });
 
   step('Run All Tests via Code Lens action', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Run All Tests via Code Lens action`);
     const workbench = await (await browser.getWorkbench()).wait();
     const textEditor = await utilities.getTextEditor(workbench, 'lwc1.test.js');
 
@@ -351,6 +364,7 @@ describe('Run LWC Tests', async () => {
   });
 
   step('Run Single Test via Code Lens action', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Run Single Test via Code Lens action`);
     const workbench = await (await browser.getWorkbench()).wait();
     const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass2Test.cls');
 
