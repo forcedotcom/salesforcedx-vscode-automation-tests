@@ -367,6 +367,7 @@ describe('Run LWC Tests', async () => {
   step('Run Single Test via Code Lens action', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Run Single Test via Code Lens action`);
     const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Terminal: Clear', 1);
 
     // Click the "Run Test" code lens at the top of one of the test methods
     const runTestOption = await utilities.findElementByText('a', 'title', 'Run Test');
