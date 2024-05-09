@@ -20,8 +20,8 @@ describe('Debug LWC Tests', async () => {
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('DebugLWCTests', false);
-    projectFolderPath = testSetup.projectFolderPath!;
     await testSetup.setUp();
+    projectFolderPath = testSetup.projectFolderPath!;
 
     // Create LWC1 and test
     await utilities.createLwc('lwc1');
