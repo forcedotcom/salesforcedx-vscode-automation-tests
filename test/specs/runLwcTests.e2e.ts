@@ -372,7 +372,6 @@ describe('Run LWC Tests', async () => {
     // Click the "Run Test" code lens at the top of one of the test methods
     const runTestOption = await utilities.findElementByText('a', 'title', 'Run Test');
     await runTestOption!.click();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Close All Editors', 1);
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
