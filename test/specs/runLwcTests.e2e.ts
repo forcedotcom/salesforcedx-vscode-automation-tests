@@ -163,8 +163,8 @@ describe('Run LWC Tests', async () => {
     expect(lwcTestsItems.length).toBe(2);
     expect(await lwcTestsSection.findItem('lwc1')).toBeTruthy();
     expect(await lwcTestsSection.findItem('lwc2')).toBeTruthy();
-    expect(await lwcTestsItems[0].getLabel()).toBe('lwc1');
-    expect(await lwcTestsItems[2].getLabel()).toBe('lwc2');
+    expect(await lwcTestsSection.findItem('displays greeting')).toBeTruthy();
+    expect(await lwcTestsSection.findItem('is defined')).toBeTruthy();
 
     // Click the run tests button on the top right corner of the Test sidebar
     await lwcTestsSection.elem.click();
