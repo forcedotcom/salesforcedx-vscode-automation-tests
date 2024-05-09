@@ -82,6 +82,7 @@ describe('Miscellaneous', async () => {
     const textEditor = await utilities.getTextEditor(workbench, 'lwc.html');
     await browser.keys(['lwc-button']);
     await utilities.pause(2);
+    await browser.keys(['ArrowDown']);
     await browser.keys(['Enter']);
     const fileContent = await textEditor.getText();
     expect(fileContent).toContain(lwcSnippet);
