@@ -16,8 +16,8 @@ describe('Miscellaneous', async () => {
     await testSetup.setUp();
   });
 
-  step('Use out-of-the-box Apex Snippets', async () => {
-    utilities.log(`${testSetup.testSuiteSuffixName} - Use out-of-the-box Apex Snippets`);
+  step('Use Apex Snippets', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Use Apex Snippets`);
 
     // Using the Command palette, run Snippets: Configure User Snippets
     const workbench = await (await browser.getWorkbench()).wait();
