@@ -270,7 +270,7 @@ describe('Run LWC Tests', async () => {
     expect(lwcTestsSection.elem).toBePresent();
 
     // Hover a test name under one of the test lwc sections and click the run button that is shown to the right of the test name on the Test sidebar
-    const lwcTestItem = (await lwcTestsSection.findItem('test11')) as TreeItem;
+    const lwcTestItem = (await lwcTestsSection.findItem('displays greeting')) as TreeItem;
     await lwcTestItem.select();
     const runTestAction = await lwcTestItem.getActionButton(
       'SFDX: Run Lightning Web Component Test Case'
