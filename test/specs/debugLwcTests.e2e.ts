@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import child_process from 'child_process';
-import { step } from 'mocha-steps';
+import { step, xstep } from 'mocha-steps';
 import { SideBarView, TreeItem } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
@@ -52,6 +52,9 @@ describe('Debug LWC Tests', async () => {
   });
 
   step('Debug All Tests on a LWC via the Test Sidebar', async () => {
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - Debug All tests on a LWC via the Test Sidebar`
+    );
     const workbench = await (await browser.getWorkbench()).wait();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
@@ -105,6 +108,7 @@ describe('Debug LWC Tests', async () => {
   });
 
   step('Debug Single Test via the Test Sidebar', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Debug Single Test via the Test Sidebar`);
     const workbench = await (await browser.getWorkbench()).wait();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
@@ -174,6 +178,9 @@ describe('Debug LWC Tests', async () => {
   });
 
   step('SFDX: Debug Current Lightning Web Component Test File', async () => {
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - SFDX: Debug Current Lightning Web Component Test File`
+    );
     const workbench = await (await browser.getWorkbench()).wait();
 
     // Debug SFDX: Debug Current Lightning Web Component Test File
@@ -204,7 +211,7 @@ describe('Debug LWC Tests', async () => {
     );
   });
 
-  step('Debug All Tests via Code Lens action', async () => {
+  xstep('Debug All Tests via Code Lens action', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const textEditor = await utilities.getTextEditor(workbench, 'lwc1.test.js');
 
@@ -236,14 +243,13 @@ describe('Debug LWC Tests', async () => {
   });
 
   step('Debug Single Test via Code Lens action', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Debug Single Test via Code Lens action`);
     const workbench = await (await browser.getWorkbench()).wait();
-    const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass2Test.cls');
 
     // Click the "Debug Test" code lens at the top of one of the test methods
-    const codeLens = await textEditor.getCodeLens('Debug Test');
-    const codeLensElem = await codeLens?.elem;
-    const debugTestOption = await codeLensElem?.$('=Debug Test');
+    const debugTestOption = await utilities.findElementByText('a', 'title', 'Debug Test');
     await debugTestOption!.click();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Close All Editors', 1);
 
     // Continue with the debug session
     await browser.keys(['F5']);

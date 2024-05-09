@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 import { getTextEditor, log, pause } from './miscellaneous';
 
@@ -99,6 +100,21 @@ export async function createLwc(name: string): Promise<void> {
   await textEditor.setText(testText);
   await textEditor.save();
   await pause(1);
+
+  // Set breakpoints
+  await browser.keys([CMD_KEY, 'f']);
+  await pause(1);
+  await browser.keys(`expect(div.textContent).toBe('Hello, World!');`);
+  await browser.keys(['Escape']);
+  await browser.keys(['ArrowRight']);
+  await runCommandFromCommandPrompt(workbench, 'Debug: Inline Breakpoint', 2);
+
+  await browser.keys([CMD_KEY, 'f']);
+  await pause(1);
+  await browser.keys(`await expect(element).toBeDefined();`);
+  await browser.keys(['Escape']);
+  await browser.keys(['ArrowRight']);
+  await runCommandFromCommandPrompt(workbench, 'Debug: Inline Breakpoint', 2);
 }
 
 export async function createAura(name: string): Promise<void> {
