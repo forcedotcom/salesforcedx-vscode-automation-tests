@@ -43,21 +43,14 @@ describe('Miscellaneous', async () => {
     await textEditor.save();
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 50);
 
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Preferences: Open Workspace Settings',
-      5
-    );
-    await browser.keys(['snippets', 'Enter']);
-
-    expect(1).toBe(2);
-
     // Create anonymous apex file
     await utilities.createAnonymousApexFile();
     await browser.keys(['Enter']);
 
     // Type snippet "soql" and check it inserted the expected query
-    await browser.keys(['soql', 'Enter']);
+    await browser.keys(['soql']);
+    expect(1).toBe(2);
+    await utilities.pause(1);
     const fileContent = await textEditor.getText();
     expect(fileContent).toContain('[SELECT field1, field2 FROM SobjectName WHERE clause];');
   });
