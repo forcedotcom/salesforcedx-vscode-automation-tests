@@ -11,6 +11,7 @@ import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import path from 'path';
 import util from 'util';
+// import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 const exec = util.promisify(child_process.exec);
 
@@ -368,10 +369,12 @@ describe('Run LWC Tests', async () => {
   step('Run Single Test via Code Lens action', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Run Single Test via Code Lens action`);
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Terminal: Clear', 1);
 
     // Click the "Run Test" code lens at the top of one of the test methods
-    const runTestOption = await utilities.findElementByText('a', 'title', 'Run Test');
+    const textEditor = await utilities.getTextEditor(workbench, 'lwc2.test.js');
+    const codeLens = await textEditor.getCodeLens('Run Test');
+    const codeLensElem = await codeLens?.elem;
+    const runTestOption = await codeLensElem?.$('=Run Test');
     await runTestOption!.click();
 
     // Verify test results are listed on the terminal
