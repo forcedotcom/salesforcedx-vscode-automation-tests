@@ -19,28 +19,12 @@ export async function getTerminalView(workbench: Workbench): Promise<TerminalVie
 }
 
 export async function getTerminalViewText(workbench: Workbench, seconds: number): Promise<string> {
-  runCommandFromCommandPrompt(workbench, 'Terminal: Focus Terminal', 2);
-  // for (let i = 0; i < seconds; i++) {
   await pause(seconds);
+  runCommandFromCommandPrompt(workbench, 'Terminal: Copy Last Command Output', 2);
 
-  // const terminalText = await terminalView.getText();
-  // terminalView.getText() no longer works and the code which follows
-  // is a workaround.  If getText() is fixed, remove the following code,
-  // add the parameter terminalView: TerminalView back
-  // and just call await terminalView.getText().
-
-  await browser.keys([process.platform == 'darwin' ? CMD_KEY : 'Control', 'a', 'c']);
-  // runCommandFromCommandPrompt(workbench, 'Terminal: Copy Last Command Output', 2);
-  // Should be able to use Keys.Ctrl, but Keys is not exported from webdriverio
-  // See https://webdriver.io/docs/api/browser/keys/
+  // await browser.keys([process.platform == 'darwin' ? CMD_KEY : 'Control', 'a', 'c']);
   const terminalText = await clipboard.read();
-
-  // if (terminalText && terminalText !== '') {
   return terminalText;
-  // }
-  // }
-
-  // throw new Error('Exceeded time limit - text in the terminal was not found');
 }
 
 export async function executeCommand(workbench: Workbench, command: string): Promise<TerminalView> {
