@@ -79,12 +79,14 @@ describe('Run LWC Tests', async () => {
 
   step('SFDX: Refresh Lightning Web Component Test Explorer', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 1);
     // Run command SFDX: Refresh Lightning Web Component Test Explorer
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Refresh Lightning Web Component Test Explorer',
       2
     );
+    // Open the Tests Sidebar
     const sidebar = workbench.getSideBar();
     const sidebarView = sidebar.getContent();
     const lwcTestsSection = await sidebarView.getSection('LWC TESTS');
@@ -154,13 +156,16 @@ describe('Run LWC Tests', async () => {
       lwcTestsSection,
       'SFDX: Refresh Lightning Web Component Test Explorer'
     );
+    // Expand LWC tests
+    await lwcTestsItems[0].expand();
+    await lwcTestsItems[1].expand();
 
     // Make sure all the tests are present in the sidebar
-    expect(lwcTestsItems.length).toBe(4);
+    expect(lwcTestsItems.length).toBe(2);
     expect(await lwcTestsSection.findItem('lwc1')).toBeTruthy();
     expect(await lwcTestsSection.findItem('lwc2')).toBeTruthy();
-    expect(await lwcTestsItems[0].getLabel()).toBe('lwc1');
-    expect(await lwcTestsItems[2].getLabel()).toBe('lwc2');
+    expect(await lwcTestsSection.findItem('displays greeting')).toBeTruthy();
+    expect(await lwcTestsSection.findItem('is defined')).toBeTruthy();
 
     // Click the run tests button on the top right corner of the Test sidebar
     await lwcTestsSection.elem.click();
