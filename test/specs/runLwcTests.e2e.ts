@@ -375,7 +375,8 @@ describe('Run LWC Tests', async () => {
     await browser.keys(['Escape', 'ArrowRight']);
     const prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
-      'Show CodeLens Commands For Current Line'
+      'Show CodeLens Commands For Current Line',
+      5
     );
     await prompt.setText('Run Test');
     await prompt.confirm();
