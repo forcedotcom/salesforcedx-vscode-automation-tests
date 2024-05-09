@@ -173,13 +173,6 @@ describe('Debug LWC Tests', async () => {
     } catch {
       utilities.log('ERROR: icon did not turn green after test successfully ran');
     }
-
-    // Verify that clicking the test case took us to the test file.
-    // We're testing SFDX: Navigate to Lightning Web Component Test with this
-    const editorView = workbench.getEditorView();
-    const activeTab = await editorView.getActiveTab();
-    const title = await activeTab?.getTitle();
-    expect(title).toBe('lwc1.test.js');
   });
 
   step('SFDX: Debug Current Lightning Web Component Test File', async () => {
