@@ -282,13 +282,13 @@ describe('Run LWC Tests', async () => {
     const terminalText = await utilities.getTerminalViewText(workbench, 15);
     expect(terminalText).not.toBeUndefined();
     expect(terminalText).toContain(
-      `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+      `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
     );
     expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
     expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
     expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
     );
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
@@ -306,7 +306,7 @@ describe('Run LWC Tests', async () => {
     const editorView = workbench.getEditorView();
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
-    expect(title).toBe('lwc1.test.js');
+    expect(title).toBe('lwc2.test.js');
   });
 
   step('SFDX: Run Current Lightning Web Component Test File', async () => {
@@ -327,13 +327,13 @@ describe('Run LWC Tests', async () => {
     const terminalText = await utilities.getTerminalViewText(workbench, 15);
     expect(terminalText).not.toBeUndefined();
     expect(terminalText).toContain(
-      `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+      `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
     );
     expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
     expect(terminalText).toContain('Tests:       2 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
     expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
     );
   });
 
