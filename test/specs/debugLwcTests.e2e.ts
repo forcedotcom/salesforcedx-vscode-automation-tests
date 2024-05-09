@@ -78,9 +78,9 @@ describe('Debug LWC Tests', async () => {
 
     // Continue with the debug session
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(3);
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(3);
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -141,9 +141,9 @@ describe('Debug LWC Tests', async () => {
 
     // Continue with the debug session
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(3);
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(3);
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -192,9 +192,9 @@ describe('Debug LWC Tests', async () => {
 
     // Continue with the debug session
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(3);
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(3);
 
     // Verify test results are listed on vscode's Output section
     // Also verify that all tests pass
@@ -223,9 +223,9 @@ describe('Debug LWC Tests', async () => {
 
     // Continue with the debug session
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(3);
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(3);
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -253,9 +253,9 @@ describe('Debug LWC Tests', async () => {
 
     // Continue with the debug session
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(3);
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(3);
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
