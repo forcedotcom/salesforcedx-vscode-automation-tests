@@ -11,7 +11,7 @@ import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import path from 'path';
 import util from 'util';
-import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
+// import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 const exec = util.promisify(child_process.exec);
 
@@ -369,17 +369,22 @@ describe('Run LWC Tests', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Run Single Test via Code Lens action`);
     const workbench = await (await browser.getWorkbench()).wait();
 
-    await browser.keys([CMD_KEY, 'f']);
-    await utilities.pause(1);
-    await browser.keys([`it('displays greeting', () => {`]);
-    await browser.keys(['Escape', 'ArrowRight']);
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Show CodeLens Commands For Current Line',
-      5
-    );
-    await browser.keys(['Run Test']);
-    await browser.keys(['Enter']);
+    // await browser.keys([CMD_KEY, 'f']);
+    // await utilities.pause(1);
+    // await browser.keys([`it('displays greeting', () => {`]);
+    // await browser.keys(['Escape', 'ArrowRight']);
+    // await utilities.runCommandFromCommandPrompt(
+    //   workbench,
+    //   'Show CodeLens Commands For Current Line',
+    //   5
+    // );
+    // await browser.keys(['Run Test']);
+    // await browser.keys(['Enter']);
+    const textEditor = await utilities.getTextEditor(workbench, 'lwc2.test.js');
+    const codeLens = await textEditor.getCodeLens('Run Test');
+    const codeLensElem = await codeLens?.elem;
+    const runTestOption = await codeLensElem?.$('=Run Test');
+    await runTestOption!.click();
 
     // // Click the "Run Test" code lens at the top of one of the test methods
     // const runTestOption = await utilities.findElementByText('a', 'title', 'Run Test');
