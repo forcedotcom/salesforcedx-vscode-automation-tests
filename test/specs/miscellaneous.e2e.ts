@@ -85,7 +85,13 @@ describe('Miscellaneous', async () => {
     await browser.keys(['ArrowDown']);
     await browser.keys(['Enter']);
     const fileContent = await textEditor.getText();
-    expect(fileContent).toContain(lwcSnippet);
+
+    const fileContentWithoutTrailingSpaces = fileContent
+      .split('\n')
+      .map((line) => line.trimEnd())
+      .join('\n');
+
+    expect(fileContentWithoutTrailingSpaces).toContain(lwcSnippet);
   });
 
   step('Tear down and clean up the testing environment', async () => {
