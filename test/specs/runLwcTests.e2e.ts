@@ -367,7 +367,7 @@ describe('Run LWC Tests', async () => {
   step('Run Single Test via Code Lens action', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Run Single Test via Code Lens action`);
     const workbench = await (await browser.getWorkbench()).wait();
-    const textEditor = await utilities.getTextEditor(workbench, 'lwc1.test.js');
+    const textEditor = await utilities.getTextEditor(workbench, 'lwc2.test.js');
 
     // Click the "Run Test" code lens at the top of one of the test methods
     const codeLens = await textEditor.getCodeLens('Run Test');
@@ -380,13 +380,13 @@ describe('Run LWC Tests', async () => {
     const terminalText = await utilities.getTerminalViewText(workbench, 15);
     expect(terminalText).not.toBeUndefined();
     expect(terminalText).toContain(
-      `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+      `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
     );
     expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
     expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
     expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
     );
   });
 
