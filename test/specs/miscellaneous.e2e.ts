@@ -49,8 +49,8 @@ describe('Miscellaneous', async () => {
 
     // Type snippet "soql" and check it inserted the expected query
     await browser.keys(['soql']);
-    expect(1).toBe(2);
-    await utilities.pause(1);
+    await utilities.pause(2);
+    await browser.keys(['Enter']);
     const fileContent = await textEditor.getText();
     expect(fileContent).toContain('[SELECT field1, field2 FROM SobjectName WHERE clause];');
   });
