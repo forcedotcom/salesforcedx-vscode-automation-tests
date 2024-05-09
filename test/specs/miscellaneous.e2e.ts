@@ -7,6 +7,7 @@
 import { step } from 'mocha-steps';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 describe('Miscellaneous', async () => {
   let testSetup: TestSetup;
@@ -23,11 +24,14 @@ describe('Miscellaneous', async () => {
 
     // Create anonymous apex file
     await utilities.createAnonymousApexFile();
-    await browser.keys(['Enter']);
 
-    // Type snippet "isb" and check it inserted the expected string
+    // Type snippet "isb" in a new line and check it inserted the expected string
     const textEditor = await utilities.getTextEditor(workbench, 'Anonymous.apex');
-    await textEditor.clearText();
+    await browser.keys([CMD_KEY, 'f']);
+    await utilities.pause(1);
+    await browser.keys([`System.debug('¡Hola mundo!');`]);
+    await browser.keys(['Escape']);
+    await browser.keys(['ArrowRight', 'Enter']);
     await browser.keys(['isb']);
     await utilities.pause(2);
     await browser.keys(['Enter']);
