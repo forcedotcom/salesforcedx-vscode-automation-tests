@@ -373,13 +373,13 @@ describe('Run LWC Tests', async () => {
     await utilities.pause(1);
     await browser.keys([`it('displays greeting', () => {`]);
     await browser.keys(['Escape', 'ArrowRight']);
-    const prompt = await utilities.runCommandFromCommandPrompt(
+    await utilities.runCommandFromCommandPrompt(
       workbench,
       'Show CodeLens Commands For Current Line',
       5
     );
-    await prompt.setText('Run Test');
-    await prompt.confirm();
+    await browser.keys(['Run Test']);
+    await browser.keys(['Enter']);
 
     // // Click the "Run Test" code lens at the top of one of the test methods
     // const runTestOption = await utilities.findElementByText('a', 'title', 'Run Test');
