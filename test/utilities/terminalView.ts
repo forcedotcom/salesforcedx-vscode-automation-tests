@@ -19,10 +19,12 @@ export async function getTerminalView(workbench: Workbench): Promise<TerminalVie
 }
 
 export async function getTerminalViewText(workbench: Workbench, seconds: number): Promise<string> {
+  runCommandFromCommandPrompt(workbench, 'Terminal: Focus Terminal', 2);
   await pause(seconds);
-  runCommandFromCommandPrompt(workbench, 'Terminal: Copy Last Command Output', 2);
 
-  // await browser.keys([process.platform == 'darwin' ? CMD_KEY : 'Control', 'a', 'c']);
+  await browser.keys([process.platform == 'darwin' ? CMD_KEY : 'Control', 'a', 'c']);
+  // runCommandFromCommandPrompt(workbench, 'Terminal: Copy Last Command Output', 2);
+
   const terminalText = await clipboard.read();
   return terminalText;
 }
