@@ -56,6 +56,7 @@ describe('Debug LWC Tests', async () => {
       `${testSetup.testSuiteSuffixName} - Debug All tests on a LWC via the Test Sidebar`
     );
     const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 1);
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
     // Open the Test Sidebar
