@@ -56,17 +56,22 @@ describe('Debug LWC Tests', async () => {
       `${testSetup.testSuiteSuffixName} - Debug All tests on a LWC via the Test Sidebar`
     );
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 1);
-    const testingView = await workbench.getActivityBar().getViewControl('Testing');
+    await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 3);
 
     // Open the Test Sidebar
-    const testingSideBarView = await testingView?.openView();
-    expect(testingSideBarView).toBeInstanceOf(SideBarView);
-
     const sidebar = workbench.getSideBar();
     const sidebarView = sidebar.getContent();
     const lwcTestsSection = await sidebarView.getSection('LWC TESTS');
     expect(lwcTestsSection.elem).toBePresent();
+
+    const lwcTestsItems = await utilities.retrieveAllTestItemsFromSidebar(
+      6,
+      lwcTestsSection,
+      'SFDX: Refresh Lightning Web Component Test Explorer'
+    );
+    // Expand LWC tests
+    await lwcTestsItems[0].expand();
+    await lwcTestsItems[1].expand();
 
     // Click the debug test button that is shown to the right when you hover a test class name on the Test sidebar
     const lwcTestItem = (await lwcTestsSection.findItem('lwc1')) as TreeItem;
@@ -125,15 +130,6 @@ describe('Debug LWC Tests', async () => {
     const lwcTestsSection = await sidebarView.getSection('LWC TESTS');
     expect(lwcTestsSection.elem).toBePresent();
 
-    const lwcTestsItems = await utilities.retrieveAllTestItemsFromSidebar(
-      6,
-      lwcTestsSection,
-      'SFDX: Refresh Lightning Web Component Test Explorer'
-    );
-    // Expand LWC tests
-    await lwcTestsItems[0].expand();
-    await lwcTestsItems[1].expand();
-
     // Hover a test name under one of the test lwc sections and click the debug button that is shown to the right of the test name on the Test sidebar
     const lwcTestItem = (await lwcTestsSection.findItem('displays greeting')) as TreeItem;
     await lwcTestItem.select();
@@ -157,13 +153,13 @@ describe('Debug LWC Tests', async () => {
     const terminalText = await utilities.getTerminalViewText(workbench, 10);
     expect(terminalText).not.toBeUndefined();
     expect(terminalText).toContain(
-      `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+      `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
     );
     expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
     expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
     expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
     );
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
@@ -211,13 +207,13 @@ describe('Debug LWC Tests', async () => {
     const terminalText = await utilities.getTerminalViewText(workbench, 10);
     expect(terminalText).not.toBeUndefined();
     expect(terminalText).toContain(
-      `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+      `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
     );
     expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
     expect(terminalText).toContain('Tests:       2 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
     expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
     );
   });
 
@@ -261,7 +257,10 @@ describe('Debug LWC Tests', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
 
     // Click the "Debug Test" code lens at the top of one of the test methods
-    const debugTestOption = await utilities.findElementByText('a', 'title', 'Debug Test');
+    const textEditor = await utilities.getTextEditor(workbench, 'lwc2.test.js');
+    const codeLens = await textEditor.getCodeLens('Debug Test');
+    const codeLensElem = await codeLens?.elem;
+    const debugTestOption = await codeLensElem?.$('=Debug Test');
     await debugTestOption!.click();
     await utilities.pause(10);
 
@@ -279,13 +278,13 @@ describe('Debug LWC Tests', async () => {
     const terminalText = await utilities.getTerminalViewText(workbench, 10);
     expect(terminalText).not.toBeUndefined();
     expect(terminalText).toContain(
-      `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+      `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
     );
     expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
     expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
     expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
     );
   });
 
