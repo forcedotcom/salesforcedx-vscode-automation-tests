@@ -117,8 +117,17 @@ describe('Debug LWC Tests', async () => {
     const lwcTestsSection = await sidebarView.getSection('LWC TESTS');
     expect(lwcTestsSection.elem).toBePresent();
 
+    const lwcTestsItems = await utilities.retrieveAllTestItemsFromSidebar(
+      6,
+      lwcTestsSection,
+      'SFDX: Refresh Lightning Web Component Test Explorer'
+    );
+    // Expand LWC tests
+    await lwcTestsItems[0].expand();
+    await lwcTestsItems[1].expand();
+
     // Hover a test name under one of the test lwc sections and click the debug button that is shown to the right of the test name on the Test sidebar
-    const lwcTestItem = (await lwcTestsSection.findItem('test11')) as TreeItem;
+    const lwcTestItem = (await lwcTestsSection.findItem('displays greeting')) as TreeItem;
     await lwcTestItem.select();
     const debugTestAction = await lwcTestItem.getActionButton(
       'SFDX: Debug Lightning Web Component Test Case'
