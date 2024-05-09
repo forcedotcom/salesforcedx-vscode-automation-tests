@@ -230,6 +230,7 @@ describe('Debug LWC Tests', async () => {
     const codeLensElem = await codeLens?.elem;
     const debugAllTestsOption = await codeLensElem?.$('=Debug');
     await debugAllTestsOption!.click();
+    await utilities.pause(10);
 
     // Continue with the debug session
     await browser.keys(['F5']);
@@ -262,7 +263,7 @@ describe('Debug LWC Tests', async () => {
     // Click the "Debug Test" code lens at the top of one of the test methods
     const debugTestOption = await utilities.findElementByText('a', 'title', 'Debug Test');
     await debugTestOption!.click();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Close All Editors', 1);
+    await utilities.pause(10);
 
     // Continue with the debug session
     await browser.keys(['F5']);
