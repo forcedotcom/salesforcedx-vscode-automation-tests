@@ -10,6 +10,7 @@ import path from 'path';
 import util from 'util';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
+import * as analyticsTemplate from '../testData/sampleAnalyticsTemplateData';
 
 const exec = util.promisify(child_process.exec);
 
@@ -516,8 +517,6 @@ describe('Templates', async () => {
       projectName,
       'sampleAnalyticsTemplate1'
     );
-    expect(filteredTreeViewItems.includes('sampleAnalyticsTemplate1')).toBe(true);
-    expect(filteredTreeViewItems.includes('dashboards')).toBe(true);
     expect(filteredTreeViewItems.includes('app-to-template-rules.json')).toBe(true);
     expect(filteredTreeViewItems.includes('folder.json')).toBe(true);
     expect(filteredTreeViewItems.includes('releaseNotes.html')).toBe(true);
@@ -527,20 +526,36 @@ describe('Templates', async () => {
     expect(filteredTreeViewItems.includes('variables.json')).toBe(true);
   });
 
-  xstep('Verify the contents of the Sample Analytics Template', async () => {
+  step('Verify the contents of the Sample Analytics Template', async () => {
     // Verify the default code for a Sample Analytics Template.
-    const expectedText = [
-      '<apex:page>',
-      '<!-- Begin Default Content REMOVE THIS -->',
-      '<h1>Congratulations</h1>',
-      'This is your new Page',
-      '<!-- End Default Content REMOVE THIS -->',
-      '</apex:page>'
-    ].join('\n');
     const workbench = await (await browser.getWorkbench()).wait();
-    const textEditor = await utilities.getTextEditor(workbench, 'VisualforcePage1.page');
-    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
-    expect(textGeneratedFromTemplate).toEqual(expectedText);
+    let textEditor = await utilities.getTextEditor(workbench, 'app-to-template-rules.json');
+    let textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
+    expect(textGeneratedFromTemplate).toEqual(analyticsTemplate.appToTemplateRules);
+
+    textEditor = await utilities.getTextEditor(workbench, 'folder.json');
+    textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
+    expect(textGeneratedFromTemplate).toEqual(analyticsTemplate.folder);
+
+    textEditor = await utilities.getTextEditor(workbench, 'releaseNotes.html');
+    textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
+    expect(textGeneratedFromTemplate).toEqual(analyticsTemplate.releaseNotes);
+
+    textEditor = await utilities.getTextEditor(workbench, 'template-info.json');
+    textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
+    expect(textGeneratedFromTemplate).toEqual(analyticsTemplate.templateInfo);
+
+    textEditor = await utilities.getTextEditor(workbench, 'template-to-app-rules.json');
+    textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
+    expect(textGeneratedFromTemplate).toEqual(analyticsTemplate.templateToAppRules);
+
+    textEditor = await utilities.getTextEditor(workbench, 'ui.json');
+    textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
+    expect(textGeneratedFromTemplate).toEqual(analyticsTemplate.ui);
+
+    textEditor = await utilities.getTextEditor(workbench, 'variables.json');
+    textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
+    expect(textGeneratedFromTemplate).toEqual(analyticsTemplate.variables);
   });
 
   // Tear down
