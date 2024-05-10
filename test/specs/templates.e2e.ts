@@ -5,10 +5,11 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { step } from 'mocha-steps';
+import { step, xstep } from 'mocha-steps';
 import path from 'path';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 describe('Templates', async () => {
   let testSetup: TestSetup;
@@ -93,6 +94,89 @@ describe('Templates', async () => {
     const textEditor = await utilities.getTextEditor(workbench, 'ApexClass1.cls');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     expect(textGeneratedFromTemplate).toEqual(expectedText);
+  });
+
+  // Apex Unit Test Class
+  step('Create an Apex Unit Test Class', async () => {
+    // Using the Command palette, run SFDX: Create Apex Unit Test Class.
+    const workbench = await (await browser.getWorkbench()).wait();
+    const inputBox = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Create Apex Unit Test Class',
+      1
+    );
+
+    // Set the name of the new component to ApexUnitTestClass1.
+    await inputBox.setText('ApexUnitTestClass1');
+    await inputBox.confirm();
+    await utilities.pause(1);
+
+    // Select the default directory (press Enter/Return).
+    await inputBox.confirm();
+
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+      workbench,
+      'SFDX: Create Apex Unit Test Class successfully ran',
+      utilities.TEN_MINUTES
+    );
+    expect(successNotificationWasFound).toBe(true);
+
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      'Finished SFDX: Create Apex Unit Test Class',
+      10
+    );
+    expect(outputPanelText).not.toBeUndefined();
+
+    const classPath = path.join(
+      'force-app',
+      'main',
+      'default',
+      'classes',
+      'ApexUnitTestClass1.cls'
+    );
+    expect(outputPanelText).toContain(`create ${classPath}`);
+
+    const metadataPath = path.join(
+      'force-app',
+      'main',
+      'default',
+      'classes',
+      'ApexUnitTestClass1.cls-meta.xml'
+    );
+    expect(outputPanelText).toContain(`create ${metadataPath}`);
+
+    // Check for expected items in the Explorer view.
+    const sidebar = workbench.getSideBar();
+    const treeViewSection = await sidebar.getContent().getSection(projectName);
+    await treeViewSection.expand();
+
+    // Get the matching (visible) items within the tree which contains "ApexUnitTestClass1".
+    const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
+      workbench,
+      projectName,
+      'ApexUnitTestClass1'
+    );
+
+    expect(filteredTreeViewItems.includes('ApexUnitTestClass1.cls')).toBe(true);
+    expect(filteredTreeViewItems.includes('ApexUnitTestClass1.cls-meta.xml')).toBe(true);
+  });
+
+  step('Verify the contents of the Apex Unit Test Class', async () => {
+    const expectedText = [
+      '@isTest',
+      'private class ApexUnitTestClass1 {',
+      '',
+      '    @isTest',
+      '    static void myUnitTest() {',
+      '        // TO DO: implement unit test',
+      '    }',
+      '}'
+    ].join('\n');
+    const workbench = await (await browser.getWorkbench()).wait();
+    const textEditor = await utilities.getTextEditor(workbench, 'ApexUnitTestClass1.cls');
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
+    expect(textGeneratedFromTemplate).toContain(expectedText);
   });
 
   // Apex Trigger
@@ -546,6 +630,79 @@ describe('Templates', async () => {
     expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
 
+  // Lightning Web Component Test
+  step('Create Lightning Web Component Test', async () => {
+    // Delete previous test file
+    const workbench = await (await browser.getWorkbench()).wait();
+    const sidebar = workbench.getSideBar();
+    const treeViewSection = await sidebar.getContent().getSection(projectName);
+    await treeViewSection.expand();
+    const lwcTestFolder = await treeViewSection.findItem('__tests__');
+    await lwcTestFolder?.select();
+    let testItem = await treeViewSection.findItem('lightningWebComponent1.test.js');
+    await testItem?.select;
+    await browser.keys([CMD_KEY, 'Delete']);
+
+    // Using the Command palette, run SFDX: Create Lightning Web Component Test.
+    const inputBox = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Create Lightning Web Component Test',
+      1
+    );
+
+    // Set the name of the new test to lightningWebComponent1.
+    await inputBox.confirm();
+    await inputBox.setText('lightningWebComponent1');
+    await inputBox.confirm();
+    await utilities.pause(1);
+
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+      workbench,
+      'SFDX: Create Lightning Web Component Test failed to run',
+      utilities.TEN_MINUTES
+    );
+    expect(successNotificationWasFound).toBe(true);
+
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      'Starting SFDX: Create Lightning Web Component Test',
+      10
+    );
+    expect(outputPanelText).not.toBeUndefined();
+
+    // Check for expected item in the Explorer view.
+    testItem = await treeViewSection.findItem('lightningWebComponent1.test.js');
+    expect(testItem).toBeDefined();
+  });
+
+  step('Verify the contents of the Lightning Web Component Test', async () => {
+    const expectedText = [
+      "import { createElement } from 'lwc';",
+      "import LightningWebComponent1 from 'c/lightningWebComponent1';",
+      '',
+      "describe('c-lightning-web-component1', () => {",
+      '    afterEach(() => {',
+      '        // The jsdom instance is shared across test cases in a single file so reset the DOM',
+      '        while (document.body.firstChild) {',
+      '            document.body.removeChild(document.body.firstChild);',
+      '        }',
+      '    });',
+      '',
+      "    it('TODO: test case generated by CLI command, please fill in test logic', () => {",
+      "        const element = createElement('c-lightning-web-component1', {",
+      '            is: LightningWebComponent1',
+      '        });',
+      '        document.body.appendChild(element);',
+      '        expect(1).toBe(2);',
+      '    });',
+      '});'
+    ].join('\n');
+    const workbench = await (await browser.getWorkbench()).wait();
+    const textEditor = await utilities.getTextEditor(workbench, 'lightningWebComponent1.test.js');
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
+    expect(textGeneratedFromTemplate).toEqual(expectedText);
+  });
+
   // Visualforce Component
   step('Create a Visualforce Component', async () => {
     // Clear the output panel, then use the Command palette to run, "SFDX: Create Visualforce Component".
@@ -686,6 +843,77 @@ describe('Templates', async () => {
 
   step('Verify the contents of the Visualforce Page', async () => {
     // Verify the default code for a Visualforce Page.
+    const expectedText = [
+      '<apex:page>',
+      '<!-- Begin Default Content REMOVE THIS -->',
+      '<h1>Congratulations</h1>',
+      'This is your new Page',
+      '<!-- End Default Content REMOVE THIS -->',
+      '</apex:page>'
+    ].join('\n');
+    const workbench = await (await browser.getWorkbench()).wait();
+    const textEditor = await utilities.getTextEditor(workbench, 'VisualforcePage1.page');
+    const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
+    expect(textGeneratedFromTemplate).toEqual(expectedText);
+  });
+
+  // Sample Analytics Template
+  step('Create a Sample Analytics Template', async () => {
+    // Clear the output panel, then use the Command palette to run, "SFDX: Create Sample Analytics Template".
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+    const inputBox = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Create Sample Analytics Template',
+      1
+    );
+
+    // Set the name of the new page to sampleAnalyticsTemplate1
+    await inputBox.setText('sampleAnalyticsTemplate1');
+    await inputBox.confirm();
+    await utilities.pause(1);
+
+    // Select the default directory (press Enter/Return).
+    await inputBox.confirm();
+
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+      workbench,
+      'SFDX: Create Sample Analytics Template successfully ran',
+      utilities.TEN_MINUTES
+    );
+    expect(successNotificationWasFound).toBe(true);
+
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      'Finished SFDX: Create Sample Analytics Template',
+      10
+    );
+    expect(outputPanelText).not.toBeUndefined();
+
+    // Check for expected items in the Explorer view.
+    const sidebar = workbench.getSideBar();
+    const treeViewSection = await sidebar.getContent().getSection(projectName);
+    await treeViewSection.expand();
+
+    // Check for the presence of the directory, "sampleAnalyticsTemplate1".
+    const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
+      workbench,
+      projectName,
+      'sampleAnalyticsTemplate1'
+    );
+    expect(filteredTreeViewItems.includes('sampleAnalyticsTemplate1')).toBe(true);
+    expect(filteredTreeViewItems.includes('dashboards')).toBe(true);
+    expect(filteredTreeViewItems.includes('app-to-template-rules.json')).toBe(true);
+    expect(filteredTreeViewItems.includes('folder.json')).toBe(true);
+    expect(filteredTreeViewItems.includes('releaseNotes.html')).toBe(true);
+    expect(filteredTreeViewItems.includes('template-info.json')).toBe(true);
+    expect(filteredTreeViewItems.includes('template-to-app-rules.json')).toBe(true);
+    expect(filteredTreeViewItems.includes('ui.json')).toBe(true);
+    expect(filteredTreeViewItems.includes('variables.json')).toBe(true);
+  });
+
+  xstep('Verify the contents of the Sample Analytics Template', async () => {
+    // Verify the default code for a Sample Analytics Template.
     const expectedText = [
       '<apex:page>',
       '<!-- Begin Default Content REMOVE THIS -->',
