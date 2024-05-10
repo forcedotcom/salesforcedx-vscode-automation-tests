@@ -486,8 +486,8 @@ describe('Templates', async () => {
       1
     );
 
-    // Set the name of the new page to sampleAnalyticsTemplate1
-    await inputBox.setText('sampleAnalyticsTemplate1');
+    // Set the name of the new page to sat1
+    await inputBox.setText('sat1');
     await inputBox.confirm();
     await utilities.pause(1);
 
@@ -511,11 +511,11 @@ describe('Templates', async () => {
     // Check for expected items in the Explorer view.
     await utilities.expandSideBar(workbench, projectName);
 
-    // Check for the presence of the directory, "sampleAnalyticsTemplate1".
+    // Check for the presence of the directory, "sat1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
       workbench,
       projectName,
-      'sampleAnalyticsTemplate1'
+      'sat1'
     );
     expect(filteredTreeViewItems.includes('app-to-template-rules.json')).toBe(true);
     expect(filteredTreeViewItems.includes('folder.json')).toBe(true);
