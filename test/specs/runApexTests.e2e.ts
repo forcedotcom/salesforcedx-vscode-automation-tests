@@ -223,7 +223,7 @@ describe('Run Apex Tests', async () => {
     const apexTestsSection = await sidebarView.getSection('APEX TESTS');
     expect(apexTestsSection.elem).toBePresent();
 
-    const apexTestsItems = await utilities.retrieveAllTestItemsFromSidebar(
+    const apexTestsItems = await utilities.retrieveExpectedNumTestsFromSidebar(
       6,
       apexTestsSection,
       'Refresh Tests'

@@ -118,7 +118,7 @@ export async function getVisibleItems(
   return [...rows.values()];
 }
 
-export async function retrieveAllTestItemsFromSidebar(
+export async function retrieveExpectedNumTestsFromSidebar(
   expectedNumTests: number,
   testsSection: ViewSection,
   actionLabel: string
