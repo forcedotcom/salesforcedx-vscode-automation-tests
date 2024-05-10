@@ -158,7 +158,7 @@ describe('Run LWC Tests', async () => {
     const lwcTestsSection = await sidebarView.getSection('LWC TESTS');
     expect(lwcTestsSection.elem).toBePresent();
 
-    const lwcTestsItems = await utilities.retrieveAllTestItemsFromSidebar(
+    const lwcTestsItems = await utilities.retrieveExpectedNumTestsFromSidebar(
       6,
       lwcTestsSection,
       'SFDX: Refresh Lightning Web Component Test Explorer'
