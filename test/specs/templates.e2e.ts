@@ -4,21 +4,26 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-
+import child_process from 'child_process';
 import { step, xstep } from 'mocha-steps';
 import path from 'path';
+import util from 'util';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
-import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
+import { platform } from 'os';
+
+const exec = util.promisify(child_process.exec);
 
 describe('Templates', async () => {
   let testSetup: TestSetup;
   let projectName: string;
+  let projectFolderPath: string;
 
   // Set up
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('Templates', false);
     await testSetup.setUp();
+    projectFolderPath = testSetup.projectFolderPath!;
     projectName = testSetup.tempProjectName.toUpperCase();
   });
 
@@ -634,14 +639,18 @@ describe('Templates', async () => {
   step('Create Lightning Web Component Test', async () => {
     // Delete previous test file
     const workbench = await (await browser.getWorkbench()).wait();
-    const sidebar = workbench.getSideBar();
-    const treeViewSection = await sidebar.getContent().getSection(projectName);
-    await treeViewSection.expand();
-    const lwcTestFolder = await treeViewSection.findItem('__tests__');
-    await lwcTestFolder?.select();
-    let testItem = await treeViewSection.findItem('lightningWebComponent1.test.js');
-    await testItem?.select;
-    await browser.keys([CMD_KEY, 'Delete']);
+    const pathToLwcTest = path.join(
+      'force-app',
+      'main',
+      'default',
+      'lwc',
+      'lightningWebComponent1',
+      '__tests__',
+      'lightningWebComponent1.test.js'
+    );
+    await exec(process.platform == 'win32' ? `del ${pathToLwcTest}` : `rm ${pathToLwcTest}`, {
+      cwd: testSetup.projectFolderPath
+    });
 
     // Using the Command palette, run SFDX: Create Lightning Web Component Test.
     const inputBox = await utilities.runCommandFromCommandPrompt(
@@ -654,14 +663,14 @@ describe('Templates', async () => {
     await inputBox.confirm();
     await inputBox.setText('lightningWebComponent1');
     await inputBox.confirm();
-    await utilities.pause(1);
+    await utilities.pause(3);
 
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+    const failureNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Lightning Web Component Test failed to run',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    expect(failureNotificationWasFound).toBe(true);
 
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
@@ -671,7 +680,12 @@ describe('Templates', async () => {
     expect(outputPanelText).not.toBeUndefined();
 
     // Check for expected item in the Explorer view.
-    testItem = await treeViewSection.findItem('lightningWebComponent1.test.js');
+    const sidebar = workbench.getSideBar();
+    const treeViewSection = await sidebar.getContent().getSection(projectName);
+    await treeViewSection.expand();
+    const lwcTestFolder = await treeViewSection.findItem('__tests__');
+    await lwcTestFolder?.select();
+    const testItem = await treeViewSection.findItem('lightningWebComponent1.test.js');
     expect(testItem).toBeDefined();
   });
 
