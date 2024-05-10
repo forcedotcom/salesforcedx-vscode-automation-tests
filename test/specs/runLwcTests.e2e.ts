@@ -11,6 +11,7 @@ import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import path from 'path';
 import util from 'util';
+import { fail } from 'assert';
 // import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 const exec = util.promisify(child_process.exec);
@@ -179,7 +180,10 @@ describe('Run LWC Tests', async () => {
     const runTestsAction = await lwcTestsSection.getAction(
       'SFDX: Run All Lightning Web Component Tests'
     );
-    await runTestsAction!.elem.click();
+    if (!runTestsAction) {
+      fail('Could not find run tests action button');
+    }
+    await runTestsAction.elem.click();
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -229,7 +233,10 @@ describe('Run LWC Tests', async () => {
     const runTestsAction = await lwcTestItem.getActionButton(
       'SFDX: Run Lightning Web Component Test File'
     );
-    await runTestsAction!.elem.click();
+    if (!runTestsAction) {
+      fail('Could not find run tests action button');
+    }
+    await runTestsAction.elem.click();
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -242,7 +249,7 @@ describe('Run LWC Tests', async () => {
     expect(terminalText).toContain('Tests:       2 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
     expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
     );
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
@@ -276,7 +283,10 @@ describe('Run LWC Tests', async () => {
     const runTestAction = await lwcTestItem.getActionButton(
       'SFDX: Run Lightning Web Component Test Case'
     );
-    await runTestAction!.elem.click();
+    if (!runTestAction) {
+      fail('Could not find run test action button');
+    }
+    await runTestAction.elem.click();
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -289,7 +299,7 @@ describe('Run LWC Tests', async () => {
     expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
     expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
+      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
     );
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
@@ -334,7 +344,7 @@ describe('Run LWC Tests', async () => {
     expect(terminalText).toContain('Tests:       2 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
     expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
+      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
     );
   });
 
@@ -348,7 +358,10 @@ describe('Run LWC Tests', async () => {
     const codeLens = await textEditor.getCodeLens('Run');
     const codeLensElem = await codeLens?.elem;
     const runAllTestsOption = await codeLensElem?.$('=Run');
-    await runAllTestsOption!.click();
+    if (!runAllTestsOption) {
+      fail('Could not find run all tests action button');
+    }
+    await runAllTestsOption.click();
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -361,7 +374,7 @@ describe('Run LWC Tests', async () => {
     expect(terminalText).toContain('Tests:       2 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
     expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
     );
   });
 
@@ -374,7 +387,10 @@ describe('Run LWC Tests', async () => {
     const codeLens = await textEditor.getCodeLens('Run Test');
     const codeLensElem = await codeLens?.elem;
     const runTestOption = await codeLensElem?.$('=Run Test');
-    await runTestOption!.click();
+    if (!runTestOption) {
+      fail('Could not find run test action button');
+    }
+    await runTestOption.click();
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -387,7 +403,7 @@ describe('Run LWC Tests', async () => {
     expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
     expect(terminalText).toContain('Snapshots:   0 total');
     expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath!, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
+      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
     );
   });
 
