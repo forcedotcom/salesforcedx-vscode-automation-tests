@@ -10,71 +10,28 @@ import path from 'path';
 import util from 'util';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
-import { platform } from 'os';
 
 const exec = util.promisify(child_process.exec);
 
 describe('Templates', async () => {
   let testSetup: TestSetup;
   let projectName: string;
-  let projectFolderPath: string;
 
   // Set up
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('Templates', false);
     await testSetup.setUp();
-    projectFolderPath = testSetup.projectFolderPath!;
     projectName = testSetup.tempProjectName.toUpperCase();
   });
 
   // Apex Class
   step('Create an Apex Class', async () => {
     // Using the Command palette, run SFDX: Create Apex Class.
-    const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Create Apex Class',
-      1
-    );
-
-    // Set the name of the new component to ApexClass1.
-    await inputBox.setText('ApexClass1');
-    await inputBox.confirm();
-    await utilities.pause(1);
-
-    // Select the default directory (press Enter/Return).
-    await inputBox.confirm();
-
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Create Apex Class successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Finished SFDX: Create Apex Class',
-      10
-    );
-    expect(outputPanelText).not.toBeUndefined();
-
-    const classPath = path.join('force-app', 'main', 'default', 'classes', 'ApexClass1.cls');
-    expect(outputPanelText).toContain(`create ${classPath}`);
-
-    const metadataPath = path.join(
-      'force-app',
-      'main',
-      'default',
-      'classes',
-      'ApexClass1.cls-meta.xml'
-    );
-    expect(outputPanelText).toContain(`create ${metadataPath}`);
+    await utilities.createCommand('Apex Class', 'ApexClass1', 'classes', 'cls');
 
     // Check for expected items in the Explorer view.
-    const sidebar = workbench.getSideBar();
-    const treeViewSection = await sidebar.getContent().getSection(projectName);
-    await treeViewSection.expand();
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.expandSideBar(workbench, projectName);
 
     // Get the matching (visible) items within the tree which contains "ApexClass1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
@@ -104,57 +61,11 @@ describe('Templates', async () => {
   // Apex Unit Test Class
   step('Create an Apex Unit Test Class', async () => {
     // Using the Command palette, run SFDX: Create Apex Unit Test Class.
-    const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Create Apex Unit Test Class',
-      1
-    );
-
-    // Set the name of the new component to ApexUnitTestClass1.
-    await inputBox.setText('ApexUnitTestClass1');
-    await inputBox.confirm();
-    await utilities.pause(1);
-
-    // Select the default directory (press Enter/Return).
-    await inputBox.confirm();
-
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Create Apex Unit Test Class successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Finished SFDX: Create Apex Unit Test Class',
-      10
-    );
-    expect(outputPanelText).not.toBeUndefined();
-
-    const classPath = path.join(
-      'force-app',
-      'main',
-      'default',
-      'classes',
-      'ApexUnitTestClass1.cls'
-    );
-    expect(outputPanelText).toContain(`create ${classPath}`);
-
-    const metadataPath = path.join(
-      'force-app',
-      'main',
-      'default',
-      'classes',
-      'ApexUnitTestClass1.cls-meta.xml'
-    );
-    expect(outputPanelText).toContain(`create ${metadataPath}`);
+    await utilities.createCommand('Apex Unit Test Class', 'ApexUnitTestClass1', 'classes', 'cls');
 
     // Check for expected items in the Explorer view.
-    const sidebar = workbench.getSideBar();
-    const treeViewSection = await sidebar.getContent().getSection(projectName);
-    await treeViewSection.expand();
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.expandSideBar(workbench, projectName);
 
     // Get the matching (visible) items within the tree which contains "ApexUnitTestClass1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
@@ -186,59 +97,12 @@ describe('Templates', async () => {
 
   // Apex Trigger
   step('Create an Apex Trigger', async () => {
-    // Clear the output panel, then use the Command palette to run, "SFDX: Create Apex Trigger".
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Create Apex Trigger',
-      1
-    );
-
-    // Set the name of the new component to ApexTrigger1.
-    await inputBox.setText('ApexTrigger1');
-    await inputBox.confirm();
-    await utilities.pause(1);
-
-    // Select the default directory (press Enter/Return).
-    await inputBox.confirm();
-
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Create Apex Trigger successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Finished SFDX: Create Apex Trigger',
-      10
-    );
-    expect(outputPanelText).not.toBeUndefined();
-
-    const triggerPath = path.join(
-      'force-app',
-      'main',
-      'default',
-      'triggers',
-      'ApexTrigger1.trigger'
-    );
-    expect(outputPanelText).toContain(`create ${triggerPath}`);
-
-    const metadataPath = path.join(
-      'force-app',
-      'main',
-      'default',
-      'triggers',
-      'ApexTrigger1.trigger-meta.xml'
-    );
-    expect(outputPanelText).toContain(`create ${metadataPath}`);
+    // Using the Command palette, run "SFDX: Create Apex Trigger".
+    await utilities.createCommand('Apex Trigger', 'ApexTrigger1', 'triggers', 'trigger');
 
     // Check for expected items in the Explorer view.
-    const sidebar = workbench.getSideBar();
-    const treeViewSection = await sidebar.getContent().getSection(projectName);
-    await treeViewSection.expand();
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.expandSideBar(workbench, projectName);
 
     // Get the matching (visible) items within the tree which contains "ApexTrigger1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
@@ -262,96 +126,28 @@ describe('Templates', async () => {
   // Aura App
   step('Create an Aura App', async () => {
     // Clear the output panel, then use the Command palette to run, "SFDX: Create Aura App".
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Create Aura App',
-      1
-    );
-
-    // Set the name of the new component to AuraApp1.
-    await inputBox.setText('AuraApp1');
-    await inputBox.confirm();
-    await utilities.pause(1);
-
-    // Select the default directory (press Enter/Return).
-    await inputBox.confirm();
-
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Create Aura App successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Finished SFDX: Create Aura App',
-      10
-    );
-    expect(outputPanelText).not.toBeUndefined();
-
-    const appPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1.app');
-    expect(outputPanelText).toContain(`create ${appPath}`);
-
-    const metadataPath = path.join(
-      'force-app',
-      'main',
-      'default',
-      'aura',
-      'AuraApp1',
-      'AuraApp1.app-meta.xml'
-    );
-    expect(outputPanelText).toContain(`create ${metadataPath}`);
-
-    const docPath = path.join(
-      'force-app',
-      'main',
-      'default',
-      'aura',
-      'AuraApp1',
-      'AuraApp1.auradoc'
-    );
+    const outputPanelText = await utilities.createCommand('Aura App', 'AuraApp1', 'aura', 'app');
+    const basePath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1');
+    const docPath = path.join(basePath, 'AuraApp1.auradoc');
     expect(outputPanelText).toContain(`create ${docPath}`);
 
-    const cssPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1.css');
+    const cssPath = path.join(basePath, 'AuraApp1.css');
     expect(outputPanelText).toContain(`create ${cssPath}`);
 
-    const svgPath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1', 'AuraApp1.svg');
+    const svgPath = path.join(basePath, 'AuraApp1.svg');
     expect(outputPanelText).toContain(`create ${svgPath}`);
 
-    const controllerPath = path.join(
-      'force-app',
-      'main',
-      'default',
-      'aura',
-      'AuraApp1',
-      'AuraApp1Controller.js'
-    );
+    const controllerPath = path.join(basePath, 'AuraApp1Controller.js');
     expect(outputPanelText).toContain(`create ${controllerPath}`);
 
-    const helperPath = path.join(
-      'force-app',
-      'main',
-      'default',
-      'aura',
-      'AuraApp1',
-      'AuraApp1Helper.js'
-    );
+    const helperPath = path.join(basePath, 'AuraApp1Helper.js');
     expect(outputPanelText).toContain(`create ${helperPath}`);
 
-    const rendererPath = path.join(
-      'force-app',
-      'main',
-      'default',
-      'aura',
-      'AuraApp1',
-      'AuraApp1Renderer.js'
-    );
+    const rendererPath = path.join(basePath, 'AuraApp1Renderer.js');
     expect(outputPanelText).toContain(`create ${rendererPath}`);
 
     // Get the matching (visible) items within the tree which contains "AuraApp1".
+    const workbench = await (await browser.getWorkbench()).wait();
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
       workbench,
       projectName,
@@ -379,35 +175,9 @@ describe('Templates', async () => {
   // Aura Component
   step('Create an Aura Component', async () => {
     // Using the Command palette, run SFDX: Create Aura Component.
-    const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Create Aura Component',
-      1
-    );
-
-    // Set the name of the new component to auraComponent1.
-    await inputBox.setText('auraComponent1');
-    await inputBox.confirm();
-    await utilities.pause(1);
-
-    // Select the default directory (press Enter/Return).
-    await inputBox.confirm();
-
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Create Aura Component successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Finished SFDX: Create Aura Component',
-      10
-    );
-    expect(outputPanelText).not.toBeUndefined();
+    await utilities.createCommand('Aura Component', 'auraComponent1', 'aura', 'cmp');
     // Zoom out so all tree items are visible
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
     // Check for the presence of the directory, "auraComponent1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
@@ -440,39 +210,11 @@ describe('Templates', async () => {
   // Aura Event
   step('Create an Aura Event', async () => {
     // Using the Command palette, run SFDX: Create Aura Component.
-    const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Create Aura Event',
-      1
-    );
-
-    // Set the name of the new component to auraComponent1.
-    await inputBox.setText('auraEvent1');
-    await inputBox.confirm();
-    await utilities.pause(1);
-
-    // Select the default directory (press Enter/Return).
-    await inputBox.confirm();
-
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Create Aura Event successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Finished SFDX: Create Aura Event',
-      10
-    );
-    expect(outputPanelText).not.toBeUndefined();
+    await utilities.createCommand('Aura Event', 'auraEvent1', 'aura', 'evt');
 
     // Check for expected items in the Explorer view.
-    const sidebar = workbench.getSideBar();
-    const treeViewSection = await sidebar.getContent().getSection(projectName);
-    await treeViewSection.expand();
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.expandSideBar(workbench, projectName);
 
     // Check for the presence of the directory, "auraEvent1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
@@ -481,7 +223,6 @@ describe('Templates', async () => {
       'auraEvent1'
     );
     expect(filteredTreeViewItems.includes('auraEvent1')).toBe(true);
-
     expect(filteredTreeViewItems.includes('auraEvent1.evt')).toBe(true);
     expect(filteredTreeViewItems.includes('auraEvent1.evt-meta.xml')).toBe(true);
   });
@@ -498,58 +239,11 @@ describe('Templates', async () => {
 
   // Aura Interface
   step('Create an Aura Interface', async () => {
-    // Clear the output panel, then use the Command palette to run, "SFDX: Create Aura Interface".
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Create Aura Interface',
-      1
-    );
-
-    // Set the name of the new interface to AuraInterface1.
-    await inputBox.setText('AuraInterface1');
-    await inputBox.confirm();
-    await utilities.pause(1);
-
-    // Select the default directory (press Enter/Return).
-    await inputBox.confirm();
-
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Create Aura Interface successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Finished SFDX: Create Aura Interface',
-      10
-    );
-    expect(outputPanelText).not.toBeUndefined();
-
-    const interfacePath = path.join(
-      'force-app',
-      'main',
-      'default',
-      'aura',
-      'AuraInterface1',
-      'AuraInterface1.intf'
-    );
-    expect(outputPanelText).toContain(`create ${interfacePath}`);
-
-    const metadataPath = path.join(
-      'force-app',
-      'main',
-      'default',
-      'aura',
-      'AuraInterface1',
-      'AuraInterface1.intf-meta.xml'
-    );
-    expect(outputPanelText).toContain(`create ${metadataPath}`);
+    // Using the Command palette, run "SFDX: Create Aura Interface".
+    await utilities.createCommand('Aura Interface', 'AuraInterface1', 'aura', 'intf');
 
     // Get the matching (visible) items within the tree which contains "AuraInterface1".
+    const workbench = await (await browser.getWorkbench()).wait();
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
       workbench,
       projectName,
@@ -576,39 +270,11 @@ describe('Templates', async () => {
   // Lightning Web Component
   step('Create Lightning Web Component', async () => {
     // Using the Command palette, run SFDX: Create Lightning Web Component.
-    const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Create Lightning Web Component',
-      1
-    );
-
-    // Set the name of the new component to lightningWebComponent1.
-    await inputBox.setText('lightningWebComponent1');
-    await inputBox.confirm();
-    await utilities.pause(1);
-
-    // Select the default directory (press Enter/Return).
-    await inputBox.confirm();
-
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Create Lightning Web Component successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Finished SFDX: Create Lightning Web Component',
-      10
-    );
-    expect(outputPanelText).not.toBeUndefined();
+    await utilities.createCommand('Lightning Web Component', 'lightningWebComponent1', 'lwc', 'js');
 
     // Check for expected items in the Explorer view.
-    const sidebar = workbench.getSideBar();
-    const treeViewSection = await sidebar.getContent().getSection(projectName);
-    await treeViewSection.expand();
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.expandSideBar(workbench, projectName);
 
     // Check for the presence of the directory, "lightningWebComponent1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
@@ -617,7 +283,6 @@ describe('Templates', async () => {
       'lightningWebComponent1'
     );
     expect(filteredTreeViewItems.includes('lightningWebComponent1')).toBe(true);
-
     expect(filteredTreeViewItems.includes('lightningWebComponent1.html')).toBe(true);
     expect(filteredTreeViewItems.includes('lightningWebComponent1.js')).toBe(true);
     expect(filteredTreeViewItems.includes('lightningWebComponent1.js-meta.xml')).toBe(true);
@@ -690,9 +355,7 @@ describe('Templates', async () => {
 
     // Check for expected item in the Explorer view.
     await utilities.getTextEditor(workbench, 'lightningWebComponent1.test.js');
-    const sidebar = workbench.getSideBar();
-    const treeViewSection = await sidebar.getContent().getSection(projectName);
-    await treeViewSection.expand();
+    const treeViewSection = await utilities.expandSideBar(workbench, projectName);
     const lwcTestFolder = await treeViewSection.findItem('__tests__');
     await lwcTestFolder?.select();
     const testItem = await treeViewSection.findItem('lightningWebComponent1.test.js');
@@ -729,56 +392,15 @@ describe('Templates', async () => {
 
   // Visualforce Component
   step('Create a Visualforce Component', async () => {
-    // Clear the output panel, then use the Command palette to run, "SFDX: Create Visualforce Component".
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Create Visualforce Component',
-      1
-    );
-
-    // Set the name of the new component to VisualforceCmp1.
-    await inputBox.setText('VisualforceCmp1');
-    await inputBox.confirm();
-    await utilities.pause(1);
-
-    // Select the default directory (press Enter/Return).
-    await inputBox.confirm();
-
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Create Visualforce Component successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Finished SFDX: Create Visualforce Component',
-      10
-    );
-    expect(outputPanelText).not.toBeUndefined();
-
-    const componentPath = path.join(
-      'force-app',
-      'main',
-      'default',
+    // Using the Command palette, run "SFDX: Create Visualforce Component".
+    await utilities.createCommand(
+      'Visualforce Component',
+      'VisualforceCmp1',
       'components',
-      'VisualforceCmp1.component'
+      'component'
     );
-    expect(outputPanelText).toContain(`create ${componentPath}`);
-
-    const metadataPath = path.join(
-      'force-app',
-      'main',
-      'default',
-      'components',
-      'VisualforceCmp1.component-meta.xml'
-    );
-    expect(outputPanelText).toContain(`create ${metadataPath}`);
-
     // Get the matching (visible) items within the tree which contains "AuraInterface1".
+    const workbench = await (await browser.getWorkbench()).wait();
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
       workbench,
       projectName,
@@ -806,56 +428,11 @@ describe('Templates', async () => {
 
   // Visualforce Page
   step('Create a Visualforce Page', async () => {
-    // Clear the output panel, then use the Command palette to run, "SFDX: Create Visualforce Page".
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Create Visualforce Page',
-      1
-    );
-
-    // Set the name of the new page to VisualforcePage1.
-    await inputBox.setText('VisualforcePage1');
-    await inputBox.confirm();
-    await utilities.pause(1);
-
-    // Select the default directory (press Enter/Return).
-    await inputBox.confirm();
-
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Create Visualforce Page successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Finished SFDX: Create Visualforce Page',
-      10
-    );
-    expect(outputPanelText).not.toBeUndefined();
-
-    const visualforcePagePath = path.join(
-      'force-app',
-      'main',
-      'default',
-      'pages',
-      'VisualforcePage1.page'
-    );
-    expect(outputPanelText).toContain(`create ${visualforcePagePath}`);
-
-    const metadataPath = path.join(
-      'force-app',
-      'main',
-      'default',
-      'pages',
-      'VisualforcePage1.page-meta.xml'
-    );
-    expect(outputPanelText).toContain(`create ${metadataPath}`);
+    // Using the Command palette, run "SFDX: Create Visualforce Page".
+    await utilities.createCommand('Visualforce Page', 'VisualforcePage1', 'pages', 'page');
 
     // Get the matching (visible) items within the tree which contains "AuraInterface1".
+    const workbench = await (await browser.getWorkbench()).wait();
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
       workbench,
       projectName,
@@ -915,9 +492,7 @@ describe('Templates', async () => {
     expect(outputPanelText).not.toBeUndefined();
 
     // Check for expected items in the Explorer view.
-    const sidebar = workbench.getSideBar();
-    const treeViewSection = await sidebar.getContent().getSection(projectName);
-    await treeViewSection.expand();
+    await utilities.expandSideBar(workbench, projectName);
 
     // Check for the presence of the directory, "sampleAnalyticsTemplate1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
