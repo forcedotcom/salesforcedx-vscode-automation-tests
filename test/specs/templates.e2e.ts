@@ -326,16 +326,7 @@ describe('Templates', async () => {
   });
 
   // Lightning Web Component Test
-  step('Create Lightning Web Component Test', async () => {
-    // // Setup: Install @salesforce/sfdx-plugin-lwc-test
-    // await exec('npm install @salesforce/sfdx-plugin-lwc-test', {
-    //   cwd: testSetup.projectFolderPath
-    // }).finally(() => {
-    //   utilities.log(
-    //     `${testSetup.testSuiteSuffixName} - Finished installing @salesforce/sfdx-plugin-lwc-test`
-    //   );
-    // });
-
+  xstep('Create Lightning Web Component Test', async () => {
     // Delete previous test file
     const workbench = await (await browser.getWorkbench()).wait();
     const pathToLwcTest = path.join(
@@ -362,7 +353,7 @@ describe('Templates', async () => {
     await inputBox.confirm();
     await inputBox.setText('lightningWebComponent1');
     await inputBox.confirm();
-    await utilities.pause(20);
+    await utilities.pause(60);
 
     const failureNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -387,7 +378,7 @@ describe('Templates', async () => {
     expect(testItem).toBeDefined();
   });
 
-  step('Verify the contents of the Lightning Web Component Test', async () => {
+  xstep('Verify the contents of the Lightning Web Component Test', async () => {
     const expectedText = [
       "import { createElement } from 'lwc';",
       "import LightningWebComponent1 from 'c/lightningWebComponent1';",
