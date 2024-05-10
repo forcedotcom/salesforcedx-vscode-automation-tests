@@ -126,7 +126,12 @@ describe('Templates', async () => {
   // Aura App
   step('Create an Aura App', async () => {
     // Clear the output panel, then use the Command palette to run, "SFDX: Create Aura App".
-    const outputPanelText = await utilities.createCommand('Aura App', 'AuraApp1', 'aura', 'app');
+    const outputPanelText = await utilities.createCommand(
+      'Aura App',
+      'AuraApp1',
+      path.join('aura', 'AuraApp1'),
+      'app'
+    );
     const basePath = path.join('force-app', 'main', 'default', 'aura', 'AuraApp1');
     const docPath = path.join(basePath, 'AuraApp1.auradoc');
     expect(outputPanelText).toContain(`create ${docPath}`);
@@ -175,7 +180,12 @@ describe('Templates', async () => {
   // Aura Component
   step('Create an Aura Component', async () => {
     // Using the Command palette, run SFDX: Create Aura Component.
-    await utilities.createCommand('Aura Component', 'auraComponent1', 'aura', 'cmp');
+    await utilities.createCommand(
+      'Aura Component',
+      'auraComponent1',
+      path.join('aura', 'auraComponent1'),
+      'cmp'
+    );
     // Zoom out so all tree items are visible
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
@@ -210,7 +220,12 @@ describe('Templates', async () => {
   // Aura Event
   step('Create an Aura Event', async () => {
     // Using the Command palette, run SFDX: Create Aura Component.
-    await utilities.createCommand('Aura Event', 'auraEvent1', 'aura', 'evt');
+    await utilities.createCommand(
+      'Aura Event',
+      'auraEvent1',
+      path.join('aura', 'auraEvent1'),
+      'evt'
+    );
 
     // Check for expected items in the Explorer view.
     const workbench = await (await browser.getWorkbench()).wait();
@@ -240,7 +255,12 @@ describe('Templates', async () => {
   // Aura Interface
   step('Create an Aura Interface', async () => {
     // Using the Command palette, run "SFDX: Create Aura Interface".
-    await utilities.createCommand('Aura Interface', 'AuraInterface1', 'aura', 'intf');
+    await utilities.createCommand(
+      'Aura Interface',
+      'AuraInterface1',
+      path.join('aura', 'AuraInterface1'),
+      'intf'
+    );
 
     // Get the matching (visible) items within the tree which contains "AuraInterface1".
     const workbench = await (await browser.getWorkbench()).wait();
@@ -270,7 +290,12 @@ describe('Templates', async () => {
   // Lightning Web Component
   step('Create Lightning Web Component', async () => {
     // Using the Command palette, run SFDX: Create Lightning Web Component.
-    await utilities.createCommand('Lightning Web Component', 'lightningWebComponent1', 'lwc', 'js');
+    await utilities.createCommand(
+      'Lightning Web Component',
+      'lightningWebComponent1',
+      path.join('lwc', 'lightningWebComponent1'),
+      'js'
+    );
 
     // Check for expected items in the Explorer view.
     const workbench = await (await browser.getWorkbench()).wait();
