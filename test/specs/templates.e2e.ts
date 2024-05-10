@@ -637,6 +637,15 @@ describe('Templates', async () => {
 
   // Lightning Web Component Test
   step('Create Lightning Web Component Test', async () => {
+    // Setup: Install @salesforce/sfdx-plugin-lwc-test
+    await exec('npm install @salesforce/sfdx-plugin-lwc-test', {
+      cwd: testSetup.projectFolderPath
+    }).finally(() => {
+      utilities.log(
+        `${testSetup.testSuiteSuffixName} - Finished installing @salesforce/sfdx-plugin-lwc-test`
+      );
+    });
+
     // Delete previous test file
     const workbench = await (await browser.getWorkbench()).wait();
     const pathToLwcTest = path.join(
@@ -680,6 +689,7 @@ describe('Templates', async () => {
     expect(outputPanelText).not.toBeUndefined();
 
     // Check for expected item in the Explorer view.
+    await utilities.getTextEditor(workbench, 'lightningWebComponent1.test.js');
     const sidebar = workbench.getSideBar();
     const treeViewSection = await sidebar.getContent().getSection(projectName);
     await treeViewSection.expand();
