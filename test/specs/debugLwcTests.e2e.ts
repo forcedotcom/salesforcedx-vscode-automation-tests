@@ -18,6 +18,7 @@ const exec = util.promisify(child_process.exec);
 describe('Debug LWC Tests', async () => {
   let testSetup: TestSetup;
   let projectFolderPath: string;
+  const CONTINUE = 'F5';
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('DebugLWCTests', false);
@@ -84,13 +85,7 @@ describe('Debug LWC Tests', async () => {
     await utilities.pause(10);
 
     // Continue with the debug session
-    await browser.keys(['F5']);
-    await utilities.pause(3);
-    await browser.keys(['F5']);
-    await utilities.pause(3);
-    await browser.keys(['F5']);
-    await utilities.pause(1);
-    await browser.keys(['Escape']);
+    await continueDebugging();
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -142,13 +137,7 @@ describe('Debug LWC Tests', async () => {
     await utilities.pause(10);
 
     // Continue with the debug session
-    await browser.keys(['F5']);
-    await utilities.pause(3);
-    await browser.keys(['F5']);
-    await utilities.pause(3);
-    await browser.keys(['F5']);
-    await utilities.pause(1);
-    await browser.keys(['Escape']);
+    await continueDebugging();
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -190,13 +179,7 @@ describe('Debug LWC Tests', async () => {
     );
 
     // Continue with the debug session
-    await browser.keys(['F5']);
-    await utilities.pause(3);
-    await browser.keys(['F5']);
-    await utilities.pause(3);
-    await browser.keys(['F5']);
-    await utilities.pause(1);
-    await browser.keys(['Escape']);
+    await continueDebugging();
 
     // Verify test results are listed on vscode's Output section
     // Also verify that all tests pass
@@ -225,13 +208,7 @@ describe('Debug LWC Tests', async () => {
     await utilities.pause(10);
 
     // Continue with the debug session
-    await browser.keys(['F5']);
-    await utilities.pause(3);
-    await browser.keys(['F5']);
-    await utilities.pause(3);
-    await browser.keys(['F5']);
-    await utilities.pause(1);
-    await browser.keys(['Escape']);
+    await continueDebugging();
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -262,13 +239,7 @@ describe('Debug LWC Tests', async () => {
     await utilities.pause(10);
 
     // Continue with the debug session
-    await browser.keys(['F5']);
-    await utilities.pause(3);
-    await browser.keys(['F5']);
-    await utilities.pause(3);
-    await browser.keys(['F5']);
-    await utilities.pause(1);
-    await browser.keys(['Escape']);
+    await continueDebugging();
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -288,4 +259,15 @@ describe('Debug LWC Tests', async () => {
   step('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
+
+  const continueDebugging = async (): Promise<void> => {
+    // Continue with the debug session
+    await browser.keys(CONTINUE);
+    await utilities.pause(3);
+    await browser.keys(CONTINUE);
+    await utilities.pause(3);
+    await browser.keys(CONTINUE);
+    await utilities.pause(1);
+    await browser.keys('Escape');
+  };
 });
