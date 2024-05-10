@@ -11,6 +11,7 @@ import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import path from 'path';
 import util from 'util';
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 const exec = util.promisify(child_process.exec);
 
@@ -253,6 +254,7 @@ describe('Debug LWC Tests', async () => {
 
     // Click the "Debug Test" code lens at the top of one of the test methods
     const textEditor = await utilities.getTextEditor(workbench, 'lwc2.test.js');
+    await browser.keys([CMD_KEY, 'ArrowUp']);
     const codeLens = await textEditor.getCodeLens('Debug Test');
     const codeLensElem = await codeLens?.elem;
     const debugTestOption = await codeLensElem?.$('=Debug Test');
