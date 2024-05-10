@@ -237,6 +237,13 @@ describe('Apex Replay Debugger', async () => {
     await utilities.pause(1);
     await browser.keys(['F5']);
     await utilities.pause(1);
+
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+      workbench,
+      'Debug Test(s) successfully ran',
+      utilities.TEN_MINUTES
+    );
+    expect(successNotificationWasFound).toBe(true);
   });
 
   step('Run the Anonymous Apex Debugger using the Command Palette', async () => {
