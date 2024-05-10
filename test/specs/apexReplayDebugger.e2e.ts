@@ -205,7 +205,7 @@ describe('Apex Replay Debugger', async () => {
     await utilities.pause(1);
   });
 
-  step('SFDX: Launch Apex Replay Debugger with Current File', async () => {
+  step('SFDX: Launch Apex Replay Debugger with Current File - log file', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Open Previous Editor');
@@ -213,6 +213,23 @@ describe('Apex Replay Debugger', async () => {
       workbench,
       'SFDX: Launch Apex Replay Debugger with Current File',
       1
+    );
+
+    // Continue with the debug session
+    await browser.keys(['F5']);
+    await utilities.pause(1);
+    await browser.keys(['F5']);
+    await utilities.pause(1);
+  });
+
+  step('SFDX: Launch Apex Replay Debugger with Current File - test class', async () => {
+    // Run SFDX: Launch Apex Replay Debugger with Current File
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.getTextEditor(workbench, 'ExampleApexClassTest.cls');
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Launch Apex Replay Debugger with Current File',
+      3
     );
 
     // Continue with the debug session
