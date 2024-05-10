@@ -14,6 +14,7 @@ import * as utilities from '../utilities';
 describe('Apex Replay Debugger', async () => {
   let prompt: QuickOpenBox | InputBox;
   let testSetup: TestSetup;
+  const CONTINUE = 'F5';
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('ApexReplayDebugger', false);
@@ -199,10 +200,7 @@ describe('Apex Replay Debugger', async () => {
     await utilities.pause(1);
 
     // Continue with the debug session
-    await browser.keys(['F5']);
-    await utilities.pause(1);
-    await browser.keys(['F5']);
-    await utilities.pause(1);
+    await continueDebugging();
   });
 
   step('SFDX: Launch Apex Replay Debugger with Current File - log file', async () => {
@@ -216,10 +214,7 @@ describe('Apex Replay Debugger', async () => {
     );
 
     // Continue with the debug session
-    await browser.keys(['F5']);
-    await utilities.pause(1);
-    await browser.keys(['F5']);
-    await utilities.pause(1);
+    await continueDebugging();
   });
 
   step('SFDX: Launch Apex Replay Debugger with Current File - test class', async () => {
@@ -233,10 +228,7 @@ describe('Apex Replay Debugger', async () => {
     );
 
     // Continue with the debug session
-    await browser.keys(['F5']);
-    await utilities.pause(1);
-    await browser.keys(['F5']);
-    await utilities.pause(1);
+    await continueDebugging();
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -317,4 +309,11 @@ describe('Apex Replay Debugger', async () => {
   step('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
+
+  const continueDebugging = async (): Promise<void> => {
+    await browser.keys(CONTINUE);
+    await utilities.pause(1);
+    await browser.keys(CONTINUE);
+    await utilities.pause(1);
+  };
 });
