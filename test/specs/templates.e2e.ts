@@ -327,14 +327,14 @@ describe('Templates', async () => {
 
   // Lightning Web Component Test
   step('Create Lightning Web Component Test', async () => {
-    // Setup: Install @salesforce/sfdx-plugin-lwc-test
-    await exec('npm install @salesforce/sfdx-plugin-lwc-test', {
-      cwd: testSetup.projectFolderPath
-    }).finally(() => {
-      utilities.log(
-        `${testSetup.testSuiteSuffixName} - Finished installing @salesforce/sfdx-plugin-lwc-test`
-      );
-    });
+    // // Setup: Install @salesforce/sfdx-plugin-lwc-test
+    // await exec('npm install @salesforce/sfdx-plugin-lwc-test', {
+    //   cwd: testSetup.projectFolderPath
+    // }).finally(() => {
+    //   utilities.log(
+    //     `${testSetup.testSuiteSuffixName} - Finished installing @salesforce/sfdx-plugin-lwc-test`
+    //   );
+    // });
 
     // Delete previous test file
     const workbench = await (await browser.getWorkbench()).wait();
@@ -362,7 +362,7 @@ describe('Templates', async () => {
     await inputBox.confirm();
     await inputBox.setText('lightningWebComponent1');
     await inputBox.confirm();
-    await utilities.pause(3);
+    await utilities.pause(20);
 
     const failureNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
