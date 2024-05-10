@@ -255,7 +255,7 @@ describe('Debug LWC Tests', async () => {
     // Click the "Debug Test" code lens at the top of one of the test methods
     const textEditor = await utilities.getTextEditor(workbench, 'lwc2.test.js');
     await browser.keys([CMD_KEY, 'ArrowUp']);
-    const codeLens = await textEditor.getCodeLens('Debug Test');
+    const codeLens = await textEditor.getCodeLens('Run Test');
     const codeLensElem = await codeLens?.elem;
     const debugTestOption = await codeLensElem?.$('=Debug Test');
     await debugTestOption!.click();
