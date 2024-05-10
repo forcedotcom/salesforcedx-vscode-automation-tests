@@ -218,10 +218,7 @@ describe('Run Apex Tests', async () => {
     const testingSideBarView = await testingView?.openView();
     expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
-    const sidebar = workbench.getSideBar();
-    const sidebarView = sidebar.getContent();
-    const apexTestsSection = await sidebarView.getSection('APEX TESTS');
-    expect(apexTestsSection.elem).toBePresent();
+    const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');
 
     const apexTestsItems = await utilities.retrieveExpectedNumTestsFromSidebar(
       6,
@@ -294,10 +291,7 @@ describe('Run Apex Tests', async () => {
     const testingSideBarView = await testingView?.openView();
     expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
-    const sidebar = workbench.getSideBar();
-    const sidebarView = sidebar.getContent();
-    const apexTestsSection = await sidebarView.getSection('APEX TESTS');
-    expect(apexTestsSection.elem).toBePresent();
+    const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
@@ -352,10 +346,7 @@ describe('Run Apex Tests', async () => {
     const testingSideBarView = await testingView?.openView();
     expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
-    const sidebar = workbench.getSideBar();
-    const sidebarView = sidebar.getContent();
-    const apexTestsSection = await sidebarView.getSection('APEX TESTS');
-    expect(apexTestsSection.elem).toBePresent();
+    const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();

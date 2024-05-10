@@ -126,7 +126,7 @@ export async function retrieveExpectedNumTestsFromSidebar(
   let testsItems = (await testsSection.getVisibleItems()) as TreeItem[];
   await browser.keys(['Escape']);
 
-  // If the Apex tests did not show up, click the refresh button on the top right corner of the Test sidebar
+  // If the tests did not show up, click the refresh button on the top right corner of the Test sidebar
   for (let x = 0; x < 3; x++) {
     if (testsItems.length === 1) {
       await testsSection.elem.click();
@@ -140,4 +140,12 @@ export async function retrieveExpectedNumTestsFromSidebar(
   }
 
   return testsItems;
+}
+
+export async function getTestsSection(workbench: Workbench, type: string) {
+  const sidebar = workbench.getSideBar();
+  const sidebarView = sidebar.getContent();
+  const testsSection = await sidebarView.getSection(type);
+  expect(testsSection.elem).toBePresent();
+  return testsSection;
 }
