@@ -517,7 +517,6 @@ describe('Templates', async () => {
       projectName,
       'waveTemplates'
     );
-    console.log(filteredTreeViewItems);
     expect(filteredTreeViewItems.includes('app-to-template-rules.json')).toBe(true);
     expect(filteredTreeViewItems.includes('folder.json')).toBe(true);
     expect(filteredTreeViewItems.includes('releaseNotes.html')).toBe(true);
