@@ -7,6 +7,7 @@
 
 import { DefaultTreeItem, TreeItem, ViewItem, Workbench, ViewSection } from 'wdio-vscode-service';
 import { pause } from './miscellaneous';
+import { fail } from 'assert';
 
 export async function getFilteredVisibleTreeViewItems(
   workbench: Workbench,
@@ -131,7 +132,10 @@ export async function retrieveExpectedNumTestsFromSidebar(
     if (testsItems.length === 1) {
       await testsSection.elem.click();
       const refreshAction = await testsSection.getAction(actionLabel);
-      await refreshAction!.elem.click();
+      if (!refreshAction) {
+        fail('Could not find debug tests action button');
+      }
+      await refreshAction.elem.click();
       pause(10);
       testsItems = (await testsSection.getVisibleItems()) as TreeItem[];
     } else if (testsItems.length === expectedNumTests) {

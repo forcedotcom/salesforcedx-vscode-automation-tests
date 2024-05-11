@@ -37,7 +37,6 @@ describe('Debug LWC Tests', async () => {
       await exec(`sf force:lightning:lwc:test:setup`, {
         cwd: testSetup.projectFolderPath
       });
-      await utilities.pause(20);
     });
 
     step('Verify Extension is Running', async () => {
