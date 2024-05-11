@@ -515,8 +515,9 @@ describe('Templates', async () => {
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
       workbench,
       projectName,
-      'sat1'
+      'waveTemplates'
     );
+    console.log(filteredTreeViewItems);
     expect(filteredTreeViewItems.includes('app-to-template-rules.json')).toBe(true);
     expect(filteredTreeViewItems.includes('folder.json')).toBe(true);
     expect(filteredTreeViewItems.includes('releaseNotes.html')).toBe(true);
