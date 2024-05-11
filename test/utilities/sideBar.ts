@@ -54,11 +54,11 @@ export async function getFilteredVisibleTreeViewItemLabels(
 
   // Warning, we can only retrieve the items which are visible.
   const visibleItems = (await treeViewSection.getVisibleItems()) as DefaultTreeItem[];
-  console.log('visible items', visibleItems);
   const filteredItems = (await visibleItems.reduce(
     async (previousPromise: Promise<string[]>, currentItem: ViewItem) => {
       const results = await previousPromise;
       const label = await (currentItem as TreeItem).getLabel();
+      console.log('item', label);
       if (label.startsWith(searchString)) {
         results.push(label);
       }
