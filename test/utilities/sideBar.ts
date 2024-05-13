@@ -9,14 +9,34 @@ import { DefaultTreeItem, TreeItem, ViewItem, Workbench, ViewSection } from 'wdi
 import { pause } from './miscellaneous';
 import { fail } from 'assert';
 
+export async function expandSideBar(
+  workbench: Workbench,
+  projectName: string
+): Promise<ViewSection> {
+  const sidebar = workbench.getSideBar();
+  const treeViewSection = await sidebar.getContent().getSection(projectName);
+  await treeViewSection.expand();
+  return treeViewSection;
+}
+
+export async function getVisibleItemsFromSidebar(workbench: Workbench, projectName: string) {
+  const treeViewSection = await expandSideBar(workbench, projectName);
+
+  // Warning, we can only retrieve the items which are visible.
+  const visibleItems = (await treeViewSection.getVisibleItems()) as DefaultTreeItem[];
+  const visibleItemsLabels = await Promise.all(
+    visibleItems.map((item) => item.getLabel().then((label) => label))
+  );
+
+  return visibleItemsLabels;
+}
+
 export async function getFilteredVisibleTreeViewItems(
   workbench: Workbench,
   projectName: string,
   searchString: string
 ): Promise<DefaultTreeItem[]> {
-  const sidebar = workbench.getSideBar();
-  const treeViewSection = await sidebar.getContent().getSection(projectName);
-  await treeViewSection.expand();
+  const treeViewSection = await expandSideBar(workbench, projectName);
 
   // Warning, we can only retrieve the items which are visible.
   const visibleItems = (await treeViewSection.getVisibleItems()) as DefaultTreeItem[];
@@ -43,9 +63,7 @@ export async function getFilteredVisibleTreeViewItemLabels(
   projectName: string,
   searchString: string
 ): Promise<string[]> {
-  const sidebar = workbench.getSideBar();
-  const treeViewSection = await sidebar.getContent().getSection(projectName);
-  await treeViewSection.expand();
+  const treeViewSection = await expandSideBar(workbench, projectName);
 
   // Warning, we can only retrieve the items which are visible.
   const visibleItems = (await treeViewSection.getVisibleItems()) as DefaultTreeItem[];

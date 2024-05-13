@@ -10,6 +10,8 @@ import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings';
 import { attemptToFindOutputPanelText } from './outputView';
 import { runCommandFromCommandPrompt } from './commandPrompt';
+import { notificationIsPresentWithTimeout } from './notifications';
+import path from 'path';
 
 export const FIVE_MINUTES = 5 * 60;
 export const TEN_MINUTES = 10 * 60;
@@ -102,4 +104,49 @@ export async function getTextEditor(workbench: Workbench, fileName: string): Pro
   const editorView = workbench.getEditorView();
   const textEditor = (await editorView.openEditor(fileName)) as TextEditor;
   return textEditor;
+}
+
+export async function createCommand(
+  type: string,
+  name: string,
+  folder: string,
+  extension: string
+): Promise<string | undefined> {
+  const workbench = await (await browser.getWorkbench()).wait();
+  await runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+  const inputBox = await runCommandFromCommandPrompt(workbench, `SFDX: Create ${type}`, 1);
+
+  // Set the name of the new component to name.
+  await inputBox.setText(name);
+  await inputBox.confirm();
+  await pause(1);
+
+  // Select the default directory (press Enter/Return).
+  await inputBox.confirm();
+
+  const successNotificationWasFound = await notificationIsPresentWithTimeout(
+    workbench,
+    `SFDX: Create ${type} successfully ran`,
+    TEN_MINUTES
+  );
+  expect(successNotificationWasFound).toBe(true);
+
+  const outputPanelText = await attemptToFindOutputPanelText(
+    `Salesforce CLI`,
+    `Finished SFDX: Create ${type}`,
+    10
+  );
+  expect(outputPanelText).not.toBeUndefined();
+  const typePath = path.join(`force-app`, `main`, `default`, folder, `${name}.${extension}`);
+  expect(outputPanelText).toContain(`create ${typePath}`);
+
+  const metadataPath = path.join(
+    `force-app`,
+    `main`,
+    `default`,
+    folder,
+    `${name}.${extension}-meta.xml`
+  );
+  expect(outputPanelText).toContain(`create ${metadataPath}`);
+  return outputPanelText;
 }
