@@ -511,19 +511,16 @@ describe('Templates', async () => {
     // Check for expected items in the Explorer view.
     await utilities.expandSideBar(workbench, projectName);
 
-    // Check for the presence of the directory, "sat1".
-    const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
-      workbench,
-      projectName,
-      'dashboards'
-    );
-    expect(filteredTreeViewItems.includes('app-to-template-rules.json')).toBe(true);
-    expect(filteredTreeViewItems.includes('folder.json')).toBe(true);
-    expect(filteredTreeViewItems.includes('releaseNotes.html')).toBe(true);
-    expect(filteredTreeViewItems.includes('template-info.json')).toBe(true);
-    expect(filteredTreeViewItems.includes('template-to-app-rules.json')).toBe(true);
-    expect(filteredTreeViewItems.includes('ui.json')).toBe(true);
-    expect(filteredTreeViewItems.includes('variables.json')).toBe(true);
+    // Check for the presence of the corresponding files
+    const treeViewItems = await utilities.getVisibleItemsFromSidebar(workbench, projectName);
+    expect(treeViewItems.includes('dashboards')).toBe(true);
+    expect(treeViewItems.includes('app-to-template-rules.json')).toBe(true);
+    expect(treeViewItems.includes('folder.json')).toBe(true);
+    expect(treeViewItems.includes('releaseNotes.html')).toBe(true);
+    expect(treeViewItems.includes('template-info.json')).toBe(true);
+    expect(treeViewItems.includes('template-to-app-rules.json')).toBe(true);
+    expect(treeViewItems.includes('ui.json')).toBe(true);
+    expect(treeViewItems.includes('variables.json')).toBe(true);
   });
 
   step('Verify the contents of the Sample Analytics Template', async () => {

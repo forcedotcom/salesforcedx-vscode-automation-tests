@@ -18,6 +18,25 @@ export async function expandSideBar(
   return treeViewSection;
 }
 
+export async function getVisibleItemsFromSidebar(workbench: Workbench, projectName: string) {
+  const treeViewSection = await expandSideBar(workbench, projectName);
+
+  // Warning, we can only retrieve the items which are visible.
+  const visibleItems = (await treeViewSection.getVisibleItems()) as DefaultTreeItem[];
+  const visibleItemsLabels = await visibleItems.reduce(
+    async (previousPromise: Promise<string[]>, currentItem: DefaultTreeItem) => {
+      const results = await previousPromise;
+      const label = await currentItem.getLabel();
+      results.push(label);
+
+      return results;
+    },
+    Promise.resolve([])
+  );
+
+  return visibleItemsLabels;
+}
+
 export async function getFilteredVisibleTreeViewItems(
   workbench: Workbench,
   projectName: string,
