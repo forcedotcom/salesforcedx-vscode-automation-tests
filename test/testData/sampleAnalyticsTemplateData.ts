@@ -121,8 +121,8 @@ export const releaseNotes = '<h2>Release Notes for Template</h2>';
 
 export const folder = [
   '{',
-  '  "name": "templatico",',
-  '  "label": "templatico",',
+  '  "name": "sat1",',
+  '  "label": "sat1",',
   '  "description": "Analytics template with one simple dashboard",',
   '  "featuredAssets": {},',
   '  "shares": []',
