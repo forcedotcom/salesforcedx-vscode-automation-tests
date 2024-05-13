@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 import { getTextEditor, log, pause } from './miscellaneous';
 
@@ -53,15 +54,67 @@ export async function createLwc(name: string): Promise<void> {
     `<template>`,
     `\t<lightning-card title="${name}" icon-name="custom:custom14">`,
     `\t\t<div class="slds-var-m-around_medium">Hello, {greeting}!</div>`,
-    `\t\t<c-view-source source="lwc/hello" slot="footer">`,
-    `\t\t\tBind an HTML element to a component property.`,
-    `\t\t</c-view-source>`,
     `\t</lightning-card>`,
     `</template>`
   ].join('\n');
+  // `\t\t<c-view-source source="lwc/hello" slot="footer">`,
+  // `\t\t\tBind an HTML element to a component property.`,
+  // `\t\t</c-view-source>`,
   await textEditor.setText(htmlText);
   await textEditor.save();
   await pause(1);
+
+  log('createLwc() - Modify test content');
+  log('');
+  textEditor = await getTextEditor(workbench, name + '.test.js');
+  const nameCapitalized = name.charAt(0).toUpperCase() + name.slice(1);
+  const testText = [
+    `import { createElement } from 'lwc';`,
+    `import ${nameCapitalized} from 'c/${name}';`,
+    '',
+    `describe('c-${name}', () => {`,
+    `    afterEach(() => {`,
+    `        while (document.body.firstChild) {`,
+    `            document.body.removeChild(document.body.firstChild);`,
+    `        }`,
+    `    });`,
+    ``,
+    `    it('displays greeting', () => {`,
+    `        const element = createElement('c-${name}', {`,
+    `            is: ${nameCapitalized}`,
+    `        });`,
+    `        document.body.appendChild(element);`,
+    `        const div = element.shadowRoot.querySelector('div');`,
+    `        expect(div.textContent).toBe('Hello, World!');`,
+    `    });`,
+    ``,
+    `    it('is defined', async () => {`,
+    `        const element = createElement('c-${name}', {`,
+    `            is: ${nameCapitalized}`,
+    `        });`,
+    `        document.body.appendChild(element);`,
+    `        await expect(element).toBeDefined();`,
+    `    });`,
+    `});`
+  ].join('\n');
+  await textEditor.setText(testText);
+  await textEditor.save();
+  await pause(1);
+
+  // Set breakpoints
+  await browser.keys([CMD_KEY, 'f']);
+  await pause(1);
+  await browser.keys(`expect(div.textContent).toBe('Hello, World!');`);
+  await browser.keys(['Escape']);
+  await browser.keys(['ArrowRight']);
+  await runCommandFromCommandPrompt(workbench, 'Debug: Inline Breakpoint', 2);
+
+  await browser.keys([CMD_KEY, 'f']);
+  await pause(1);
+  await browser.keys(`await expect(element).toBeDefined();`);
+  await browser.keys(['Escape']);
+  await browser.keys(['ArrowRight']);
+  await runCommandFromCommandPrompt(workbench, 'Debug: Inline Breakpoint', 2);
 }
 
 export async function createAura(name: string): Promise<void> {

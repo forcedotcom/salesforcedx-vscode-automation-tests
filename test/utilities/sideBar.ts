@@ -7,6 +7,7 @@
 
 import { DefaultTreeItem, TreeItem, ViewItem, Workbench, ViewSection } from 'wdio-vscode-service';
 import { pause } from './miscellaneous';
+import { fail } from 'assert';
 
 export async function expandSideBar(
   workbench: Workbench,
@@ -143,25 +144,37 @@ export async function getVisibleItems(
   return [...rows.values()];
 }
 
-export async function retrieveAllApexTestItemsFromSidebar(
+export async function retrieveExpectedNumTestsFromSidebar(
   expectedNumTests: number,
-  apexTestsSection: ViewSection
+  testsSection: ViewSection,
+  actionLabel: string
 ): Promise<TreeItem[]> {
-  let apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
+  let testsItems = (await testsSection.getVisibleItems()) as TreeItem[];
   await browser.keys(['Escape']);
 
-  // If the Apex tests did not show up, click the refresh button on the top right corner of the Test sidebar
+  // If the tests did not show up, click the refresh button on the top right corner of the Test sidebar
   for (let x = 0; x < 3; x++) {
-    if (apexTestsItems.length === 1) {
-      await apexTestsSection.elem.click();
-      const refreshAction = await apexTestsSection.getAction('Refresh Tests');
-      await refreshAction!.elem.click();
+    if (testsItems.length === 1) {
+      await testsSection.elem.click();
+      const refreshAction = await testsSection.getAction(actionLabel);
+      if (!refreshAction) {
+        fail('Could not find debug tests action button');
+      }
+      await refreshAction.elem.click();
       pause(10);
-      apexTestsItems = (await apexTestsSection.getVisibleItems()) as TreeItem[];
-    } else if (apexTestsItems.length === expectedNumTests) {
+      testsItems = (await testsSection.getVisibleItems()) as TreeItem[];
+    } else if (testsItems.length === expectedNumTests) {
       break;
     }
   }
 
-  return apexTestsItems;
+  return testsItems;
+}
+
+export async function getTestsSection(workbench: Workbench, type: string) {
+  const sidebar = workbench.getSideBar();
+  const sidebarView = sidebar.getContent();
+  const testsSection = await sidebarView.getSection(type);
+  expect(testsSection.elem).toBePresent();
+  return testsSection;
 }
