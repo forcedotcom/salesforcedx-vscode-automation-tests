@@ -137,7 +137,6 @@ describe('Run LWC Tests', async () => {
       expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
       const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
-
       const lwcTestsItems = await utilities.retrieveExpectedNumTestsFromSidebar(
         6,
         lwcTestsSection,
@@ -203,9 +202,8 @@ describe('Run LWC Tests', async () => {
       const testingSideBarView = await testingView?.openView();
       expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
-      const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
-
       // Click the run test button that is shown to the right when you hover a test class name on the Test sidebar
+      const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
       const lwcTestItem = (await lwcTestsSection.findItem('lwc1')) as TreeItem;
       await lwcTestItem.select();
       const runTestsAction = await lwcTestItem.getActionButton(
@@ -250,9 +248,8 @@ describe('Run LWC Tests', async () => {
       const testingSideBarView = await testingView?.openView();
       expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
-      const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
-
       // Hover a test name under one of the test lwc sections and click the run button that is shown to the right of the test name on the Test sidebar
+      const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
       const lwcTestItem = (await lwcTestsSection.findItem('displays greeting')) as TreeItem;
       await lwcTestItem.select();
       const runTestAction = await lwcTestItem.getActionButton(
