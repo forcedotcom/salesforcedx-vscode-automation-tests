@@ -24,15 +24,8 @@ export async function getVisibleItemsFromSidebar(workbench: Workbench, projectNa
 
   // Warning, we can only retrieve the items which are visible.
   const visibleItems = (await treeViewSection.getVisibleItems()) as DefaultTreeItem[];
-  const visibleItemsLabels = await visibleItems.reduce(
-    async (previousPromise: Promise<string[]>, currentItem: DefaultTreeItem) => {
-      const results = await previousPromise;
-      const label = await currentItem.getLabel();
-      results.push(label);
-
-      return results;
-    },
-    Promise.resolve([])
+  const visibleItemsLabels = await Promise.all(
+    visibleItems.map((item) => item.getLabel().then((label) => label))
   );
 
   return visibleItemsLabels;
