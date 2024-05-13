@@ -515,7 +515,7 @@ describe('Templates', async () => {
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
       workbench,
       projectName,
-      'waveTemplates'
+      'dashboards'
     );
     expect(filteredTreeViewItems.includes('app-to-template-rules.json')).toBe(true);
     expect(filteredTreeViewItems.includes('folder.json')).toBe(true);
