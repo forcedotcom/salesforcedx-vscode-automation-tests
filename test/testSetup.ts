@@ -63,7 +63,7 @@ export class TestSetup {
   public async disableCommandCenter(): Promise<void> {
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'Preferences: Open User Settings', 3);
-    await browser.keys(['autoupdate']);
+    await browser.keys(['Window: Command Center']);
     await utilities.pause(3);
     expect(1).toBe(2);
 
