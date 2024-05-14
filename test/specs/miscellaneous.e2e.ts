@@ -99,10 +99,13 @@ describe('Miscellaneous', async () => {
 
     // Type snippet "lwc-button" and check it inserted the right lwc
     const textEditor = await utilities.getTextEditor(workbench, 'lwc.html');
+
+    await utilities.runCommandFromCommandPrompt(workbench, 'Snippets: Insert Snippet', 1);
     await browser.keys(['lwc-button']);
     await utilities.pause(2);
-    await browser.keys(['ArrowDown']);
     await browser.keys(['Enter']);
+    await browser.keys(['Escape']);
+    await textEditor.save();
     const fileContent = await textEditor.getText();
 
     const fileContentWithoutTrailingSpaces = fileContent
