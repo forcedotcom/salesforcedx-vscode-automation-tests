@@ -12,7 +12,6 @@ import util from 'util';
 import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
 import { EnvironmentSettings } from './environmentSettings';
 import * as utilities from './utilities';
-import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 const exec = util.promisify(child_process.exec);
 
@@ -48,7 +47,6 @@ export class TestSetup {
     await utilities.verifyAllExtensionsAreRunning();
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
-    await this.disableCommandCenter();
     utilities.log(`${this.testSuiteSuffixName} - ...finished TestSetup.setUp()`);
     utilities.log('');
   }
@@ -58,26 +56,6 @@ export class TestSetup {
       // The Terminal view can be a bit unreliable, so directly call exec() instead:
       await exec(`sf org:delete:scratch --target-org ${this.scratchOrgAliasName} --no-prompt`);
     }
-  }
-
-  public async disableCommandCenter(): Promise<void> {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Preferences: Open User Settings', 3);
-    await browser.keys(['Window: Command Center']);
-    await utilities.pause(3);
-    expect(1).toBe(2);
-
-    const commandCenterBtn = await utilities.findElementByText(
-      'div',
-      'title',
-      'window.commandCenter'
-    );
-    await commandCenterBtn.click();
-    await utilities.pause(3);
-
-    // Close settings tab
-    await browser.keys([CMD_KEY, 'w']);
-    await utilities.pause(1);
   }
 
   public async setUpTestingEnvironment(): Promise<void> {
