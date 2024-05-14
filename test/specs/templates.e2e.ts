@@ -28,7 +28,7 @@ describe('Templates', async () => {
   // Apex Class
   step('Create an Apex Class', async () => {
     // Using the Command palette, run SFDX: Create Apex Class.
-    await utilities.createCommand('Apex Class', 'ApexClass1', 'classes', 'cls');
+    await utilities.createCommand('Apex Class', 'ElephantApexClass1', 'classes', 'cls');
 
     // Check for expected items in the Explorer view.
     const workbench = await (await browser.getWorkbench()).wait();
@@ -38,8 +38,11 @@ describe('Templates', async () => {
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
       workbench,
       projectName,
-      'ApexClass1'
+      'ElephantApexClass1'
     );
+
+    // throw error to get screenshot
+    expect(1).toEqual(3);
 
     expect(filteredTreeViewItems.includes('ApexClass1.cls')).toBe(true);
     expect(filteredTreeViewItems.includes('ApexClass1.cls-meta.xml')).toBe(true);
