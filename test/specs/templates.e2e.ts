@@ -41,6 +41,8 @@ describe('Templates', async () => {
       'ElephantApexClass1'
     );
 
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 2);
+
     // throw error to get screenshot
     expect(1).toEqual(3);
 
