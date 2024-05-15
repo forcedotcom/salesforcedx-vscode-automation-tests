@@ -7,27 +7,121 @@
 
 import { Workbench } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt.ts';
-import { FIVE_MINUTES, log, pause } from './miscellaneous.ts';
-// import { CMD_KEY } from 'wdio-vscode-service/dist/constants.ts';
+import { log, pause } from './miscellaneous.ts';
+import fs from 'fs/promises';
 import path from 'path';
+import FastGlob from 'fast-glob';
+import { EnvironmentSettings } from '../environmentSettings.ts';
+import { exec } from 'child_process';
+import * as utilities from './workbench.ts';
 
-import { Key } from 'webdriverio';
-const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
+export type ExtensionId =
+  | 'salesforcedx-vscode'
+  | 'salesforcedx-vscode-expanded'
+  | 'salesforcedx-vscode-soql'
+  | 'salesforcedx-einstein-gpt'
+  | 'salesforcedx-vscode-core'
+  | 'salesforcedx-vscode-apex'
+  | 'salesforcedx-vscode-apex-debugger'
+  | 'salesforcedx-vscode-apex-replay-debugger'
+  | 'salesforcedx-vscode-lightning'
+  | 'salesforcedx-vscode-lwc'
+  | 'salesforcedx-vscode-visualforce';
 
-const extensions: string[] = [
-  'salesforcedx-vscode',
-  'salesforcedx-vscode-expanded',
-  'salesforcedx-vscode-soql',
-  'salesforcedx-einstein-gpt',
-  'salesforcedx-vscode-core',
-  'salesforcedx-vscode-apex',
-  'salesforcedx-vscode-apex-debugger',
-  'salesforcedx-vscode-apex-replay-debugger',
-  'salesforcedx-vscode-lightning',
-  'salesforcedx-vscode-lwc',
-  'salesforcedx-vscode-visualforce'
+export type Extension = {
+  id: string;
+  extensionPath: string;
+  isActive: boolean;
+  packageJSON: unknown;
+};
+
+type ExtensionType = {
+  extensionId: ExtensionId;
+  name: string;
+  vsixPath: string;
+  shouldInstall: 'always' | 'never' | 'optional';
+  shouldVerifyActivation: boolean;
+};
+
+const extensions: ExtensionType[] = [
+  {
+    extensionId: 'salesforcedx-vscode',
+    name: 'Salesforce Extension Pack',
+    vsixPath: '',
+    shouldInstall: 'never',
+    shouldVerifyActivation: false
+  },
+  {
+    extensionId: 'salesforcedx-vscode-expanded',
+    name: 'Salesforce Extension Pack (Expanded)',
+    vsixPath: '',
+    shouldInstall: 'never',
+    shouldVerifyActivation: false
+  },
+  {
+    extensionId: 'salesforcedx-vscode-soql',
+    name: 'SOQL',
+    vsixPath: '',
+    shouldInstall: 'optional',
+    shouldVerifyActivation: true
+  },
+  {
+    extensionId: 'salesforcedx-einstein-gpt',
+    name: 'Einstein for Developers (Beta)',
+    vsixPath: '',
+    shouldInstall: 'optional',
+    shouldVerifyActivation: false
+  },
+  {
+    extensionId: 'salesforcedx-vscode-core',
+    name: 'Salesforce CLI Integration',
+    vsixPath: '',
+    shouldInstall: 'always',
+    shouldVerifyActivation: true
+  },
+  {
+    extensionId: 'salesforcedx-vscode-apex',
+    name: 'Apex',
+    vsixPath: '',
+    shouldInstall: 'always',
+    shouldVerifyActivation: true
+  },
+  {
+    extensionId: 'salesforcedx-vscode-apex-debugger',
+    name: 'Apex Interactive Debugger',
+    vsixPath: '',
+    shouldInstall: 'optional',
+    shouldVerifyActivation: true
+  },
+  {
+    extensionId: 'salesforcedx-vscode-apex-replay-debugger',
+    name: 'Apex Replay Debugger',
+    vsixPath: '',
+    shouldInstall: 'optional',
+    shouldVerifyActivation: true
+  },
+  {
+    extensionId: 'salesforcedx-vscode-lightning',
+    name: 'Lightning Web Components',
+    vsixPath: '',
+    shouldInstall: 'optional',
+    shouldVerifyActivation: true
+  },
+  {
+    extensionId: 'salesforcedx-vscode-lwc',
+    name: 'Lightning Web Components',
+    vsixPath: '',
+    shouldInstall: 'optional',
+    shouldVerifyActivation: true
+  },
+  {
+    extensionId: 'salesforcedx-vscode-visualforce',
+    name: 'salesforcedx-vscode-visualforce',
+    vsixPath: '',
+    shouldInstall: 'optional',
+    shouldVerifyActivation: true
+  }
 ];
-
 export async function showRunningExtensions(workbench: Workbench): Promise<void> {
   await runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);
 }
@@ -64,49 +158,67 @@ export async function findExtensionInRunningExtensionsList(
 }
 
 export async function reloadAndEnableExtensions(): Promise<void> {
-  const buttons = await $$('a.monaco-button.monaco-text-button');
-  let extraPause = false;
-  for (const item of buttons) {
-    const text = await item.getText();
-    if (text.includes('Reload and Enable Extensions')) {
-      log('reloadAndEnableExtensions() - Reload and Enable Extensions');
-      await item.click();
-      extraPause = true;
+  log('Reload and Enable Extensions');
+  await utilities.reloadWindow();
+  const workbench = await utilities.getWorkbench();
+  await workbench.executeCommand('Extensions: Enable All Extensions');
+}
+
+export async function installExtension(extension: string, extensionsDir: string): Promise<void> {
+  log(`SetUp - Started Install extension ${path.basename(extension)}`);
+  const codeBin = await findVSCodeBinary();
+
+  return new Promise((resolve, reject) => {
+    const command = `"${codeBin}" --install-extension ${extension} --extensions-dir ${extensionsDir}`;
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        log(`Error installing extension ${extension}: ${error}`);
+        reject(error);
+        return;
+      }
+      if (stderr) {
+        log(`Error output for ${extension}: ${stderr}`);
+      }
+      log(stdout);
+      log(`...SetUp - Finished Install extension ${extension}`);
+      resolve();
+    });
+  });
+}
+
+export async function installExtensions(excludeExtensions: ExtensionId[] = []): Promise<void> {
+  const workbench = await utilities.getWorkbench();
+  const extensionsDir = path.resolve(path.join(EnvironmentSettings.getInstance().extensionPath));
+  const extensionsVsixs = FastGlob.sync('**/*.vsix', { cwd: extensionsDir });
+  if (extensionsVsixs.length === 0) {
+    throw new Error(`No vsix files were found in dir ${extensionsDir}`);
+  }
+
+  // Refactored part to use the extensions array
+  extensionsVsixs.forEach((vsix) => {
+    const match = vsix.match(/^(?<extension>.*?)(-(?<version>\d+\.\d+\.\d+))?\.vsix$/);
+    if (match && match.groups) {
+      const { extension } = match.groups;
+      const foundExtension = extensions.find((e) => e.extensionId === extension);
+      if (foundExtension) {
+        foundExtension.vsixPath = path.join(extensionsDir, vsix);
+        // assign 'never' to this extension if its id is included in excluedExtensions
+        foundExtension.shouldInstall = excludeExtensions.includes(foundExtension.extensionId)
+          ? 'never'
+          : 'always';
+        // if not installing, don't verify, otherwise use default value
+        foundExtension.shouldVerifyActivation =
+          foundExtension.shouldInstall === 'never' ? false : foundExtension.shouldVerifyActivation;
+        log(`SetUp - Found extension ${extension} with vsixPath ${foundExtension.vsixPath}`);
+      }
     }
-  }
-  if (extraPause) {
-    log('reloadAndEnableExtensions() - extra pause');
-    pause(30);
-  }
-}
+  });
 
-export async function installExtension(extension: string): Promise<void> {
-  const __dirname = new URL('.', import.meta.url).pathname;
-  const pathToExtensions = path.join(
-    __dirname,
-    '..',
-    '..',
-    '..',
-    'salesforcedx-vscode',
-    'extensions',
-    extension
-  );
-  log(`SetUp - Started Install extension ${extension}`);
-  const workbench = await (await browser.getWorkbench()).wait();
-  await runCommandFromCommandPrompt(workbench, 'Extensions: Install from VSIX...', 5);
-  await browser.keys([CMD_KEY, 'a']);
-  await browser.keys(pathToExtensions);
-
-  await browser.keys(['Enter']);
-  log(`...SetUp - Finished Install extension ${extension}`);
-}
-
-export async function installExtensions(): Promise<void> {
-  const workbench = await (await browser.getWorkbench()).wait();
-  for (const extension of extensions) {
-    await installExtension(extension);
+  // Iterate over the extensions array to install extensions
+  for (const extensionObj of extensions.filter((ext) => ext.vsixPath !== '' && ext.shouldInstall)) {
+    await installExtension(extensionObj.vsixPath, extensionsDir);
   }
-  await pause(FIVE_MINUTES);
+
   await runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 5);
   await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
 }
@@ -114,43 +226,68 @@ export async function installExtensions(): Promise<void> {
 export async function verifyAllExtensionsAreRunning(): Promise<void> {
   log('');
   log(`Starting verifyAllExtensionsAreRunning()...`);
-
-  // Using the Command palette, run Developer: Show Running Extensions
-  const workbench = await (await browser.getWorkbench()).wait();
-  await runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 5);
-  await showRunningExtensions(workbench);
-
-  // Zoom out so all the extensions are visible
-  await runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-  await runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-  await runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-  await runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
+  const workbench = await utilities.getWorkbench();
+  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
 
   // Goes through each and all of the extensions verifying they're running in no longer than 100 secs
   await findExtensionsWithTimeout();
 
-  // Zoom back in to initial state
-  await runCommandFromCommandPrompt(workbench, 'View: Zoom In', 1);
-  await runCommandFromCommandPrompt(workbench, 'View: Zoom In', 1);
-  await runCommandFromCommandPrompt(workbench, 'View: Zoom In', 1);
-  await runCommandFromCommandPrompt(workbench, 'View: Zoom In', 1);
   log(`... Finished verifyAllExtensionsAreRunning()`);
   log('');
 }
 
 export async function findExtensionsWithTimeout(): Promise<void> {
-  const workbench = await (await browser.getWorkbench()).wait();
   let forcedWait = 0;
   let extensionWasFound = false;
-  for (const extension of extensions.slice(-7)) {
-    log(`Verifying extension ${extension}`);
-    do {
-      await pause(7);
-      extensionWasFound = await findExtensionInRunningExtensionsList(workbench, extension);
-      forcedWait += 10;
-    } while (extensionWasFound === false && forcedWait < 100);
-    log(`extension ${extension} was found: ${extensionWasFound}`);
+  const shouldVerifyActivation = extensions.filter((ext) => {
+    return ext.shouldVerifyActivation;
+  });
+  for (const extension of shouldVerifyActivation) {
+    log(`Verifying extension ${extension.name} with id: ${extension.extensionId}`);
+    if (extensionWasFound === false && forcedWait < 100)
+      do {
+        await pause(7);
+        const ext = await browser.executeWorkbench<Extension>((vscode, id) => {
+          return vscode.extensions.getExtension(`salesforce.${id}`);
+        }, extension.extensionId);
+        extensionWasFound = ext?.isActive ?? false;
+        forcedWait += 10;
+      } while (extensionWasFound === false && forcedWait < 100);
+    log(`extension ${extension.extensionId} was found: ${extensionWasFound}`);
     forcedWait = 0;
     expect(extensionWasFound).toBe(true);
   }
+}
+
+export async function findVSCodeBinary(): Promise<string> {
+  const serviceDirPath = path.join(process.cwd(), '.wdio-vscode-service');
+
+  const wdioServiceDirContents = await fs.readdir(serviceDirPath);
+
+  // Search for vscode installation directory
+  const vscodeInstallDir = wdioServiceDirContents.find((entry) =>
+    /^vscode-.*?-\d+\.\d+\.\d+$/.test(entry)
+  );
+
+  if (!vscodeInstallDir) {
+    throw new Error(`Could not find vscode install directory in ${serviceDirPath}`);
+  }
+
+  // Construct full path to vscode installation directory
+  const vscodeFullPath = path.join(serviceDirPath, vscodeInstallDir);
+
+  // Define the glob pattern for code binary
+  const codeBinaryPattern = '**/bin/{code,Code.exe}';
+
+  // Search for code binary in vscode installation directory
+  const codeBin = await FastGlob(codeBinaryPattern, {
+    cwd: vscodeFullPath,
+    absolute: true // returning absolute paths
+  });
+
+  if (codeBin.length === 0) {
+    throw new Error(`Could not find code binary in ${vscodeFullPath}`);
+  }
+
+  return codeBin[0];
 }

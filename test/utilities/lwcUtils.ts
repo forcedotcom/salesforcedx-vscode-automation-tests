@@ -5,9 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { runCommandFromCommandPrompt } from './commandPrompt.ts';
 import { getTextEditor, log, pause } from './miscellaneous.ts';
+import { Key } from 'webdriverio';
+const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 export async function createLwc(name: string): Promise<void> {
   log('createLwc() - calling browser.getWorkbench()');

@@ -4,7 +4,7 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { step, xstep } from 'mocha-steps';
+import { step } from 'mocha-steps';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
@@ -110,44 +110,37 @@ describe('An Initial Suite', async () => {
     await utilities.pause(1);
   });
 
-  xstep(
-    'Verify that SFDX commands are present after an SFDX project has been created',
-    async () => {
-      const workbench = await (await browser.getWorkbench()).wait();
-      await utilities.runCommandFromCommandPrompt(
-        workbench,
-        'Extensions: Enable All Extensions',
-        10
-      );
-      await utilities.runCommandFromCommandPrompt(
-        workbench,
-        'Extensions: Show Enabled Extensions',
-        2
-      );
-      const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
-      const quickPicks = await prompt.getQuickPicks();
-      const commands: string[] = [];
-      for (const quickPick of quickPicks) {
-        commands.push(await quickPick.getLabel());
-      }
-
-      // Look for the first few SFDX commands.
-      expect(commands).toContain('SFDX: Add Tests to Apex Test Suite');
-      expect(commands).toContain('SFDX: Authorize a Dev Hub');
-      expect(commands).toContain('SFDX: Authorize an Org');
-      expect(commands).toContain('SFDX: Authorize an Org using Session ID');
-      expect(commands).toContain('SFDX: Cancel Active Command');
-      expect(commands).toContain('SFDX: Configure Apex Debug Exceptions');
-      expect(commands).toContain('SFDX: Create a Default Scratch Org...');
-      expect(commands).toContain('SFDX: Create Apex Class');
-      expect(commands).toContain('SFDX: Create Apex Test Suite');
-      expect(commands).toContain('SFDX: Create Apex Trigger');
-      // There are more, but just look for the first few commands.
-
-      // Escape out of the pick list.
-      await prompt.cancel();
+  step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 10);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Extensions: Show Enabled Extensions',
+      2
+    );
+    const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
+    const quickPicks = await prompt.getQuickPicks();
+    const commands: string[] = [];
+    for (const quickPick of quickPicks) {
+      commands.push(await quickPick.getLabel());
     }
-  );
+
+    // Look for the first few SFDX commands.
+    expect(commands).toContain('SFDX: Create Project');
+    expect(commands).toContain('SFDX: Authorize a Dev Hub');
+    expect(commands).toContain('SFDX: Authorize an Org');
+    expect(commands).toContain('SFDX: Authorize an Org using Session ID');
+    expect(commands).toContain('SFDX: Cancel Active Command');
+    expect(commands).toContain('SFDX: Configure Apex Debug Exceptions');
+    expect(commands).toContain('SFDX: Create a Default Scratch Org...');
+    expect(commands).toContain('SFDX: Create and Set Up Project for ISV Debugging');
+    expect(commands).toContain('SFDX: Create Apex Class');
+    expect(commands).toContain('SFDX: Create Apex Trigger');
+    // There are more, but just look for the first few commands.
+
+    // Escape out of the pick list.
+    await prompt.cancel();
+  });
 
   step('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
