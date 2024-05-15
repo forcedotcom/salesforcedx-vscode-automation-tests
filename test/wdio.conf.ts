@@ -25,6 +25,10 @@ const capabilities: VSCodeCapabilities = {
       force: true,
       installExtension: EnvironmentSettings.getInstance().extensionPath,
       extensionsDir: EnvironmentSettings.getInstance().extensionPath
+    },
+    userSettings: {
+      'extensions.autoUpdate': false,
+      'window.commandCenter': false
     }
   } as VSCodeOptions,
 

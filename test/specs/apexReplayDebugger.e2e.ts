@@ -17,6 +17,7 @@ const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 describe('Apex Replay Debugger', async () => {
   let prompt: QuickOpenBox | InputBox;
   let testSetup: TestSetup;
+  const CONTINUE = 'F5';
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('ApexReplayDebugger', false);
@@ -202,13 +203,10 @@ describe('Apex Replay Debugger', async () => {
     await utilities.pause(1);
 
     // Continue with the debug session
-    await browser.keys(['F5']);
-    await utilities.pause(1);
-    await browser.keys(['F5']);
-    await utilities.pause(1);
+    await continueDebugging();
   });
 
-  step('SFDX: Launch Apex Replay Debugger with Current File', async () => {
+  step('SFDX: Launch Apex Replay Debugger with Current File - log file', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Open Previous Editor');
@@ -219,10 +217,28 @@ describe('Apex Replay Debugger', async () => {
     );
 
     // Continue with the debug session
-    await browser.keys(['F5']);
-    await utilities.pause(1);
-    await browser.keys(['F5']);
-    await utilities.pause(1);
+    await continueDebugging();
+  });
+
+  step('SFDX: Launch Apex Replay Debugger with Current File - test class', async () => {
+    // Run SFDX: Launch Apex Replay Debugger with Current File
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.getTextEditor(workbench, 'ExampleApexClassTest.cls');
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Launch Apex Replay Debugger with Current File',
+      3
+    );
+
+    // Continue with the debug session
+    await continueDebugging();
+
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+      workbench,
+      'Debug Test(s) successfully ran',
+      utilities.TEN_MINUTES
+    );
+    expect(successNotificationWasFound).toBe(true);
   });
 
   step('Run the Anonymous Apex Debugger using the Command Palette', async () => {
@@ -296,4 +312,11 @@ describe('Apex Replay Debugger', async () => {
   step('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
+
+  const continueDebugging = async (): Promise<void> => {
+    await browser.keys(CONTINUE);
+    await utilities.pause(1);
+    await browser.keys(CONTINUE);
+    await utilities.pause(1);
+  };
 });

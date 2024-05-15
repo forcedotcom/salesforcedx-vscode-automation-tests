@@ -109,12 +109,13 @@ describe('Debug Apex Tests', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on Apex Tests View', 1);
 
     // Open the Test Sidebar
-    const sidebar = workbench.getSideBar();
-    const sidebarView = sidebar.getContent();
-    const apexTestsSection = await sidebarView.getSection('APEX TESTS');
-    expect(apexTestsSection.elem).toBePresent();
+    const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');
 
-    const apexTestsItems = await utilities.retrieveAllApexTestItemsFromSidebar(4, apexTestsSection);
+    const apexTestsItems = await utilities.retrieveExpectedNumTestsFromSidebar(
+      4,
+      apexTestsSection,
+      'Refresh Tests'
+    );
 
     // Make sure all the tests are present in the sidebar
     expect(apexTestsItems.length).toBe(4);
@@ -151,10 +152,7 @@ describe('Debug Apex Tests', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on Apex Tests View', 1);
 
     // Open the Test Sidebar
-    const sidebar = workbench.getSideBar();
-    const sidebarView = sidebar.getContent();
-    const apexTestsSection = await sidebarView.getSection('APEX TESTS');
-    expect(apexTestsSection.elem).toBePresent();
+    const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');
 
     // Hover a test name under one of the test class sections and click the debug button that is shown to the right of the test name on the Test sidebar
     await browser.keys(['Escape']);

@@ -4,10 +4,9 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import { step, xstep } from 'mocha-steps';
+import { step } from 'mocha-steps';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
-// import { CMD_KEY } from 'wdio-vscode-service/dist/constants.ts';
 
 import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
@@ -22,6 +21,10 @@ describe('Aura LSP', async () => {
 
     // Create Aura Component
     await utilities.createAura('aura1');
+
+    // Reload the VSCode window to allow the Aura Component to be indexed by the Aura Language Server
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 70);
   });
 
   step('Verify Extension is Running', async () => {
@@ -49,7 +52,7 @@ describe('Aura LSP', async () => {
     utilities.log(outputViewText);
   });
 
-  xstep('Go to Definition', async () => {
+  step('Go to Definition', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
@@ -68,17 +71,33 @@ describe('Aura LSP', async () => {
     await utilities.pause(1);
 
     // Verify 'Go to definition'
-    const definition = await textEditor.getCoordinates();
-    expect(definition[0]).toBe(3);
-    expect(definition[1]).toBe(27);
+    // This workaround types text in the place where the cursor is located after the Go to Definition is complete, and then verifies that the added text is present in the correct location.
+    await browser.keys('elephant');
+    await browser.keys([CMD_KEY, 's']);
+    await utilities.pause(1);
+    const line3Text = await textEditor.getTextAtLine(3);
+    expect(line3Text).toContain('name="elephantsimpleNewContact"');
+
+    // The following code uses WDIO's provided function to get the position of the cursor, but `textEditor.getCoordinates();` causes a `coordinates is not iterable` error in Ubuntu. Thus we have to use the workaround above instead.
+    // const definition = await textEditor.getCoordinates();
+    // expect(definition[0]).toBe(3);
+    // expect(definition[1]).toBe(27);
   });
 
-  xstep('Autocompletion', async () => {
+  step('Autocompletion', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
     const workbench = await (await browser.getWorkbench()).wait();
     const textEditor = await utilities.getTextEditor(workbench, 'aura1.cmp');
-    await textEditor.typeTextAt(2, 1, '<aura:appl');
+    // Workaround for `coordinates is not iterable` error is needed here too because `textEditor.typeTextAt()` uses coordinates.
+    await browser.keys([CMD_KEY, 'f']);
+    await utilities.pause(1);
+    await browser.keys('aura:attribute');
+    await browser.keys(['Escape']);
+    await browser.keys(['ArrowRight']);
+    await browser.keys(['ArrowUp']);
+    await browser.keys('<aura:appl');
+    // await textEditor.typeTextAt(2, 1, '<aura:appl');
     await utilities.pause(1);
 
     // Verify autocompletion options are present

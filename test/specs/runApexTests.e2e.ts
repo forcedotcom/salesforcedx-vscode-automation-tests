@@ -134,7 +134,46 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
   });
 
-  step('Run Tests via Command Palette', async () => {
+  step('Run All Tests via Command Palette', async () => {
+    // Clear the Output view.
+    await utilities.dismissAllNotifications();
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+
+    // Run SFDX: Run Apex tests.
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Run Apex Tests', 1);
+
+    // Select the "All Tests" option
+    await prompt.selectQuickPick('All Tests');
+
+    // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+      workbench,
+      'SFDX: Run Apex Tests successfully ran',
+      utilities.TEN_MINUTES
+    );
+    expect(successNotificationWasFound).toBe(true);
+
+    // Verify test results are listed on vscode's Output section
+    // Also verify that all tests pass
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Apex',
+      '=== Test Results',
+      10
+    );
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain('=== Test Summary');
+    expect(outputPanelText).toContain('Outcome              Passed');
+    expect(outputPanelText).toContain('Tests Ran            3');
+    expect(outputPanelText).toContain('Pass Rate            100%');
+    expect(outputPanelText).toContain('TEST NAME');
+    expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
+    expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello  Pass');
+    expect(outputPanelText).toContain('ExampleApexClass3Test.validateSayHello  Pass');
+    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
+  });
+
+  step('Run Single Class via Command Palette', async () => {
     // Clear the Output view.
     await utilities.dismissAllNotifications();
     const workbench = await (await browser.getWorkbench()).wait();
@@ -171,51 +210,7 @@ describe('Run Apex Tests', async () => {
     expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
   });
 
-  step('Modify Existing Apex Test Class', async () => {
-    // Open the Test Sidebar
-    const workbench = await (await browser.getWorkbench()).wait();
-    const testingView = await workbench.getActivityBar().getViewControl('Testing');
-    const testingSideBarView = await testingView?.openView();
-    expect(testingSideBarView).toBeInstanceOf(SideBarView);
-
-    const sidebar = workbench.getSideBar();
-    const sidebarView = sidebar.getContent();
-    const apexTestsSection = await sidebarView.getSection('APEX TESTS');
-    expect(apexTestsSection.elem).toBePresent();
-
-    // Open an existing apex test and modify it
-    const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass1Test.cls');
-    const testText = [
-      `@IsTest`,
-      `public class ExampleApexClass1Test {`,
-      `\t@IsTest`,
-      `\tstatic void validateSayHello() {`,
-      `\t\tSystem.debug('Starting validate');`,
-      `\t\tExampleApexClass1.SayHello('Andres');`,
-      `\t\tSystem.assertEquals(1, 1, 'all good');`,
-      `\t}`,
-      `}`
-    ].join('\n');
-    await textEditor.setText(testText);
-    await textEditor.save();
-
-    // Push source to org
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Push Source to Default Org and Ignore Conflicts',
-      1
-    );
-
-    // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Ignore Conflicts successfully ran".
-    const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successPushNotificationWasFound).toBe(true);
-  });
-
-  step('Run all Apex tests via Test Sidebar', async () => {
+  step('Run All tests via Test Sidebar', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
@@ -223,12 +218,13 @@ describe('Run Apex Tests', async () => {
     const testingSideBarView = await testingView?.openView();
     expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
-    const sidebar = workbench.getSideBar();
-    const sidebarView = sidebar.getContent();
-    const apexTestsSection = await sidebarView.getSection('APEX TESTS');
-    expect(apexTestsSection.elem).toBePresent();
+    const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');
 
-    const apexTestsItems = await utilities.retrieveAllApexTestItemsFromSidebar(6, apexTestsSection);
+    const apexTestsItems = await utilities.retrieveExpectedNumTestsFromSidebar(
+      6,
+      apexTestsSection,
+      'Refresh Tests'
+    );
 
     // Make sure all the tests are present in the sidebar
     expect(apexTestsItems.length).toBe(6);
@@ -287,7 +283,7 @@ describe('Run Apex Tests', async () => {
     }
   });
 
-  step('Run all Apex Tests on a Class via the Test Sidebar', async () => {
+  step('Run All Tests on a Class via the Test Sidebar', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
@@ -295,10 +291,7 @@ describe('Run Apex Tests', async () => {
     const testingSideBarView = await testingView?.openView();
     expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
-    const sidebar = workbench.getSideBar();
-    const sidebarView = sidebar.getContent();
-    const apexTestsSection = await sidebarView.getSection('APEX TESTS');
-    expect(apexTestsSection.elem).toBePresent();
+    const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
@@ -345,7 +338,7 @@ describe('Run Apex Tests', async () => {
     }
   });
 
-  step('Run a Single Apex Test via the Test Sidebar', async () => {
+  step('Run Single Test via the Test Sidebar', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
@@ -353,10 +346,7 @@ describe('Run Apex Tests', async () => {
     const testingSideBarView = await testingView?.openView();
     expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
-    const sidebar = workbench.getSideBar();
-    const sidebarView = sidebar.getContent();
-    const apexTestsSection = await sidebarView.getSection('APEX TESTS');
-    expect(apexTestsSection.elem).toBePresent();
+    const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();

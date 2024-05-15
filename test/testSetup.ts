@@ -9,7 +9,7 @@ import child_process from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import util from 'util';
-import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench} from 'wdio-vscode-service';
+import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
 import { EnvironmentSettings } from './environmentSettings.ts';
 import * as utilities from './utilities/index.ts';
 // import { CMD_KEY } from 'wdio-vscode-service/dist/constants.js';
@@ -55,7 +55,6 @@ export class TestSetup {
     await utilities.verifyAllExtensionsAreRunning();
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
-    await this.disableCommandCenter();
     utilities.log(`${this.testSuiteSuffixName} - ...finished TestSetup.setUp()`);
     utilities.log('');
   }
@@ -63,31 +62,8 @@ export class TestSetup {
   public async tearDown(): Promise<void> {
     if (this.scratchOrgAliasName && !this.reuseScratchOrg) {
       // The Terminal view can be a bit unreliable, so directly call exec() instead:
-      await exec(`sfdx org:delete:scratch --target-org ${this.scratchOrgAliasName} --no-prompt`);
+      await exec(`sf org:delete:scratch --target-org ${this.scratchOrgAliasName} --no-prompt`);
     }
-  }
-
-  public async disableCommandCenter(): Promise<void> {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Preferences: Open Workspace Settings',
-      3
-    );
-    await browser.keys(['Window: Command Center']);
-    await utilities.pause(3);
-
-    const commandCenterBtn = await utilities.findElementByText(
-      'div',
-      'aria-label',
-      'window.commandCenter'
-    );
-    await commandCenterBtn.click();
-    await utilities.pause(3);
-
-    // Close settings tab
-    await browser.keys([CMD_KEY, 'w']);
-    await utilities.pause(1);
   }
 
   public async setUpTestingEnvironment(): Promise<void> {
@@ -192,28 +168,28 @@ export class TestSetup {
 
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
     const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
-    utilities.log(`${this.testSuiteSuffixName} - calling sfdx org:display...`);
-    const sfdxForceOrgDisplayResult = await exec(
-      `sfdx org:display --target-org ${
+    utilities.log(`${this.testSuiteSuffixName} - calling sf org:display...`);
+    const sfOrgDisplayResult = await exec(
+      `sf org:display --target-org ${
         EnvironmentSettings.getInstance().devHubAliasName
       } --verbose --json`
     );
-    const json = this.removedEscapedCharacters(sfdxForceOrgDisplayResult.stdout);
+    const json = this.removedEscapedCharacters(sfOrgDisplayResult.stdout);
 
     // Now write the file.
     fs.writeFileSync(authFilePath, json);
     utilities.log(`${this.testSuiteSuffixName} - finished writing the file...`);
 
     // Call org:login:sfdx-url and read in the JSON that was just created.
-    utilities.log(`${this.testSuiteSuffixName} - calling sfdx org:login:sfdx-url...`);
-    const sfdxSfdxUrlStoreResult = await exec(`sfdx org:login:sfdx-url -d -f ${authFilePath}`);
+    utilities.log(`${this.testSuiteSuffixName} - calling sf org:login:sfdx-url...`);
+    const sfSfdxUrlStoreResult = await exec(`sf org:login:sfdx-url -d -f ${authFilePath}`);
     if (
-      !sfdxSfdxUrlStoreResult.stdout.includes(
+      !sfSfdxUrlStoreResult.stdout.includes(
         `Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID`
       )
     ) {
       throw new Error(
-        `In authorizeDevHub(), sfdxSfdxUrlStoreResult does not contain "Successfully authorized ${
+        `In authorizeDevHub(), sfSfdxUrlStoreResult does not contain "Successfully authorized ${
           EnvironmentSettings.getInstance().devHubUserName
         } with org ID"`
       );
@@ -238,11 +214,11 @@ export class TestSetup {
       throw new Error('Error: devHubUserName was not set.');
     }
 
-    const execResult = await exec('sfdx org:list --json');
-    const sfdxForceOrgListJson = this.removedEscapedCharacters(execResult.stdout);
-    const sfdxForceOrgListResult = JSON.parse(sfdxForceOrgListJson).result;
+    const execResult = await exec('sf org:list --json');
+    const sfOrgListJson = this.removedEscapedCharacters(execResult.stdout);
+    const sfOrgListResult = JSON.parse(sfOrgListJson).result;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const nonScratchOrgs = sfdxForceOrgListResult.nonScratchOrgs as any[];
+    const nonScratchOrgs = sfOrgListResult.nonScratchOrgs as any[];
 
     for (let i = 0; i < nonScratchOrgs.length; i++) {
       const nonScratchOrg = nonScratchOrgs[i];
@@ -269,10 +245,8 @@ export class TestSetup {
     if (this.reuseScratchOrg) {
       utilities.log(`${this.testSuiteSuffixName} - looking for a scratch org to reuse...`);
 
-      const sfdxForceOrgListResult = await exec('sfdx org:list --json');
-      const resultJson = sfdxForceOrgListResult.stdout
-        .replace(/\u001B\[\d\dm/g, '')
-        .replace(/\\n/g, '');
+      const sfOrgListResult = await exec('sf org:list --json');
+      const resultJson = sfOrgListResult.stdout.replace(/\u001B\[\d\dm/g, '').replace(/\\n/g, '');
       const scratchOrgs = JSON.parse(resultJson).result.scratchOrgs;
 
       for (const scratchOrg of scratchOrgs) {
@@ -314,14 +288,14 @@ export class TestSetup {
     const startDate = Date.now();
     const durationDays = 1;
 
-    utilities.log(`${this.testSuiteSuffixName} - calling "sfdx org:create:scratch"...`);
-    const sfdxForceOrgCreateResult = await exec(
-      `sfdx org:create:scratch --edition developer --definition-file ${definitionFile} --alias ${this.scratchOrgAliasName} --duration-days ${durationDays} --set-default --json`
+    utilities.log(`${this.testSuiteSuffixName} - calling "sf org:create:scratch"...`);
+    const sfOrgCreateResult = await exec(
+      `sf org:create:scratch --edition developer --definition-file ${definitionFile} --alias ${this.scratchOrgAliasName} --duration-days ${durationDays} --set-default --json`
     );
-    utilities.log(`${this.testSuiteSuffixName} - ..."sfdx org:create:scratch" finished`);
+    utilities.log(`${this.testSuiteSuffixName} - ..."sf org:create:scratch" finished`);
 
     utilities.log(`${this.testSuiteSuffixName} - calling removedEscapedCharacters()...`);
-    const json = this.removedEscapedCharacters(sfdxForceOrgCreateResult.stdout);
+    const json = this.removedEscapedCharacters(sfOrgCreateResult.stdout);
 
     utilities.log(`${this.testSuiteSuffixName} - calling JSON.parse()...`);
     const result = JSON.parse(json).result;
