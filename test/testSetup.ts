@@ -195,14 +195,7 @@ export class TestSetup {
     utilities.log(
       `${this.testSuiteSuffixName} - ...Setting default org in createProjecToViewRemoteChanges()`
     );
-    const sfdxConfigJsonContent = [
-      `{`,
-      `  defaultusername: '${this.scratchOrgAliasName}'`,
-      `}`
-    ].join('\n');
-    const textEditor = await utilities.getTextEditor(workbench, 'sfdx-config.json');
-    await textEditor.setText(sfdxConfigJsonContent);
-    await textEditor.save();
+    await exec(`sf config set target-org ${this.scratchOrgAliasName}`);
   }
 
   public async authorizeDevHub(): Promise<void> {
