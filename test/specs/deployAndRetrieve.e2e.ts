@@ -356,7 +356,7 @@ describe('Deploy and Retrieve', async () => {
     operation: string,
     fromTo: string,
     type: string, // Text to identify operation type (if it has source tracking enabled, disabled or if it was a deploy on save)
-    prefix?: string
+    prefix: string = ''
   ): Promise<void> => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
