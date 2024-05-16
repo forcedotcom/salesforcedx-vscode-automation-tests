@@ -140,12 +140,69 @@ export class TestSetup {
     }
 
     // Verify the project was created and was loaded.
-    await this.verifyProjectCreated();
+    await this.verifyProjectCreated(this.tempProjectName);
 
     this.updateScratchOrgDefWithEdition(scratchOrgEdition);
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
     utilities.log('');
+  }
+
+  public async createProjecToViewRemoteChanges(): Promise<void> {
+    utilities.log('');
+    utilities.log(`${this.testSuiteSuffixName} - Starting createProjecToViewRemoteChanges()...`);
+
+    const workbench = await (await browser.getWorkbench()).wait();
+    this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
+
+    // Select the "Standard" project type.
+    await utilities.selectQuickPickItem(this.prompt, 'Standard');
+
+    // Enter the project's name.
+    await this.prompt.setText('ViewChanges');
+    await utilities.pause(1);
+
+    // Press Enter/Return.
+    await this.prompt.confirm();
+
+    // Set the location of the project.
+    const input = await this.prompt.input$;
+    await input.setValue(this.tempFolderPath!);
+    await utilities.pause(1);
+
+    // Click the OK button.
+    await utilities.clickFilePathOkButton();
+
+    // Verify the project was created and was loaded.
+    await this.verifyProjectCreated('ViewChanges');
+    this.updateScratchOrgDefWithEdition('Developer');
+
+    utilities.log(`${this.testSuiteSuffixName} - ...finished createProjecToViewRemoteChanges()`);
+    utilities.log('');
+
+    utilities.log(
+      `${this.testSuiteSuffixName} - ...Verify CLI Integration Extension is running in createProjecToViewRemoteChanges()`
+    );
+    // Verify CLI Integration Extension is present and running.
+    await utilities.reloadAndEnableExtensions();
+    await utilities.showRunningExtensions(workbench);
+    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+      workbench,
+      'salesforcedx-vscode-core'
+    );
+    expect(extensionWasFound).toBe(true);
+
+    utilities.log(
+      `${this.testSuiteSuffixName} - ...Setting default org in createProjecToViewRemoteChanges()`
+    );
+    const sfdxConfigJsonContent = [
+      `{`,
+      `  defaultusername: '${this.scratchOrgAliasName}'`,
+      `}`
+    ].join('\n');
+    const textEditor = await utilities.getTextEditor(workbench, 'sfdx-config.json');
+    await textEditor.setText(sfdxConfigJsonContent);
+    await textEditor.save();
   }
 
   public async authorizeDevHub(): Promise<void> {
@@ -466,7 +523,7 @@ export class TestSetup {
     }
   }
 
-  private async verifyProjectCreated() {
+  private async verifyProjectCreated(projectName: string) {
     utilities.log(`${this.testSuiteSuffixName} - Verifying project was created...`);
 
     // Reload the VS Code window
@@ -475,9 +532,7 @@ export class TestSetup {
 
     const sidebar = await (await workbench.getSideBar()).wait();
     const content = await (await sidebar.getContent()).wait();
-    const treeViewSection = await (
-      await content.getSection(this.tempProjectName.toUpperCase())
-    ).wait();
+    const treeViewSection = await (await content.getSection(projectName.toUpperCase())).wait();
     if (!treeViewSection) {
       throw new Error(
         'In verifyProjectCreated(), getSection() returned a treeViewSection with a value of null (or undefined)'

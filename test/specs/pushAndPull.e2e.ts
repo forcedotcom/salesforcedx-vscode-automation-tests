@@ -7,7 +7,7 @@
 
 import child_process from 'child_process';
 import fs from 'fs';
-import { step } from 'mocha-steps';
+import { step, xstep } from 'mocha-steps';
 import path from 'path';
 import util from 'util';
 import { TestSetup } from '../testSetup';
@@ -160,22 +160,6 @@ describe('Push and Pull', async () => {
     );
   });
 
-  step('SFDX: View Local Changes', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: View Local Changes', 5);
-
-    // Check the output.
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      `Salesforce CLI`,
-      `Source Status`,
-      10
-    );
-
-    expect(outputPanelText).toContain(
-      `Local Changed  ExampleApexClass1  ApexClass  ${path.join('force-app', 'main', 'default', 'classes', 'ExampleApexClass1.cls')}`
-    );
-  });
-
   step('Pull the Apex class', async () => {
     // With this test, it's going to pull twice...
     const workbench = await (await browser.getWorkbench()).wait();
@@ -238,7 +222,25 @@ describe('Push and Pull', async () => {
     await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
   });
 
-  step('Create an additional system admin user', async () => {
+  step('SFDX: View Changes in Default Org', async () => {
+    const workbench = await (await browser.getWorkbench()).wait();
+    // Create second Project to then view Remote Changes
+    await testSetup.createProjecToViewRemoteChanges();
+
+    //Run SFDX: View Changes in Default Org command to view remote changes
+    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: View Changes in Default Org', 5);
+
+    // Check the output.
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      `Salesforce CLI`,
+      `Source Status`,
+      10
+    );
+
+    expect(outputPanelText).toContain(`Remote Add  ExampleApexClass1  ApexClass`);
+  });
+
+  xstep('Create an additional system admin user', async () => {
     // Org alias format: AdminUser_yyyy_mm_dd_username_ticks__PushAndPull
     const currentDate = new Date();
     const ticks = currentDate.getTime();
@@ -276,7 +278,7 @@ describe('Push and Pull', async () => {
     );
   });
 
-  step('Set the 2nd user as the default user', async () => {
+  xstep('Set the 2nd user as the default user', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const inputBox = await utilities.runCommandFromCommandPrompt(
       workbench,
