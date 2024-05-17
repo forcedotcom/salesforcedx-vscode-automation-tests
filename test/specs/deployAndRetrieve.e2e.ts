@@ -372,7 +372,7 @@ describe('Deploy and Retrieve', async () => {
       10
     );
     utilities.log(
-      `${operation} time ${type} - 3: ` + (await utilities.getOperationTime(outputPanelText!))
+      `${operation} time ${type}: ` + (await utilities.getOperationTime(outputPanelText!))
     );
     expect(outputPanelText).not.toBeUndefined();
     expect(outputPanelText).toContain(`${operation}ed Source`.replace('Retrieveed', 'Retrieved'));
