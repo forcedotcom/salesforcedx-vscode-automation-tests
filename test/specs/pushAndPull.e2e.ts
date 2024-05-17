@@ -225,7 +225,16 @@ describe('Push and Pull', async () => {
   step('SFDX: View Changes in Default Org', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Create second Project to then view Remote Changes
-    await testSetup.createProjecToViewRemoteChanges();
+    await testSetup.createProject(workbench, 'ViewChanges', 'Developer');
+
+    // Verify CLI Integration Extension is present and running.
+    await utilities.reloadAndEnableExtensions();
+    await utilities.showRunningExtensions(workbench);
+    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+      workbench,
+      'salesforcedx-vscode-core'
+    );
+    expect(extensionWasFound).toBe(true);
 
     //Run SFDX: View Changes in Default Org command to view remote changes
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: View Changes in Default Org', 5);

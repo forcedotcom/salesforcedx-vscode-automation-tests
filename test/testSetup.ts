@@ -42,7 +42,7 @@ export class TestSetup {
     await utilities.installExtensions();
     await utilities.reloadAndEnableExtensions();
     await this.setUpTestingEnvironment();
-    await this.createProject(scratchOrgEdition);
+    await this.createInitialProject(scratchOrgEdition);
     await utilities.reloadAndEnableExtensions();
     await utilities.verifyAllExtensionsAreRunning();
     await this.authorizeDevHub();
@@ -84,14 +84,13 @@ export class TestSetup {
     utilities.log('');
   }
 
-  public async createProject(scratchOrgEdition: string): Promise<void> {
+  public async createInitialProject(scratchOrgEdition: string): Promise<void> {
     utilities.log('');
-    utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
-
-    const workbench = await (await browser.getWorkbench()).wait();
+    utilities.log(`${this.testSuiteSuffixName} - Starting createInitialProject()...`);
 
     // If you are not in a VSCode project, the Salesforce extensions are not running
     // Force the CLI integration extension to load before creating the project
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
     await browser.keys(['Escape']);
@@ -110,56 +109,26 @@ export class TestSetup {
     } while (coreExtensionWasFound === false);
     utilities.log(`${this.testSuiteSuffixName} - Ready to create the standard project`);
 
-    this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
-    // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
-
-    // Select the "Standard" project type.
-    await utilities.selectQuickPickItem(this.prompt, 'Standard');
-
-    // Enter the project's name.
-    await this.prompt.setText(this.tempProjectName);
-    await utilities.pause(1);
-
-    // Press Enter/Return.
-    await this.prompt.confirm();
-
-    // Set the location of the project.
-    const input = await this.prompt.input$;
-    await input.setValue(this.tempFolderPath!);
-    await utilities.pause(1);
-
-    // Click the OK button.
-    await utilities.clickFilePathOkButton();
-
-    // Get os info
-    const os = process.platform;
+    await this.createProject(workbench, this.tempProjectName, scratchOrgEdition);
 
     // Extra config needed for Apex LSP on GHA
+    const os = process.platform;
     if (os === 'darwin') {
       this.setJavaHomeConfigEntry();
     }
 
-    // Verify the project was created and was loaded.
-    await this.verifyProjectCreated(this.tempProjectName);
-
-    this.updateScratchOrgDefWithEdition(scratchOrgEdition);
-
-    utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
+    utilities.log(`${this.testSuiteSuffixName} - ...finished createInitialProject()`);
     utilities.log('');
   }
 
-  public async createProjecToViewRemoteChanges(): Promise<void> {
-    utilities.log('');
-    utilities.log(`${this.testSuiteSuffixName} - Starting createProjecToViewRemoteChanges()...`);
-
-    const workbench = await (await browser.getWorkbench()).wait();
+  public async createProject(workbench: Workbench, projectName: string, scratchOrgEdition: string) {
     this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
-
+    // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
     // Select the "Standard" project type.
     await utilities.selectQuickPickItem(this.prompt, 'Standard');
 
     // Enter the project's name.
-    await this.prompt.setText('ViewChanges');
+    await this.prompt.setText(projectName);
     await utilities.pause(1);
 
     // Press Enter/Return.
@@ -174,23 +143,8 @@ export class TestSetup {
     await utilities.clickFilePathOkButton();
 
     // Verify the project was created and was loaded.
-    await this.verifyProjectCreated('ViewChanges');
-    this.updateScratchOrgDefWithEdition('Developer');
-
-    utilities.log(`${this.testSuiteSuffixName} - ...finished createProjecToViewRemoteChanges()`);
-    utilities.log('');
-
-    utilities.log(
-      `${this.testSuiteSuffixName} - ...Verify CLI Integration Extension is running in createProjecToViewRemoteChanges()`
-    );
-    // Verify CLI Integration Extension is present and running.
-    await utilities.reloadAndEnableExtensions();
-    await utilities.showRunningExtensions(workbench);
-    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-      workbench,
-      'salesforcedx-vscode-core'
-    );
-    expect(extensionWasFound).toBe(true);
+    await this.verifyProjectCreated(projectName);
+    this.updateScratchOrgDefWithEdition(scratchOrgEdition);
   }
 
   public async authorizeDevHub(): Promise<void> {
