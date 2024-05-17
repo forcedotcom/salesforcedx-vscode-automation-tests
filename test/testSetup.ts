@@ -191,28 +191,6 @@ export class TestSetup {
       'salesforcedx-vscode-core'
     );
     expect(extensionWasFound).toBe(true);
-
-    // utilities.log(
-    //   `${this.testSuiteSuffixName} - ...Setting default org in createProjecToViewRemoteChanges()`
-    // );
-
-    // let inputBox = await utilities.runCommandFromCommandPrompt(
-    //   workbench,
-    //   'Developer: Write Data to Terminal',
-    //   2
-    // );
-    // await inputBox.setText(`sf config set target-org ${this.scratchOrgAliasName}`);
-    // await browser.keys(['Enter']);
-    // await browser.keys(['Enter']);
-
-    // inputBox = await utilities.runCommandFromCommandPrompt(
-    //   workbench,
-    //   'Terminal: Run Recent Command...',
-    //   2
-    // );
-    // await inputBox.setText(`sf config set target-org ${this.scratchOrgAliasName}`);
-    // await browser.keys(['Enter']);
-    // await browser.keys(['Enter']);
   }
 
   public async authorizeDevHub(): Promise<void> {
