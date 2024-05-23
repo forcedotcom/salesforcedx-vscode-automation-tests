@@ -75,10 +75,10 @@ describe('Manifest Builder', async () => {
       1
     );
 
-    // Look for the success notification that appears which says, "SFDX: Deploy Source to Org successfully ran".
+    // Look for the success notification that appears which says, "SFDX: Deploy This Source to Org successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran',
+      'SFDX: Deploy This Source to Org successfully ran',
       utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
@@ -86,7 +86,7 @@ describe('Manifest Builder', async () => {
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      'Starting SFDX: Deploy Source to Org',
+      'Starting SFDX: Deploy This Source to Org',
       10
     );
     expect(outputPanelText).not.toBeUndefined();
@@ -111,7 +111,7 @@ describe('Manifest Builder', async () => {
         'Product__c.object-meta.xml'
       )}`
     );
-    expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
+    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
   });
 
   step('SFDX: Retrieve Source in Manifest from Org', async () => {
@@ -127,10 +127,10 @@ describe('Manifest Builder', async () => {
       1
     );
 
-    // Look for the success notification that appears which says, "SFDX: Retrieve Source from Org successfully ran".
+    // Look for the success notification that appears which says, "SFDX: Retrieve This Source from Org successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Retrieve Source from Org successfully ran',
+      'SFDX: Retrieve This Source from Org successfully ran',
       utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
@@ -138,7 +138,7 @@ describe('Manifest Builder', async () => {
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      'Starting SFDX: Retrieve Source from Org',
+      'Starting SFDX: Retrieve This Source from Org',
       10
     );
     expect(outputPanelText).not.toBeUndefined();
