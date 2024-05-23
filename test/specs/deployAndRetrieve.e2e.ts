@@ -360,7 +360,7 @@ describe('Deploy and Retrieve', async () => {
   ): Promise<void> => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      `SFDX: ${operation} Source ${fromTo} Org successfully ran`,
+      `SFDX: ${operation} This Source ${fromTo} Org successfully ran`,
       utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
@@ -368,7 +368,7 @@ describe('Deploy and Retrieve', async () => {
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      `Starting SFDX: ${operation} Source ${fromTo}`,
+      `Starting SFDX: ${operation} This Source ${fromTo}`,
       10
     );
     utilities.log(
@@ -378,6 +378,6 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain(`${operation}ed Source`.replace('Retrieveed', 'Retrieved'));
     expect(outputPanelText).toContain(`${prefix}MyClass    ApexClass  ${pathToClass}.cls`);
     expect(outputPanelText).toContain(`${prefix}MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain(`ended SFDX: ${operation} Source ${fromTo} Org`);
+    expect(outputPanelText).toContain(`ended SFDX: ${operation} This Source ${fromTo} Org`);
   };
 });
