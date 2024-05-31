@@ -69,7 +69,11 @@ export class TestSetup {
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
     const uncaughtErrors = await $$('span.codicon-bug');
-    utilities.log(`${uncaughtErrors.length} uncaught errors were found`);
+    utilities.log(
+      uncaughtErrors.length == 1
+        ? `${uncaughtErrors.length} extension with uncaught errors was found`
+        : `${uncaughtErrors.length} extensions with uncaught errors were found`
+    );
     expect(uncaughtErrors.length).toBe(0);
   }
 
