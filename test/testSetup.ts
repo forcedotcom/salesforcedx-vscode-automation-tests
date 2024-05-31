@@ -52,10 +52,25 @@ export class TestSetup {
   }
 
   public async tearDown(): Promise<void> {
+    await this.checkForUncaughtErrors();
     if (this.scratchOrgAliasName && !this.reuseScratchOrg) {
       // The Terminal view can be a bit unreliable, so directly call exec() instead:
       await exec(`sf org:delete:scratch --target-org ${this.scratchOrgAliasName} --no-prompt`);
     }
+  }
+
+  private async checkForUncaughtErrors(): Promise<void> {
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.showRunningExtensions(workbench);
+
+    // Zoom out so all the extensions are visible
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
+    const uncaughtErrors = await $$('span.codicon-bug');
+    utilities.log(`${uncaughtErrors.length} uncaught errors were found`);
+    expect(uncaughtErrors.length).toBe(0);
   }
 
   public async setUpTestingEnvironment(): Promise<void> {

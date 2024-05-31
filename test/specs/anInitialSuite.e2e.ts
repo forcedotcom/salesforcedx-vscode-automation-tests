@@ -110,18 +110,6 @@ describe('An Initial Suite', async () => {
     await utilities.pause(1);
   });
 
-  step('Check for uncaught errors', async () => {
-    // Zoom out so all the extensions are visible
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-    const uncaughtErrors = await $$('span.codicon-bug');
-    utilities.log(`${uncaughtErrors.length} uncaught errors were found`);
-    expect(uncaughtErrors.length).toBe(0);
-  });
-
   xstep(
     'Verify that SFDX commands are present after an SFDX project has been created',
     async () => {
