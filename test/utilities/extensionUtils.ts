@@ -161,7 +161,8 @@ export async function reloadAndEnableExtensions(): Promise<void> {
   log('Reload and Enable Extensions');
   await utilities.reloadWindow();
   const workbench = await utilities.getWorkbench();
-  await workbench.executeCommand('Extensions: Enable All Extensions');
+  const prompt = await runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 5);
+  await prompt.confirm();
 }
 
 export async function installExtension(extension: string, extensionsDir: string): Promise<void> {
@@ -226,8 +227,6 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
 export async function verifyAllExtensionsAreRunning(): Promise<void> {
   log('');
   log(`Starting verifyAllExtensionsAreRunning()...`);
-  const workbench = await utilities.getWorkbench();
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
 
   // Goes through each and all of the extensions verifying they're running in no longer than 100 secs
   await findExtensionsWithTimeout();
@@ -251,6 +250,7 @@ export async function findExtensionsWithTimeout(): Promise<void> {
           return vscode.extensions.getExtension(`salesforce.${id}`);
         }, extension.extensionId);
         extensionWasFound = ext?.isActive ?? false;
+        log(`post extension check: ${extension.extensionId} : ${extensionWasFound}`)
         forcedWait += 10;
       } while (extensionWasFound === false && forcedWait < 100);
     log(`extension ${extension.extensionId} was found: ${extensionWasFound}`);

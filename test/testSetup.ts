@@ -494,6 +494,7 @@ export class TestSetup {
     // Reload the VS Code window
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 70);
+    await utilities.showExplorerView();
 
     const sidebar = await (await workbench.getSideBar()).wait();
     const content = await (await sidebar.getContent()).wait();
