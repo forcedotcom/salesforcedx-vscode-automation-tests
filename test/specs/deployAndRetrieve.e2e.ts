@@ -8,6 +8,7 @@ import { step } from 'mocha-steps';
 import path from 'path';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
+import { Workbench } from 'wdio-vscode-service';
 
 describe('Deploy and Retrieve', async () => {
   let testSetup: TestSetup;

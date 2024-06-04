@@ -46,7 +46,7 @@ export class TestSetup {
     await utilities.installExtensions();
     await utilities.reloadAndEnableExtensions();
     await this.setUpTestingEnvironment();
-    await this.createProject(scratchOrgEdition);
+    await this.createInitialProject(scratchOrgEdition);
     await utilities.reloadAndEnableExtensions();
     await utilities.verifyAllExtensionsAreRunning();
     await this.authorizeDevHub();
@@ -56,10 +56,29 @@ export class TestSetup {
   }
 
   public async tearDown(): Promise<void> {
+    await this.checkForUncaughtErrors();
     if (this.scratchOrgAliasName && !this.reuseScratchOrg) {
       // The Terminal view can be a bit unreliable, so directly call exec() instead:
       await exec(`sf org:delete:scratch --target-org ${this.scratchOrgAliasName} --no-prompt`);
     }
+  }
+
+  private async checkForUncaughtErrors(): Promise<void> {
+    const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.showRunningExtensions(workbench);
+
+    // Zoom out so all the extensions are visible
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
+    const uncaughtErrors = await $$('span.codicon-bug');
+    utilities.log(
+      uncaughtErrors.length == 1
+        ? `${uncaughtErrors.length} extension with uncaught errors was found`
+        : `${uncaughtErrors.length} extensions with uncaught errors were found`
+    );
+    expect(uncaughtErrors.length).toBe(0);
   }
 
   public async setUpTestingEnvironment(): Promise<void> {
@@ -88,14 +107,13 @@ export class TestSetup {
     utilities.log('');
   }
 
-  public async createProject(scratchOrgEdition: string): Promise<void> {
+  public async createInitialProject(scratchOrgEdition: string): Promise<void> {
     utilities.log('');
-    utilities.log(`${this.testSuiteSuffixName} - Starting createProject()...`);
-
-    const workbench = await (await browser.getWorkbench()).wait();
+    utilities.log(`${this.testSuiteSuffixName} - Starting createInitialProject()...`);
 
     // If you are not in a VSCode project, the Salesforce extensions are not running
     // Force the CLI integration extension to load before creating the project
+    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
     await browser.keys(['Escape']);
@@ -114,14 +132,26 @@ export class TestSetup {
     } while (coreExtensionWasFound === false);
     utilities.log(`${this.testSuiteSuffixName} - Ready to create the standard project`);
 
+    await this.createProject(workbench, this.tempProjectName, scratchOrgEdition);
+
+    // Extra config needed for Apex LSP on GHA
+    const os = process.platform;
+    if (os === 'darwin') {
+      this.setJavaHomeConfigEntry();
+    }
+
+    utilities.log(`${this.testSuiteSuffixName} - ...finished createInitialProject()`);
+    utilities.log('');
+  }
+
+  public async createProject(workbench: Workbench, projectName: string, scratchOrgEdition: string) {
     this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
-
     // Select the "Standard" project type.
     await utilities.selectQuickPickItem(this.prompt, 'Standard');
 
     // Enter the project's name.
-    await this.prompt.setText(this.tempProjectName);
+    await this.prompt.setText(projectName);
     await utilities.pause(1);
 
     // Press Enter/Return.
@@ -135,21 +165,9 @@ export class TestSetup {
     // Click the OK button.
     await utilities.clickFilePathOkButton();
 
-    // Get os info
-    const os = process.platform;
-
-    // Extra config needed for Apex LSP on GHA
-    if (os === 'darwin') {
-      this.setJavaHomeConfigEntry();
-    }
-
     // Verify the project was created and was loaded.
-    await this.verifyProjectCreated();
-
+    await this.verifyProjectCreated(projectName);
     this.updateScratchOrgDefWithEdition(scratchOrgEdition);
-
-    utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
-    utilities.log('');
   }
 
   public async authorizeDevHub(): Promise<void> {
@@ -470,7 +488,7 @@ export class TestSetup {
     }
   }
 
-  private async verifyProjectCreated() {
+  private async verifyProjectCreated(projectName: string) {
     utilities.log(`${this.testSuiteSuffixName} - Verifying project was created...`);
 
     // Reload the VS Code window
@@ -479,9 +497,7 @@ export class TestSetup {
 
     const sidebar = await (await workbench.getSideBar()).wait();
     const content = await (await sidebar.getContent()).wait();
-    const treeViewSection = await (
-      await content.getSection(this.tempProjectName.toUpperCase())
-    ).wait();
+    const treeViewSection = await (await content.getSection(projectName.toUpperCase())).wait();
     if (!treeViewSection) {
       throw new Error(
         'In verifyProjectCreated(), getSection() returned a treeViewSection with a value of null (or undefined)'

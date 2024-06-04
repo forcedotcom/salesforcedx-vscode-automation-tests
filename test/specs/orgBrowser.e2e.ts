@@ -101,7 +101,7 @@ describe('Org Browser', async () => {
     // Verify the deploy was successful
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran',
+      'SFDX: Deploy This Source to Org successfully ran',
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
@@ -131,15 +131,15 @@ describe('Org Browser', async () => {
     expect(myClassLabelEl).toBeTruthy();
   });
 
-  xstep('Retrieve Source from Org', async () => {
-    utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve Source from Org`);
+  xstep('Retrieve This Source from Org', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve This Source from Org`);
     const myClassLabelEl = await utilities.findElementByText('div', 'aria-label', 'MyClass');
     await myClassLabelEl.click();
     await utilities.pause(2);
     const retrieveSourceButton = await utilities.findElementByText(
       'li',
       'title',
-      'Retrieve Source from Org'
+      'Retrieve This Source from Org'
     );
     console.log('button 1', retrieveSourceButton);
     await retrieveSourceButton.click();
@@ -147,7 +147,7 @@ describe('Org Browser', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Retrieve Source from Org successfully ran',
+      'SFDX: Retrieve This Source from Org successfully ran',
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
@@ -169,7 +169,7 @@ describe('Org Browser', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Retrieve Source from Org successfully ran',
+      'SFDX: Retrieve This Source from Org successfully ran',
       utilities.FIVE_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
