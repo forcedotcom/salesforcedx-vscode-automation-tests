@@ -112,7 +112,7 @@ describe('An Initial Suite', async () => {
 
   step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 10);
+    await utilities.enableAllExtensions();
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'Extensions: Show Enabled Extensions',

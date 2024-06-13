@@ -14,6 +14,7 @@ import { EnvironmentSettings } from './environmentSettings.ts';
 import * as utilities from './utilities/index.ts';
 
 import { fileURLToPath } from 'url';
+import { fail } from 'assert';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -68,10 +69,8 @@ export class TestSetup {
     await utilities.showRunningExtensions(workbench);
 
     // Zoom out so all the extensions are visible
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
+    await utilities.zoom('Out', 4, 1);
+
     const uncaughtErrors = await $$('span.codicon-bug');
     utilities.log(
       uncaughtErrors.length == 1
@@ -93,14 +92,12 @@ export class TestSetup {
 
     // Remove the project folder, just in case there are stale files there.
     if (fs.existsSync(this.projectFolderPath)) {
-      await utilities.removeFolder(this.projectFolderPath);
-      await utilities.pause(1);
+      utilities.removeFolder(this.projectFolderPath);
     }
 
     // Now create the temp folder.  It should exist but create the folder if it is missing.
     if (!fs.existsSync(this.tempFolderPath)) {
-      await utilities.createFolder(this.tempFolderPath);
-      await utilities.pause(1);
+      utilities.createFolder(this.tempFolderPath);
     }
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished setUpTestingEnvironment()`);
@@ -113,23 +110,36 @@ export class TestSetup {
 
     // If you are not in a VSCode project, the Salesforce extensions are not running
     // Force the CLI integration extension to load before creating the project
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
+    const workbench = await utilities.getWorkbench();
+    await utilities.showRunningExtensions(workbench);
+    const prompt = await workbench.executeQuickPick('SFDX: Create Project');
+    await utilities.waitForQuickPick(prompt, 'Standard', {
+      msg: 'Expected extension salesforcedx-core to be available 5 seconds',
+      timeout: 5_000
+    });
+    // await prompt.cancel();
     await browser.keys(['Escape']);
     await utilities.pause(1);
     await browser.keys(['Escape']);
 
-    // Do not continue until we verify CLI Integration extension is present and running
-    let coreExtensionWasFound = false;
-    do {
-      await utilities.pause(10);
-
-      coreExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+    const findCoreExtension = async () => {
+      return await utilities.findExtensionInRunningExtensionsList(
         workbench,
         'salesforcedx-vscode-core'
       );
-    } while (coreExtensionWasFound === false);
+    };
+
+    // Do not continue until we verify CLI Integration extension is present and running
+    const coreIsActive = await browser.waitUntil(() => findCoreExtension(), {
+      timeout: 20_000, // Timeout after 20 seconds
+      interval: 500, // Check every 500 ms
+      timeoutMsg: 'Expected core extension to be active after 20 seconds'
+    });
+
+    if (!coreIsActive) {
+      fail('Expected core extension to be active after 20 seconds');
+    }
+
     utilities.log(`${this.testSuiteSuffixName} - Ready to create the standard project`);
 
     await this.createProject(workbench, this.tempProjectName, scratchOrgEdition);
@@ -145,14 +155,17 @@ export class TestSetup {
   }
 
   public async createProject(workbench: Workbench, projectName: string, scratchOrgEdition: string) {
-    this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
+    this.prompt = await utilities.executeQuickPick('SFDX: Create Project');
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
     // Select the "Standard" project type.
-    await utilities.selectQuickPickItem(this.prompt, 'Standard');
+    await utilities.waitForQuickPick(this.prompt, 'Standard', {
+      msg: 'Expected extension salesforcedx-core to be available 5 seconds',
+      timeout: 5_000
+    });
 
     // Enter the project's name.
     await this.prompt.setText(projectName);
-    await utilities.pause(1);
+    await utilities.pause(2);
 
     // Press Enter/Return.
     await this.prompt.confirm();
@@ -160,7 +173,7 @@ export class TestSetup {
     // Set the location of the project.
     const input = await this.prompt.input$;
     await input.setValue(this.tempFolderPath!);
-    await utilities.pause(1);
+    await utilities.pause(2);
 
     // Click the OK button.
     await utilities.clickFilePathOkButton();
@@ -251,7 +264,7 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`);
 
     utilities.log(`${this.testSuiteSuffixName} - calling transformedUserName()...`);
-    const currentOsUserName = await utilities.transformedUserName();
+    const currentOsUserName = utilities.transformedUserName();
 
     utilities.log(`${this.testSuiteSuffixName} - calling getWorkbench()...`);
     const workbench = await (await browser.getWorkbench()).wait();
@@ -496,8 +509,8 @@ export class TestSetup {
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 70);
     await utilities.showExplorerView();
 
-    const sidebar = await (await workbench.getSideBar()).wait();
-    const content = await (await sidebar.getContent()).wait();
+    const sidebar = await workbench.getSideBar().wait();
+    const content = await sidebar.getContent().wait();
     const treeViewSection = await (await content.getSection(projectName.toUpperCase())).wait();
     if (!treeViewSection) {
       throw new Error(

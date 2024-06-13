@@ -13,7 +13,7 @@ import path from 'path';
 import FastGlob from 'fast-glob';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import { exec } from 'child_process';
-import * as utilities from './workbench.ts';
+import * as utilities from './index.ts';
 
 export type ExtensionId =
   | 'salesforcedx-vscode'
@@ -128,13 +128,13 @@ export async function showRunningExtensions(workbench: Workbench): Promise<void>
 
 export async function findExtensionInRunningExtensionsList(
   workbench: Workbench,
-  extensionName: string
+  extensionId: string
 ): Promise<boolean> {
   // This function assumes the Extensions list was opened.
 
   // Close the panel and clear notifications so we can see as many of the running extensions as we can.
   try {
-    await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
+    // await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
     await runCommandFromCommandPrompt(workbench, 'Notifications: Clear All Notifications', 1);
   } catch {
     // Close the command prompt by hitting the Escape key
@@ -143,26 +143,13 @@ export async function findExtensionInRunningExtensionsList(
   }
   pause(1);
 
-  const extensionNameDivs = await $$('div.monaco-list-row');
-  let extensionWasFound = false;
-  for (const extensionNameDiv of extensionNameDivs) {
-    const text = await extensionNameDiv.getAttribute('aria-label');
-    if (text.includes(extensionName)) {
-      extensionWasFound = true;
-      log(`extension ${extensionName} was found`);
-      break;
-    }
-  }
-
-  return extensionWasFound;
+  const extensionNameDivs = await $$(`div.monaco-list-row[aria-label="${extensionId}"]`);
+  return extensionNameDivs.length === 1;
 }
 
 export async function reloadAndEnableExtensions(): Promise<void> {
-  log('Reload and Enable Extensions');
   await utilities.reloadWindow();
-  const workbench = await utilities.getWorkbench();
-  const prompt = await runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 5);
-  await prompt.confirm();
+  await utilities.enableAllExtensions();
 }
 
 export async function installExtension(extension: string, extensionsDir: string): Promise<void> {
@@ -228,8 +215,12 @@ export async function verifyAllExtensionsAreRunning(): Promise<void> {
   log('');
   log(`Starting verifyAllExtensionsAreRunning()...`);
 
+  await utilities.zoom('Out', 4, 1);
+
   // Goes through each and all of the extensions verifying they're running in no longer than 100 secs
   await findExtensionsWithTimeout();
+
+  await utilities.zoomReset(1);
 
   log(`... Finished verifyAllExtensionsAreRunning()`);
   log('');
@@ -241,19 +232,22 @@ export async function findExtensionsWithTimeout(): Promise<void> {
   const shouldVerifyActivation = extensions.filter((ext) => {
     return ext.shouldVerifyActivation;
   });
+  const workbench = await utilities.getWorkbench();
+  await utilities.showRunningExtensions(workbench);
+
   for (const extension of shouldVerifyActivation) {
     log(`Verifying extension ${extension.name} with id: ${extension.extensionId}`);
     if (extensionWasFound === false && forcedWait < 100)
       do {
         await pause(7);
-        const ext = await browser.executeWorkbench<Extension>((vscode, id) => {
-          return vscode.extensions.getExtension(`salesforce.${id}`);
-        }, extension.extensionId);
-        extensionWasFound = ext?.isActive ?? false;
-        log(`post extension check: ${extension.extensionId} : ${extensionWasFound}`)
+        extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
+          workbench,
+          extension.extensionId
+        );
+        log(`post extension check: ${extension.extensionId} : ${extensionWasFound}`);
         forcedWait += 10;
       } while (extensionWasFound === false && forcedWait < 100);
-    log(`extension ${extension.extensionId} was found: ${extensionWasFound}`);
+    log(`extension ${extension.name}:${extension.extensionId} was found: ${extensionWasFound}`);
     forcedWait = 0;
     expect(extensionWasFound).toBe(true);
   }
