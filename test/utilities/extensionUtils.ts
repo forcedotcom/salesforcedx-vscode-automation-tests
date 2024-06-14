@@ -175,7 +175,6 @@ export async function installExtension(extension: string, extensionsDir: string)
 }
 
 export async function installExtensions(excludeExtensions: ExtensionId[] = []): Promise<void> {
-  const workbench = await utilities.getWorkbench();
   const extensionsDir = path.resolve(path.join(EnvironmentSettings.getInstance().extensionPath));
   const extensionsVsixs = FastGlob.sync('**/*.vsix', { cwd: extensionsDir });
   if (extensionsVsixs.length === 0) {
@@ -207,8 +206,8 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
     await installExtension(extensionObj.vsixPath, extensionsDir);
   }
 
-  await runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 5);
-  await runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 10);
+  await utilities.enableAllExtensions();
+  await utilities.reloadWindow(10);
 }
 
 export async function verifyAllExtensionsAreRunning(): Promise<void> {
@@ -250,6 +249,7 @@ export async function findExtensionsWithTimeout(): Promise<void> {
     log(`extension ${extension.name}:${extension.extensionId} was found: ${extensionWasFound}`);
     forcedWait = 0;
     expect(extensionWasFound).toBe(true);
+    extensionWasFound = false;
   }
 }
 

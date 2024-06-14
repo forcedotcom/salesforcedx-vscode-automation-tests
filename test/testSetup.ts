@@ -505,8 +505,8 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Verifying project was created...`);
 
     // Reload the VS Code window
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 70);
+    const workbench = await utilities.getWorkbench();
+    await utilities.reloadWindow();
     await utilities.showExplorerView();
 
     const sidebar = await workbench.getSideBar().wait();

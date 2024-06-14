@@ -1,14 +1,18 @@
 import { Workbench } from 'wdio-vscode-service';
-import { log } from './miscellaneous.ts';
+import { log, pause } from './miscellaneous.ts';
 import { executeQuickPick } from './commandPrompt.ts';
+import { PredicateWithTimeout } from './predicates.ts';
 
 export async function getWorkbench(wait = 5): Promise<Workbench> {
-  return await (await browser.getWorkbench()).wait(wait * 1000);
+  return await (await browser.getWorkbench()).wait(wait * 1_000);
 }
-
-export async function reloadWindow(): Promise<void> {
+// { predicate: standardPredicates.alwaysTrue, maxWaitTime: 5_000 }
+export async function reloadWindow(
+  predicateOrWait: PredicateWithTimeout | number = 0
+): Promise<void> {
   log(`Reloading window`);
-  await executeQuickPick('Developer: Reload Window');
+  const prompt = await executeQuickPick('Developer: Reload Window');
+  await handlePredicateOrWait(predicateOrWait, prompt);
 }
 
 export async function enableAllExtensions(): Promise<void> {
@@ -48,4 +52,39 @@ export async function zoom(
 
 export async function zoomReset(wait: number = 1): Promise<void> {
   await executeQuickPick('View: Reset Zoom', wait);
+}
+
+async function handlePredicateOrWait(predicateOrWait: PredicateWithTimeout | number, prompt: unknown) {
+  if (typeof predicateOrWait === 'number') {
+    if (predicateOrWait > 0) {
+      await pause(predicateOrWait);
+    }
+  } else if (typeof predicateOrWait === 'object') {
+    const { predicate, maxWaitTime } = predicateOrWait;
+    const safePredicate = withFailsafe(predicate, maxWaitTime, prompt);
+
+    try {
+      const result = await safePredicate();
+      if (result !== true) {
+        throw new Error('Predicate did not resolve to true');
+      }
+    } catch (error) {
+      log(`Predicate failed or timed out: ${(error as Error).message}`);
+      throw error;
+    }
+  }
+}
+
+function withFailsafe(
+  predicate: (...args: unknown[]) => Promise<boolean>,
+  timeout: number,
+  prompt: unknown
+): () => Promise<boolean> {
+  return async function () {
+    const timeoutPromise = new Promise<boolean>((_, reject) =>
+      setTimeout(() => reject(new Error('Predicate timed out')), timeout)
+    );
+
+    return Promise.race([predicate(prompt), timeoutPromise]);
+  };
 }
