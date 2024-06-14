@@ -43,9 +43,9 @@ describe('Debug LWC Tests', async () => {
       utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 
       // Using the Command palette, run Developer: Show Running Extensions
-      const workbench = await browser.getWorkbench();
-      await utilities.showRunningExtensions(workbench);
+      await utilities.showRunningExtensions();
 
+      const workbench = await browser.getWorkbench();
       // Verify Lightning Web Components extension is present and running
       const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
         workbench,
@@ -59,7 +59,7 @@ describe('Debug LWC Tests', async () => {
         `${testSetup.testSuiteSuffixName} - Debug All tests on a LWC via the Test Sidebar`
       );
       const workbench = await (await browser.getWorkbench()).wait();
-      await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 3);
+      await utilities.executeQuickPick('Testing: Focus on LWC Tests View', 3);
 
       // Open the Test Sidebar
       const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');

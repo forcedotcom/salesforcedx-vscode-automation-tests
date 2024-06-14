@@ -30,9 +30,9 @@ describe('Apex LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 
     // Using the Command palette, run Developer: Show Running Extensions
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.showRunningExtensions(workbench);
+    await utilities.showRunningExtensions();
 
+    const workbench = await (await browser.getWorkbench()).wait();
     // Verify Apex extension is present and running
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,

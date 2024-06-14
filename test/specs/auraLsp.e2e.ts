@@ -23,17 +23,16 @@ describe('Aura LSP', async () => {
     await utilities.createAura('aura1');
 
     // Reload the VSCode window to allow the Aura Component to be indexed by the Aura Language Server
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 70);
+    await utilities.reloadWindow(70);
   });
 
   step('Verify Extension is Running', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 
     // Using the Command palette, run Developer: Show Running Extensions
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.showRunningExtensions(workbench);
+    await utilities.showRunningExtensions();
 
+    const workbench = await (await browser.getWorkbench()).wait();
     // Verify Aura Components extension is present and running.
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
@@ -87,7 +86,7 @@ describe('Aura LSP', async () => {
   step('Autocompletion', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'aura1.cmp');
     // Workaround for `coordinates is not iterable` error is needed here too because `textEditor.typeTextAt()` uses coordinates.
     await browser.keys([CMD_KEY, 'f']);

@@ -122,8 +122,17 @@ const extensions: ExtensionType[] = [
     shouldVerifyActivation: true
   }
 ];
-export async function showRunningExtensions(workbench: Workbench): Promise<void> {
-  await runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);
+
+export async function showRunningExtensions(): Promise<void> {
+  await utilities.executeQuickPick('Developer: Show Running Extensions');
+  await browser.waitUntil(async () => {
+    const runningExtensionsTab = await $("//div[contains(@class, 'active') and contains(@class, 'selected') and .//*[contains(text(), 'Running Extensions')]]");
+    return runningExtensionsTab.isDisplayed();
+  }, {
+    timeout: 5000, // Timeout after 5 seconds
+    interval: 500, // Check every 500 ms
+    timeoutMsg: 'Expected "Running Extensions" tab to be visible after 5 seconds'
+  });
 }
 
 export async function findExtensionInRunningExtensionsList(
@@ -232,7 +241,7 @@ export async function findExtensionsWithTimeout(): Promise<void> {
     return ext.shouldVerifyActivation;
   });
   const workbench = await utilities.getWorkbench();
-  await utilities.showRunningExtensions(workbench);
+  await utilities.showRunningExtensions();
 
   for (const extension of shouldVerifyActivation) {
     log(`Verifying extension ${extension.name} with id: ${extension.extensionId}`);

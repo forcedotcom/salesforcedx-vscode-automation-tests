@@ -66,7 +66,7 @@ export class TestSetup {
 
   private async checkForUncaughtErrors(): Promise<void> {
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.showRunningExtensions(workbench);
+    await utilities.showRunningExtensions();
 
     // Zoom out so all the extensions are visible
     await utilities.zoom('Out', 4, 1);
@@ -111,7 +111,7 @@ export class TestSetup {
     // If you are not in a VSCode project, the Salesforce extensions are not running
     // Force the CLI integration extension to load before creating the project
     const workbench = await utilities.getWorkbench();
-    await utilities.showRunningExtensions(workbench);
+    await utilities.showRunningExtensions();
     const prompt = await workbench.executeQuickPick('SFDX: Create Project');
     await utilities.waitForQuickPick(prompt, 'Standard', {
       msg: 'Expected extension salesforcedx-core to be available 5 seconds',

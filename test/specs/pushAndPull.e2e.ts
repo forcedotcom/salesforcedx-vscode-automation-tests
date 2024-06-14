@@ -29,12 +29,7 @@ describe('Push and Pull', async () => {
   });
 
   step('SFDX: View All Changes (Local and in Default Org)', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: View All Changes (Local and in Default Org)',
-      5
-    );
+    await utilities.executeQuickPick('SFDX: View All Changes (Local and in Default Org)', 5);
 
     // Check the output.
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -229,7 +224,7 @@ describe('Push and Pull', async () => {
 
     // Verify CLI Integration Extension is present and running.
     await utilities.reloadAndEnableExtensions();
-    await utilities.showRunningExtensions(workbench);
+    await utilities.showRunningExtensions();
     const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
       workbench,
       'salesforcedx-vscode-core'

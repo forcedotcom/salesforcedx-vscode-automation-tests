@@ -31,8 +31,7 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify our extensions are not initially loaded', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.showRunningExtensions(workbench);
+    await utilities.showRunningExtensions();
 
     const extensionNameDivs = await $$('div.name');
     let sfdxKeywordWasFound = false;
