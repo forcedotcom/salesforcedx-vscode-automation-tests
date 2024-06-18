@@ -47,6 +47,7 @@ export type ExtensionActivation = {
   isPresent: boolean;
   version?: string;
   activationTime?: string;
+  hasBug?: boolean;
 };
 
 export type VerifyExtensionsOptions = {
@@ -229,6 +230,7 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
     );
 
   if (
+    foundInstalledExtensions.length > 0 &&
     foundInstalledExtensions.every((ext) =>
       extensions.find((refExt) => refExt.extensionId === ext?.extensionId)
     )
@@ -242,19 +244,21 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
     return;
   }
 
-  const extensionsVsixs = FastGlob.sync('**/*.vsix', { cwd: extensionsDir });
+  const extensionsVsixs = utilities.getVsixFilesFromDir(extensionsDir);
   if (extensionsVsixs.length === 0) {
     throw new Error(`No vsix files were found in dir ${extensionsDir}`);
   }
 
   // Refactored part to use the extensions array
   extensionsVsixs.forEach((vsix) => {
-    const match = vsix.match(/^(?<extension>.*?)(-(?<version>\d+\.\d+\.\d+))?\.vsix$/);
+    const match = path
+      .basename(vsix)
+      .match(/^(?<extension>.*?)(-(?<version>\d+\.\d+\.\d+))?\.vsix$/);
     if (match && match.groups) {
       const { extension } = match.groups;
       const foundExtension = extensions.find((e) => e.extensionId === extension);
       if (foundExtension) {
-        foundExtension.vsixPath = path.join(extensionsDir, vsix);
+        foundExtension.vsixPath = vsix;
         // assign 'never' to this extension if its id is included in excluedExtensions
         foundExtension.shouldInstall = excludeExtensions.includes(foundExtension.extensionId)
           ? 'never'
@@ -427,7 +431,9 @@ export async function findExtensionsInRunningExtensionsList(
     const extensionId = await parent.getAttribute('aria-label');
     const version = await extension.$('.version').getText();
     const activationTime = await extension.$('.activation-time').getText();
-    runningExtensions.push({ extensionId, activationTime, version, isPresent: true });
+    const bugSpan = await parent.$('span.codicon-bug');
+    const hasBug = bugSpan?.error?.message.startsWith('no such element') ? false : true;
+    runningExtensions.push({ extensionId, activationTime, version, isPresent: true, hasBug });
   }
 
   // limit runningExtensions to those whose property extensionId is in the list of extensionIds

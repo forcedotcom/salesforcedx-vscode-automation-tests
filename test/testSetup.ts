@@ -70,12 +70,18 @@ export class TestSetup {
     // Zoom out so all the extensions are visible
     await utilities.zoom('Out', 4, 1);
 
-    const uncaughtErrors = await $$('span.codicon-bug');
-    utilities.log(
-      uncaughtErrors.length == 1
-        ? `${uncaughtErrors.length} extension with uncaught errors was found`
-        : `${uncaughtErrors.length} extensions with uncaught errors were found`
-    );
+    const uncaughtErrors = (
+      await utilities.findExtensionsInRunningExtensionsList(
+        utilities.getExtensionsToVerifyActive().map((ext) => ext.extensionId)
+      )
+    ).filter((ext) => ext.hasBug);
+
+    await utilities.zoomReset(1);
+
+    uncaughtErrors.forEach((ext) => {
+      utilities.log(`Extension ${ext.extensionId}:${ext.version ?? 'unknown'} has a bug`);
+    });
+
     expect(uncaughtErrors.length).toBe(0);
   }
 

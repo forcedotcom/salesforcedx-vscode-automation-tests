@@ -8,6 +8,7 @@ import * as fs from 'fs';
 import path from 'path';
 import { TestSetup } from '../testSetup.ts';
 import { log } from './miscellaneous.ts';
+import FastGlob from 'fast-glob';
 
 export function createFolder(folderPath: string): void {
   fs.mkdirSync(folderPath, { recursive: true });
@@ -51,4 +52,15 @@ export async function createCustomObjects(testSetup: TestSetup): Promise<void> {
     await testSetup.tearDown();
     throw error;
   }
+}
+
+/**
+ * Scans the directory for vsix files and returns the full path to each file
+ * @param vsixDir
+ * @returns
+ */
+export function getVsixFilesFromDir(vsixDir: string): string[] {
+  return FastGlob.sync('**/*.vsix', { cwd: vsixDir }).map((vsixFile) =>
+    path.join(vsixDir, vsixFile)
+  );
 }
