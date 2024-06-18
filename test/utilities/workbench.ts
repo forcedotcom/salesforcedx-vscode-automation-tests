@@ -45,6 +45,7 @@ export async function zoom(
   zoomLevel: number,
   wait: number = 1
 ): Promise<void> {
+  await zoomReset(wait);
   for (let level = 0; level < zoomLevel; level++) {
     await executeQuickPick(`View: Zoom ${zoomIn}`, wait);
   }

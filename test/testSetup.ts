@@ -49,7 +49,7 @@ export class TestSetup {
     await this.setUpTestingEnvironment();
     await this.createInitialProject(scratchOrgEdition);
     await utilities.reloadAndEnableExtensions();
-    await utilities.verifyAllExtensionsAreRunning();
+    await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
     utilities.log(`${this.testSuiteSuffixName} - ...finished TestSetup.setUp()`);
@@ -65,7 +65,6 @@ export class TestSetup {
   }
 
   private async checkForUncaughtErrors(): Promise<void> {
-    const workbench = await (await browser.getWorkbench()).wait();
     await utilities.showRunningExtensions();
 
     // Zoom out so all the extensions are visible
@@ -117,24 +116,15 @@ export class TestSetup {
       msg: 'Expected extension salesforcedx-core to be available 5 seconds',
       timeout: 5_000
     });
-    // await prompt.cancel();
     await browser.keys(['Escape']);
     await utilities.pause(1);
     await browser.keys(['Escape']);
 
-    const findCoreExtension = async () => {
-      return await utilities.findExtensionInRunningExtensionsList(
-        workbench,
-        'salesforcedx-vscode-core'
-      );
-    };
-
-    // Do not continue until we verify CLI Integration extension is present and running
-    const coreIsActive = await browser.waitUntil(() => findCoreExtension(), {
-      timeout: 20_000, // Timeout after 20 seconds
-      interval: 500, // Check every 500 ms
-      timeoutMsg: 'Expected core extension to be active after 20 seconds'
-    });
+    const coreIsActive = await utilities.verifyExtensionsAreRunning(
+      utilities
+        .getExtensionsToVerifyActive()
+        .filter((ext) => ext.extensionId === 'salesforcedx-vscode-core')
+    );
 
     if (!coreIsActive) {
       fail('Expected core extension to be active after 20 seconds');

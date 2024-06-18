@@ -225,11 +225,13 @@ describe('Push and Pull', async () => {
     // Verify CLI Integration Extension is present and running.
     await utilities.reloadAndEnableExtensions();
     await utilities.showRunningExtensions();
-    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-      workbench,
+    utilities.zoom('Out', 4, 1);
+    // Verify Apex extension is present and running
+    const extensionWasFound = await utilities.findExtensionsInRunningExtensionsList([
       'salesforcedx-vscode-core'
-    );
-    expect(extensionWasFound).toBe(true);
+    ]);
+    utilities.zoomReset();
+    expect(extensionWasFound.length).toBe(1);
 
     //Run SFDX: View Changes in Default Org command to view remote changes
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: View Changes in Default Org', 5);

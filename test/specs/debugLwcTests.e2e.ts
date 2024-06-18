@@ -44,15 +44,14 @@ describe('Debug LWC Tests', async () => {
 
       // Using the Command palette, run Developer: Show Running Extensions
       await utilities.showRunningExtensions();
-
-      const workbench = await browser.getWorkbench();
-      // Verify Lightning Web Components extension is present and running
-      const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-        workbench,
+      utilities.zoom('Out', 4, 1);
+      // Verify Apex extension is present and running
+      const extensionWasFound = await utilities.findExtensionsInRunningExtensionsList([
         'salesforcedx-vscode-lwc'
-      );
-      expect(extensionWasFound).toBe(true);
-    });
+      ]);
+      utilities.zoomReset();
+      expect(extensionWasFound.length).toBe(1);
+      });
 
     step('Debug All Tests on a LWC via the Test Sidebar', async () => {
       utilities.log(

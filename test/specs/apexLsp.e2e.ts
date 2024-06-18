@@ -31,14 +31,13 @@ describe('Apex LSP', async () => {
 
     // Using the Command palette, run Developer: Show Running Extensions
     await utilities.showRunningExtensions();
-
-    const workbench = await (await browser.getWorkbench()).wait();
+    utilities.zoom('Out', 4, 1);
     // Verify Apex extension is present and running
-    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-      workbench,
+    const extensionWasFound = await utilities.findExtensionsInRunningExtensionsList([
       'salesforcedx-vscode-apex'
-    );
-    expect(extensionWasFound).toBe(true);
+    ]);
+    utilities.zoomReset();
+    expect(extensionWasFound.length).toBe(1);
   });
 
   step('Verify LSP finished indexing', async () => {

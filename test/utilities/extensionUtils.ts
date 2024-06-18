@@ -6,7 +6,6 @@
  */
 
 import { Workbench } from 'wdio-vscode-service';
-import { runCommandFromCommandPrompt } from './commandPrompt.ts';
 import { log, pause } from './miscellaneous.ts';
 import fs from 'fs/promises';
 import path from 'path';
@@ -35,13 +34,27 @@ export type Extension = {
   packageJSON: unknown;
 };
 
-type ExtensionType = {
+export type ExtensionType = {
   extensionId: ExtensionId;
   name: string;
   vsixPath: string;
   shouldInstall: 'always' | 'never' | 'optional';
   shouldVerifyActivation: boolean;
 };
+
+export type ExtensionActivation = {
+  extensionId: string;
+  isPresent: boolean;
+  version?: string;
+  activationTime?: string;
+};
+
+export type VerifyExtensionsOptions = {
+  timeout?: number;
+  interval?: number;
+};
+
+const VERIFY_EXTENSIONS_TIMEOUT = 20_000;
 
 const extensions: ExtensionType[] = [
   {
@@ -125,14 +138,19 @@ const extensions: ExtensionType[] = [
 
 export async function showRunningExtensions(): Promise<void> {
   await utilities.executeQuickPick('Developer: Show Running Extensions');
-  await browser.waitUntil(async () => {
-    const runningExtensionsTab = await $("//div[contains(@class, 'active') and contains(@class, 'selected') and .//*[contains(text(), 'Running Extensions')]]");
-    return runningExtensionsTab.isDisplayed();
-  }, {
-    timeout: 5000, // Timeout after 5 seconds
-    interval: 500, // Check every 500 ms
-    timeoutMsg: 'Expected "Running Extensions" tab to be visible after 5 seconds'
-  });
+  await browser.waitUntil(
+    async () => {
+      const runningExtensionsTab = await $(
+        "//div[contains(@class, 'active') and contains(@class, 'selected') and .//*[contains(text(), 'Running Extensions')]]"
+      );
+      return runningExtensionsTab.isDisplayed();
+    },
+    {
+      timeout: 5000, // Timeout after 5 seconds
+      interval: 500, // Check every 500 ms
+      timeoutMsg: 'Expected "Running Extensions" tab to be visible after 5 seconds'
+    }
+  );
 }
 
 export async function findExtensionInRunningExtensionsList(
@@ -144,13 +162,12 @@ export async function findExtensionInRunningExtensionsList(
   // Close the panel and clear notifications so we can see as many of the running extensions as we can.
   try {
     // await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
-    await runCommandFromCommandPrompt(workbench, 'Notifications: Clear All Notifications', 1);
+    await utilities.executeQuickPick('Notifications: Clear All Notifications', 1);
   } catch {
     // Close the command prompt by hitting the Escape key
     await browser.keys(['Escape']);
     log('No panel or notifs to close - command not found');
   }
-  pause(1);
 
   const extensionNameDivs = await $$(`div.monaco-list-row[aria-label="${extensionId}"]`);
   return extensionNameDivs.length === 1;
@@ -185,6 +202,46 @@ export async function installExtension(extension: string, extensionsDir: string)
 
 export async function installExtensions(excludeExtensions: ExtensionId[] = []): Promise<void> {
   const extensionsDir = path.resolve(path.join(EnvironmentSettings.getInstance().extensionPath));
+  const extensionPattern =
+    /^(?<publisher>.+?)\.(?<extensionId>.+?)-(?<version>\d+\.\d+\.\d+)(?:\.\d+)*$/;
+  const foundInstalledExtensions = (await fs.readdir(extensionsDir))
+    .filter(async (entry) => {
+      const stats = await fs.stat(entry);
+      return stats.isDirectory();
+    })
+    .map((entry) => {
+      const match = entry.match(extensionPattern);
+      if (match?.groups) {
+        return {
+          publisher: match.groups.publisher,
+          extensionId: match.groups.extensionId,
+          version: match.groups.version,
+          path: entry
+        };
+      }
+      return null;
+    })
+    .filter(Boolean)
+    .filter((ext) =>
+      extensions.find((refExt) => {
+        return refExt.extensionId === ext?.extensionId;
+      })
+    );
+
+  if (
+    foundInstalledExtensions.every((ext) =>
+      extensions.find((refExt) => refExt.extensionId === ext?.extensionId)
+    )
+  ) {
+    log(
+      `Found the following pre-installed extensions in dir ${extensionsDir}, skipping installation of vsix`
+    );
+    foundInstalledExtensions.forEach((ext) => {
+      log(`Extension ${ext?.extensionId} version ${ext?.version}`);
+    });
+    return;
+  }
+
   const extensionsVsixs = FastGlob.sync('**/*.vsix', { cwd: extensionsDir });
   if (extensionsVsixs.length === 0) {
     throw new Error(`No vsix files were found in dir ${extensionsDir}`);
@@ -219,27 +276,10 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
   await utilities.reloadWindow(10);
 }
 
-export async function verifyAllExtensionsAreRunning(): Promise<void> {
-  log('');
-  log(`Starting verifyAllExtensionsAreRunning()...`);
-
-  await utilities.zoom('Out', 4, 1);
-
-  // Goes through each and all of the extensions verifying they're running in no longer than 100 secs
-  await findExtensionsWithTimeout();
-
-  await utilities.zoomReset(1);
-
-  log(`... Finished verifyAllExtensionsAreRunning()`);
-  log('');
-}
-
 export async function findExtensionsWithTimeout(): Promise<void> {
   let forcedWait = 0;
   let extensionWasFound = false;
-  const shouldVerifyActivation = extensions.filter((ext) => {
-    return ext.shouldVerifyActivation;
-  });
+  const shouldVerifyActivation = getExtensionsToVerifyActive();
   const workbench = await utilities.getWorkbench();
   await utilities.showRunningExtensions();
 
@@ -260,6 +300,12 @@ export async function findExtensionsWithTimeout(): Promise<void> {
     expect(extensionWasFound).toBe(true);
     extensionWasFound = false;
   }
+}
+
+export function getExtensionsToVerifyActive(): ExtensionType[] {
+  return extensions.filter((ext) => {
+    return ext.shouldVerifyActivation;
+  });
 }
 
 export async function findVSCodeBinary(): Promise<string> {
@@ -293,4 +339,97 @@ export async function findVSCodeBinary(): Promise<string> {
   }
 
   return codeBin[0];
+}
+
+export async function verifyExtensionsAreRunning(
+  extensions: ExtensionType[],
+  timeout = VERIFY_EXTENSIONS_TIMEOUT
+) {
+  log('');
+  log(`Starting verifyAllExtensionsAreRunning()...`);
+  if (extensions.length === 0) {
+    log(
+      'verifyExtensionsAreRunning - No extensions to verify, continuing test run w/o extension verification'
+    );
+    return true;
+  }
+
+  const extensionsToVerify = extensions.map((extension) => extension.extensionId);
+
+  await showRunningExtensions();
+
+  await utilities.zoom('Out', 4, 1);
+
+  let extensionsStatus: ExtensionActivation[] = [];
+  let allActivated = false;
+
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(
+      () => reject(new Error('findExtensionsInRunningExtensionsList timeout')),
+      timeout ?? VERIFY_EXTENSIONS_TIMEOUT
+    )
+  );
+
+  try {
+    await Promise.race([
+      (async () => {
+        do {
+          extensionsStatus = await findExtensionsInRunningExtensionsList(extensionsToVerify);
+
+          // Log the current state of the activation check for each extension
+          for (const extensionStatus of extensionsStatus) {
+            log(
+              `Extension ${extensionStatus.extensionId}: ${extensionStatus.activationTime ?? 'Not activated'}`
+            );
+          }
+
+          allActivated = extensionsStatus.every(
+            (extensionStatus) => extensionStatus.activationTime
+          );
+        } while (!allActivated);
+      })(),
+      timeoutPromise
+    ]);
+  } catch (error) {
+    log(`Error while waiting for extensions to activate: ${error}`);
+  }
+
+  await utilities.zoomReset(1);
+
+  log('... Finished verifyAllExtensionsAreRunning()');
+  log('');
+
+  return allActivated;
+}
+
+export async function findExtensionsInRunningExtensionsList(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  extensionIds: string[]
+): Promise<ExtensionActivation[]> {
+  // This function assumes the Extensions list was opened.
+
+  // Close the panel and clear notifications so we can see as many of the running extensions as we can.
+  try {
+    // await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
+    await utilities.executeQuickPick('Notifications: Clear All Notifications', 1);
+  } catch {
+    // Close the command prompt by hitting the Escape key
+    await browser.keys(['Escape']);
+    log('No panel or notifs to close - command not found');
+  }
+
+  // Get all extensions
+  const allExtensions = await $$('div.monaco-list-row > div.extension');
+
+  const runningExtensions: ExtensionActivation[] = [];
+  for (const extension of allExtensions) {
+    const parent = await extension.parentElement();
+    const extensionId = await parent.getAttribute('aria-label');
+    const version = await extension.$('.version').getText();
+    const activationTime = await extension.$('.activation-time').getText();
+    runningExtensions.push({ extensionId, activationTime, version, isPresent: true });
+  }
+
+  // limit runningExtensions to those whose property extensionId is in the list of extensionIds
+  return runningExtensions.filter((extension) => extensionIds.includes(extension.extensionId));
 }

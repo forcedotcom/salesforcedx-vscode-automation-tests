@@ -188,7 +188,7 @@ describe('Templates', async () => {
       'cmp'
     );
     // Zoom out so all tree items are visible
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.zoom('Out', 1, 2);
     // Check for the presence of the directory, "auraComponent1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
