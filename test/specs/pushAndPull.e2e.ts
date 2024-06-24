@@ -25,7 +25,7 @@ async function verifyPushSuccessful(workbench: Workbench, wait = utilities.TEN_M
   expect(successNotificationWasFound).toBe(true);
 }
 
-async function validatePullSuccess(workbench: Workbench, wait = utilities.TEN_MINUTES) {
+async function verifyPullSuccess(workbench: Workbench, wait = utilities.TEN_MINUTES) {
   const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
     workbench,
     'SFDX: Pull Source from Default Org successfully ran',
@@ -190,7 +190,7 @@ describe('Push and Pull', async () => {
 
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
     // At this point there should be no conflicts since there have been no changes.
-    await validatePullSuccess(workbench);
+    await verifyPullSuccess(workbench);
     // Check the output.
     let outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from', 'Created');
     // The first time a pull is performed, force-app/main/default/profiles/Admin.profile-meta.xml is pulled down.
@@ -204,7 +204,7 @@ describe('Push and Pull', async () => {
 
     // And pull again.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
-    await validatePullSuccess(workbench);
+    await verifyPullSuccess(workbench);
 
     // Check the output.
     outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
@@ -224,7 +224,7 @@ describe('Push and Pull', async () => {
 
     // Pull the file.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
-    await validatePullSuccess(workbench);
+    await verifyPullSuccess(workbench);
 
     // Check the output.
     await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
@@ -242,7 +242,7 @@ describe('Push and Pull', async () => {
 
     // An now pull the changes.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
-    await validatePullSuccess(workbench);
+    await verifyPullSuccess(workbench);
     await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
   });
 
