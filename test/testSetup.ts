@@ -119,7 +119,7 @@ export class TestSetup {
     await utilities.showRunningExtensions();
     const prompt = await workbench.executeQuickPick('SFDX: Create Project');
     await utilities.waitForQuickPick(prompt, 'Standard', {
-      msg: 'Expected extension salesforcedx-core to be available 5 seconds',
+      msg: 'Expected extension salesforcedx-core to be available within 5 seconds',
       timeout: 5_000
     });
     await browser.keys(['Escape']);
@@ -150,12 +150,12 @@ export class TestSetup {
     utilities.log('');
   }
 
-  public async createProject(workbench: Workbench, projectName: string, scratchOrgEdition: string) {
+  public async createProject(projectName: string, scratchOrgEdition: string) {
     this.prompt = await utilities.executeQuickPick('SFDX: Create Project');
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
     // Select the "Standard" project type.
     await utilities.waitForQuickPick(this.prompt, 'Standard', {
-      msg: 'Expected extension salesforcedx-core to be available 5 seconds',
+      msg: 'Expected extension salesforcedx-core to be available within 5 seconds',
       timeout: 5_000
     });
 

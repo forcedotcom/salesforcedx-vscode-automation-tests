@@ -34,11 +34,11 @@ describe('Aura LSP', async () => {
     await utilities.zoom('Out', 4, 1);
 
     // Verify Aura Components extension is present and running.
-    const extensionWasFound = await utilities.findExtensionsInRunningExtensionsList([
+    const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
       'salesforcedx-vscode-lightning'
     ]);
     utilities.zoomReset();
-    expect(extensionWasFound.length).toBe(1);
+    expect(foundExtensions.length).toBe(1);
   });
 
   step('Verify LSP finished indexing', async () => {

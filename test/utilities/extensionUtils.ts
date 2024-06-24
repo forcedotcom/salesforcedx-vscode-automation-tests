@@ -5,7 +5,6 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Workbench } from 'wdio-vscode-service';
 import { log, pause } from './miscellaneous.ts';
 import fs from 'fs/promises';
 import path from 'path';
@@ -154,26 +153,6 @@ export async function showRunningExtensions(): Promise<void> {
   );
 }
 
-export async function findExtensionInRunningExtensionsList(
-  workbench: Workbench,
-  extensionId: string
-): Promise<boolean> {
-  // This function assumes the Extensions list was opened.
-
-  // Close the panel and clear notifications so we can see as many of the running extensions as we can.
-  try {
-    // await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
-    await utilities.executeQuickPick('Notifications: Clear All Notifications', 1);
-  } catch {
-    // Close the command prompt by hitting the Escape key
-    await browser.keys(['Escape']);
-    log('No panel or notifs to close - command not found');
-  }
-
-  const extensionNameDivs = await $$(`div.monaco-list-row[aria-label="${extensionId}"]`);
-  return extensionNameDivs.length === 1;
-}
-
 export async function reloadAndEnableExtensions(): Promise<void> {
   await utilities.reloadWindow();
   await utilities.enableAllExtensions();
@@ -254,7 +233,7 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
     const match = path
       .basename(vsix)
       .match(/^(?<extension>.*?)(-(?<version>\d+\.\d+\.\d+))?\.vsix$/);
-    if (match && match.groups) {
+    if (match?.groups) {
       const { extension } = match.groups;
       const foundExtension = extensions.find((e) => e.extensionId === extension);
       if (foundExtension) {
@@ -278,32 +257,6 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
 
   await utilities.enableAllExtensions();
   await utilities.reloadWindow(10);
-}
-
-export async function findExtensionsWithTimeout(): Promise<void> {
-  let forcedWait = 0;
-  let extensionWasFound = false;
-  const shouldVerifyActivation = getExtensionsToVerifyActive();
-  const workbench = await utilities.getWorkbench();
-  await utilities.showRunningExtensions();
-
-  for (const extension of shouldVerifyActivation) {
-    log(`Verifying extension ${extension.name} with id: ${extension.extensionId}`);
-    if (extensionWasFound === false && forcedWait < 100)
-      do {
-        await pause(7);
-        extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-          workbench,
-          extension.extensionId
-        );
-        log(`post extension check: ${extension.extensionId} : ${extensionWasFound}`);
-        forcedWait += 10;
-      } while (extensionWasFound === false && forcedWait < 100);
-    log(`extension ${extension.name}:${extension.extensionId} was found: ${extensionWasFound}`);
-    forcedWait = 0;
-    expect(extensionWasFound).toBe(true);
-    extensionWasFound = false;
-  }
 }
 
 export function getExtensionsToVerifyActive(): ExtensionType[] {
@@ -350,7 +303,7 @@ export async function verifyExtensionsAreRunning(
   timeout = VERIFY_EXTENSIONS_TIMEOUT
 ) {
   log('');
-  log(`Starting verifyAllExtensionsAreRunning()...`);
+  log(`Starting verifyExtensionsAreRunning()...`);
   if (extensions.length === 0) {
     log(
       'verifyExtensionsAreRunning - No extensions to verify, continuing test run w/o extension verification'
@@ -400,7 +353,7 @@ export async function verifyExtensionsAreRunning(
 
   await utilities.zoomReset(1);
 
-  log('... Finished verifyAllExtensionsAreRunning()');
+  log('... Finished verifyExtensionsAreRunning()');
   log('');
 
   return allActivated;

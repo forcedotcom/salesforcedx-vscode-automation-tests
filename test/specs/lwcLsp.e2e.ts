@@ -29,12 +29,12 @@ describe('LWC LSP', async () => {
     // Using the Command palette, run Developer: Show Running Extensions
     await utilities.showRunningExtensions();
     utilities.zoom('Out', 4, 1);
-    // Verify Apex extension is present and running
-    const extensionWasFound = await utilities.findExtensionsInRunningExtensionsList([
+    // Verify Lightning Web Components extension is present and running 
+    const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
       'salesforcedx-vscode-lwc'
     ]);
     utilities.zoomReset();
-    expect(extensionWasFound.length).toBe(1);
+    expect(foundExtensions.length).toBe(1);
   });
 
   step('Go to Definition (JavaScript)', async () => {

@@ -63,12 +63,13 @@ describe('Visualforce LSP', async () => {
     // Using the Command palette, run Developer: Show Running Extensions
     await utilities.showRunningExtensions();
     utilities.zoom('Out', 4, 1);
-    // Verify Apex extension is present and running
-    const extensionWasFound = await utilities.findExtensionsInRunningExtensionsList([
+    // Verify Visualforce extension is present and running  
+
+    const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
       'salesforcedx-vscode-visualforce'
     ]);
     utilities.zoomReset();
-    expect(extensionWasFound.length).toBe(1);
+    expect(foundExtensions.length).toBe(1);
   });
 
   xstep('Go to Definition', async () => {

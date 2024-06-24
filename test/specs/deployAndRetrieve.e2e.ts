@@ -8,7 +8,6 @@ import { step } from 'mocha-steps';
 import path from 'path';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
-import { Workbench } from 'wdio-vscode-service';
 
 describe('Deploy and Retrieve', async () => {
   let testSetup: TestSetup;
@@ -99,7 +98,7 @@ describe('Deploy and Retrieve', async () => {
     // At this point there should be no conflicts since this is a new class.
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran',
+      'SFDX: Deploy This Source to Org successfully ran',
       utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
@@ -107,7 +106,7 @@ describe('Deploy and Retrieve', async () => {
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      'Starting SFDX: Deploy Source to Org',
+      'Starting SFDX: Deploy This Source to Org',
       10
     );
     utilities.log('Deploy time ST - 1: ' + (await utilities.getOperationTime(outputPanelText!)));
@@ -115,7 +114,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('Deployed Source');
     expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls`);
     expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
+    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
   });
 
   step('Deploy again (with no changes) - ST enabled', async () => {
@@ -127,7 +126,7 @@ describe('Deploy and Retrieve', async () => {
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran',
+      'SFDX: Deploy This Source to Org successfully ran',
       utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
@@ -135,7 +134,7 @@ describe('Deploy and Retrieve', async () => {
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      'Starting SFDX: Deploy Source to Org',
+      'Starting SFDX: Deploy This Source to Org',
       10
     );
     utilities.log('Deploy time ST - 2: ' + (await utilities.getOperationTime(outputPanelText!)));
@@ -145,7 +144,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain(
       `Unchanged  MyClass    ApexClass  ${pathToClass}.cls-meta.xml`
     );
-    expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
+    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
   });
 
   step('Modify the file and deploy again - ST enabled', async () => {
@@ -163,7 +162,7 @@ describe('Deploy and Retrieve', async () => {
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran',
+      'SFDX: Deploy This Source to Org successfully ran',
       utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
@@ -171,7 +170,7 @@ describe('Deploy and Retrieve', async () => {
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      'Starting SFDX: Deploy Source to Org',
+      'Starting SFDX: Deploy This Source to Org',
       10
     );
     utilities.log('Deploy time ST - 3: ' + (await utilities.getOperationTime(outputPanelText!)));
@@ -179,7 +178,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('Deployed Source');
     expect(outputPanelText).toContain(`Changed  MyClass    ApexClass  ${pathToClass}.cls`);
     expect(outputPanelText).toContain(`Changed  MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
+    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
   });
 
   step('Retrieve with SFDX: Retrieve This Source from Org', async () => {
@@ -195,7 +194,7 @@ describe('Deploy and Retrieve', async () => {
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Retrieve Source from Org successfully ran',
+      'SFDX: Retrieve This Source from Org successfully ran',
       utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
@@ -203,7 +202,7 @@ describe('Deploy and Retrieve', async () => {
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      'Starting SFDX: Retrieve Source from Org',
+      'Starting SFDX: Retrieve This Source from Org',
       10
     );
     utilities.log('Retrieve time - 1: ' + (await utilities.getOperationTime(outputPanelText!)));
@@ -211,7 +210,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('Retrieved Source');
     expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls`);
     expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain('ended SFDX: Retrieve Source from Org');
+    expect(outputPanelText).toContain('ended SFDX: Retrieve This Source from Org');
   });
 
   step('Modify the file and retrieve again', async () => {
@@ -234,7 +233,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.pause(3);
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Retrieve Source from Org successfully ran',
+      'SFDX: Retrieve This Source from Org successfully ran',
       utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
@@ -243,7 +242,7 @@ describe('Deploy and Retrieve', async () => {
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      'Starting SFDX: Retrieve Source from Org',
+      'Starting SFDX: Retrieve This Source from Org',
       10
     );
     utilities.log('Retrieve time - 2: ' + (await utilities.getOperationTime(outputPanelText!)));
@@ -251,7 +250,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('Retrieved Source');
     expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls`);
     expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain('ended SFDX: Retrieve Source from Org');
+    expect(outputPanelText).toContain('ended SFDX: Retrieve This Source from Org');
     // Retrieve operation will overwrite the file, hence the the comment will remain as before the modification
     expect(textAfterRetrieve).not.toContain('modified comment');
   });
@@ -314,7 +313,7 @@ describe('Deploy and Retrieve', async () => {
     // At this point there should be no conflicts since this is a new class.
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran',
+      'SFDX: Deploy This Source to Org successfully ran',
       utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
@@ -322,7 +321,7 @@ describe('Deploy and Retrieve', async () => {
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      'Starting SFDX: Deploy Source to Org',
+      'Starting SFDX: Deploy This Source to Org',
       10
     );
     utilities.log('Deploy time - on save: ' + (await utilities.getOperationTime(outputPanelText!)));
@@ -330,7 +329,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('Deployed Source');
     expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls`);
     expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
+    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
   });
 
   step('Disable Source Tracking Setting', async () => {
@@ -358,7 +357,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.pause(1);
     // Reload window to update cache and get the setting behavior to work
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
-    await utilities.verifyAllExtensionsAreRunning();
+    await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
   });
 
   step('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
@@ -377,7 +376,7 @@ describe('Deploy and Retrieve', async () => {
     // At this point there should be no conflicts since this is a new class.
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran',
+      'SFDX: Deploy This Source to Org successfully ran',
       utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
@@ -385,7 +384,7 @@ describe('Deploy and Retrieve', async () => {
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      'Starting SFDX: Deploy Source to Org',
+      'Starting SFDX: Deploy This Source to Org',
       10
     );
     utilities.log('Deploy time no-ST - 1: ' + (await utilities.getOperationTime(outputPanelText!)));
@@ -393,7 +392,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('Deployed Source');
     expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls`);
     expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
+    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
   });
 
   step('Deploy again (with no changes) - ST disabled', async () => {
@@ -405,7 +404,7 @@ describe('Deploy and Retrieve', async () => {
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran',
+      'SFDX: Deploy This Source to Org successfully ran',
       utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
@@ -413,7 +412,7 @@ describe('Deploy and Retrieve', async () => {
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      'Starting SFDX: Deploy Source to Org',
+      'Starting SFDX: Deploy This Source to Org',
       10
     );
     utilities.log('Deploy time no-ST - 2: ' + (await utilities.getOperationTime(outputPanelText!)));
@@ -423,7 +422,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain(
       `Unchanged  MyClass    ApexClass  ${pathToClass}.cls-meta.xml`
     );
-    expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
+    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
   });
 
   step('Modify the file and deploy again - ST disabled', async () => {
@@ -441,7 +440,7 @@ describe('Deploy and Retrieve', async () => {
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
-      'SFDX: Deploy Source to Org successfully ran',
+      'SFDX: Deploy This Source to Org successfully ran',
       utilities.TEN_MINUTES
     );
     expect(successNotificationWasFound).toBe(true);
@@ -449,7 +448,7 @@ describe('Deploy and Retrieve', async () => {
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
-      'Starting SFDX: Deploy Source to Org',
+      'Starting SFDX: Deploy This Source to Org',
       10
     );
     utilities.log('Deploy time no-ST - 3: ' + (await utilities.getOperationTime(outputPanelText!)));
@@ -457,7 +456,7 @@ describe('Deploy and Retrieve', async () => {
     expect(outputPanelText).toContain('Deployed Source');
     expect(outputPanelText).toContain(`Changed  MyClass    ApexClass  ${pathToClass}.cls`);
     expect(outputPanelText).toContain(`Changed  MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain('ended SFDX: Deploy Source to Org');
+    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
   });
 
   step('SFDX: Delete This from Project and Org', async () => {

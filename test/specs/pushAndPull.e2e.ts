@@ -16,6 +16,24 @@ import { Workbench } from 'wdio-vscode-service';
 
 const exec = util.promisify(child_process.exec);
 
+async function verifyPushSuccessful(workbench: Workbench, wait = utilities.TEN_MINUTES) {
+  const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+    workbench,
+    'SFDX: Push Source to Default Org successfully ran',
+    wait
+  );
+  expect(successNotificationWasFound).toBe(true);
+}
+
+async function validatePullSuccess(workbench: Workbench, wait = utilities.TEN_MINUTES) {
+  const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+    workbench,
+    'SFDX: Pull Source from Default Org successfully ran',
+    wait
+  );
+  expect(successNotificationWasFound).toBe(true);
+}
+
 describe('Push and Pull', async () => {
   let testSetup: TestSetup;
   let projectName = '';
@@ -89,7 +107,9 @@ describe('Push and Pull', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
     // At this point there should be no conflicts since this is a new class.
-    // Check the output.
+    await verifyPushSuccessful(workbench);
+
+      // Check the output.
     await verifyPushAndPullOutputText(workbench, 'Push', 'to', 'Created');
   });
 
@@ -100,6 +120,8 @@ describe('Push and Pull', async () => {
 
     // Now push
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
+
+    await verifyPushSuccessful(workbench);
 
     // Check the output.
     await verifyPushAndPullOutputText(workbench, 'Push', 'to');
@@ -118,6 +140,8 @@ describe('Push and Pull', async () => {
     // Push the file.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
+    await verifyPushSuccessful(workbench);
+
     await verifyPushAndPullOutputText(workbench, 'Push', 'to');
 
     // Clear the Output view again.
@@ -128,6 +152,8 @@ describe('Push and Pull', async () => {
 
     // An now push the changes.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
+
+    await verifyPushSuccessful(workbench);
 
     // Check the output.
     const outputPanelText = await verifyPushAndPullOutputText(workbench, 'Push', 'to', 'Changed');
@@ -163,7 +189,8 @@ describe('Push and Pull', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
-
+    // At this point there should be no conflicts since there have been no changes.
+    await validatePullSuccess(workbench);
     // Check the output.
     let outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from', 'Created');
     // The first time a pull is performed, force-app/main/default/profiles/Admin.profile-meta.xml is pulled down.
@@ -177,6 +204,7 @@ describe('Push and Pull', async () => {
 
     // And pull again.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
+    await validatePullSuccess(workbench);
 
     // Check the output.
     outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
@@ -196,6 +224,7 @@ describe('Push and Pull', async () => {
 
     // Pull the file.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
+    await validatePullSuccess(workbench);
 
     // Check the output.
     await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
@@ -213,25 +242,25 @@ describe('Push and Pull', async () => {
 
     // An now pull the changes.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
-
+    await validatePullSuccess(workbench);
     await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
   });
 
   step('SFDX: View Changes in Default Org', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Create second Project to then view Remote Changes
-    await testSetup.createProject(workbench, 'ViewChanges', 'Developer');
+    await testSetup.createProject('ViewChanges', 'Developer');
 
     // Verify CLI Integration Extension is present and running.
     await utilities.reloadAndEnableExtensions();
     await utilities.showRunningExtensions();
     utilities.zoom('Out', 4, 1);
     // Verify Apex extension is present and running
-    const extensionWasFound = await utilities.findExtensionsInRunningExtensionsList([
+    const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
       'salesforcedx-vscode-core'
     ]);
     utilities.zoomReset();
-    expect(extensionWasFound.length).toBe(1);
+    expect(foundExtensions.length).toBe(1);
 
     //Run SFDX: View Changes in Default Org command to view remote changes
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: View Changes in Default Org', 5);
@@ -376,3 +405,4 @@ describe('Push and Pull', async () => {
     return outputPanelText;
   };
 });
+
