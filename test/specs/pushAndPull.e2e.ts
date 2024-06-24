@@ -16,7 +16,7 @@ import { Workbench } from 'wdio-vscode-service';
 
 const exec = util.promisify(child_process.exec);
 
-async function verifyPushSuccessful(workbench: Workbench, wait = utilities.TEN_MINUTES) {
+async function verifyPushSuccess(workbench: Workbench, wait = utilities.TEN_MINUTES) {
   const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
     workbench,
     'SFDX: Push Source to Default Org successfully ran',
@@ -107,7 +107,7 @@ describe('Push and Pull', async () => {
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
     // At this point there should be no conflicts since this is a new class.
-    await verifyPushSuccessful(workbench);
+    await verifyPushSuccess(workbench);
 
       // Check the output.
     await verifyPushAndPullOutputText(workbench, 'Push', 'to', 'Created');
@@ -121,7 +121,7 @@ describe('Push and Pull', async () => {
     // Now push
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    await verifyPushSuccessful(workbench);
+    await verifyPushSuccess(workbench);
 
     // Check the output.
     await verifyPushAndPullOutputText(workbench, 'Push', 'to');
@@ -140,7 +140,7 @@ describe('Push and Pull', async () => {
     // Push the file.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    await verifyPushSuccessful(workbench);
+    await verifyPushSuccess(workbench);
 
     await verifyPushAndPullOutputText(workbench, 'Push', 'to');
 
@@ -153,7 +153,7 @@ describe('Push and Pull', async () => {
     // An now push the changes.
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
-    await verifyPushSuccessful(workbench);
+    await verifyPushSuccess(workbench);
 
     // Check the output.
     const outputPanelText = await verifyPushAndPullOutputText(workbench, 'Push', 'to', 'Changed');
