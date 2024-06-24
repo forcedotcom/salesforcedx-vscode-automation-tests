@@ -61,37 +61,6 @@ export async function findElementByText(
 }
 
 /**
- * @param operation identifies if it's a pull or push operation
- * @param changes indicates if changes are expected or not
- * @param type indicates if the metadata is expected to have been created, changed or deleted
- * @returns the output panel text after
- */
-export async function verifyPushAndPullOutputText(
-  operation: string,
-  type?: string
-): Promise<string | undefined> {
-  // Check the output.
-  const outputPanelText = await attemptToFindOutputPanelText(
-    `Salesforce CLI`,
-    `=== ${operation}ed Source`,
-    10
-  );
-  expect(outputPanelText).not.toBeUndefined();
-  // expect(outputPanelText).toContain('ended with exit code 0');
-  if (type) {
-    if (operation === 'Push') {
-      expect(outputPanelText).toContain(`${type}  ExampleApexClass1  ApexClass`);
-    } else {
-      expect(outputPanelText).toContain(`${type}  Admin`);
-    }
-  } else {
-    expect(outputPanelText).toContain('No results found');
-  }
-  expect(outputPanelText).toContain('ended with exit code 0');
-  return outputPanelText;
-}
-
-/**
  * @param workbench page object representing the custom VSCode title bar
  * @param fileName name of the file we want to open and use
  * @returns editor for the given file name
