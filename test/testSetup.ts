@@ -74,6 +74,12 @@ export class TestSetup {
         ? `${uncaughtErrors.length} extension with uncaught errors was found`
         : `${uncaughtErrors.length} extensions with uncaught errors were found`
     );
+
+    uncaughtErrors.forEach( (uncaughtError) => {
+      console.log('uncaught error = ' + uncaughtError);
+      console.log('parent = ' + uncaughtError.parentElement);
+    });
+
     expect(uncaughtErrors.length).toBe(0);
   }
 
