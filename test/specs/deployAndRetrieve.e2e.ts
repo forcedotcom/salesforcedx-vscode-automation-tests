@@ -8,6 +8,7 @@ import { step } from 'mocha-steps';
 import path from 'path';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
+import { Workbench } from 'wdio-vscode-service';
 
 describe('Deploy and Retrieve', async () => {
   let testSetup: TestSetup;
@@ -93,28 +94,7 @@ describe('Deploy and Retrieve', async () => {
     // Clear the Output view first.
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     await utilities.getTextEditor(workbench, 'MyClass.cls');
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
-
-    // At this point there should be no conflicts since this is a new class.
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Deploy This Source to Org successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    // Verify Output tab
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Starting SFDX: Deploy This Source to Org',
-      10
-    );
-    utilities.log('Deploy time ST - 1: ' + (await utilities.getOperationTime(outputPanelText!)));
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Deployed Source');
-    expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls`);
-    expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
+    await runAndValidateCommand(workbench, 'Deploy', 'to', 'ST');
   });
 
   step('Deploy again (with no changes) - ST enabled', async () => {
@@ -122,29 +102,8 @@ describe('Deploy and Retrieve', async () => {
     // Clear the Output view first.
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     await utilities.getTextEditor(workbench, 'MyClass.cls');
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
-
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Deploy This Source to Org successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    // Verify Output tab
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Starting SFDX: Deploy This Source to Org',
-      10
-    );
-    utilities.log('Deploy time ST - 2: ' + (await utilities.getOperationTime(outputPanelText!)));
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Deployed Source');
-    expect(outputPanelText).toContain(`Unchanged  MyClass    ApexClass  ${pathToClass}.cls`);
-    expect(outputPanelText).toContain(
-      `Unchanged  MyClass    ApexClass  ${pathToClass}.cls-meta.xml`
-    );
-    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
+    
+    await runAndValidateCommand(workbench, 'Deploy', 'to', 'ST', 'Unchanged  ');
   });
 
   step('Modify the file and deploy again - ST enabled', async () => {
@@ -158,27 +117,7 @@ describe('Deploy and Retrieve', async () => {
     await textEditor.save();
 
     // Deploy running SFDX: Deploy This Source to Org
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
-
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Deploy This Source to Org successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    // Verify Output tab
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Starting SFDX: Deploy This Source to Org',
-      10
-    );
-    utilities.log('Deploy time ST - 3: ' + (await utilities.getOperationTime(outputPanelText!)));
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Deployed Source');
-    expect(outputPanelText).toContain(`Changed  MyClass    ApexClass  ${pathToClass}.cls`);
-    expect(outputPanelText).toContain(`Changed  MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
+    await runAndValidateCommand(workbench, 'Deploy', 'to', 'ST', 'Changed  ');
   });
 
   step('Retrieve with SFDX: Retrieve This Source from Org', async () => {
@@ -186,31 +125,8 @@ describe('Deploy and Retrieve', async () => {
     // Clear the Output view first.
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     await utilities.getTextEditor(workbench, 'MyClass.cls');
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Retrieve This Source from Org',
-      5
-    );
 
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Retrieve This Source from Org successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    // Verify Output tab
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Starting SFDX: Retrieve This Source from Org',
-      10
-    );
-    utilities.log('Retrieve time - 1: ' + (await utilities.getOperationTime(outputPanelText!)));
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Retrieved Source');
-    expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls`);
-    expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain('ended SFDX: Retrieve This Source from Org');
+    await runAndValidateCommand(workbench, 'Retrieve', 'from', 'ST');
   });
 
   step('Modify the file and retrieve again', async () => {
@@ -224,34 +140,10 @@ describe('Deploy and Retrieve', async () => {
     await textEditor.save();
 
     // Retrieve running SFDX: Retrieve This Source from Org
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Retrieve This Source from Org',
-      5
-    );
 
-    await utilities.pause(3);
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Retrieve This Source from Org successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-    const textAfterRetrieve = await textEditor.getText();
-
-    // Verify Output tab
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Starting SFDX: Retrieve This Source from Org',
-      10
-    );
-    utilities.log('Retrieve time - 2: ' + (await utilities.getOperationTime(outputPanelText!)));
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Retrieved Source');
-    expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls`);
-    expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain('ended SFDX: Retrieve This Source from Org');
+    await runAndValidateCommand(workbench, 'Retrieve', 'from', 'ST');
     // Retrieve operation will overwrite the file, hence the the comment will remain as before the modification
+    const textAfterRetrieve = await textEditor.getText();
     expect(textAfterRetrieve).not.toContain('modified comment');
   });
 
@@ -311,25 +203,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.pause(5);
 
     // At this point there should be no conflicts since this is a new class.
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Deploy This Source to Org successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    // Verify Output tab
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Starting SFDX: Deploy This Source to Org',
-      10
-    );
-    utilities.log('Deploy time - on save: ' + (await utilities.getOperationTime(outputPanelText!)));
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Deployed Source');
-    expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls`);
-    expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
+    await validateCommand(workbench, 'Deploy', 'to', 'on save');
   });
 
   step('Disable Source Tracking Setting', async () => {
@@ -371,28 +245,8 @@ describe('Deploy and Retrieve', async () => {
     // Clear the Output view first.
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     await utilities.getTextEditor(workbench, 'MyClass.cls');
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
 
-    // At this point there should be no conflicts since this is a new class.
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Deploy This Source to Org successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    // Verify Output tab
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Starting SFDX: Deploy This Source to Org',
-      10
-    );
-    utilities.log('Deploy time no-ST - 1: ' + (await utilities.getOperationTime(outputPanelText!)));
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Deployed Source');
-    expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls`);
-    expect(outputPanelText).toContain(`MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
+    await runAndValidateCommand(workbench, 'Deploy', 'to', 'no-ST');
   });
 
   step('Deploy again (with no changes) - ST disabled', async () => {
@@ -400,29 +254,8 @@ describe('Deploy and Retrieve', async () => {
     // Clear the Output view first.
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     await utilities.getTextEditor(workbench, 'MyClass.cls');
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
 
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Deploy This Source to Org successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    // Verify Output tab
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Starting SFDX: Deploy This Source to Org',
-      10
-    );
-    utilities.log('Deploy time no-ST - 2: ' + (await utilities.getOperationTime(outputPanelText!)));
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Deployed Source');
-    expect(outputPanelText).toContain(`Unchanged  MyClass    ApexClass  ${pathToClass}.cls`);
-    expect(outputPanelText).toContain(
-      `Unchanged  MyClass    ApexClass  ${pathToClass}.cls-meta.xml`
-    );
-    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
+    await runAndValidateCommand(workbench, 'Deploy', 'to', 'no-ST', 'Unchanged  ');
   });
 
   step('Modify the file and deploy again - ST disabled', async () => {
@@ -436,27 +269,7 @@ describe('Deploy and Retrieve', async () => {
     await textEditor.save();
 
     // Deploy running SFDX: Deploy This Source to Org
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
-
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
-      'SFDX: Deploy This Source to Org successfully ran',
-      utilities.TEN_MINUTES
-    );
-    expect(successNotificationWasFound).toBe(true);
-
-    // Verify Output tab
-    const outputPanelText = await utilities.attemptToFindOutputPanelText(
-      'Salesforce CLI',
-      'Starting SFDX: Deploy This Source to Org',
-      10
-    );
-    utilities.log('Deploy time no-ST - 3: ' + (await utilities.getOperationTime(outputPanelText!)));
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Deployed Source');
-    expect(outputPanelText).toContain(`Changed  MyClass    ApexClass  ${pathToClass}.cls`);
-    expect(outputPanelText).toContain(`Changed  MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
+    await runAndValidateCommand(workbench, 'Deploy', 'to', 'no-ST', 'Changed  ');
   });
 
   step('SFDX: Delete This from Project and Org', async () => {
@@ -522,4 +335,50 @@ describe('Deploy and Retrieve', async () => {
   step('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
+
+  const runAndValidateCommand = async (
+    workbench: Workbench,
+    operation: string,
+    fromTo: string,
+    type: string,
+    prefix?: string
+  ): Promise<void> => {
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      `SFDX: ${operation} This Source ${fromTo} Org`,
+      5
+    );
+
+    await validateCommand(workbench, operation, fromTo, type, prefix);
+  };
+
+  const validateCommand = async (
+    workbench: Workbench,
+    operation: string,
+    fromTo: string,
+    type: string, // Text to identify operation type (if it has source tracking enabled, disabled or if it was a deploy on save)
+    prefix: string = ''
+  ): Promise<void> => {
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+      workbench,
+      `SFDX: ${operation} This Source ${fromTo} Org successfully ran`,
+      utilities.TEN_MINUTES
+    );
+    expect(successNotificationWasFound).toBe(true);
+
+    // Verify Output tab
+    const outputPanelText = await utilities.attemptToFindOutputPanelText(
+      'Salesforce CLI',
+      `Starting SFDX: ${operation} This Source ${fromTo}`,
+      10
+    );
+    utilities.log(
+      `${operation} time ${type}: ` + (await utilities.getOperationTime(outputPanelText!))
+    );
+    expect(outputPanelText).not.toBeUndefined();
+    expect(outputPanelText).toContain(`${operation}ed Source`.replace('Retrieveed', 'Retrieved'));
+    expect(outputPanelText).toContain(`${prefix}MyClass    ApexClass  ${pathToClass}.cls`);
+    expect(outputPanelText).toContain(`${prefix}MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
+    expect(outputPanelText).toContain(`ended SFDX: ${operation} This Source ${fromTo} Org`);
+  };
 });
