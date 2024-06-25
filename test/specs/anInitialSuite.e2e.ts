@@ -90,7 +90,7 @@ describe('An Initial Suite', async () => {
     // Don't call testSetup.setUp() b/c we don't need to authorize a scratch org,
     // just call setUpTestingEnvironment() and createProject().
     await testSetup.setUpTestingEnvironment();
-    await testSetup.createProject('Standard');
+    await testSetup.createProject('developer');
     await utilities.reloadAndEnableExtensions();
   });
 
