@@ -76,8 +76,8 @@ export class TestSetup {
     );
 
     uncaughtErrors.forEach( (uncaughtError) => {
-      console.log('uncaught error = ' + uncaughtError);
-      console.log('parent = ' + uncaughtError.parentElement);
+      console.log('uncaught error = ' + JSON.stringify(uncaughtError));
+      console.log('parent = ' + JSON.stringify(uncaughtError.parentElement));
     });
 
     expect(uncaughtErrors.length).toBe(0);
