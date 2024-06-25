@@ -138,7 +138,7 @@ export class TestSetup {
 
     utilities.log(`${this.testSuiteSuffixName} - Ready to create the standard project`);
 
-    await this.createProject(workbench, this.tempProjectName, scratchOrgEdition);
+    await this.createProject(this.tempProjectName, scratchOrgEdition);
 
     // Extra config needed for Apex LSP on GHA
     const os = process.platform;
