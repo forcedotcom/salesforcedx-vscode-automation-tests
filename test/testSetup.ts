@@ -41,13 +41,13 @@ export class TestSetup {
     return 'TempProject-' + this.testSuiteSuffixName;
   }
 
-  public async setUp(scratchOrgEdition: string = 'Developer'): Promise<void> {
+  public async setUp(scratchOrgEdition: utilities.OrgEdition = 'developer'): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
     await utilities.installExtensions();
     await utilities.reloadAndEnableExtensions();
     await this.setUpTestingEnvironment();
-    await this.createInitialProject(scratchOrgEdition);
+    await this.createProject(scratchOrgEdition);
     await utilities.reloadAndEnableExtensions();
     await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
     await this.authorizeDevHub();
@@ -109,7 +109,11 @@ export class TestSetup {
     utilities.log('');
   }
 
-  public async createInitialProject(scratchOrgEdition: string): Promise<void> {
+  /**
+   * @deprecated - this function has been overcome by events, will be removed soon
+   * @param scratchOrgEdition
+   */
+  public async createInitialProject(scratchOrgEdition: utilities.OrgEdition): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createInitialProject()...`);
 
@@ -138,7 +142,7 @@ export class TestSetup {
 
     utilities.log(`${this.testSuiteSuffixName} - Ready to create the standard project`);
 
-    await this.createProject(this.tempProjectName, scratchOrgEdition);
+    await this.createProject(scratchOrgEdition);
 
     // Extra config needed for Apex LSP on GHA
     const os = process.platform;
@@ -150,7 +154,9 @@ export class TestSetup {
     utilities.log('');
   }
 
-  public async createProject(projectName: string, scratchOrgEdition: string) {
+  public async createProject(scratchOrgEdition: utilities.OrgEdition, projectName?: string) {
+    utilities.log('');
+    utilities.log(`${projectName ?? this.testSuiteSuffixName} - Starting createProject()...`);
     this.prompt = await utilities.executeQuickPick('SFDX: Create Project');
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
     // Select the "Standard" project type.
@@ -160,7 +166,7 @@ export class TestSetup {
     });
 
     // Enter the project's name.
-    await this.prompt.setText(projectName);
+    await this.prompt.setText(projectName ?? this.tempProjectName);
     await utilities.pause(2);
 
     // Press Enter/Return.
@@ -175,8 +181,15 @@ export class TestSetup {
     await utilities.clickFilePathOkButton();
 
     // Verify the project was created and was loaded.
-    await this.verifyProjectCreated(projectName);
+    await this.verifyProjectCreated(projectName ?? this.tempProjectName);
     this.updateScratchOrgDefWithEdition(scratchOrgEdition);
+
+    // Extra config needed for Apex LSP on GHA
+    if (process.platform === 'darwin') {
+      this.setJavaHomeConfigEntry();
+    }
+    utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
+    utilities.log('');
   }
 
   public async authorizeDevHub(): Promise<void> {
@@ -255,7 +268,7 @@ export class TestSetup {
     );
   }
 
-  private async createDefaultScratchOrg(): Promise<void> {
+  private async createDefaultScratchOrg(edition: utilities.OrgEdition = 'developer'): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`);
 
@@ -263,33 +276,34 @@ export class TestSetup {
     const currentOsUserName = utilities.transformedUserName();
 
     utilities.log(`${this.testSuiteSuffixName} - calling getWorkbench()...`);
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     if (this.reuseScratchOrg) {
       utilities.log(`${this.testSuiteSuffixName} - looking for a scratch org to reuse...`);
 
       const sfOrgListResult = await exec('sf org:list --json');
-      const resultJson = sfOrgListResult.stdout.replace(/\u001B\[\d\dm/g, '').replace(/\\n/g, '');
-      const scratchOrgs = JSON.parse(resultJson).result.scratchOrgs;
+      const resultJson = this.removedEscapedCharacters(sfOrgListResult.stdout);
+      const scratchOrgs = JSON.parse(resultJson).result.scratchOrgs as {alias: string}[];
 
-      for (const scratchOrg of scratchOrgs) {
+      const foundScratchOrg = scratchOrgs.find((scratchOrg) => {
         const alias = scratchOrg.alias as string;
-        if (
+        return (
           alias &&
           alias.includes('TempScratchOrg_') &&
           alias.includes(currentOsUserName) &&
           alias.includes(this.testSuiteSuffixName)
-        ) {
-          this.scratchOrgAliasName = alias;
+        );
+      });
 
-          // Set the current scratch org.
-          await this.setDefaultOrg(workbench);
+      if (foundScratchOrg) {
+        this.scratchOrgAliasName = foundScratchOrg.alias as string;
 
-          utilities.log(`${this.testSuiteSuffixName} - found one: ${this.scratchOrgAliasName}`);
-          utilities.log(`${this.testSuiteSuffixName} - ...finished createDefaultScratchOrg()`);
-          utilities.log('');
-          return;
-        }
+        // Set the current scratch org.
+        await this.setDefaultOrg(workbench);
+
+        utilities.log(`${this.testSuiteSuffixName} - found one: ${this.scratchOrgAliasName}`);
+        utilities.log(`${this.testSuiteSuffixName} - ...finished createDefaultScratchOrg()`);
+        utilities.log('');
       }
     }
 
@@ -313,7 +327,7 @@ export class TestSetup {
 
     utilities.log(`${this.testSuiteSuffixName} - calling "sf org:create:scratch"...`);
     const sfOrgCreateResult = await exec(
-      `sf org:create:scratch --edition developer --definition-file ${definitionFile} --alias ${this.scratchOrgAliasName} --duration-days ${durationDays} --set-default --json`
+      `sf org:create:scratch --edition ${edition} --definition-file ${definitionFile} --alias ${this.scratchOrgAliasName} --duration-days ${durationDays} --set-default --json`
     );
     utilities.log(`${this.testSuiteSuffixName} - ..."sf org:create:scratch" finished`);
 
@@ -480,8 +494,8 @@ export class TestSetup {
     );
   }
 
-  private updateScratchOrgDefWithEdition(scratchOrgEdition: string) {
-    if (scratchOrgEdition === 'Enterprise') {
+  private updateScratchOrgDefWithEdition(scratchOrgEdition: utilities.OrgEdition) {
+    if (scratchOrgEdition === 'enterprise') {
       const projectScratchDefPath = path.join(
         this.tempFolderPath!,
         this.tempProjectName,

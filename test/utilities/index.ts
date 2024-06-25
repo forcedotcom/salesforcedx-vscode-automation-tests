@@ -20,3 +20,4 @@ export * from './terminalView.ts';
 export * from './screenshot.ts';
 export * from './visualforceUtils.ts';
 export * from './workbench.ts';
+export * from './types.ts';

@@ -249,7 +249,7 @@ describe('Push and Pull', async () => {
   step('SFDX: View Changes in Default Org', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Create second Project to then view Remote Changes
-    await testSetup.createProject('ViewChanges', 'Developer');
+    await testSetup.createProject('developer', 'ViewChanges');
 
     // Verify CLI Integration Extension is present and running.
     await utilities.reloadAndEnableExtensions();
