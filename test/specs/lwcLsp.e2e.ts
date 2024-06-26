@@ -27,15 +27,14 @@ describe('LWC LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 
     // Using the Command palette, run Developer: Show Running Extensions
-    const workbench = await browser.getWorkbench();
-    await utilities.showRunningExtensions(workbench);
-
-    // Verify Lightning Web Components extension is present and running
-    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-      workbench,
+    await utilities.showRunningExtensions();
+    utilities.zoom('Out', 4, 1);
+    // Verify Lightning Web Components extension is present and running 
+    const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
       'salesforcedx-vscode-lwc'
-    );
-    expect(extensionWasFound).toBe(true);
+    ]);
+    utilities.zoomReset();
+    expect(foundExtensions.length).toBe(1);
   });
 
   step('Go to Definition (JavaScript)', async () => {

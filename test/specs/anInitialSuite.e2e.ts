@@ -31,29 +31,21 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify our extensions are not initially loaded', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.showRunningExtensions(workbench);
+    await utilities.showRunningExtensions();
+    await utilities.zoom('Out', 4, 1);
 
-    const extensionNameDivs = await $$('div.name');
-    let sfdxKeywordWasFound = false;
-    let salesforceKeywordWasFound = false;
-    for (const extensionNameDiv of extensionNameDivs) {
-      const text = await extensionNameDiv.getText();
-      if (text.includes('sfdx')) {
-        sfdxKeywordWasFound = true;
-        utilities.log(`AnInitialSuite - extension ${text} was present, but wasn't expected`);
-      } else if (text.includes('salesforce')) {
-        if (text !== 'salesforce.system-tests') {
-          // salesforce.system-tests is expected, anything else is an issue.
-          salesforceKeywordWasFound = true;
-          utilities.log(
-            `AnInitialSuite - extension ${text} was present, but wasn't expected before the extensions loaded`
-          );
-        }
-      }
+    const foundSfExtensions = await utilities.findExtensionsInRunningExtensionsList(
+      utilities.getExtensionsToVerifyActive().map((ext) => ext.extensionId)
+    );
+    await utilities.zoomReset();
+    if (foundSfExtensions.length > 0) {
+      foundSfExtensions.forEach((ext) => {
+        utilities.log(
+          `AnInitialSuite - extension ${ext.extensionId} was present, but wasn't expected before the extensions loaded`
+        );
+      });
+      throw new Error('AnInitialSuite - extension was found before the extensions loaded');
     }
-    expect(sfdxKeywordWasFound).toBe(false);
-    expect(salesforceKeywordWasFound).toBe(false);
   });
 
   step('Verify the default SFDX commands are present when no project is loaded', async () => {
@@ -96,14 +88,14 @@ describe('An Initial Suite', async () => {
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('AnInitialSuite', false);
     // Don't call testSetup.setUp() b/c we don't need to authorize a scratch org,
-    // just call setUpTestingEnvironment() and createInitialProject().
+    // just call setUpTestingEnvironment() and createProject().
     await testSetup.setUpTestingEnvironment();
-    await testSetup.createInitialProject('Standard');
+    await testSetup.createProject('developer');
     await utilities.reloadAndEnableExtensions();
   });
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {
-    utilities.verifyAllExtensionsAreRunning();
+    await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
     browser.keys(['Escape']);
     await utilities.pause(1);
     browser.keys(['Escape']);
@@ -111,19 +103,12 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 10);
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Extensions: Show Enabled Extensions',
-      2
-    );
+    const workbench = await utilities.getWorkbench();
+    await utilities.enableAllExtensions();
+    await utilities.executeQuickPick('Extensions: Show Enabled Extensions', 2);
     const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
     const quickPicks = await prompt.getQuickPicks();
-    const commands: string[] = [];
-    for (const quickPick of quickPicks) {
-      commands.push(await quickPick.getLabel());
-    }
+    const commands = await Promise.all(quickPicks.map((quickPick) => quickPick.getLabel()));
 
     // Look for the first few SFDX commands.
     expect(commands).toContain('SFDX: Create Project');

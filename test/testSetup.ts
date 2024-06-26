@@ -14,6 +14,7 @@ import { EnvironmentSettings } from './environmentSettings.ts';
 import * as utilities from './utilities/index.ts';
 
 import { fileURLToPath } from 'url';
+import { fail } from 'assert';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -40,15 +41,15 @@ export class TestSetup {
     return 'TempProject-' + this.testSuiteSuffixName;
   }
 
-  public async setUp(scratchOrgEdition: string = 'Developer'): Promise<void> {
+  public async setUp(scratchOrgEdition: utilities.OrgEdition = 'developer'): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
     await utilities.installExtensions();
     await utilities.reloadAndEnableExtensions();
     await this.setUpTestingEnvironment();
-    await this.createInitialProject(scratchOrgEdition);
+    await this.createProject(scratchOrgEdition);
     await utilities.reloadAndEnableExtensions();
-    await utilities.verifyAllExtensionsAreRunning();
+    await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
     utilities.log(`${this.testSuiteSuffixName} - ...finished TestSetup.setUp()`);
@@ -64,20 +65,23 @@ export class TestSetup {
   }
 
   private async checkForUncaughtErrors(): Promise<void> {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.showRunningExtensions(workbench);
+    await utilities.showRunningExtensions();
 
     // Zoom out so all the extensions are visible
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-    const uncaughtErrors = await $$('span.codicon-bug');
-    utilities.log(
-      uncaughtErrors.length == 1
-        ? `${uncaughtErrors.length} extension with uncaught errors was found`
-        : `${uncaughtErrors.length} extensions with uncaught errors were found`
-    );
+    await utilities.zoom('Out', 4, 1);
+
+    const uncaughtErrors = (
+      await utilities.findExtensionsInRunningExtensionsList(
+        utilities.getExtensionsToVerifyActive().map((ext) => ext.extensionId)
+      )
+    ).filter((ext) => ext.hasBug);
+
+    await utilities.zoomReset(1);
+
+    uncaughtErrors.forEach((ext) => {
+      utilities.log(`Extension ${ext.extensionId}:${ext.version ?? 'unknown'} has a bug`);
+    });
+
     expect(uncaughtErrors.length).toBe(0);
   }
 
@@ -93,46 +97,52 @@ export class TestSetup {
 
     // Remove the project folder, just in case there are stale files there.
     if (fs.existsSync(this.projectFolderPath)) {
-      await utilities.removeFolder(this.projectFolderPath);
-      await utilities.pause(1);
+      utilities.removeFolder(this.projectFolderPath);
     }
 
     // Now create the temp folder.  It should exist but create the folder if it is missing.
     if (!fs.existsSync(this.tempFolderPath)) {
-      await utilities.createFolder(this.tempFolderPath);
-      await utilities.pause(1);
+      utilities.createFolder(this.tempFolderPath);
     }
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished setUpTestingEnvironment()`);
     utilities.log('');
   }
 
-  public async createInitialProject(scratchOrgEdition: string): Promise<void> {
+  /**
+   * @deprecated - this function has been overcome by events, will be removed soon
+   * @param scratchOrgEdition
+   */
+  public async createInitialProject(scratchOrgEdition: utilities.OrgEdition): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createInitialProject()...`);
 
     // If you are not in a VSCode project, the Salesforce extensions are not running
     // Force the CLI integration extension to load before creating the project
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Show Running Extensions', 5);
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
+    const workbench = await utilities.getWorkbench();
+    await utilities.showRunningExtensions();
+    const prompt = await workbench.executeQuickPick('SFDX: Create Project');
+    await utilities.waitForQuickPick(prompt, 'Standard', {
+      msg: 'Expected extension salesforcedx-core to be available within 5 seconds',
+      timeout: 5_000
+    });
     await browser.keys(['Escape']);
     await utilities.pause(1);
     await browser.keys(['Escape']);
 
-    // Do not continue until we verify CLI Integration extension is present and running
-    let coreExtensionWasFound = false;
-    do {
-      await utilities.pause(10);
+    const coreIsActive = await utilities.verifyExtensionsAreRunning(
+      utilities
+        .getExtensionsToVerifyActive()
+        .filter((ext) => ext.extensionId === 'salesforcedx-vscode-core')
+    );
 
-      coreExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-        workbench,
-        'salesforcedx-vscode-core'
-      );
-    } while (coreExtensionWasFound === false);
+    if (!coreIsActive) {
+      fail('Expected core extension to be active after 20 seconds');
+    }
+
     utilities.log(`${this.testSuiteSuffixName} - Ready to create the standard project`);
 
-    await this.createProject(workbench, this.tempProjectName, scratchOrgEdition);
+    await this.createProject(scratchOrgEdition);
 
     // Extra config needed for Apex LSP on GHA
     const os = process.platform;
@@ -144,15 +154,20 @@ export class TestSetup {
     utilities.log('');
   }
 
-  public async createProject(workbench: Workbench, projectName: string, scratchOrgEdition: string) {
-    this.prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Create Project', 5);
+  public async createProject(scratchOrgEdition: utilities.OrgEdition, projectName?: string) {
+    utilities.log('');
+    utilities.log(`${projectName ?? this.testSuiteSuffixName} - Starting createProject()...`);
+    this.prompt = await utilities.executeQuickPick('SFDX: Create Project');
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
     // Select the "Standard" project type.
-    await utilities.selectQuickPickItem(this.prompt, 'Standard');
+    await utilities.waitForQuickPick(this.prompt, 'Standard', {
+      msg: 'Expected extension salesforcedx-core to be available within 5 seconds',
+      timeout: 5_000
+    });
 
     // Enter the project's name.
-    await this.prompt.setText(projectName);
-    await utilities.pause(1);
+    await this.prompt.setText(projectName ?? this.tempProjectName);
+    await utilities.pause(2);
 
     // Press Enter/Return.
     await this.prompt.confirm();
@@ -160,14 +175,21 @@ export class TestSetup {
     // Set the location of the project.
     const input = await this.prompt.input$;
     await input.setValue(this.tempFolderPath!);
-    await utilities.pause(1);
+    await utilities.pause(2);
 
     // Click the OK button.
     await utilities.clickFilePathOkButton();
 
     // Verify the project was created and was loaded.
-    await this.verifyProjectCreated(projectName);
+    await this.verifyProjectCreated(projectName ?? this.tempProjectName);
     this.updateScratchOrgDefWithEdition(scratchOrgEdition);
+
+    // Extra config needed for Apex LSP on GHA
+    if (process.platform === 'darwin') {
+      this.setJavaHomeConfigEntry();
+    }
+    utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
+    utilities.log('');
   }
 
   public async authorizeDevHub(): Promise<void> {
@@ -246,41 +268,42 @@ export class TestSetup {
     );
   }
 
-  private async createDefaultScratchOrg(): Promise<void> {
+  private async createDefaultScratchOrg(edition: utilities.OrgEdition = 'developer'): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`);
 
     utilities.log(`${this.testSuiteSuffixName} - calling transformedUserName()...`);
-    const currentOsUserName = await utilities.transformedUserName();
+    const currentOsUserName = utilities.transformedUserName();
 
     utilities.log(`${this.testSuiteSuffixName} - calling getWorkbench()...`);
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     if (this.reuseScratchOrg) {
       utilities.log(`${this.testSuiteSuffixName} - looking for a scratch org to reuse...`);
 
       const sfOrgListResult = await exec('sf org:list --json');
-      const resultJson = sfOrgListResult.stdout.replace(/\u001B\[\d\dm/g, '').replace(/\\n/g, '');
-      const scratchOrgs = JSON.parse(resultJson).result.scratchOrgs;
+      const resultJson = this.removedEscapedCharacters(sfOrgListResult.stdout);
+      const scratchOrgs = JSON.parse(resultJson).result.scratchOrgs as {alias: string}[];
 
-      for (const scratchOrg of scratchOrgs) {
+      const foundScratchOrg = scratchOrgs.find((scratchOrg) => {
         const alias = scratchOrg.alias as string;
-        if (
+        return (
           alias &&
           alias.includes('TempScratchOrg_') &&
           alias.includes(currentOsUserName) &&
           alias.includes(this.testSuiteSuffixName)
-        ) {
-          this.scratchOrgAliasName = alias;
+        );
+      });
 
-          // Set the current scratch org.
-          await this.setDefaultOrg(workbench);
+      if (foundScratchOrg) {
+        this.scratchOrgAliasName = foundScratchOrg.alias as string;
 
-          utilities.log(`${this.testSuiteSuffixName} - found one: ${this.scratchOrgAliasName}`);
-          utilities.log(`${this.testSuiteSuffixName} - ...finished createDefaultScratchOrg()`);
-          utilities.log('');
-          return;
-        }
+        // Set the current scratch org.
+        await this.setDefaultOrg(workbench);
+
+        utilities.log(`${this.testSuiteSuffixName} - found one: ${this.scratchOrgAliasName}`);
+        utilities.log(`${this.testSuiteSuffixName} - ...finished createDefaultScratchOrg()`);
+        utilities.log('');
       }
     }
 
@@ -304,7 +327,7 @@ export class TestSetup {
 
     utilities.log(`${this.testSuiteSuffixName} - calling "sf org:create:scratch"...`);
     const sfOrgCreateResult = await exec(
-      `sf org:create:scratch --edition developer --definition-file ${definitionFile} --alias ${this.scratchOrgAliasName} --duration-days ${durationDays} --set-default --json`
+      `sf org:create:scratch --edition ${edition} --definition-file ${definitionFile} --alias ${this.scratchOrgAliasName} --duration-days ${durationDays} --set-default --json`
     );
     utilities.log(`${this.testSuiteSuffixName} - ..."sf org:create:scratch" finished`);
 
@@ -471,8 +494,8 @@ export class TestSetup {
     );
   }
 
-  private updateScratchOrgDefWithEdition(scratchOrgEdition: string) {
-    if (scratchOrgEdition === 'Enterprise') {
+  private updateScratchOrgDefWithEdition(scratchOrgEdition: utilities.OrgEdition) {
+    if (scratchOrgEdition === 'enterprise') {
       const projectScratchDefPath = path.join(
         this.tempFolderPath!,
         this.tempProjectName,
@@ -492,11 +515,12 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Verifying project was created...`);
 
     // Reload the VS Code window
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 70);
+    const workbench = await utilities.getWorkbench();
+    await utilities.reloadWindow();
+    await utilities.showExplorerView();
 
-    const sidebar = await (await workbench.getSideBar()).wait();
-    const content = await (await sidebar.getContent()).wait();
+    const sidebar = await workbench.getSideBar().wait();
+    const content = await sidebar.getContent().wait();
     const treeViewSection = await (await content.getSection(projectName.toUpperCase())).wait();
     if (!treeViewSection) {
       throw new Error(

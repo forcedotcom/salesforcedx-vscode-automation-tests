@@ -7,8 +7,8 @@
 import child_process from 'child_process';
 import { step, xstep } from 'mocha-steps';
 import { SideBarView, TreeItem } from 'wdio-vscode-service';
-import { TestSetup } from '../testSetup';
-import * as utilities from '../utilities';
+import { TestSetup } from '../testSetup.ts';
+import * as utilities from '../utilities/index.ts';
 import path from 'path';
 import util from 'util';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
@@ -43,15 +43,14 @@ describe('Debug LWC Tests', async () => {
       utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 
       // Using the Command palette, run Developer: Show Running Extensions
-      const workbench = await browser.getWorkbench();
-      await utilities.showRunningExtensions(workbench);
-
-      // Verify Lightning Web Components extension is present and running
-      const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-        workbench,
+      await utilities.showRunningExtensions();
+      utilities.zoom('Out', 4, 1);
+      // Verify Lightning Web Components extension is present and running  
+      const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
         'salesforcedx-vscode-lwc'
-      );
-      expect(extensionWasFound).toBe(true);
+      ]);
+      utilities.zoomReset();
+      expect(foundExtensions.length).toBe(1);
     });
 
     step('Debug All Tests on a LWC via the Test Sidebar', async () => {
@@ -59,7 +58,7 @@ describe('Debug LWC Tests', async () => {
         `${testSetup.testSuiteSuffixName} - Debug All tests on a LWC via the Test Sidebar`
       );
       const workbench = await (await browser.getWorkbench()).wait();
-      await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 3);
+      await utilities.executeQuickPick('Testing: Focus on LWC Tests View', 3);
 
       // Open the Test Sidebar
       const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');

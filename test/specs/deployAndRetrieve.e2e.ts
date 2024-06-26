@@ -6,8 +6,8 @@
  */
 import { step } from 'mocha-steps';
 import path from 'path';
-import { TestSetup } from '../testSetup';
-import * as utilities from '../utilities';
+import { TestSetup } from '../testSetup.ts';
+import * as utilities from '../utilities/index.ts';
 import { Workbench } from 'wdio-vscode-service';
 
 describe('Deploy and Retrieve', async () => {
@@ -102,7 +102,7 @@ describe('Deploy and Retrieve', async () => {
     // Clear the Output view first.
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
     await utilities.getTextEditor(workbench, 'MyClass.cls');
-
+    
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'ST', 'Unchanged  ');
   });
 
@@ -231,7 +231,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.pause(1);
     // Reload window to update cache and get the setting behavior to work
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
-    await utilities.verifyAllExtensionsAreRunning();
+    await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
   });
 
   step('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
@@ -351,6 +351,7 @@ describe('Deploy and Retrieve', async () => {
 
     await validateCommand(workbench, operation, fromTo, type, prefix);
   };
+
   const validateCommand = async (
     workbench: Workbench,
     operation: string,

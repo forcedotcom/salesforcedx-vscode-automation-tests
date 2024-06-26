@@ -7,8 +7,8 @@
 import child_process from 'child_process';
 import { step, xstep } from 'mocha-steps';
 import { SideBarView, TreeItem } from 'wdio-vscode-service';
-import { TestSetup } from '../testSetup';
-import * as utilities from '../utilities';
+import { TestSetup } from '../testSetup.ts';
+import * as utilities from '../utilities/index.ts';
 import path from 'path';
 import util from 'util';
 import { fail } from 'assert';
