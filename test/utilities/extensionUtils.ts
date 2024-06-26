@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { log, pause } from './miscellaneous.ts';
+import { log } from './miscellaneous.ts';
 import fs from 'fs/promises';
 import path from 'path';
 import FastGlob from 'fast-glob';
