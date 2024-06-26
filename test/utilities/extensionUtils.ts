@@ -97,7 +97,7 @@ export async function installExtension(extension: string): Promise<void> {
 
 export async function installExtensions(): Promise<void> {
   const workbench = await (await browser.getWorkbench()).wait();
-  const pattern = /^salesforcedx-vscode-expanded-\d+\.\d+\.\d+\.vsix$/;
+  const pattern = /\S.*expanded\S.*$/;
   for (const extension of extensions) {
     if (!pattern.test(extension)) {
       await installExtension(extension);
