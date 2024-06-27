@@ -12,8 +12,6 @@ import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import path from 'path';
 
 const extensions: string[] = [
-  'salesforcedx-vscode',
-  'salesforcedx-vscode-expanded',
   'salesforcedx-vscode-soql',
   'salesforcedx-vscode-core',
   'salesforcedx-vscode-apex',
@@ -98,11 +96,7 @@ export async function installExtension(extension: string): Promise<void> {
 export async function installExtensions(): Promise<void> {
   const workbench = await (await browser.getWorkbench()).wait();
   for (const extension of extensions) {
-    log('extension = ' + extension);
-    if ((extension !== 'salesforcedx-vscode-expanded') && (extension !== 'salesforcedx-vscode')) {
-      await installExtension(extension);
-      log('installed ' + extension);
-    }
+    await installExtension(extension);
   }
   await pause(FIVE_MINUTES);
   await runCommandFromCommandPrompt(workbench, 'Extensions: Enable All Extensions', 5);
