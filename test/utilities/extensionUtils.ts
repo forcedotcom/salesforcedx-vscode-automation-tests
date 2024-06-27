@@ -98,8 +98,10 @@ export async function installExtension(extension: string): Promise<void> {
 export async function installExtensions(): Promise<void> {
   const workbench = await (await browser.getWorkbench()).wait();
   for (const extension of extensions) {
+    log('extension = ' + extension);
     if (!extension.includes('salesforcedx-vscode-expanded-')) {
       await installExtension(extension);
+      log('installed ' + extension);
     }
   }
   await pause(FIVE_MINUTES);
