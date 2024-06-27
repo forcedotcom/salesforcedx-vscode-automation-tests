@@ -12,8 +12,6 @@ import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import path from 'path';
 
 const extensions: string[] = [
-  'salesforcedx-vscode',
-  'salesforcedx-vscode-expanded',
   'salesforcedx-vscode-soql',
   'salesforcedx-vscode-core',
   'salesforcedx-vscode-apex',
