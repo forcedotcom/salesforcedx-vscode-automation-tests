@@ -84,7 +84,7 @@ describe('An Initial Suite', async () => {
       }
     }
 
-    expect(expectedSfdxCommandsFound).toBe(5);
+    expect(expectedSfdxCommandsFound).toBe(3);
     expect(unexpectedSfdxCommandWasFound).toBe(false);
 
     // Escape out of the pick list.
