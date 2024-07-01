@@ -177,7 +177,7 @@ export class TestSetup {
     const input = await this.prompt.input$;
     await input.setValue(this.tempFolderPath!);
     await utilities.pause(Duration.seconds(2));
-    await browser.keys(['Enter']);
+    await utilities.clickFilePathOkButton();
 
     // Verify the project was created and was loaded.
     await this.verifyProjectCreated(projectName ?? this.tempProjectName);

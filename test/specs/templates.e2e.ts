@@ -480,7 +480,7 @@ describe('Templates', async () => {
   step('Create a Sample Analytics Template', async () => {
     // Clear the output panel, then use the Command palette to run, "SFDX: Create Sample Analytics Template".
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(1));
+    await utilities.clearOutputView();
     const inputBox = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Create Sample Analytics Template',
