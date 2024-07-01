@@ -8,16 +8,18 @@
 import os from 'os';
 import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings.ts';
-import { attemptToFindOutputPanelText } from './outputView.ts';
-import { executeQuickPick } from './commandPrompt.ts';
+import { attemptToFindOutputPanelText, clearOutputView } from './outputView.ts';
+import { runCommandFromCommandPrompt } from './commandPrompt.ts';
 import { notificationIsPresentWithTimeout } from './notifications.ts';
+import { Duration } from '@salesforce/kit';
 import path from 'path';
+import { PredicateWithTimeout } from './predicates.ts';
 
-export const FIVE_MINUTES = 5 * 60;
-export const TEN_MINUTES = 10 * 60;
+export const FIVE_MINUTES = Duration.minutes(5);
+export const TEN_MINUTES = Duration.minutes(10);
 
-export async function pause(durationInSeconds: number): Promise<void> {
-  await sleep(durationInSeconds * EnvironmentSettings.getInstance().throttleFactor * 1000);
+export async function pause(duration: Duration = Duration.seconds(1)): Promise<void> {
+  await sleep(duration.milliseconds * EnvironmentSettings.getInstance().throttleFactor);
 }
 
 export function log(message: string) {

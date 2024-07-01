@@ -6,9 +6,10 @@
  */
 
 import { InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
-import { pause } from './miscellaneous.ts';
+import { log, pause } from './miscellaneous.ts';
 import { getWorkbench } from './workbench.ts';
 import { Duration } from '@salesforce/kit';
+import assert from 'assert';
 
 export async function openCommandPromptWithCommand(
   workbench: Workbench,
@@ -131,4 +132,32 @@ export async function executeQuickPick(
   const prompt = await workbench.executeQuickPick(command);
   pause(wait);
   return prompt;
+}
+
+export async function clickFilePathOkButton(): Promise<void> {
+  const okButton = await $('*:not([style*="display: none"]).quick-input-action .monaco-button');
+
+  if (!okButton) {
+    throw new Error('Ok button not found');
+  }
+  await okButton.waitForClickable({
+    timeout: Duration.seconds(5).milliseconds,
+    interval: Duration.milliseconds(100).milliseconds,
+    timeoutMsg: `Ok button not clickable within 5 seconds`
+  });
+
+  await okButton.click();
+  // await pause(Duration.milliseconds(100));
+  // await okButton.click();
+
+  await pause(Duration.seconds(1));
+  const buttons = await $$('a.monaco-button.monaco-text-button');
+  for (const item of buttons) {
+    const text = await item.getText();
+    if (text.includes('Overwrite')) {
+      log('clickFilePathOkButton() - folder already exists');
+      await item.click();
+    }
+  }
+  await pause(Duration.seconds(2));
 }

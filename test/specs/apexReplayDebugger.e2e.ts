@@ -58,7 +58,7 @@ describe('Apex Replay Debugger', async () => {
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
     // Clear output before running the command
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(1));
+    await utilities.clearOutputView();
 
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
     await utilities.runCommandFromCommandPrompt(
@@ -98,7 +98,7 @@ describe('Apex Replay Debugger', async () => {
     await utilities.pause(Duration.seconds(1));
 
     // Clear output before running the command
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(1));
+    await utilities.clearOutputView();
 
     // Run SFDX: Launch Apex Replay Debugger with Currently Selected Text.
     await utilities.runCommandFromCommandPrompt(
@@ -136,8 +136,12 @@ describe('Apex Replay Debugger', async () => {
   step('SFDX: Get Apex Debug Logs', async () => {
     // Run SFDX: Get Apex Debug Logs
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(1));
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Get Apex Debug Logs', Duration.seconds(1));
+    await utilities.clearOutputView();
+    prompt = await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Get Apex Debug Logs',
+      Duration.seconds(1)
+    );
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(
@@ -248,7 +252,7 @@ describe('Apex Replay Debugger', async () => {
     await utilities.createAnonymousApexFile();
 
     // Clear output before running the command
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(1));
+    await utilities.clearOutputView();
 
     // Run SFDX: Launch Apex Replay Debugger with Editor Contents", using the Command Palette.
     await utilities.runCommandFromCommandPrompt(
@@ -281,7 +285,7 @@ describe('Apex Replay Debugger', async () => {
   step('SFDX: Turn Off Apex Debug Log for Replay Debugger', async () => {
     // Run SFDX: Turn Off Apex Debug Log for Replay Debugger
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(1));
+    await utilities.clearOutputView();
     prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Turn Off Apex Debug Log for Replay Debugger',

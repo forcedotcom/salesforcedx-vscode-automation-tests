@@ -25,7 +25,7 @@ describe('Visualforce LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - calling createVisualforcePage()`);
     // Clear output before running the command
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(1));
+    await utilities.clearOutputView();
     // Create Visualforce Page
     await utilities.createVisualforcePage();
 

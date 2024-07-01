@@ -66,7 +66,11 @@ describe('SObjects Definitions', async () => {
 
   step('Push Source to Org', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', Duration.seconds(5));
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Push Source to Default Org',
+      Duration.seconds(5)
+    );
     await utilities.pause(Duration.seconds(1));
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -87,7 +91,7 @@ describe('SObjects Definitions', async () => {
 
   step('Refresh SObject Definitions for Custom SObjects', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(2));
     const prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Refresh SObject Definitions',
@@ -168,7 +172,7 @@ describe('SObjects Definitions', async () => {
 
   step('Refresh SObject Definitions for Standard SObjects', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(2));
     const prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Refresh SObject Definitions',
@@ -231,7 +235,7 @@ describe('SObjects Definitions', async () => {
   step('Refresh SObject Definitions for All SObjects', async () => {
     // Clear the output for correct test validation.
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(2));
 
     const prompt = await utilities.runCommandFromCommandPrompt(
       workbench,

@@ -74,52 +74,40 @@ export async function attemptToFindOutputPanelText(
 export async function getOperationTime(outputText: string): Promise<string> {
   const tRegex = /((?<hours>\d+):(?<minutes>\d+):(?<seconds>\d+)(?<secondFraction>\.\d+))/g;
   let matches;
-  const groups: TimeParts[] = [];
+  const times: Date[] = [];
   while ((matches = tRegex.exec(outputText)) !== null) {
-    const group = matches.groups as TimeParts; // Type assertion
-    groups.push(group);
+    if (matches.groups) {
+      const { hours, minutes, seconds, secondFraction } = matches.groups;
+      const time = new Date(
+        1970,
+        0,
+        1,
+        Number(hours),
+        Number(minutes),
+        Number(seconds),
+        Number(secondFraction) * 1000
+      );
+      times.push(time);
+    }
   }
-  const [startTime, endTime] = groups.map((group) =>
-    Object.entries(group)
-      .map(([key, value]) => ({ [key]: Number(value) }))
-      .reduce(
-        (acc, curr, index) => {
-          switch (index) {
-            case 0:
-              acc.setHours(curr.hours);
-              break;
-            case 1:
-              acc.setMinutes(curr.minutes);
-              break;
-            case 2:
-              acc.setSeconds(curr.seconds);
-              break;
-            case 3:
-              acc.setMilliseconds(curr.secondFraction * 1000);
-              break;
-            default:
-              break;
+  if (times.length < 2) {
+    return 'Insufficient timestamps found.';
           }
-          return acc;
-        },
-        new Date(1970, 0, 1)
-      )
-  );
+  const [startTime, endTime] = times;
   let diff = endTime.getTime() - startTime.getTime();
-  // Convert the difference to hours, minutes, and seconds
-  const hours = Math.floor(diff / 1000 / 60 / 60);
-  diff -= hours * 1000 * 60 * 60;
-  const minutes = Math.floor(diff / 1000 / 60);
-  diff -= minutes * 1000 * 60;
+
+  const hours = Math.floor(diff / 3600000); // 1000 * 60 * 60
+  diff %= 3600000;
+  const minutes = Math.floor(diff / 60000); // 1000 * 60
+  diff %= 60000;
   const seconds = Math.floor(diff / 1000);
-  diff -= seconds * 1000;
-  const milliseconds = diff;
+  const milliseconds = diff % 1000;
 
-  // return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+  return `${formatTimeComponent(hours)}:${formatTimeComponent(minutes)}:${formatTimeComponent(seconds)}.${formatTimeComponent(milliseconds, 3)}`;
+}
 
-  return `${formatTimeComponent(hours)}:${formatTimeComponent(minutes)}:${formatTimeComponent(
-    seconds
-  )}.${formatTimeComponent(milliseconds, 3)}`;
+export async function clearOutputView(wait = Duration.seconds(1)) {
+  await executeQuickPick('View: Clear Output',wait);
 }
 
 function formatTimeComponent(component: number, padLength: number = 2): string {

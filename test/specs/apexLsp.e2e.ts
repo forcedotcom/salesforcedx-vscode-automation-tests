@@ -38,16 +38,15 @@ describe('Apex LSP', async () => {
     ]);
     await utilities.zoomReset();
     expect(foundExtensions.length).toBe(1);
+    // Close running extensions view
+    await browser.keys([CMD_KEY, 'w']);
   });
 
   step('Verify LSP finished indexing', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
 
-    // Close running extensions view
-    await browser.keys([CMD_KEY, 'w']);
-
     // Get Apex LSP Status Bar
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const statusBar = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       'Editor Language Status'

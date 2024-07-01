@@ -69,7 +69,7 @@ describe('Manifest Builder', async () => {
     // Using the Command palette, run SFDX: Deploy Source in Manifest to Org
     const workbench = await browser.getWorkbench();
     // Clear output before running the command
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(1));
+    await utilities.clearOutputView();
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Deploy Source in Manifest to Org',
@@ -121,7 +121,7 @@ describe('Manifest Builder', async () => {
     const workbench = await browser.getWorkbench();
     await utilities.getTextEditor(workbench, 'manifest.xml');
     // Clear output before running the command
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(2));
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Retrieve Source in Manifest from Org',
