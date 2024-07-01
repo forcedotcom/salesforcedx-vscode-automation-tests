@@ -64,7 +64,7 @@ describe('Apex LSP', async () => {
   step('Go to Definition', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.getTextEditor(workbench, 'ExampleClassTest.cls');
 
     // Move cursor to the middle of "ExampleClass.SayHello() call"
