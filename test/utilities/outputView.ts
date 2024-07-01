@@ -12,6 +12,7 @@ import { dismissAllNotifications } from './notifications.ts';
 import { runCommandFromCommandPrompt } from './commandPrompt.ts';
 
 import { Key } from 'webdriverio';
+import { Duration } from '@salesforce/kit';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 type TimeParts = {
@@ -29,9 +30,9 @@ export async function selectOutputChannel(name: string): Promise<void> {
 
   // Find the given channel in the Output view
   const workbench = await (await browser.getWorkbench()).wait();
-  await runCommandFromCommandPrompt(workbench, 'Output: Show Output Channels...', 1);
+  await runCommandFromCommandPrompt(workbench, 'Output: Show Output Channels...', Duration.seconds(1));
   await browser.keys([name, 'Enter']);
-  await pause(2);
+  await pause(Duration.seconds(2));
 }
 
 export async function getOutputViewText(outputChannelName: string = ''): Promise<string> {
@@ -42,7 +43,7 @@ export async function getOutputViewText(outputChannelName: string = ''): Promise
 
   // Set focus to the contents in the Output panel.
   const workbench = await (await browser.getWorkbench()).wait();
-  await runCommandFromCommandPrompt(workbench, 'Output: Focus on Output View', 2);
+  await runCommandFromCommandPrompt(workbench, 'Output: Focus on Output View', Duration.seconds(2));
 
   // Select all of the text within the panel.
   await browser.keys([CMD_KEY, 'a', 'c']);
@@ -67,7 +68,7 @@ export async function attemptToFindOutputPanelText(
       return outputViewText;
     }
 
-    await pause(1);
+    await pause(Duration.seconds(1));
     attempts--;
   }
 

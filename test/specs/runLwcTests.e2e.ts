@@ -12,6 +12,7 @@ import * as utilities from '../utilities/index.ts';
 import path from 'path';
 import util from 'util';
 import { fail } from 'assert';
+import { Duration } from '@salesforce/kit';
 
 const exec = util.promisify(child_process.exec);
 
@@ -47,12 +48,12 @@ describe('Run LWC Tests', async () => {
       await utilities.runCommandFromCommandPrompt(
         workbench,
         'SFDX: Run All Lightning Web Component Tests',
-        1
+        Duration.seconds(2)
       );
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 20);
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(20));
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
         `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
@@ -71,12 +72,12 @@ describe('Run LWC Tests', async () => {
         `${testSetup.testSuiteSuffixName} - SFDX: Refresh Lightning Web Component Test Explorer`
       );
       const workbench = await (await browser.getWorkbench()).wait();
-      await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 1);
+      await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', Duration.seconds(1));
       // Run command SFDX: Refresh Lightning Web Component Test Explorer
       await utilities.runCommandFromCommandPrompt(
         workbench,
         'SFDX: Refresh Lightning Web Component Test Explorer',
-        2
+        Duration.seconds(2)
       );
       // Open the Tests Sidebar
       const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
@@ -86,7 +87,7 @@ describe('Run LWC Tests', async () => {
       await utilities.runCommandFromCommandPrompt(
         workbench,
         'SFDX: Run All Lightning Web Component Tests',
-        2
+        Duration.seconds(2)
       );
 
       // Get tree items again
@@ -108,7 +109,7 @@ describe('Run LWC Tests', async () => {
       await utilities.runCommandFromCommandPrompt(
         workbench,
         'SFDX: Refresh Lightning Web Component Test Explorer',
-        2
+        Duration.seconds(2)
       );
 
       // Get tree items again
@@ -165,7 +166,7 @@ describe('Run LWC Tests', async () => {
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 15);
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
         `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
@@ -216,7 +217,7 @@ describe('Run LWC Tests', async () => {
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 15);
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
         `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
@@ -262,7 +263,7 @@ describe('Run LWC Tests', async () => {
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 15);
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
         `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
@@ -302,12 +303,12 @@ describe('Run LWC Tests', async () => {
       await utilities.runCommandFromCommandPrompt(
         workbench,
         'SFDX: Run Current Lightning Web Component Test File',
-        1
+        Duration.seconds(1)
       );
 
       // Verify test results are listed on vscode's Output section
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 15);
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
         `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
@@ -337,7 +338,7 @@ describe('Run LWC Tests', async () => {
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 15);
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
         `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
@@ -366,7 +367,7 @@ describe('Run LWC Tests', async () => {
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 15);
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
         `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
@@ -395,7 +396,7 @@ describe('Run LWC Tests', async () => {
       // Verify test results are listed on vscode's Output section
       // Also verify that all tests pass
       const workbench = await (await browser.getWorkbench()).wait();
-      const terminalText = await utilities.getTerminalViewText(workbench, 15);
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
         `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`

@@ -15,6 +15,7 @@ import * as utilities from './utilities/index.ts';
 
 import { fileURLToPath } from 'url';
 import { fail } from 'assert';
+import { Duration } from '@salesforce/kit';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -68,7 +69,7 @@ export class TestSetup {
     await utilities.showRunningExtensions();
 
     // Zoom out so all the extensions are visible
-    await utilities.zoom('Out', 4, 1);
+    await utilities.zoom('Out', 4, Duration.seconds(1));
 
     const uncaughtErrors = (
       await utilities.findExtensionsInRunningExtensionsList(
@@ -76,7 +77,7 @@ export class TestSetup {
       )
     ).filter((ext) => ext.hasBug);
 
-    await utilities.zoomReset(1);
+    await utilities.zoomReset();
 
     uncaughtErrors.forEach((ext) => {
       utilities.log(`Extension ${ext.extensionId}:${ext.version ?? 'unknown'} has a bug`);
@@ -124,10 +125,10 @@ export class TestSetup {
     const prompt = await workbench.executeQuickPick('SFDX: Create Project');
     await utilities.waitForQuickPick(prompt, 'Standard', {
       msg: 'Expected extension salesforcedx-core to be available within 5 seconds',
-      timeout: 5_000
+      timeout: Duration.seconds(5)
     });
     await browser.keys(['Escape']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys(['Escape']);
 
     const coreIsActive = await utilities.verifyExtensionsAreRunning(
@@ -162,12 +163,12 @@ export class TestSetup {
     // Select the "Standard" project type.
     await utilities.waitForQuickPick(this.prompt, 'Standard', {
       msg: 'Expected extension salesforcedx-core to be available within 5 seconds',
-      timeout: 5_000
+      timeout: Duration.seconds(5)
     });
 
     // Enter the project's name.
     await this.prompt.setText(projectName ?? this.tempProjectName);
-    await utilities.pause(2);
+    await utilities.pause(Duration.seconds(2));
 
     // Press Enter/Return.
     await this.prompt.confirm();
@@ -175,10 +176,8 @@ export class TestSetup {
     // Set the location of the project.
     const input = await this.prompt.input$;
     await input.setValue(this.tempFolderPath!);
-    await utilities.pause(2);
-
-    // Click the OK button.
-    await utilities.clickFilePathOkButton();
+    await utilities.pause(Duration.seconds(2));
+    await browser.keys(['Enter']);
 
     // Verify the project was created and was loaded.
     await this.verifyProjectCreated(projectName ?? this.tempProjectName);
@@ -268,7 +267,9 @@ export class TestSetup {
     );
   }
 
-  private async createDefaultScratchOrg(edition: utilities.OrgEdition = 'developer'): Promise<void> {
+  private async createDefaultScratchOrg(
+    edition: utilities.OrgEdition = 'developer'
+  ): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`);
 
@@ -283,7 +284,7 @@ export class TestSetup {
 
       const sfOrgListResult = await exec('sf org:list --json');
       const resultJson = this.removedEscapedCharacters(sfOrgListResult.stdout);
-      const scratchOrgs = JSON.parse(resultJson).result.scratchOrgs as {alias: string}[];
+      const scratchOrgs = JSON.parse(resultJson).result.scratchOrgs as { alias: string }[];
 
       const foundScratchOrg = scratchOrgs.find((scratchOrg) => {
         const alias = scratchOrg.alias as string;
@@ -340,7 +341,7 @@ export class TestSetup {
     const endDate = Date.now();
     const time = endDate - startDate;
     utilities.log(
-      `Creating ${this.scratchOrgAliasName} took ${time} ticks (${time / 1000.0} seconds)`
+      `Creating ${this.scratchOrgAliasName} took ${time} ticks (${time / 1_000.0} seconds)`
     );
 
     if (!result.authFields) {
@@ -368,7 +369,7 @@ export class TestSetup {
     const inputBox = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Set a Default Org',
-      10
+      Duration.seconds(10)
     );
 
     utilities.log(`${this.testSuiteSuffixName} - calling findQuickPickItem()...`);
@@ -384,7 +385,7 @@ export class TestSetup {
       );
     }
 
-    await utilities.pause(3);
+    await utilities.pause(Duration.seconds(3));
 
     // Warning! This only works if the item (the scratch org) is visible.
     // If there are many scratch orgs, not all of them may be displayed.
@@ -423,7 +424,7 @@ export class TestSetup {
     const inputBox = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Set a Default Org',
-      2
+      Duration.seconds(2)
     );
 
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
@@ -436,7 +437,7 @@ export class TestSetup {
       throw new Error(`In setDefaultOrg(), the scratch org's quick pick item was not found`);
     }
 
-    await utilities.pause(3);
+    await utilities.pause(Duration.seconds(3));
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,

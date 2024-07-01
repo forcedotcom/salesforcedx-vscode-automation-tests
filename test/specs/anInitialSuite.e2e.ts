@@ -7,6 +7,7 @@
 import { step } from 'mocha-steps';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
+import { Duration } from '@salesforce/kit';
 
 /*
 anInitialSuite.e2e.ts is a special case.  We want to validate that the Salesforce extensions and
@@ -32,7 +33,7 @@ describe('An Initial Suite', async () => {
 
   step('Verify our extensions are not initially loaded', async () => {
     await utilities.showRunningExtensions();
-    await utilities.zoom('Out', 4, 1);
+    await utilities.zoom('Out', 4, Duration.seconds(1));
 
     const foundSfExtensions = await utilities.findExtensionsInRunningExtensionsList(
       utilities.getExtensionsToVerifyActive().map((ext) => ext.extensionId)
@@ -97,15 +98,15 @@ describe('An Initial Suite', async () => {
   step('Verify our extensions are loaded after creating an SFDX project', async () => {
     await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
     browser.keys(['Escape']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     browser.keys(['Escape']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
   });
 
   step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
     const workbench = await utilities.getWorkbench();
     await utilities.enableAllExtensions();
-    await utilities.executeQuickPick('Extensions: Show Enabled Extensions', 2);
+    await utilities.executeQuickPick('Extensions: Show Enabled Extensions', Duration.seconds(2));
     const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
     const quickPicks = await prompt.getQuickPicks();
     const commands = await Promise.all(quickPicks.map((quickPick) => quickPick.getLabel()));

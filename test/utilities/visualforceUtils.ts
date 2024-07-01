@@ -5,6 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
+import { Duration } from '@salesforce/kit';
 import { runCommandFromCommandPrompt } from './commandPrompt.ts';
 import { getTextEditor, pause } from './miscellaneous.ts';
 
@@ -20,7 +21,7 @@ export async function createVisualforcePage(): Promise<void> {
 
   // Select the default directory (press Enter/Return).
   await inputBox.confirm();
-  await pause(1);
+  await pause(Duration.seconds(1));
 
   // Modify page content
   const textEditor = await getTextEditor(workbench, 'FooPage.page');
@@ -37,5 +38,5 @@ export async function createVisualforcePage(): Promise<void> {
   ].join('\n');
   await textEditor.setText(pageText);
   await textEditor.save();
-  await pause(1);
+  await pause(Duration.seconds(1));
 }

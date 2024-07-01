@@ -9,6 +9,7 @@ import path from 'path';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import { Workbench } from 'wdio-vscode-service';
+import { Duration } from '@salesforce/kit';
 
 describe('Deploy and Retrieve', async () => {
   let testSetup: TestSetup;
@@ -70,7 +71,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'Preferences: Open Workspace Settings',
-      5
+      Duration.seconds(5)
     );
     await browser.keys(['enable source tracking']);
 
@@ -78,7 +79,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'Notifications: Clear All Notifications',
-      1
+      Duration.seconds(1)
     );
 
     const enableSourceTrackingBtn = await utilities.findElementByText(
@@ -92,7 +93,7 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy with SFDX: Deploy This Source to Org - ST enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'ST');
   });
@@ -100,16 +101,16 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy again (with no changes) - ST enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
-    
+
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'ST', 'Unchanged  ');
   });
 
   step('Modify the file and deploy again - ST enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
 
     // Modify the file by adding a comment.
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -123,7 +124,7 @@ describe('Deploy and Retrieve', async () => {
   step('Retrieve with SFDX: Retrieve This Source from Org', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
 
     await runAndValidateCommand(workbench, 'Retrieve', 'from', 'ST');
@@ -132,7 +133,7 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and retrieve again', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
 
     // Modify the file by changing the comment.
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -150,12 +151,12 @@ describe('Deploy and Retrieve', async () => {
   step('Prefer Deploy on Save when `Push or deploy on save` is enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
 
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'Preferences: Open Workspace Settings',
-      3
+      Duration.seconds(3)
     );
     await browser.keys(['push on save']);
 
@@ -165,17 +166,17 @@ describe('Deploy and Retrieve', async () => {
       'salesforcedx-vscode-core.push-or-deploy-on-save.enabled'
     );
     await pushOrDeployOnSaveBtn.click();
-    await utilities.pause(3);
+    await utilities.pause(Duration.seconds(3));
 
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'Preferences: Open Workspace Settings',
-      3
+      Duration.seconds(3)
     );
     await browser.keys(['prefer deploy']);
 
     try {
-      await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', 2);
+      await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', Duration.seconds(2));
     } catch {
       utilities.log('Panel is already closed');
     }
@@ -185,22 +186,22 @@ describe('Deploy and Retrieve', async () => {
       'salesforcedx-vscode-core.push-or-deploy-on-save.preferDeployOnSave'
     );
     await preferDeployOnSaveBtn.click();
-    await utilities.pause(3);
+    await utilities.pause(Duration.seconds(3));
 
     // Clear all notifications so clear output button is reachable
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'Notifications: Clear All Notifications',
-      1
+      Duration.seconds(1)
     );
 
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
     // Modify the file and save to trigger deploy
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
     await textEditor.setTextAtLine(2, `\t// let's trigger deploy`);
     await textEditor.save();
-    await utilities.pause(5);
+    await utilities.pause(Duration.seconds(5));
 
     // At this point there should be no conflicts since this is a new class.
     await validateCommand(workbench, 'Deploy', 'to', 'on save');
@@ -211,7 +212,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'Preferences: Open Workspace Settings',
-      5
+      Duration.seconds(5)
     );
     await browser.keys(['enable source tracking']);
 
@@ -219,7 +220,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'Notifications: Clear All Notifications',
-      1
+      Duration.seconds(1)
     );
 
     const enableSourceTrackingBtn = await utilities.findElementByText(
@@ -228,9 +229,9 @@ describe('Deploy and Retrieve', async () => {
       'salesforcedx-vscode-core.experimental.enableSourceTrackingForDeployAndRetrieve'
     );
     await enableSourceTrackingBtn.click();
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     // Reload window to update cache and get the setting behavior to work
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', Duration.seconds(100));
     await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
   });
 
@@ -240,10 +241,10 @@ describe('Deploy and Retrieve', async () => {
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'Notifications: Clear All Notifications',
-      1
+      Duration.seconds(1)
     );
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
 
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'no-ST');
@@ -252,7 +253,7 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy again (with no changes) - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
 
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'no-ST', 'Unchanged  ');
@@ -261,7 +262,7 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and deploy again - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
 
     // Modify the file by adding a comment.
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -279,15 +280,15 @@ describe('Deploy and Retrieve', async () => {
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Push Source to Default Org and Ignore Conflicts',
-      10
+      Duration.seconds(10)
     );
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
 
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Delete This from Project and Org',
-      2
+      Duration.seconds(2)
     );
 
     // Make sure we get a confirmation dialog
@@ -346,7 +347,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.runCommandFromCommandPrompt(
       workbench,
       `SFDX: ${operation} This Source ${fromTo} Org`,
-      5
+      Duration.seconds(5)
     );
 
     await validateCommand(workbench, operation, fromTo, type, prefix);
