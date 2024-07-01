@@ -93,7 +93,7 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy with SFDX: Deploy This Source to Org - ST enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'ST');
   });
@@ -101,7 +101,7 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy again (with no changes) - ST enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
 
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'ST', 'Unchanged  ');
@@ -110,7 +110,7 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and deploy again - ST enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(2));
 
     // Modify the file by adding a comment.
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -124,7 +124,7 @@ describe('Deploy and Retrieve', async () => {
   step('Retrieve with SFDX: Retrieve This Source from Org', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
 
     await runAndValidateCommand(workbench, 'Retrieve', 'from', 'ST');
@@ -133,7 +133,7 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and retrieve again', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(2));
 
     // Modify the file by changing the comment.
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -151,7 +151,7 @@ describe('Deploy and Retrieve', async () => {
   step('Prefer Deploy on Save when `Push or deploy on save` is enabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(2));
 
     await utilities.runCommandFromCommandPrompt(
       workbench,
@@ -176,7 +176,11 @@ describe('Deploy and Retrieve', async () => {
     await browser.keys(['prefer deploy']);
 
     try {
-      await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', Duration.seconds(2));
+      await utilities.runCommandFromCommandPrompt(
+        workbench,
+        'View: Close Panel',
+        Duration.seconds(2)
+      );
     } catch {
       utilities.log('Panel is already closed');
     }
@@ -196,7 +200,7 @@ describe('Deploy and Retrieve', async () => {
     );
 
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(2));
     // Modify the file and save to trigger deploy
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
     await textEditor.setTextAtLine(2, `\t// let's trigger deploy`);
@@ -231,7 +235,11 @@ describe('Deploy and Retrieve', async () => {
     await enableSourceTrackingBtn.click();
     await utilities.pause(Duration.seconds(1));
     // Reload window to update cache and get the setting behavior to work
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', Duration.seconds(100));
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Developer: Reload Window',
+      Duration.seconds(100)
+    );
     await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
   });
 
@@ -244,7 +252,7 @@ describe('Deploy and Retrieve', async () => {
       Duration.seconds(1)
     );
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
 
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'no-ST');
@@ -253,7 +261,7 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy again (with no changes) - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
 
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'no-ST', 'Unchanged  ');
@@ -262,7 +270,7 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and deploy again - ST disabled', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(2));
 
     // Modify the file by adding a comment.
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -283,7 +291,7 @@ describe('Deploy and Retrieve', async () => {
       Duration.seconds(10)
     );
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(2));
 
     await utilities.runCommandFromCommandPrompt(
       workbench,
