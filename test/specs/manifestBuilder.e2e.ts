@@ -8,6 +8,7 @@ import { step } from 'mocha-steps';
 import path from 'path';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
+import { Duration } from '@salesforce/kit';
 
 describe('Manifest Builder', async () => {
   let testSetup: TestSetup;
@@ -33,7 +34,7 @@ describe('Manifest Builder', async () => {
     const inputBox = await utilities.runCommandFromCommandPrompt(
       workbench,
       'Create: New File...',
-      1
+      Duration.seconds(1)
     );
 
     // Set the name of the new manifest file
@@ -59,7 +60,7 @@ describe('Manifest Builder', async () => {
 
     await textEditor.setText(content);
     await textEditor.save();
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     utilities.log(`${testSetup.testSuiteSuffixName} - finished creating manifest file`);
   });
 
@@ -68,11 +69,11 @@ describe('Manifest Builder', async () => {
     // Using the Command palette, run SFDX: Deploy Source in Manifest to Org
     const workbench = await browser.getWorkbench();
     // Clear output before running the command
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+    await utilities.clearOutputView();
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Deploy Source in Manifest to Org',
-      1
+      Duration.seconds(1)
     );
 
     // Look for the success notification that appears which says, "SFDX: Deploy This Source to Org successfully ran".
@@ -120,11 +121,11 @@ describe('Manifest Builder', async () => {
     const workbench = await browser.getWorkbench();
     await utilities.getTextEditor(workbench, 'manifest.xml');
     // Clear output before running the command
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+    await utilities.clearOutputView(Duration.seconds(2));
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Retrieve Source in Manifest from Org',
-      1
+      Duration.seconds(2)
     );
 
     // Look for the success notification that appears which says, "SFDX: Retrieve This Source from Org successfully ran".

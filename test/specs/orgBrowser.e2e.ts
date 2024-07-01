@@ -10,6 +10,7 @@ import * as utilities from '../utilities/index.ts';
 // import { CMD_KEY } from 'wdio-vscode-service/dist/constants.ts';
 
 import { Key } from 'webdriverio';
+import { Duration } from '@salesforce/kit';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Org Browser', async () => {
@@ -25,7 +26,11 @@ describe('Org Browser', async () => {
       `${testSetup.testSuiteSuffixName} - Check Org Browser is connected to target org`
     );
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Show Org Browser', 5);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'View: Show Org Browser',
+      Duration.seconds(5)
+    );
 
     const orgBrowserLabelEl = await utilities.findElementByText(
       'div',
@@ -66,7 +71,7 @@ describe('Org Browser', async () => {
       'Apex Classes'
     );
     apexClassesLabelEl.click();
-    utilities.pause(5);
+    utilities.pause(Duration.seconds(5));
     const noCompsAvailableLabelEl = await utilities.findElementByText(
       'div',
       'aria-label',
@@ -92,11 +97,15 @@ describe('Org Browser', async () => {
 
     const workbench = await (await browser.getWorkbench()).wait();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.clearOutputView(Duration.seconds(2));
 
     // Get text editor
     await utilities.getTextEditor(workbench, 'MyClass.cls');
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Deploy This Source to Org', 5);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'SFDX: Deploy This Source to Org',
+      Duration.seconds(5)
+    );
 
     // Verify the deploy was successful
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -114,19 +123,23 @@ describe('Org Browser', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Refresh Apex Classes`);
     // Check MyClass is present under Apex Classes section
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Show Org Browser', 5);
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'View: Show Org Browser',
+      Duration.seconds(5)
+    );
     const refreshComponentsButton = await (
       await utilities.findElementByText('div', 'aria-label', 'Apex Classes')
     ).$('li[title="SFDX: Refresh Components"]');
     await refreshComponentsButton.click();
-    await utilities.pause(5);
+    await utilities.pause(Duration.seconds(5));
     const refreshTypesButton = await utilities.findElementByText(
       'li',
       'title',
       'SFDX: Refresh Types'
     );
     await refreshTypesButton.click();
-    await utilities.pause(5);
+    await utilities.pause(Duration.seconds(5));
     const myClassLabelEl = await utilities.findElementByText('div', 'aria-label', 'MyClass');
     expect(myClassLabelEl).toBeTruthy();
   });
@@ -135,7 +148,7 @@ describe('Org Browser', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve This Source from Org`);
     const myClassLabelEl = await utilities.findElementByText('div', 'aria-label', 'MyClass');
     await myClassLabelEl.click();
-    await utilities.pause(2);
+    await utilities.pause(Duration.seconds(2));
     const retrieveSourceButton = await utilities.findElementByText(
       'li',
       'title',
@@ -157,7 +170,7 @@ describe('Org Browser', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve and Open Source`);
     const myClassLabelEl = await utilities.findElementByText('div', 'aria-label', 'MyClass');
     myClassLabelEl.click();
-    utilities.pause(2);
+    utilities.pause(Duration.seconds(2));
     const retrieveAndOpenButton = await utilities.findElementByText(
       'li',
       'title',

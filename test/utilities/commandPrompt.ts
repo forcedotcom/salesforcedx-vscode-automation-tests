@@ -8,6 +8,7 @@
 import { InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
 import { log, pause } from './miscellaneous.ts';
 import { getWorkbench } from './workbench.ts';
+import { Duration } from '@salesforce/kit';
 
 export async function openCommandPromptWithCommand(
   workbench: Workbench,
@@ -23,12 +24,12 @@ export async function openCommandPromptWithCommand(
 export async function runCommandFromCommandPrompt(
   workbench: Workbench,
   command: string,
-  durationInSeconds: number = 0
+  durationInSeconds: Duration = Duration.seconds(0)
 ): Promise<InputBox | QuickOpenBox> {
   const prompt = await (await openCommandPromptWithCommand(workbench, command)).wait();
   await selectQuickPickItem(prompt, command);
 
-  if (durationInSeconds > 0) {
+  if (durationInSeconds.milliseconds > 0) {
     await pause(durationInSeconds);
   }
 
@@ -39,10 +40,10 @@ export async function selectQuickPickWithText(prompt: InputBox | QuickOpenBox, t
   // Set the text in the command prompt.  Only selectQuickPick() needs to be called, but setting
   // the text in the command prompt is a nice visual feedback to anyone watching the tests run.
   await prompt.setText(text);
-  await pause(1);
+  await pause(Duration.seconds(1));
 
   await prompt.selectQuickPick(text);
-  await pause(1);
+  await pause(Duration.seconds(1));
   // After the text has been entered and selectQuickPick() is called, you might see the last few characters
   // in the input box be deleted.  This is b/c selectQuickPick() calls resetPosition(), which for some reason
   // deletes the last two characters.  This doesn't seem to affect the outcome though.
@@ -60,7 +61,7 @@ export async function selectQuickPickItem(
     throw new Error(`Quick pick item ${text} was not found`);
   }
   await quickPick.select();
-  await pause(1);
+  await pause(Duration.seconds(1));
 }
 
 export async function findQuickPickItem(
@@ -73,7 +74,7 @@ export async function findQuickPickItem(
   // Type the text into the filter.  Do this in case the pick list is long and
   // the target item is not visible (and one needs to scroll down to see it).
   await inputBox.setText(quickPickItemTitle);
-  await pause(1);
+  await pause(Duration.seconds(1));
 
   let itemWasFound = false;
   const quickPicks = await inputBox.getQuickPicks();
@@ -88,7 +89,7 @@ export async function findQuickPickItem(
     if (itemWasFound) {
       if (selectTheQuickPickItem) {
         await quickPick.select();
-        await pause(1);
+        await pause(Duration.seconds(1));
       }
 
       return true;
@@ -98,25 +99,10 @@ export async function findQuickPickItem(
   return false;
 }
 
-export async function clickFilePathOkButton(): Promise<void> {
-  const okButton = $('*:not([style*="display: none"]).quick-input-action .monaco-button');
-  await okButton.click();
-  await pause(1);
-  const buttons = await $$('a.monaco-button.monaco-text-button');
-  for (const item of buttons) {
-    const text = await item.getText();
-    if (text.includes('Overwrite')) {
-      log('clickFilePathOkButton() - folder already exists');
-      await item.click();
-    }
-  }
-  await pause(2);
-}
-
 export async function waitForQuickPick(
   prompt: InputBox | QuickOpenBox | undefined,
   pickListItem: string,
-  options: { msg?: string; timeout?: number } = { timeout: 10_000 }
+  options: { msg?: string; timeout?: Duration } = { timeout: Duration.milliseconds(10_000) }
 ) {
   await browser.waitUntil(
     async () => {
@@ -128,7 +114,7 @@ export async function waitForQuickPick(
       }
     },
     {
-      timeout: options.timeout,
+      timeout: options.timeout?.milliseconds,
       interval: 500, // Check every 500 ms
       timeoutMsg:
         options.msg ??
@@ -137,9 +123,43 @@ export async function waitForQuickPick(
   );
 }
 
-export async function executeQuickPick(command: string, wait = 1): Promise<InputBox | QuickOpenBox> {
+export async function executeQuickPick(
+  command: string,
+  wait: Duration = Duration.seconds(1)
+): Promise<InputBox | QuickOpenBox> {
   const workbench = await getWorkbench();
   const prompt = await workbench.executeQuickPick(command);
   pause(wait);
   return prompt;
+}
+
+export async function clickFilePathOkButton(): Promise<void> {
+  const okButton = await $('*:not([style*="display: none"]).quick-input-action .monaco-button');
+
+  if (!okButton) {
+    throw new Error('Ok button not found');
+  }
+  await okButton.waitForClickable({
+    timeout: Duration.seconds(2).milliseconds,
+    interval: Duration.milliseconds(100).milliseconds,
+    timeoutMsg: `Ok button not clickable within 2 seconds`
+  });
+
+  await okButton.click();
+
+  await pause(Duration.seconds(1));
+  const buttons = await $$('a.monaco-button.monaco-text-button');
+  for (const item of buttons) {
+    const text = await item.getText();
+    if (text.includes('Overwrite')) {
+      log('clickFilePathOkButton() - folder already exists');
+      await item.waitForClickable({
+        timeout: Duration.seconds(2).milliseconds,
+        interval: Duration.milliseconds(100).milliseconds,
+        timeoutMsg: `Overwrite button not clickable within 2 seconds`
+      });
+      await item.click();
+    }
+  }
+  await pause(Duration.seconds(2));
 }

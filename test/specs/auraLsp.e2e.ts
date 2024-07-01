@@ -9,6 +9,7 @@ import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 import { Key } from 'webdriverio';
+import { Duration } from '@salesforce/kit';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Aura LSP', async () => {
@@ -31,7 +32,7 @@ describe('Aura LSP', async () => {
 
     // Using the Command palette, run Developer: Show Running Extensions
     await utilities.showRunningExtensions();
-    await utilities.zoom('Out', 4, 1);
+    await utilities.zoom('Out', 4, Duration.seconds(1));
 
     // Verify Aura Components extension is present and running.
     const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
@@ -59,21 +60,21 @@ describe('Aura LSP', async () => {
 
     // Move cursor to the middle of "simpleNewContact"
     await browser.keys([CMD_KEY, 'f']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys(['!v.sim']);
     await browser.keys(['Escape']);
     await browser.keys(['ArrowRight']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Go to definition through F12
     await browser.keys(['F12']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Verify 'Go to definition'
     // This workaround types text in the place where the cursor is located after the Go to Definition is complete, and then verifies that the added text is present in the correct location.
     await browser.keys('elephant');
     await browser.keys([CMD_KEY, 's']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     const line3Text = await textEditor.getTextAtLine(3);
     expect(line3Text).toContain('name="elephantsimpleNewContact"');
 
@@ -90,14 +91,14 @@ describe('Aura LSP', async () => {
     const textEditor = await utilities.getTextEditor(workbench, 'aura1.cmp');
     // Workaround for `coordinates is not iterable` error is needed here too because `textEditor.typeTextAt()` uses coordinates.
     await browser.keys([CMD_KEY, 'f']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys('aura:attribute');
     await browser.keys(['Escape']);
     await browser.keys(['ArrowRight']);
     await browser.keys(['ArrowUp']);
     await browser.keys('<aura:appl');
     // await textEditor.typeTextAt(2, 1, '<aura:appl');
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Verify autocompletion options are present
     const autocompletionOptions = await $$('textarea.inputarea.monaco-mouse-cursor-text');
@@ -108,7 +109,7 @@ describe('Aura LSP', async () => {
     await browser.keys(['Enter']);
     await textEditor.typeText('>');
     await textEditor.save();
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     const line3Text = await textEditor.getTextAtLine(2);
     expect(line3Text).toContain('aura:application');
   });

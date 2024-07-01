@@ -13,6 +13,7 @@ import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 import { fileURLToPath } from 'url';
+import { Duration } from '@salesforce/kit';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -69,7 +70,7 @@ describe('Authentication', async () => {
     );
     expect(changeDefaultOrgSetItem).toBeDefined();
     await changeDefaultOrgSetItem.click();
-    await utilities.pause(5);
+    await utilities.pause(Duration.seconds(5));
 
     const orgPickerOptions = await $('div.monaco-list#quickInput_list')
       .$('div.monaco-scrollable-element')
@@ -106,7 +107,7 @@ describe('Authentication', async () => {
     await browser.keys(['Enter']);
 
     // Need to pause here for the "set a default org" command to finish.
-    await utilities.pause(5);
+    await utilities.pause(Duration.seconds(5));
 
     // Look for the notification that appears which says, "SFDX: Set a Default Org successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -134,7 +135,7 @@ describe('Authentication', async () => {
     prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Create a Default Scratch Org...',
-      1
+      Duration.seconds(1)
     );
 
     // Select a project scratch definition file (config/project-scratch-def.json)
@@ -151,14 +152,14 @@ describe('Authentication', async () => {
     scratchOrgAliasName = `TempScratchOrg_${year}_${month}_${day}_${currentOsUserName}_${ticks}_OrgAuth`;
 
     await prompt.setText(scratchOrgAliasName);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Press Enter/Return.
     await prompt.confirm();
 
     // Enter the number of days.
     await prompt.setText('1');
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Press Enter/Return.
     await prompt.confirm();
@@ -226,7 +227,7 @@ describe('Authentication', async () => {
     const inputBox = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Set a Default Org',
-      1
+      Duration.seconds(1)
     );
 
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
@@ -237,7 +238,7 @@ describe('Authentication', async () => {
     );
     expect(scratchOrgQuickPickItemWasFound).toBe(true);
 
-    await utilities.pause(3);
+    await utilities.pause(Duration.seconds(3));
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,

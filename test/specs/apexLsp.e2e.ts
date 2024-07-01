@@ -11,6 +11,7 @@ import * as utilities from '../utilities/index.ts';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 
 import { Key } from 'webdriverio';
+import { Duration } from '@salesforce/kit';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Apex LSP', async () => {
@@ -31,23 +32,22 @@ describe('Apex LSP', async () => {
 
     // Using the Command palette, run Developer: Show Running Extensions
     await utilities.showRunningExtensions();
-    utilities.zoom('Out', 4, 1);
+    utilities.zoom('Out', 4, Duration.seconds(1));
     // Verify Apex extension is present and running
     const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
       'salesforcedx-vscode-apex'
     ]);
     utilities.zoomReset();
     expect(foundExtensions.length).toBe(1);
+    // Close running extensions view
+    await browser.keys([CMD_KEY, 'w']);
   });
 
   step('Verify LSP finished indexing', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
 
-    // Close running extensions view
-    await browser.keys([CMD_KEY, 'w']);
-
     // Get Apex LSP Status Bar
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const statusBar = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       'Editor Language Status'
@@ -64,22 +64,22 @@ describe('Apex LSP', async () => {
   step('Go to Definition', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.getTextEditor(workbench, 'ExampleClassTest.cls');
 
     // Move cursor to the middle of "ExampleClass.SayHello() call"
     await browser.keys([CMD_KEY, 'f']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys(['.SayHello']);
     await browser.keys(['Escape']);
     await browser.keys(['ArrowRight']);
     await browser.keys(['ArrowLeft']);
     await browser.keys(['ArrowLeft']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Go to definition through F12
     await browser.keys(['F12']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Verify 'Go to definition' took us to the definition file
     const editorView = workbench.getEditorView();
@@ -96,14 +96,14 @@ describe('Apex LSP', async () => {
 
     // Move cursor to line 7 and type ExampleClass.s
     await browser.keys([CMD_KEY, 'f']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys(['System.debug']);
     await browser.keys(['Escape']);
     await browser.keys(['ArrowLeft']);
     await browser.keys(['ArrowDown']);
     await browser.keys(['ArrowDown']);
     await browser.keys('ExampleClass.say');
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Verify autocompletion options are present
     const autocompletionOptions = await $$('textarea.inputarea.monaco-mouse-cursor-text');
@@ -117,7 +117,7 @@ describe('Apex LSP', async () => {
     await browser.keys(['ArrowRight']);
     await textEditor.typeText(';');
     await textEditor.save();
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     const line7Text = await textEditor.getTextAtLine(7);
     expect(line7Text).toContain(`ExampleClass.SayHello('Jack');`);
   });

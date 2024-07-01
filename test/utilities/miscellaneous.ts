@@ -8,16 +8,18 @@
 import os from 'os';
 import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings.ts';
-import { attemptToFindOutputPanelText } from './outputView.ts';
+import { attemptToFindOutputPanelText, clearOutputView } from './outputView.ts';
 import { runCommandFromCommandPrompt } from './commandPrompt.ts';
 import { notificationIsPresentWithTimeout } from './notifications.ts';
+import { Duration } from '@salesforce/kit';
 import path from 'path';
+import { PredicateWithTimeout } from './predicates.ts';
 
-export const FIVE_MINUTES = 5 * 60;
-export const TEN_MINUTES = 10 * 60;
+export const FIVE_MINUTES = Duration.minutes(5);
+export const TEN_MINUTES = Duration.minutes(10);
 
-export async function pause(durationInSeconds: number): Promise<void> {
-  await sleep(durationInSeconds * EnvironmentSettings.getInstance().throttleFactor * 1000);
+export async function pause(duration: Duration = Duration.seconds(1)): Promise<void> {
+  await sleep(duration.milliseconds * EnvironmentSettings.getInstance().throttleFactor);
 }
 
 export function log(message: string) {
@@ -66,10 +68,14 @@ export async function findElementByText(
  * @returns editor for the given file name
  */
 export async function getTextEditor(workbench: Workbench, fileName: string): Promise<TextEditor> {
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+  const inputBox = await runCommandFromCommandPrompt(
+    workbench,
+    'Go to File...',
+    Duration.seconds(1)
+  );
   await inputBox.setText(fileName);
   await inputBox.confirm();
-  await pause(1);
+  await pause(Duration.seconds(1));
   const editorView = workbench.getEditorView();
   const textEditor = (await editorView.openEditor(fileName)) as TextEditor;
   return textEditor;
@@ -82,13 +88,17 @@ export async function createCommand(
   extension: string
 ): Promise<string | undefined> {
   const workbench = await (await browser.getWorkbench()).wait();
-  await runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
-  const inputBox = await runCommandFromCommandPrompt(workbench, `SFDX: Create ${type}`, 1);
+  await clearOutputView();
+  const inputBox = await runCommandFromCommandPrompt(
+    workbench,
+    `SFDX: Create ${type}`,
+    Duration.seconds(1)
+  );
 
   // Set the name of the new component to name.
   await inputBox.setText(name);
   await inputBox.confirm();
-  await pause(1);
+  await pause(Duration.seconds(1));
 
   // Select the default directory (press Enter/Return).
   await inputBox.confirm();
@@ -118,4 +128,11 @@ export async function createCommand(
   );
   expect(outputPanelText).toContain(`create ${metadataPath}`);
   return outputPanelText;
+}
+
+// Type guard function to check if the argument is a Duration
+export function isDuration(
+  predicateOrWait: PredicateWithTimeout | Duration
+): predicateOrWait is Duration {
+  return (predicateOrWait as Duration).milliseconds !== undefined;
 }

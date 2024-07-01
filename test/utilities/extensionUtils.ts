@@ -12,6 +12,7 @@ import FastGlob from 'fast-glob';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import { exec } from 'child_process';
 import * as utilities from './index.ts';
+import { Duration } from '@salesforce/kit';
 
 export type ExtensionId =
   | 'salesforcedx-vscode'
@@ -54,7 +55,7 @@ export type VerifyExtensionsOptions = {
   interval?: number;
 };
 
-const VERIFY_EXTENSIONS_TIMEOUT = 20_000;
+const VERIFY_EXTENSIONS_TIMEOUT = Duration.milliseconds(20_000);
 
 const extensions: ExtensionType[] = [
   {
@@ -256,7 +257,7 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
   }
 
   await utilities.enableAllExtensions();
-  await utilities.reloadWindow(10);
+  await utilities.reloadWindow(Duration.seconds(10));
 }
 
 export function getExtensionsToVerifyActive(): ExtensionType[] {
@@ -315,7 +316,7 @@ export async function verifyExtensionsAreRunning(
 
   await showRunningExtensions();
 
-  await utilities.zoom('Out', 4, 1);
+  await utilities.zoom('Out', 4, Duration.seconds(1));
 
   let extensionsStatus: ExtensionActivation[] = [];
   let allActivated = false;
@@ -323,7 +324,7 @@ export async function verifyExtensionsAreRunning(
   const timeoutPromise = new Promise((_, reject) =>
     setTimeout(
       () => reject(new Error('findExtensionsInRunningExtensionsList timeout')),
-      timeout ?? VERIFY_EXTENSIONS_TIMEOUT
+      timeout.milliseconds
     )
   );
 
@@ -351,7 +352,7 @@ export async function verifyExtensionsAreRunning(
     log(`Error while waiting for extensions to activate: ${error}`);
   }
 
-  await utilities.zoomReset(1);
+  await utilities.zoomReset();
 
   log('... Finished verifyExtensionsAreRunning()');
   log('');
@@ -368,7 +369,7 @@ export async function findExtensionsInRunningExtensionsList(
   // Close the panel and clear notifications so we can see as many of the running extensions as we can.
   try {
     // await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
-    await utilities.executeQuickPick('Notifications: Clear All Notifications', 1);
+    await utilities.executeQuickPick('Notifications: Clear All Notifications', Duration.seconds(1));
   } catch {
     // Close the command prompt by hitting the Escape key
     await browser.keys(['Escape']);
