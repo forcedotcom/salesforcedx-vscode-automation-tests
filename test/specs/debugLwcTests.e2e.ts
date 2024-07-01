@@ -14,7 +14,7 @@ import util from 'util';
 import { fail } from 'assert';
 
 import { Key } from 'webdriverio';
-const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
+const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;import { Duration } from '@salesforce/kit';
 
 const exec = util.promisify(child_process.exec);
 
@@ -46,7 +46,7 @@ describe('Debug LWC Tests', async () => {
 
       // Using the Command palette, run Developer: Show Running Extensions
       await utilities.showRunningExtensions();
-      utilities.zoom('Out', 4, 1);
+      utilities.zoom('Out', 4, Duration.seconds(1));
       // Verify Lightning Web Components extension is present and running
       const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
         'salesforcedx-vscode-lwc'
@@ -60,7 +60,7 @@ describe('Debug LWC Tests', async () => {
         `${testSetup.testSuiteSuffixName} - Debug All tests on a LWC via the Test Sidebar`
       );
       const workbench = await (await browser.getWorkbench()).wait();
-      await utilities.executeQuickPick('Testing: Focus on LWC Tests View', 3);
+      await utilities.executeQuickPick('Testing: Focus on LWC Tests View', Duration.seconds(3));
 
       // Open the Test Sidebar
       const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
@@ -83,14 +83,14 @@ describe('Debug LWC Tests', async () => {
         fail('Could not find debug tests action button');
       }
       await debugTestsAction.elem.click();
-      await utilities.pause(10);
+      await utilities.pause(Duration.seconds(10));
 
       // Continue with the debug session
       await continueDebugging();
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 10);
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(10));
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
         `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
@@ -103,7 +103,7 @@ describe('Debug LWC Tests', async () => {
       );
 
       // Verify the tests that are passing are labeled with a green dot on the Test sidebar
-      await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 3);
+      await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', Duration.seconds(3));
       const icon = await (await lwcTestItem.elem).$('.custom-view-tree-node-item-icon');
       const iconStyle = await icon.getAttribute('style');
       // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
@@ -134,14 +134,14 @@ describe('Debug LWC Tests', async () => {
         fail('Could not find debug test action button');
       }
       await debugTestAction.elem.click();
-      await utilities.pause(10);
+      await utilities.pause(Duration.seconds(10));
 
       // Continue with the debug session
       await continueDebugging();
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 10);
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(10));
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
         `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
@@ -154,7 +154,7 @@ describe('Debug LWC Tests', async () => {
       );
 
       // Verify the tests that are passing are labeled with a green dot on the Test sidebar
-      await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 3);
+      await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', Duration.seconds(3));
       const icon = await (await lwcTestItem.elem).$('.custom-view-tree-node-item-icon');
       const iconStyle = await icon.getAttribute('style');
       // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
@@ -175,7 +175,7 @@ describe('Debug LWC Tests', async () => {
       await utilities.runCommandFromCommandPrompt(
         workbench,
         'SFDX: Debug Current Lightning Web Component Test File',
-        10
+        Duration.seconds(10)
       );
 
       // Continue with the debug session
@@ -183,7 +183,7 @@ describe('Debug LWC Tests', async () => {
 
       // Verify test results are listed on vscode's Output section
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 10);
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(10));
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
         `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
@@ -208,14 +208,14 @@ describe('Debug LWC Tests', async () => {
         fail('Could not find debug test action button');
       }
       await debugAllTestsOption.click();
-      await utilities.pause(10);
+      await utilities.pause(Duration.seconds(10));
 
       // Continue with the debug session
       await continueDebugging();
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 10);
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(10));
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
         `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
@@ -242,14 +242,14 @@ describe('Debug LWC Tests', async () => {
         fail('Could not find debug test action button');
       }
       await debugTestOption.click();
-      await utilities.pause(10);
+      await utilities.pause(Duration.seconds(10));
 
       // Continue with the debug session
       await continueDebugging();
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 10);
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(10));
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
         `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
@@ -274,7 +274,7 @@ describe('Debug LWC Tests', async () => {
         'SFDX: Debug Current Lightning Web Component Test File'
       );
       await debugTestButtonToolbar.click();
-      await utilities.pause(10);
+      await utilities.pause(Duration.seconds(10));
 
       // Continue with the debug session
       await continueDebugging();
@@ -282,7 +282,7 @@ describe('Debug LWC Tests', async () => {
       // Verify test results are listed on vscode's Output section
       // Also verify that all tests pass
       const workbench = await (await browser.getWorkbench()).wait();
-      const terminalText = await utilities.getTerminalViewText(workbench, 10);
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(10));
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
         `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
@@ -302,11 +302,11 @@ describe('Debug LWC Tests', async () => {
     const continueDebugging = async (): Promise<void> => {
       // Continue with the debug session
       await browser.keys(CONTINUE);
-      await utilities.pause(3);
+      await utilities.pause(Duration.seconds(3));
       await browser.keys(CONTINUE);
-      await utilities.pause(3);
+      await utilities.pause(Duration.seconds(3));
       await browser.keys(CONTINUE);
-      await utilities.pause(1);
+      await utilities.pause(Duration.seconds(1));
       await browser.keys('Escape');
     };
   }

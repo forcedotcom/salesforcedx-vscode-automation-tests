@@ -1,6 +1,8 @@
+import { Duration } from '@salesforce/kit';
+
 export interface PredicateWithTimeout {
   predicate: () => Promise<boolean>;
-  maxWaitTime: number; // in milliseconds
+  maxWaitTime: Duration; // in milliseconds
 }
 
 export const standardPredicates = {
@@ -16,7 +18,7 @@ export const standardPredicates = {
   },
 };
 
-export function createPredicateWithTimeout(predicate: () => Promise<boolean>, maxWaitTime: number): PredicateWithTimeout {
+export function createPredicateWithTimeout(predicate: () => Promise<boolean>, maxWaitTime: Duration): PredicateWithTimeout {
   return {
     predicate,
     maxWaitTime,
