@@ -8,6 +8,7 @@ import { step } from 'mocha-steps';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import { TreeItem } from 'wdio-vscode-service';
+import { Duration } from '@salesforce/kit';
 
 describe('Debug Apex Tests', async () => {
   let testSetup: TestSetup;
@@ -18,18 +19,18 @@ describe('Debug Apex Tests', async () => {
 
     // Create Apex class 1 and test
     await utilities.createApexClassWithTest('ExampleApexClass1');
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Create Apex class 2 and test
     await utilities.createApexClassWithTest('ExampleApexClass2');
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Push source to org
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Push Source to Default Org and Ignore Conflicts',
-      1
+      Duration.seconds(1)
     );
 
     // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Ignore Conflicts successfully ran".
@@ -74,9 +75,9 @@ describe('Debug Apex Tests', async () => {
 
     // Continue with the debug session
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
   });
 
   step('Debug Single Test via Apex Class', async () => {
@@ -99,14 +100,14 @@ describe('Debug Apex Tests', async () => {
 
     // Continue with the debug session
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
   });
 
   step('Debug all Apex Methods on a Class via the Test Sidebar', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on Apex Tests View', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on Apex Tests View', Duration.seconds(1));
 
     // Open the Test Sidebar
     const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');
@@ -130,7 +131,7 @@ describe('Debug Apex Tests', async () => {
     await apexTestItem.select();
     const debugTestsAction = await (await apexTestItem.elem).$('a[aria-label="Debug Tests"]');
     await debugTestsAction.click();
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Look for the success notification that appears which says, "Debug Test(s) successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -142,14 +143,14 @@ describe('Debug Apex Tests', async () => {
 
     // Continue with the debug session
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
   });
 
   step('Debug a Single Apex Test Method via the Test Sidebar', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on Apex Tests View', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on Apex Tests View', Duration.seconds(1));
 
     // Open the Test Sidebar
     const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');
@@ -161,7 +162,7 @@ describe('Debug Apex Tests', async () => {
     await apexTestItem.select();
     const debugTestAction = await (await apexTestItem.elem).$('a[aria-label="Debug Single Test"]');
     await debugTestAction.click();
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Look for the success notification that appears which says, "Debug Test(s) successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -173,9 +174,9 @@ describe('Debug Apex Tests', async () => {
 
     // Continue with the debug session
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys(['F5']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
   });
 
   step('Tear down and clean up the testing environment', async () => {

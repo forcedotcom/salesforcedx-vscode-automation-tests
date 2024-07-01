@@ -29,7 +29,7 @@ export async function selectOutputChannel(name: string): Promise<void> {
   // Find the given channel in the Output view
   await executeQuickPick('Output: Show Output Channels...', 1);
   await browser.keys([name, 'Enter']);
-  await pause(2);
+  await pause(Duration.seconds(2));
 }
 
 export async function getOutputViewText(outputChannelName: string = ''): Promise<string> {
@@ -64,7 +64,7 @@ export async function attemptToFindOutputPanelText(
       return outputViewText;
     }
 
-    await pause(1);
+    await pause(Duration.seconds(1));
     attempts--;
   }
 

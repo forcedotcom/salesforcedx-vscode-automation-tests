@@ -11,6 +11,7 @@ import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 import { Key } from 'webdriverio';
+import { Duration } from '@salesforce/kit';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Apex Replay Debugger', async () => {
@@ -30,7 +31,7 @@ describe('Apex Replay Debugger', async () => {
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Push Source to Default Org and Ignore Conflicts',
-      1
+      Duration.seconds(1)
     );
 
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -57,13 +58,13 @@ describe('Apex Replay Debugger', async () => {
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
     // Clear output before running the command
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(1));
 
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Turn On Apex Debug Log for Replay Debugger',
-      10
+      Duration.seconds(10)
     );
 
     // Look for the success notification that appears which says, "SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran".
@@ -92,18 +93,18 @@ describe('Apex Replay Debugger', async () => {
 
     // Select text
     await browser.keys([CMD_KEY, 'f']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys(["ExampleApexClass.SayHello('Cody');"]);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Clear output before running the command
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(1));
 
     // Run SFDX: Launch Apex Replay Debugger with Currently Selected Text.
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Execute Anonymous Apex with Currently Selected Text',
-      1
+      Duration.seconds(1)
     );
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -135,8 +136,8 @@ describe('Apex Replay Debugger', async () => {
   step('SFDX: Get Apex Debug Logs', async () => {
     // Run SFDX: Get Apex Debug Logs
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Get Apex Debug Logs', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(1));
+    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Get Apex Debug Logs', Duration.seconds(1));
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(
@@ -195,11 +196,11 @@ describe('Apex Replay Debugger', async () => {
     prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Launch Apex Replay Debugger with Last Log File',
-      1
+      Duration.seconds(1)
     );
     await prompt.setText(logFilePath);
     await prompt.confirm();
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Continue with the debug session
     await continueDebugging();
@@ -212,7 +213,7 @@ describe('Apex Replay Debugger', async () => {
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Launch Apex Replay Debugger with Current File',
-      1
+      Duration.seconds(1)
     );
 
     // Continue with the debug session
@@ -226,7 +227,7 @@ describe('Apex Replay Debugger', async () => {
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Launch Apex Replay Debugger with Current File',
-      3
+      Duration.seconds(3)
     );
 
     // Continue with the debug session
@@ -247,13 +248,13 @@ describe('Apex Replay Debugger', async () => {
     await utilities.createAnonymousApexFile();
 
     // Clear output before running the command
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(1));
 
     // Run SFDX: Launch Apex Replay Debugger with Editor Contents", using the Command Palette.
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Execute Anonymous Apex with Editor Contents',
-      10
+      Duration.seconds(10)
     );
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -280,11 +281,11 @@ describe('Apex Replay Debugger', async () => {
   step('SFDX: Turn Off Apex Debug Log for Replay Debugger', async () => {
     // Run SFDX: Turn Off Apex Debug Log for Replay Debugger
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', Duration.seconds(1));
     prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Turn Off Apex Debug Log for Replay Debugger',
-      1
+      Duration.seconds(1)
     );
 
     // Look for the success notification that appears which says, "SFDX: Turn Off Apex Debug Log for Replay Debugger successfully ran".
@@ -314,8 +315,8 @@ describe('Apex Replay Debugger', async () => {
 
   const continueDebugging = async (): Promise<void> => {
     await browser.keys(CONTINUE);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys(CONTINUE);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
   };
 });
