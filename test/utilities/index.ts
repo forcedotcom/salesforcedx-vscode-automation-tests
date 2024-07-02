@@ -16,6 +16,7 @@ export * from './outputView';
 export * from './sideBar';
 export * from './statusBar';
 export * from './terminalView';
+export * from './types';
 export * from './visualforceUtils';
 export * from './predicates';
 export * from './workbench';

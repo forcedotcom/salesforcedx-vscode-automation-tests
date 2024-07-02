@@ -49,19 +49,18 @@ export async function selectQuickPickWithText(prompt: InputBox | QuickOpenBox, t
 }
 
 export async function selectQuickPickItem(
-  prompt: InputBox | QuickOpenBox,
+  prompt: InputBox | QuickOpenBox | undefined,
   text: string
 ): Promise<void> {
-  const quickPicks = await prompt.getQuickPicks();
-  for (const quickPick of quickPicks) {
-    const label = await quickPick.getLabel();
-    if (label === text) {
-      await quickPick.select();
-      return;
-    }
+  if (!prompt) {
+    throw new Error('Prompt canot be undefined');
   }
-
-  throw new Error(`Quick pick item ${text} was not found`);
+  const quickPick = await prompt.findQuickPick(text);
+  if (!quickPick || (await quickPick.getLabel()) !== text) {
+    throw new Error(`Quick pick item ${text} was not found`);
+  }
+  await quickPick.select();
+  await pause(1);
 }
 
 export async function findQuickPickItem(
@@ -100,7 +99,7 @@ export async function findQuickPickItem(
 }
 
 export async function clickFilePathOkButton(): Promise<void> {
-  const okButton = await $('*:not([style*="display: none"]).quick-input-action .monaco-button');
+  const okButton = $('*:not([style*="display: none"]).quick-input-action .monaco-button');
   await okButton.click();
   await pause(1);
   const buttons = await $$('a.monaco-button.monaco-text-button');
@@ -112,6 +111,30 @@ export async function clickFilePathOkButton(): Promise<void> {
     }
   }
   await pause(2);
+}
+
+export async function waitForQuickPick(
+  prompt: InputBox | QuickOpenBox | undefined,
+  pickListItem: string,
+  options: { msg?: string; timeout?: number } = { timeout: 10_000 }
+) {
+  await browser.waitUntil(
+    async () => {
+      try {
+        await selectQuickPickItem(prompt, pickListItem);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
+    {
+      timeout: options.timeout,
+      interval: 500, // Check every 500 ms
+      timeoutMsg:
+        options.msg ??
+        `Expected to find option ${pickListItem} before ${options.timeout} milliseconds`
+    }
+  );
 }
 
 export async function executeQuickPick(command: string, wait = 1): Promise<InputBox | QuickOpenBox> {
