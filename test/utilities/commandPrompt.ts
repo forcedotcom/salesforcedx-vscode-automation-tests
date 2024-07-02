@@ -7,6 +7,7 @@
 
 import { InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
 import { log, pause } from './miscellaneous';
+import { getWorkbench } from './workbench';
 
 export async function openCommandPromptWithCommand(
   workbench: Workbench,
@@ -111,4 +112,11 @@ export async function clickFilePathOkButton(): Promise<void> {
     }
   }
   await pause(2);
+}
+
+export async function executeQuickPick(command: string, wait = 1): Promise<InputBox | QuickOpenBox> {
+  const workbench = await getWorkbench();
+  const prompt = await workbench.executeQuickPick(command);
+  pause(wait);
+  return prompt;
 }

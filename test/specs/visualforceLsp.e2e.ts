@@ -61,18 +61,14 @@ describe('Visualforce LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 
     // Using the Command palette, run Developer: Show Running Extensions
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.showRunningExtensions(workbench);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.showRunningExtensions();
+    await utilities.zoom('Out', 4, 2);
 
     // Verify Visualforce extension is present and running
-    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-      workbench,
-      'salesforcedx-vscode-visualforce'
+    const extensionWasFound = await utilities.findExtensionsInRunningExtensionsList(
+      ['salesforcedx-vscode-visualforce']
     );
+    await utilities.zoomReset();
     expect(extensionWasFound).toBe(true);
   });
 

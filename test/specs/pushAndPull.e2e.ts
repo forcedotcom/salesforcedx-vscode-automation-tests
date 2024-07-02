@@ -229,10 +229,9 @@ describe('Push and Pull', async () => {
 
     // Verify CLI Integration Extension is present and running.
     await utilities.reloadAndEnableExtensions();
-    await utilities.showRunningExtensions(workbench);
-    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-      workbench,
-      'salesforcedx-vscode-core'
+    await utilities.showRunningExtensions();
+    const extensionWasFound = await utilities.findExtensionsInRunningExtensionsList(
+      ['salesforcedx-vscode-core']
     );
     expect(extensionWasFound).toBe(true);
 

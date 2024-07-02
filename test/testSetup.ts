@@ -12,6 +12,7 @@ import util from 'util';
 import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
 import { EnvironmentSettings } from './environmentSettings';
 import * as utilities from './utilities';
+import { fail } from 'assert';
 
 const exec = util.promisify(child_process.exec);
 
@@ -44,7 +45,7 @@ export class TestSetup {
     await this.setUpTestingEnvironment();
     await this.createInitialProject(scratchOrgEdition);
     await utilities.reloadAndEnableExtensions();
-    await utilities.verifyAllExtensionsAreRunning();
+    await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
     utilities.log(`${this.testSuiteSuffixName} - ...finished TestSetup.setUp()`);
@@ -60,20 +61,17 @@ export class TestSetup {
   }
 
   private async checkForUncaughtErrors(): Promise<void> {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.showRunningExtensions(workbench);
+    await utilities.showRunningExtensions();
 
     // Zoom out so all the extensions are visible
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 1);
+    await utilities.zoom('Out', 4, 1);
     const uncaughtErrors = await $$('span.codicon-bug');
     utilities.log(
       uncaughtErrors.length == 1
         ? `${uncaughtErrors.length} extension with uncaught errors was found`
         : `${uncaughtErrors.length} extensions with uncaught errors were found`
     );
+    await utilities.zoomReset();
     expect(uncaughtErrors.length).toBe(0);
   }
 
@@ -117,15 +115,16 @@ export class TestSetup {
     await browser.keys(['Escape']);
 
     // Do not continue until we verify CLI Integration extension is present and running
-    let coreExtensionWasFound = false;
-    do {
-      await utilities.pause(10);
+    const coreIsActive = await utilities.verifyExtensionsAreRunning(
+      utilities
+        .getExtensionsToVerifyActive()
+        .filter((ext) => ext.extensionId === 'salesforcedx-vscode-core')
+    );
 
-      coreExtensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-        workbench,
-        'salesforcedx-vscode-core'
-      );
-    } while (coreExtensionWasFound === false);
+    if (!coreIsActive) {
+      fail('Expected core extension to be active after 20 seconds');
+    }
+
     utilities.log(`${this.testSuiteSuffixName} - Ready to create the standard project`);
 
     await this.createProject(workbench, this.tempProjectName, scratchOrgEdition);

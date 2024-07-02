@@ -231,7 +231,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.pause(1);
     // Reload window to update cache and get the setting behavior to work
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
-    await utilities.verifyAllExtensionsAreRunning();
+    await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
   });
 
   step('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {

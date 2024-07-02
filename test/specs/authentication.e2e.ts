@@ -29,7 +29,7 @@ describe('Authentication', async () => {
     await testSetup.setUpTestingEnvironment();
     await testSetup.createInitialProject('Standard');
     await utilities.reloadAndEnableExtensions();
-    await utilities.verifyAllExtensionsAreRunning();
+    await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
   });
 
   step('Run SFDX: Authorize a Dev Hub', async () => {

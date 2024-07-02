@@ -76,7 +76,8 @@ export async function getOperationTime(outputText: string): Promise<string> {
   let matches;
   const groups: TimeParts[] = [];
   while ((matches = tRegex.exec(outputText)) !== null) {
-    groups.push(matches.groups);
+    const group = matches.groups as TimeParts; // Type assertion
+    groups.push(group);
   }
   const [startTime, endTime] = groups.map((group) =>
     Object.entries(group)

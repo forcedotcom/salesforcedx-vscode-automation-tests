@@ -6,7 +6,7 @@
  */
 import { step } from 'mocha-steps';
 import { TestSetup } from '../testSetup';
-import * as utilities from '../utilities';
+import * as utilities from '../utilities/index';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { EnvironmentSettings } from '../environmentSettings';
 
@@ -27,15 +27,14 @@ describe('Apex LSP', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 
     // Using the Command palette, run Developer: Show Running Extensions
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.showRunningExtensions(workbench);
-
+    await utilities.showRunningExtensions();
+    await utilities.zoom('Out', 4, 1);
     // Verify Apex extension is present and running
-    const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-      workbench,
+    const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
       'salesforcedx-vscode-apex'
-    );
-    expect(extensionWasFound).toBe(true);
+    ]);
+    await utilities.zoomReset();
+    expect(foundExtensions.length).toBe(1);
   });
 
   step('Verify LSP finished indexing', async () => {

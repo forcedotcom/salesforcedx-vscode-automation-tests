@@ -43,14 +43,12 @@ describe('Debug LWC Tests', async () => {
       utilities.log(`${testSetup.testSuiteSuffixName} - Verify Extension is Running`);
 
       // Using the Command palette, run Developer: Show Running Extensions
-      const workbench = await browser.getWorkbench();
-      await utilities.showRunningExtensions(workbench);
+      await utilities.showRunningExtensions();
 
       // Verify Lightning Web Components extension is present and running
-      const extensionWasFound = await utilities.findExtensionInRunningExtensionsList(
-        workbench,
+      const extensionWasFound = await utilities.findExtensionsInRunningExtensionsList([
         'salesforcedx-vscode-lwc'
-      );
+      ]);
       expect(extensionWasFound).toBe(true);
     });
 
@@ -92,13 +90,30 @@ describe('Debug LWC Tests', async () => {
       const terminalText = await utilities.getTerminalViewText(workbench, 10);
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
-        `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+        `PASS  ${path.join(
+          'force-app',
+          'main',
+          'default',
+          'lwc',
+          'lwc1',
+          '__tests__',
+          'lwc1.test.js'
+        )}`
       );
       expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
       expect(terminalText).toContain('Tests:       2 passed, 2 total');
       expect(terminalText).toContain('Snapshots:   0 total');
       expect(terminalText).toContain(
-        `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+        `Ran all test suites within paths "${path.join(
+          projectFolderPath,
+          'force-app',
+          'main',
+          'default',
+          'lwc',
+          'lwc1',
+          '__tests__',
+          'lwc1.test.js'
+        )}`
       );
 
       // Verify the tests that are passing are labeled with a green dot on the Test sidebar
@@ -143,13 +158,30 @@ describe('Debug LWC Tests', async () => {
       const terminalText = await utilities.getTerminalViewText(workbench, 10);
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
-        `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
+        `PASS  ${path.join(
+          'force-app',
+          'main',
+          'default',
+          'lwc',
+          'lwc2',
+          '__tests__',
+          'lwc2.test.js'
+        )}`
       );
       expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
       expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
       expect(terminalText).toContain('Snapshots:   0 total');
       expect(terminalText).toContain(
-        `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
+        `Ran all test suites within paths "${path.join(
+          projectFolderPath,
+          'force-app',
+          'main',
+          'default',
+          'lwc',
+          'lwc2',
+          '__tests__',
+          'lwc2.test.js'
+        )}`
       );
 
       // Verify the tests that are passing are labeled with a green dot on the Test sidebar
@@ -185,13 +217,30 @@ describe('Debug LWC Tests', async () => {
       const terminalText = await utilities.getTerminalViewText(workbench, 10);
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
-        `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
+        `PASS  ${path.join(
+          'force-app',
+          'main',
+          'default',
+          'lwc',
+          'lwc2',
+          '__tests__',
+          'lwc2.test.js'
+        )}`
       );
       expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
       expect(terminalText).toContain('Tests:       2 passed, 2 total');
       expect(terminalText).toContain('Snapshots:   0 total');
       expect(terminalText).toContain(
-        `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
+        `Ran all test suites within paths "${path.join(
+          projectFolderPath,
+          'force-app',
+          'main',
+          'default',
+          'lwc',
+          'lwc2',
+          '__tests__',
+          'lwc2.test.js'
+        )}`
       );
     });
 
@@ -217,13 +266,30 @@ describe('Debug LWC Tests', async () => {
       const terminalText = await utilities.getTerminalViewText(workbench, 10);
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
-        `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+        `PASS  ${path.join(
+          'force-app',
+          'main',
+          'default',
+          'lwc',
+          'lwc1',
+          '__tests__',
+          'lwc1.test.js'
+        )}`
       );
       expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
       expect(terminalText).toContain('Tests:       2 passed, 2 total');
       expect(terminalText).toContain('Snapshots:   0 total');
       expect(terminalText).toContain(
-        `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
+        `Ran all test suites within paths "${path.join(
+          projectFolderPath,
+          'force-app',
+          'main',
+          'default',
+          'lwc',
+          'lwc1',
+          '__tests__',
+          'lwc1.test.js'
+        )}`
       );
     });
 
@@ -251,13 +317,30 @@ describe('Debug LWC Tests', async () => {
       const terminalText = await utilities.getTerminalViewText(workbench, 10);
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
-        `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
+        `PASS  ${path.join(
+          'force-app',
+          'main',
+          'default',
+          'lwc',
+          'lwc2',
+          '__tests__',
+          'lwc2.test.js'
+        )}`
       );
       expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
       expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
       expect(terminalText).toContain('Snapshots:   0 total');
       expect(terminalText).toContain(
-        `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
+        `Ran all test suites within paths "${path.join(
+          projectFolderPath,
+          'force-app',
+          'main',
+          'default',
+          'lwc',
+          'lwc2',
+          '__tests__',
+          'lwc2.test.js'
+        )}`
       );
     });
 
@@ -284,13 +367,30 @@ describe('Debug LWC Tests', async () => {
       const terminalText = await utilities.getTerminalViewText(workbench, 10);
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(
-        `PASS  ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
+        `PASS  ${path.join(
+          'force-app',
+          'main',
+          'default',
+          'lwc',
+          'lwc2',
+          '__tests__',
+          'lwc2.test.js'
+        )}`
       );
       expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
       expect(terminalText).toContain('Tests:       2 passed, 2 total');
       expect(terminalText).toContain('Snapshots:   0 total');
       expect(terminalText).toContain(
-        `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
+        `Ran all test suites within paths "${path.join(
+          projectFolderPath,
+          'force-app',
+          'main',
+          'default',
+          'lwc',
+          'lwc2',
+          '__tests__',
+          'lwc2.test.js'
+        )}`
       );
     });
 
