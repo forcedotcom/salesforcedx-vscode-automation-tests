@@ -141,7 +141,7 @@ export async function showRunningExtensions(): Promise<void> {
   await browser.waitUntil(
     async () => {
       const runningExtensionsTab = await $(
-        "//div[contains(@class, 'active') and contains(@class, 'selected') and .//*[contains(text(), 'Running Extensions')]]"
+        "//a[@class='label-name' and text()='Running Extensions']"
       );
       return runningExtensionsTab.isDisplayed();
     },
