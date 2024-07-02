@@ -27,7 +27,7 @@ describe('Authentication', async () => {
     await utilities.installExtensions();
     await utilities.reloadAndEnableExtensions();
     await testSetup.setUpTestingEnvironment();
-    await testSetup.createInitialProject('Standard');
+    await testSetup.createProject('developer');
     await utilities.reloadAndEnableExtensions();
     await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
   });
@@ -58,7 +58,7 @@ describe('Authentication', async () => {
     // Could also run the command, "SFDX: Set a Default Org" but this exercises more UI elements.
 
     // Click on "No default Org Set" (in the bottom bar).
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const changeDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       'No Default Org Set'

@@ -9,7 +9,7 @@ import clipboard from 'clipboardy';
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { pause } from './miscellaneous';
 import { dismissAllNotifications } from './notifications';
-import { runCommandFromCommandPrompt } from './commandPrompt';
+import { executeQuickPick, runCommandFromCommandPrompt } from './commandPrompt';
 
 type TimeParts = {
   hours: string;
@@ -25,8 +25,7 @@ export async function selectOutputChannel(name: string): Promise<void> {
   await dismissAllNotifications();
 
   // Find the given channel in the Output view
-  const workbench = await (await browser.getWorkbench()).wait();
-  await runCommandFromCommandPrompt(workbench, 'Output: Show Output Channels...', 1);
+  await executeQuickPick('Output: Show Output Channels...', 1);
   await browser.keys([name, 'Enter']);
   await pause(2);
 }

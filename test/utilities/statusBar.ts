@@ -6,25 +6,30 @@
  */
 
 import { Workbench } from 'wdio-vscode-service';
-import { pause } from './miscellaneous';
 
 export async function getStatusBarItemWhichIncludes(
   workbench: Workbench,
   title: string
 ): Promise<WebdriverIO.Element> {
   const retries = 10;
-  for (let i = retries; i > 0; i--) {
-    const statusBar = await workbench.getStatusBar().wait();
-    const items = await statusBar.item$$;
-    for (const item of items) {
-      const itemTitle = await item.getAttribute(statusBar.locators.itemTitle);
-      if (itemTitle.includes(title)) {
-        return item;
-      }
-    }
+  const interval = 1_000; // 1 second interval
 
-    await pause(1);
+  const statusBarItem = await browser.waitUntil(
+    async () => {
+      const statusBar = await workbench.getStatusBar().wait();
+      const item = await statusBar.getItem(title);
+      return item ? item : null;
+    },
+    {
+      timeout: retries * interval,
+      interval: interval,
+      timeoutMsg: `Status bar item containing ${title} was not found`
+    }
+  );
+
+  if (!statusBarItem) {
+    throw new Error(`Status bar item containing ${title} was not found`);
   }
 
-  throw new Error(`Status bar item containing ${title} was not found`);
+  return statusBarItem;
 }

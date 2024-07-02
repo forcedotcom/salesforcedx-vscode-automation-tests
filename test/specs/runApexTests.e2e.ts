@@ -211,7 +211,7 @@ describe('Run Apex Tests', async () => {
   });
 
   step('Run All tests via Test Sidebar', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
     // Open the Test Sidebar
