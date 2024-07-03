@@ -6,6 +6,7 @@
  */
 
 import { Workbench } from 'wdio-vscode-service';
+import { log } from './miscellaneous';
 
 export async function getStatusBarItemWhichIncludes(
   workbench: Workbench,
@@ -17,8 +18,18 @@ export async function getStatusBarItemWhichIncludes(
   const statusBarItem = await browser.waitUntil(
     async () => {
       const statusBar = await workbench.getStatusBar().wait();
-      const item = await statusBar.getItem(title);
-      return item ? item : null;
+      const items = await statusBar.item$$;
+      let itemWithTitle = null;
+      for (const item of items) {
+        const text = await item.getTitle();
+        log(`status bar item: ${text}`);
+        if (text.includes(title)) {
+          itemWithTitle = item;
+          break;
+        }
+      }
+      return itemWithTitle;
+
     },
     {
       timeout: retries * interval,
