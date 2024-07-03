@@ -46,9 +46,11 @@ describe('Debug LWC Tests', async () => {
       await utilities.showRunningExtensions();
 
       // Verify Lightning Web Components extension is present and running
-      const extensionWasFound = await utilities.findExtensionsInRunningExtensionsList([
-        'salesforcedx-vscode-lwc'
-      ]);
+      const extensionWasFound = await utilities.verifyExtensionsAreRunning(
+        utilities.getExtensionsToVerifyActive(
+          (ext) => ext.extensionId === 'salesforcedx-vscode-lwc'
+        )
+      );
       expect(extensionWasFound).toBe(true);
     });
 

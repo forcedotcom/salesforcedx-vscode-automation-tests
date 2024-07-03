@@ -82,10 +82,22 @@ describe('Push and Pull', async () => {
     );
 
     expect(outputPanelText).toContain(
-      `Local Add  ExampleApexClass1  ApexClass  ${path.join('force-app', 'main', 'default', 'classes', 'ExampleApexClass1.cls')}`
+      `Local Add  ExampleApexClass1  ApexClass  ${path.join(
+        'force-app',
+        'main',
+        'default',
+        'classes',
+        'ExampleApexClass1.cls'
+      )}`
     );
     expect(outputPanelText).toContain(
-      `Local Add  ExampleApexClass1  ApexClass  ${path.join('force-app', 'main', 'default', 'classes', 'ExampleApexClass1.cls-meta.xml')}`
+      `Local Add  ExampleApexClass1  ApexClass  ${path.join(
+        'force-app',
+        'main',
+        'default',
+        'classes',
+        'ExampleApexClass1.cls-meta.xml'
+      )}`
     );
   });
 
@@ -223,15 +235,15 @@ describe('Push and Pull', async () => {
   });
 
   step('SFDX: View Changes in Default Org', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     // Create second Project to then view Remote Changes
-    await testSetup.createProject(workbench, 'ViewChanges', 'Developer');
+    await testSetup.createProject('developer', 'ViewChanges');
 
     // Verify CLI Integration Extension is present and running.
     await utilities.reloadAndEnableExtensions();
     await utilities.showRunningExtensions();
-    const extensionWasFound = await utilities.findExtensionsInRunningExtensionsList(
-      ['salesforcedx-vscode-core']
+    const extensionWasFound = await utilities.verifyExtensionsAreRunning(
+      utilities.getExtensionsToVerifyActive((ext) => ext.extensionId === 'salesforcedx-vscode-core')
     );
     expect(extensionWasFound).toBe(true);
 
@@ -288,11 +300,7 @@ describe('Push and Pull', async () => {
 
   xstep('Set the 2nd user as the default user', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Set a Default Org',
-      1
-    );
+    const inputBox = await utilities.executeQuickPick('SFDX: Set a Default Org', 10);
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
       inputBox,
       adminEmailAddress,

@@ -10,6 +10,7 @@ import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { pause } from './miscellaneous';
 import { dismissAllNotifications } from './notifications';
 import { executeQuickPick, runCommandFromCommandPrompt } from './commandPrompt';
+import { getWorkbench } from './workbench';
 
 type TimeParts = {
   hours: string;
@@ -37,7 +38,7 @@ export async function getOutputViewText(outputChannelName: string = ''): Promise
   }
 
   // Set focus to the contents in the Output panel.
-  const workbench = await (await browser.getWorkbench()).wait();
+  const workbench = await getWorkbench();
   await runCommandFromCommandPrompt(workbench, 'Output: Focus on Output View', 2);
 
   // Select all of the text within the panel.

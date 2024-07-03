@@ -259,10 +259,14 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
   await utilities.reloadWindow(10);
 }
 
-export function getExtensionsToVerifyActive(): ExtensionType[] {
-  return extensions.filter((ext) => {
-    return ext.shouldVerifyActivation;
-  });
+export function getExtensionsToVerifyActive(
+  predicate: (ext: ExtensionType) => boolean = (ext) => !!ext
+): ExtensionType[] {
+  return extensions
+    .filter((ext) => {
+      return ext.shouldVerifyActivation;
+    })
+    .filter(predicate);
 }
 
 export async function findVSCodeBinary(): Promise<string> {
@@ -336,6 +340,7 @@ export async function verifyExtensionsAreRunning(
           // Log the current state of the activation check for each extension
           for (const extensionStatus of extensionsStatus) {
             log(
+              // prettier-ignore
               `Extension ${extensionStatus.extensionId}: ${extensionStatus.activationTime ?? 'Not activated'}`
             );
           }

@@ -219,11 +219,7 @@ describe('Authentication', async () => {
 
   step('Run SFDX: Set the Scratch Org As the Default Org', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Set a Default Org',
-      1
-    );
+    const inputBox = await utilities.executeQuickPick('SFDX: Set a Default Org', 10);
 
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
       inputBox,

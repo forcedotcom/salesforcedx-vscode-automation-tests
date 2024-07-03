@@ -68,14 +68,14 @@ export async function notificationIsPresentWithTimeout(
   matchExactString: boolean = true
 ): Promise<boolean> {
   // Change timeout from seconds to milliseconds
-  durationInSeconds *= 1000;
+  const duationInMilliseconds = durationInSeconds * 1000;
 
   const startDate = new Date();
   let currentDate: Date;
   let secondsPassed: number = 0;
 
   // Keep on searching for the notification until it is found or the timeout is reached
-  while (secondsPassed < durationInSeconds) {
+  while (secondsPassed < duationInMilliseconds) {
     // Get a list of all the notifications that are currently present
     const notifications = await workbench.getNotifications();
 
