@@ -18,7 +18,7 @@ describe('Miscellaneous', async () => {
 
   xstep('Use out-of-the-box Apex Snippets', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Use Apex Snippets`);
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const apexSnippet = 'String.isBlank(inputString)';
 
     // Create anonymous apex file
@@ -39,7 +39,7 @@ describe('Miscellaneous', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Use Apex Snippets`);
 
     // Using the Command palette, run Snippets: Configure User Snippets
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'Snippets: Configure User Snippets', 1);
     await browser.keys(['New Global Snippets file...', 'Enter']);
     await utilities.pause(1);
@@ -77,7 +77,7 @@ describe('Miscellaneous', async () => {
 
   step('Use out-of-the-box LWC Snippets - HTML', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Use out-of-the-box LWC Snippets - HTML`);
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     const lwcSnippet = [
       '<lightning-button',
@@ -118,7 +118,7 @@ describe('Miscellaneous', async () => {
 
   step('Use out-of-the-box LWC Snippets - JS', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Use out-of-the-box LWC Snippets - JS`);
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     const lwcSnippet = 'this.dispatchEvent(new CustomEvent("event-name"));';
 

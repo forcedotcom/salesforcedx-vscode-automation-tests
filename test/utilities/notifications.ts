@@ -7,6 +7,7 @@
 
 import { Workbench } from 'wdio-vscode-service';
 import { log, pause } from './miscellaneous';
+import { getWorkbench } from './workbench';
 
 export async function waitForNotificationToGoAway(
   workbench: Workbench,
@@ -144,7 +145,7 @@ export async function attemptToFindNotification(
 }
 
 export async function dismissAllNotifications(): Promise<void> {
-  const workbench = await (await browser.getWorkbench()).wait();
+  const workbench = await getWorkbench();
   await browser.waitUntil(async () => {
     const notifications = await workbench.getNotifications();
     for (const notification of notifications) {

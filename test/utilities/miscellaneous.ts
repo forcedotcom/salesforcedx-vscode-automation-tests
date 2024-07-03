@@ -12,6 +12,7 @@ import { attemptToFindOutputPanelText } from './outputView';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 import { notificationIsPresentWithTimeout } from './notifications';
 import path from 'path';
+import { getWorkbench } from './workbench';
 
 export const FIVE_MINUTES = 5 * 60;
 export const TEN_MINUTES = 10 * 60;
@@ -81,7 +82,7 @@ export async function createCommand(
   folder: string,
   extension: string
 ): Promise<string | undefined> {
-  const workbench = await (await browser.getWorkbench()).wait();
+  const workbench = await getWorkbench();
   await runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
   const inputBox = await runCommandFromCommandPrompt(workbench, `SFDX: Create ${type}`, 1);
 

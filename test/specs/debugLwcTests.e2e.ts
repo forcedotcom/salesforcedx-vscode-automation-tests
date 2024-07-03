@@ -58,7 +58,7 @@ describe('Debug LWC Tests', async () => {
       utilities.log(
         `${testSetup.testSuiteSuffixName} - Debug All tests on a LWC via the Test Sidebar`
       );
-      const workbench = await (await browser.getWorkbench()).wait();
+      const workbench = await utilities.getWorkbench();
       await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 3);
 
       // Open the Test Sidebar
@@ -132,7 +132,7 @@ describe('Debug LWC Tests', async () => {
 
     step('Debug Single Test via the Test Sidebar', async () => {
       utilities.log(`${testSetup.testSuiteSuffixName} - Debug Single Test via the Test Sidebar`);
-      const workbench = await (await browser.getWorkbench()).wait();
+      const workbench = await utilities.getWorkbench();
       const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
       // Open the Test Sidebar
@@ -204,7 +204,7 @@ describe('Debug LWC Tests', async () => {
       );
 
       // Debug SFDX: Debug Current Lightning Web Component Test File
-      const workbench = await (await browser.getWorkbench()).wait();
+      const workbench = await utilities.getWorkbench();
       await utilities.runCommandFromCommandPrompt(
         workbench,
         'SFDX: Debug Current Lightning Web Component Test File',
@@ -247,7 +247,7 @@ describe('Debug LWC Tests', async () => {
     });
 
     xstep('Debug All Tests via Code Lens action', async () => {
-      const workbench = await (await browser.getWorkbench()).wait();
+      const workbench = await utilities.getWorkbench();
       const textEditor = await utilities.getTextEditor(workbench, 'lwc1.test.js');
 
       // Click the "Debug" code lens at the top of the class
@@ -299,7 +299,7 @@ describe('Debug LWC Tests', async () => {
       utilities.log(`${testSetup.testSuiteSuffixName} - Debug Single Test via Code Lens action`);
 
       // Click the "Debug Test" code lens at the top of one of the test methods
-      const workbench = await (await browser.getWorkbench()).wait();
+      const workbench = await utilities.getWorkbench();
       const textEditor = await utilities.getTextEditor(workbench, 'lwc2.test.js');
       await browser.keys([CMD_KEY, 'ArrowUp']);
       const codeLens = await textEditor.getCodeLens('Run Test');
@@ -365,7 +365,7 @@ describe('Debug LWC Tests', async () => {
 
       // Verify test results are listed on vscode's Output section
       // Also verify that all tests pass
-      const workbench = await (await browser.getWorkbench()).wait();
+      const workbench = await utilities.getWorkbench();
       const terminalText = await utilities.getTerminalViewText(workbench, 10);
       expect(terminalText).not.toBeUndefined();
       expect(terminalText).toContain(

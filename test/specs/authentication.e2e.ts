@@ -33,7 +33,7 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Authorize a Dev Hub', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     // In the initial state, the org picker button should be set to "No Default Org Set".
     let noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
@@ -126,7 +126,7 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Create a Default Scratch Org', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     prompt = await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Create a Default Scratch Org...',
@@ -218,7 +218,7 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Set the Scratch Org As the Default Org', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const inputBox = await utilities.executeQuickPick('SFDX: Set a Default Org', 10);
 
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(

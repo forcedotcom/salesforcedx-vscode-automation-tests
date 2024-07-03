@@ -24,7 +24,7 @@ describe('Apex Replay Debugger', async () => {
     await utilities.createApexClassWithTest('ExampleApexClass');
 
     // Push source to org
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Push Source to Default Org and Ignore Conflicts',
@@ -43,7 +43,7 @@ describe('Apex Replay Debugger', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
 
     // Get Apex LSP Status Bar
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const statusBar = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       'Editor Language Status'
@@ -54,7 +54,7 @@ describe('Apex Replay Debugger', async () => {
 
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
     // Clear output before running the command
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
 
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
@@ -85,7 +85,7 @@ describe('Apex Replay Debugger', async () => {
 
   step('Run the Anonymous Apex Debugger with Currently Selected Text', async () => {
     // Get open text editor
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.getTextEditor(workbench, 'ExampleApexClassTest.cls');
 
     // Select text
@@ -132,7 +132,7 @@ describe('Apex Replay Debugger', async () => {
 
   step('SFDX: Get Apex Debug Logs', async () => {
     // Run SFDX: Get Apex Debug Logs
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Get Apex Debug Logs', 1);
 
@@ -180,7 +180,7 @@ describe('Apex Replay Debugger', async () => {
 
   step('SFDX: Launch Apex Replay Debugger with Last Log File', async () => {
     // Get open text editor
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const editorView = workbench.getEditorView();
 
     // Get file path from open text editor
@@ -205,7 +205,7 @@ describe('Apex Replay Debugger', async () => {
 
   step('SFDX: Launch Apex Replay Debugger with Current File - log file', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Open Previous Editor');
     await utilities.runCommandFromCommandPrompt(
       workbench,
@@ -219,7 +219,7 @@ describe('Apex Replay Debugger', async () => {
 
   step('SFDX: Launch Apex Replay Debugger with Current File - test class', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.getTextEditor(workbench, 'ExampleApexClassTest.cls');
     await utilities.runCommandFromCommandPrompt(
       workbench,
@@ -239,7 +239,7 @@ describe('Apex Replay Debugger', async () => {
   });
 
   step('Run the Anonymous Apex Debugger using the Command Palette', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     // Create anonymous apex file
     await utilities.createAnonymousApexFile();
@@ -277,7 +277,7 @@ describe('Apex Replay Debugger', async () => {
 
   step('SFDX: Turn Off Apex Debug Log for Replay Debugger', async () => {
     // Run SFDX: Turn Off Apex Debug Log for Replay Debugger
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
     prompt = await utilities.runCommandFromCommandPrompt(
       workbench,

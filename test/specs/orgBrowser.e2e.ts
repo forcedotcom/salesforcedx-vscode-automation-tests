@@ -21,7 +21,7 @@ describe('Org Browser', async () => {
     utilities.log(
       `${testSetup.testSuiteSuffixName} - Check Org Browser is connected to target org`
     );
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Show Org Browser', 5);
 
     const orgBrowserLabelEl = await utilities.findElementByText(
@@ -87,7 +87,7 @@ describe('Org Browser', async () => {
     ].join('\n');
     await utilities.createApexClass('MyClass', classText);
 
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
@@ -110,7 +110,7 @@ describe('Org Browser', async () => {
   step('Refresh Org Browser and check MyClass is there', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Refresh Apex Classes`);
     // Check MyClass is present under Apex Classes section
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Show Org Browser', 5);
     const refreshComponentsButton = await (
       await utilities.findElementByText('div', 'aria-label', 'Apex Classes')
@@ -141,7 +141,7 @@ describe('Org Browser', async () => {
     console.log('button 1', retrieveSourceButton);
     await retrieveSourceButton.click();
 
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Retrieve This Source from Org successfully ran',
@@ -163,7 +163,7 @@ describe('Org Browser', async () => {
     console.log('button 2', retrieveAndOpenButton);
     await retrieveAndOpenButton.click();
 
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Retrieve This Source from Org successfully ran',

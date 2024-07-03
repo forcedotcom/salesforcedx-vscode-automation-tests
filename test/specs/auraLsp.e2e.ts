@@ -21,7 +21,7 @@ describe('Aura LSP', async () => {
     await utilities.createAura('aura1');
 
     // Reload the VSCode window to allow the Aura Component to be indexed by the Aura Language Server
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 70);
   });
 
@@ -53,7 +53,7 @@ describe('Aura LSP', async () => {
   step('Go to Definition', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'aura1.cmp');
 
     // Move cursor to the middle of "simpleNewContact"
@@ -85,7 +85,7 @@ describe('Aura LSP', async () => {
   step('Autocompletion', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'aura1.cmp');
     // Workaround for `coordinates is not iterable` error is needed here too because `textEditor.typeTextAt()` uses coordinates.
     await browser.keys([CMD_KEY, 'f']);

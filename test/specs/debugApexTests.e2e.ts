@@ -25,7 +25,7 @@ describe('Debug Apex Tests', async () => {
     await utilities.pause(1);
 
     // Push source to org
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Push Source to Default Org and Ignore Conflicts',
@@ -45,7 +45,7 @@ describe('Debug Apex Tests', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
 
     // Get Apex LSP Status Bar
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const statusBar = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       'Editor Language Status'
@@ -55,7 +55,7 @@ describe('Debug Apex Tests', async () => {
   });
 
   step('Debug All Tests via Apex Class', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass1Test.cls');
 
     // Click the "Debug All Tests" code lens at the top of the class
@@ -80,7 +80,7 @@ describe('Debug Apex Tests', async () => {
   });
 
   step('Debug Single Test via Apex Class', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass2Test.cls');
 
     // Click the "Debug Test" code lens at the top of one of the test methods
@@ -105,7 +105,7 @@ describe('Debug Apex Tests', async () => {
   });
 
   step('Debug all Apex Methods on a Class via the Test Sidebar', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on Apex Tests View', 1);
 
     // Open the Test Sidebar
@@ -148,7 +148,7 @@ describe('Debug Apex Tests', async () => {
   });
 
   step('Debug a Single Apex Test Method via the Test Sidebar', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on Apex Tests View', 1);
 
     // Open the Test Sidebar

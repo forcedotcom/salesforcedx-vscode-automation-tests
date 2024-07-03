@@ -8,13 +8,14 @@
 import { TextEditor } from 'wdio-vscode-service';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 import { getTextEditor, pause } from './miscellaneous';
+import { getWorkbench } from './workbench';
 
 export async function createApexClass(
   name: string,
   classText: string,
   breakpoint?: number
 ): Promise<void> {
-  const workbench = await (await browser.getWorkbench()).wait();
+  const workbench = await getWorkbench();
 
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
   const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
@@ -104,7 +105,7 @@ export async function createApexClassWithBugs(): Promise<void> {
 }
 
 export async function createAnonymousApexFile(): Promise<void> {
-  const workbench = await (await browser.getWorkbench()).wait();
+  const workbench = await getWorkbench();
   const editorView = workbench.getEditorView();
 
   // Using the Command palette, run File: New File...

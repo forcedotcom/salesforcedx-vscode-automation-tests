@@ -29,7 +29,7 @@ describe('Push and Pull', async () => {
   });
 
   step('SFDX: View All Changes (Local and in Default Org)', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: View All Changes (Local and in Default Org)',
@@ -48,7 +48,7 @@ describe('Push and Pull', async () => {
 
   step('Create an Apex class', async () => {
     // Create an Apex Class.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     // Using the Command palette, run SFDX: Create Apex Class.
     await utilities.createCommand('Apex Class', 'ExampleApexClass1', 'classes', 'cls');
 
@@ -71,7 +71,7 @@ describe('Push and Pull', async () => {
   });
 
   step('SFDX: View Local Changes', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: View Local Changes', 5);
 
     // Check the output.
@@ -102,7 +102,7 @@ describe('Push and Pull', async () => {
   });
 
   step('Push the Apex class', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
 
     // At this point there should be no conflicts since this is a new class.
@@ -112,7 +112,7 @@ describe('Push and Pull', async () => {
 
   step('Push again (with no changes)', async () => {
     // Clear the Output view first.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
 
     // Now push
@@ -123,7 +123,7 @@ describe('Push and Pull', async () => {
   });
 
   step('Modify the file and push the changes', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
@@ -174,7 +174,7 @@ describe('Push and Pull', async () => {
 
   step('Pull the Apex class', async () => {
     // With this test, it's going to pull twice...
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
@@ -201,7 +201,7 @@ describe('Push and Pull', async () => {
   });
 
   step("Modify the file (but don't save), then pull", async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
@@ -219,7 +219,7 @@ describe('Push and Pull', async () => {
   });
 
   step('Save the modified file, then pull', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
     await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
@@ -299,7 +299,7 @@ describe('Push and Pull', async () => {
   });
 
   xstep('Set the 2nd user as the default user', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const inputBox = await utilities.executeQuickPick('SFDX: Set a Default Org', 10);
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
       inputBox,

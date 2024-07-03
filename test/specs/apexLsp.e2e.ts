@@ -44,7 +44,7 @@ describe('Apex LSP', async () => {
     await browser.keys([CMD_KEY, 'w']);
 
     // Get Apex LSP Status Bar
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const statusBar = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       'Editor Language Status'
@@ -61,7 +61,7 @@ describe('Apex LSP', async () => {
   step('Go to Definition', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.getTextEditor(workbench, 'ExampleClassTest.cls');
 
     // Move cursor to the middle of "ExampleClass.SayHello() call"
@@ -88,7 +88,7 @@ describe('Apex LSP', async () => {
   step('Autocompletion', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Autocompletion`);
     // Get open text editor
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'ExampleClassTest.cls');
 
     // Move cursor to line 7 and type ExampleClass.s

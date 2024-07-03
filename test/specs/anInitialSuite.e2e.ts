@@ -49,7 +49,7 @@ describe('An Initial Suite', async () => {
   });
 
   step('Verify the default SFDX commands are present when no project is loaded', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
 
     const quickPicks = await prompt.getQuickPicks();

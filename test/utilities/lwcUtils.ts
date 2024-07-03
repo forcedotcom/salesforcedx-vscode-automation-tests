@@ -8,10 +8,11 @@
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { runCommandFromCommandPrompt } from './commandPrompt';
 import { getTextEditor, log, pause } from './miscellaneous';
+import { getWorkbench } from './workbench';
 
 export async function createLwc(name: string): Promise<void> {
   log('createLwc() - calling browser.getWorkbench()');
-  const workbench = await (await browser.getWorkbench()).wait();
+  const workbench = await getWorkbench();
 
   log('createLwc() - Running SFDX: Create Lightning Web Component');
   // Using the Command palette, run SFDX: Create Lightning Web Component.
@@ -119,7 +120,7 @@ export async function createLwc(name: string): Promise<void> {
 
 export async function createAura(name: string): Promise<void> {
   log('createAura() - calling browser.getWorkbench()');
-  const workbench = await (await browser.getWorkbench()).wait();
+  const workbench = await getWorkbench();
 
   log('createAura() - Running SFDX: Create Aura Component');
   const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Aura Component', 1);
