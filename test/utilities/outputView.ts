@@ -6,7 +6,6 @@
  */
 
 import clipboard from 'clipboardy';
-// import { CMD_KEY } from 'wdio-vscode-service/dist/constants.ts';
 import { pause } from './miscellaneous.ts';
 import { dismissAllNotifications } from './notifications.ts';
 import { runCommandFromCommandPrompt } from './commandPrompt.ts';

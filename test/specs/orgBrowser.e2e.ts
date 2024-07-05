@@ -7,7 +7,6 @@
 import { step, xstep } from 'mocha-steps';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
-// import { CMD_KEY } from 'wdio-vscode-service/dist/constants.ts';
 
 import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
