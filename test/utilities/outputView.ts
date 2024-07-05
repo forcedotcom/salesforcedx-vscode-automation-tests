@@ -8,7 +8,7 @@
 import clipboard from 'clipboardy';
 import { pause } from './miscellaneous.ts';
 import { dismissAllNotifications } from './notifications.ts';
-import { runCommandFromCommandPrompt } from './commandPrompt.ts';
+import { executeQuickPick } from './commandPrompt.ts';
 
 import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
@@ -27,8 +27,7 @@ export async function selectOutputChannel(name: string): Promise<void> {
   await dismissAllNotifications();
 
   // Find the given channel in the Output view
-  const workbench = await (await browser.getWorkbench()).wait();
-  await runCommandFromCommandPrompt(workbench, 'Output: Show Output Channels...', 1);
+  await executeQuickPick('Output: Show Output Channels...', 1);
   await browser.keys([name, 'Enter']);
   await pause(2);
 }
@@ -40,8 +39,7 @@ export async function getOutputViewText(outputChannelName: string = ''): Promise
   }
 
   // Set focus to the contents in the Output panel.
-  const workbench = await (await browser.getWorkbench()).wait();
-  await runCommandFromCommandPrompt(workbench, 'Output: Focus on Output View', 2);
+  await executeQuickPick('Output: Focus on Output View', 2);
 
   // Select all of the text within the panel.
   await browser.keys([CMD_KEY, 'a', 'c']);
