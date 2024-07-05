@@ -268,7 +268,9 @@ export class TestSetup {
     );
   }
 
-  private async createDefaultScratchOrg(edition: utilities.OrgEdition = 'developer'): Promise<void> {
+  private async createDefaultScratchOrg(
+    edition: utilities.OrgEdition = 'developer'
+  ): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`);
 
@@ -283,7 +285,7 @@ export class TestSetup {
 
       const sfOrgListResult = await exec('sf org:list --json');
       const resultJson = this.removedEscapedCharacters(sfOrgListResult.stdout);
-      const scratchOrgs = JSON.parse(resultJson).result.scratchOrgs as {alias: string}[];
+      const scratchOrgs = JSON.parse(resultJson).result.scratchOrgs as { alias: string }[];
 
       const foundScratchOrg = scratchOrgs.find((scratchOrg) => {
         const alias = scratchOrg.alias as string;
@@ -420,11 +422,7 @@ export class TestSetup {
   }
 
   private async setDefaultOrg(workbench: Workbench): Promise<void> {
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Set a Default Org',
-      2
-    );
+    const inputBox = await utilities.executeQuickPick('SFDX: Set a Default Org', 2);
 
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
       inputBox,
