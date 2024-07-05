@@ -345,7 +345,6 @@ describe('Templates', async () => {
 
     // Using the Command palette, run SFDX: Create Lightning Web Component Test.
     const inputBox = await utilities.executeQuickPick(
-      workbench,
       'SFDX: Create Lightning Web Component Test',
       1
     );
@@ -481,7 +480,6 @@ describe('Templates', async () => {
     const workbench = await utilities.getWorkbench();
     await utilities.executeQuickPick('View: Clear Output', 1);
     const inputBox = await utilities.executeQuickPick(
-      workbench,
       'SFDX: Create Sample Analytics Template',
       1
     );

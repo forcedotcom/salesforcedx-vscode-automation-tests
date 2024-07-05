@@ -6,7 +6,7 @@
  */
 
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
-import { runCommandFromCommandPrompt } from './commandPrompt';
+import { executeQuickPick, runCommandFromCommandPrompt } from './commandPrompt';
 import { getTextEditor, log, pause } from './miscellaneous';
 import { getWorkbench } from './workbench';
 
@@ -16,11 +16,7 @@ export async function createLwc(name: string): Promise<void> {
 
   log('createLwc() - Running SFDX: Create Lightning Web Component');
   // Using the Command palette, run SFDX: Create Lightning Web Component.
-  const inputBox = await runCommandFromCommandPrompt(
-    workbench,
-    'SFDX: Create Lightning Web Component',
-    1
-  );
+  const inputBox = await executeQuickPick('SFDX: Create Lightning Web Component', 1);
 
   log('createLwc() - Set the name of the new component');
   // Set the name of the new component
