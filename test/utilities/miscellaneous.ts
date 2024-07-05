@@ -9,7 +9,7 @@ import os from 'os';
 import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import { attemptToFindOutputPanelText } from './outputView.ts';
-import { runCommandFromCommandPrompt } from './commandPrompt.ts';
+import { executeQuickPick } from './commandPrompt.ts';
 import { notificationIsPresentWithTimeout } from './notifications.ts';
 import path from 'path';
 
@@ -66,7 +66,7 @@ export async function findElementByText(
  * @returns editor for the given file name
  */
 export async function getTextEditor(workbench: Workbench, fileName: string): Promise<TextEditor> {
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'Go to File...', 1);
+  const inputBox = await executeQuickPick('Go to File...', 1);
   await inputBox.setText(fileName);
   await inputBox.confirm();
   await pause(1);
@@ -82,8 +82,8 @@ export async function createCommand(
   extension: string
 ): Promise<string | undefined> {
   const workbench = await (await browser.getWorkbench()).wait();
-  await runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
-  const inputBox = await runCommandFromCommandPrompt(workbench, `SFDX: Create ${type}`, 1);
+  await executeQuickPick('View: Clear Output', 1);
+  const inputBox = await executeQuickPick(`SFDX: Create ${type}`, 1);
 
   // Set the name of the new component to name.
   await inputBox.setText(name);
