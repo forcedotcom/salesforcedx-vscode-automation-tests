@@ -7,7 +7,6 @@
 import { step, xstep } from 'mocha-steps';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
-// import { CMD_KEY } from 'wdio-vscode-service/dist/constants.ts';
 import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
@@ -29,7 +28,7 @@ describe('LWC LSP', async () => {
     // Using the Command palette, run Developer: Show Running Extensions
     await utilities.showRunningExtensions();
     utilities.zoom('Out', 4, 1);
-    // Verify Lightning Web Components extension is present and running 
+    // Verify Lightning Web Components extension is present and running
     const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
       'salesforcedx-vscode-lwc'
     ]);
