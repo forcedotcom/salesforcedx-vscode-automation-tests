@@ -108,7 +108,7 @@ export async function createAnonymousApexFile(): Promise<void> {
   const editorView = workbench.getEditorView();
 
   // Using the Command palette, run File: New File...
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'Create: New File...', 1);
+  const inputBox = await executeQuickPick('Create: New File...', 1);
 
   // Set the name of the new Anonymous Apex file
   await inputBox.setText('Anonymous.apex');
