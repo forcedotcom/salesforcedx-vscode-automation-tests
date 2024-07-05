@@ -31,12 +31,12 @@ describe('Apex LSP', async () => {
 
     // Using the Command palette, run Developer: Show Running Extensions
     await utilities.showRunningExtensions();
-    utilities.zoom('Out', 4, Duration.seconds(1));
+    await utilities.zoom('Out', 4, Duration.seconds(1));
     // Verify Apex extension is present and running
     const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
       'salesforcedx-vscode-apex'
     ]);
-    utilities.zoomReset();
+    await utilities.zoomReset();
     expect(foundExtensions.length).toBe(1);
     // Close running extensions view
     await browser.keys([CMD_KEY, 'w']);

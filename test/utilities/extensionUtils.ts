@@ -243,7 +243,7 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
       .basename(vsix)
       .match(/^(?<extension>.*?)(-(?<version>\d+\.\d+\.\d+))?\.vsix$/);
     if (match?.groups) {
-      const { extension } = match.groups;
+      const { extension, version } = match.groups;
       const foundExtension = extensions.find((e) => e.extensionId === extension);
       if (foundExtension) {
         foundExtension.vsixPath = vsix;
@@ -254,7 +254,9 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
         // if not installing, don't verify, otherwise use default value
         foundExtension.shouldVerifyActivation =
           foundExtension.shouldInstall === 'never' ? false : foundExtension.shouldVerifyActivation;
-        log(`SetUp - Found extension ${extension} with vsixPath ${foundExtension.vsixPath}`);
+        log(
+          `SetUp - Found extension ${extension} version ${version} with vsixPath ${foundExtension.vsixPath}`
+        );
       }
     }
   });
