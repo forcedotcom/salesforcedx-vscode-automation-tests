@@ -205,8 +205,7 @@ describe('Debug LWC Tests', async () => {
 
       // Debug SFDX: Debug Current Lightning Web Component Test File
       const workbench = await utilities.getWorkbench();
-      await utilities.runCommandFromCommandPrompt(
-        workbench,
+      await utilities.executeQuickPick(
         'SFDX: Debug Current Lightning Web Component Test File',
         10
       );

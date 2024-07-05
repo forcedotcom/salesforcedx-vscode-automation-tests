@@ -65,7 +65,7 @@ describe('SObjects Definitions', async () => {
 
   step('Push Source to Org', async () => {
     const workbench = await utilities.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org', 5);
     await utilities.pause(1);
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -86,8 +86,8 @@ describe('SObjects Definitions', async () => {
 
   step('Refresh SObject Definitions for Custom SObjects', async () => {
     const workbench = await utilities.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
-    const prompt = await utilities.runCommandFromCommandPrompt(
+    await utilities.executeQuickPick('View: Clear Output', 2);
+    const prompt = await utilities.executeQuickPick(
       workbench,
       'SFDX: Refresh SObject Definitions',
       2
@@ -167,8 +167,8 @@ describe('SObjects Definitions', async () => {
 
   step('Refresh SObject Definitions for Standard SObjects', async () => {
     const workbench = await utilities.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
-    const prompt = await utilities.runCommandFromCommandPrompt(
+    await utilities.executeQuickPick('View: Clear Output', 2);
+    const prompt = await utilities.executeQuickPick(
       workbench,
       'SFDX: Refresh SObject Definitions',
       5
@@ -230,9 +230,9 @@ describe('SObjects Definitions', async () => {
   step('Refresh SObject Definitions for All SObjects', async () => {
     // Clear the output for correct test validation.
     const workbench = await utilities.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
 
-    const prompt = await utilities.runCommandFromCommandPrompt(
+    const prompt = await utilities.executeQuickPick(
       workbench,
       'SFDX: Refresh SObject Definitions',
       5

@@ -29,9 +29,7 @@ describe('Push and Pull', async () => {
   });
 
   step('SFDX: View All Changes (Local and in Default Org)', async () => {
-    const workbench = await utilities.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
+    await utilities.executeQuickPick(
       'SFDX: View All Changes (Local and in Default Org)',
       5
     );
@@ -71,8 +69,7 @@ describe('Push and Pull', async () => {
   });
 
   step('SFDX: View Local Changes', async () => {
-    const workbench = await utilities.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: View Local Changes', 5);
+    await utilities.executeQuickPick('SFDX: View Local Changes', 5);
 
     // Check the output.
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -103,7 +100,7 @@ describe('Push and Pull', async () => {
 
   step('Push the Apex class', async () => {
     const workbench = await utilities.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org', 5);
 
     // At this point there should be no conflicts since this is a new class.
     // Check the output.
@@ -113,10 +110,10 @@ describe('Push and Pull', async () => {
   step('Push again (with no changes)', async () => {
     // Clear the Output view first.
     const workbench = await utilities.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
 
     // Now push
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org', 5);
 
     // Check the output.
     await verifyPushAndPullOutputText(workbench, 'Push', 'to');
@@ -126,25 +123,25 @@ describe('Push and Pull', async () => {
     const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
 
     // Modify the file by adding a comment.
     const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass1.cls');
     await textEditor.setTextAtLine(3, '        // sample comment');
 
     // Push the file.
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org', 5);
 
     await verifyPushAndPullOutputText(workbench, 'Push', 'to');
 
     // Clear the Output view again.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
 
     // Now save the file.
     await textEditor.save();
 
     // An now push the changes.
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Push Source to Default Org', 5);
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org', 5);
 
     // Check the output.
     const outputPanelText = await verifyPushAndPullOutputText(workbench, 'Push', 'to', 'Changed');
@@ -177,9 +174,9 @@ describe('Push and Pull', async () => {
     const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
 
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', 5);
 
     // Check the output.
     let outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from', 'Created');
@@ -190,10 +187,10 @@ describe('Push and Pull', async () => {
 
     // Second pull...
     // Clear the output again.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
 
     // And pull again.
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', 5);
 
     // Check the output.
     outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
@@ -204,7 +201,7 @@ describe('Push and Pull', async () => {
     const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
 
     // Modify the file by adding a comment.
     const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass1.cls');
@@ -212,7 +209,7 @@ describe('Push and Pull', async () => {
     // Don't save the file just yet.
 
     // Pull the file.
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', 5);
 
     // Check the output.
     await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
@@ -222,20 +219,19 @@ describe('Push and Pull', async () => {
     const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
 
     // Now save the file.
     const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass1.cls');
     await textEditor.save();
 
     // An now pull the changes.
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Pull Source from Default Org', 5);
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', 5);
 
     await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
   });
 
   step('SFDX: View Changes in Default Org', async () => {
-    const workbench = await utilities.getWorkbench();
     // Create second Project to then view Remote Changes
     await testSetup.createProject('developer', 'ViewChanges');
 
@@ -248,7 +244,7 @@ describe('Push and Pull', async () => {
     expect(extensionWasFound).toBe(true);
 
     //Run SFDX: View Changes in Default Org command to view remote changes
-    await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: View Changes in Default Org', 5);
+    await utilities.executeQuickPick('SFDX: View Changes in Default Org', 5);
 
     // Check the output.
     const outputPanelText = await utilities.attemptToFindOutputPanelText(

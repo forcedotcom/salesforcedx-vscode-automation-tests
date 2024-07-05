@@ -189,7 +189,7 @@ describe('Templates', async () => {
     );
     // Zoom out so all tree items are visible
     const workbench = await utilities.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Zoom Out', 2);
+    await utilities.executeQuickPick('View: Zoom Out', 2);
     // Check for the presence of the directory, "auraComponent1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
       workbench,
@@ -344,7 +344,7 @@ describe('Templates', async () => {
     });
 
     // Using the Command palette, run SFDX: Create Lightning Web Component Test.
-    const inputBox = await utilities.runCommandFromCommandPrompt(
+    const inputBox = await utilities.executeQuickPick(
       workbench,
       'SFDX: Create Lightning Web Component Test',
       1
@@ -479,8 +479,8 @@ describe('Templates', async () => {
   step('Create a Sample Analytics Template', async () => {
     // Clear the output panel, then use the Command palette to run, "SFDX: Create Sample Analytics Template".
     const workbench = await utilities.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
-    const inputBox = await utilities.runCommandFromCommandPrompt(
+    await utilities.executeQuickPick('View: Clear Output', 1);
+    const inputBox = await utilities.executeQuickPick(
       workbench,
       'SFDX: Create Sample Analytics Template',
       1

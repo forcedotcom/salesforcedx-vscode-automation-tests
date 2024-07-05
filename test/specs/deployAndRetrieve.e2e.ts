@@ -67,19 +67,11 @@ describe('Deploy and Retrieve', async () => {
 
   step('Verify Source Tracking Setting is enabled', async () => {
     const workbench = await utilities.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Preferences: Open Workspace Settings',
-      5
-    );
+    await utilities.executeQuickPick(workbench, 'Preferences: Open Workspace Settings', 5);
     await browser.keys(['enable source tracking']);
 
     // Clear all notifications so setting is reachable
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Notifications: Clear All Notifications',
-      1
-    );
+    await utilities.executeQuickPick(workbench, 'Notifications: Clear All Notifications', 1);
 
     const enableSourceTrackingBtn = await utilities.findElementByText(
       'div',
@@ -92,7 +84,7 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy with SFDX: Deploy This Source to Org - ST enabled', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
     await utilities.getTextEditor(workbench, 'MyClass.cls');
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'ST');
   });
@@ -100,7 +92,7 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy again (with no changes) - ST enabled', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
     await utilities.getTextEditor(workbench, 'MyClass.cls');
 
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'ST', 'Unchanged  ');
@@ -109,7 +101,7 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and deploy again - ST enabled', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
 
     // Modify the file by adding a comment.
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -123,7 +115,7 @@ describe('Deploy and Retrieve', async () => {
   step('Retrieve with SFDX: Retrieve This Source from Org', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
     await utilities.getTextEditor(workbench, 'MyClass.cls');
 
     await runAndValidateCommand(workbench, 'Retrieve', 'from', 'ST');
@@ -132,7 +124,7 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and retrieve again', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
 
     // Modify the file by changing the comment.
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -150,13 +142,9 @@ describe('Deploy and Retrieve', async () => {
   step('Prefer Deploy on Save when `Push or deploy on save` is enabled', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
 
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Preferences: Open Workspace Settings',
-      3
-    );
+    await utilities.executeQuickPick(workbench, 'Preferences: Open Workspace Settings', 3);
     await browser.keys(['push on save']);
 
     const pushOrDeployOnSaveBtn = await utilities.findElementByText(
@@ -167,15 +155,11 @@ describe('Deploy and Retrieve', async () => {
     await pushOrDeployOnSaveBtn.click();
     await utilities.pause(3);
 
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Preferences: Open Workspace Settings',
-      3
-    );
+    await utilities.executeQuickPick(workbench, 'Preferences: Open Workspace Settings', 3);
     await browser.keys(['prefer deploy']);
 
     try {
-      await utilities.runCommandFromCommandPrompt(workbench, 'View: Close Panel', 2);
+      await utilities.executeQuickPick('View: Close Panel', 2);
     } catch {
       utilities.log('Panel is already closed');
     }
@@ -188,14 +172,10 @@ describe('Deploy and Retrieve', async () => {
     await utilities.pause(3);
 
     // Clear all notifications so clear output button is reachable
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Notifications: Clear All Notifications',
-      1
-    );
+    await utilities.executeQuickPick(workbench, 'Notifications: Clear All Notifications', 1);
 
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
     // Modify the file and save to trigger deploy
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
     await textEditor.setTextAtLine(2, `\t// let's trigger deploy`);
@@ -208,19 +188,11 @@ describe('Deploy and Retrieve', async () => {
 
   step('Disable Source Tracking Setting', async () => {
     const workbench = await utilities.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Preferences: Open Workspace Settings',
-      5
-    );
+    await utilities.executeQuickPick(workbench, 'Preferences: Open Workspace Settings', 5);
     await browser.keys(['enable source tracking']);
 
     // Clear all notifications so setting is reachable
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Notifications: Clear All Notifications',
-      1
-    );
+    await utilities.executeQuickPick(workbench, 'Notifications: Clear All Notifications', 1);
 
     const enableSourceTrackingBtn = await utilities.findElementByText(
       'div',
@@ -230,20 +202,16 @@ describe('Deploy and Retrieve', async () => {
     await enableSourceTrackingBtn.click();
     await utilities.pause(1);
     // Reload window to update cache and get the setting behavior to work
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', 100);
+    await utilities.executeQuickPick('Developer: Reload Window', 100);
     await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
   });
 
   step('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear all notifications so clear output button is visible
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Notifications: Clear All Notifications',
-      1
-    );
+    await utilities.executeQuickPick(workbench, 'Notifications: Clear All Notifications', 1);
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
     await utilities.getTextEditor(workbench, 'MyClass.cls');
 
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'no-ST');
@@ -252,7 +220,7 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy again (with no changes) - ST disabled', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
     await utilities.getTextEditor(workbench, 'MyClass.cls');
 
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'no-ST', 'Unchanged  ');
@@ -261,7 +229,7 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and deploy again - ST disabled', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
 
     // Modify the file by adding a comment.
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -276,19 +244,15 @@ describe('Deploy and Retrieve', async () => {
     const workbench = await utilities.getWorkbench();
     await utilities.getTextEditor(workbench, 'MyClass.cls');
     // Run SFDX: Push Source to Default Org and Ignore Conflicts to be in sync with remote
-    await utilities.runCommandFromCommandPrompt(
+    await utilities.executeQuickPick(
       workbench,
       'SFDX: Push Source to Default Org and Ignore Conflicts',
       10
     );
     // Clear the Output view first.
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 2);
+    await utilities.executeQuickPick('View: Clear Output', 2);
 
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Delete This from Project and Org',
-      2
-    );
+    await utilities.executeQuickPick(workbench, 'SFDX: Delete This from Project and Org', 2);
 
     // Make sure we get a confirmation dialog
     const confirmationDialogText =
@@ -343,11 +307,7 @@ describe('Deploy and Retrieve', async () => {
     type: string,
     prefix?: string
   ): Promise<void> => {
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      `SFDX: ${operation} This Source ${fromTo} Org`,
-      5
-    );
+    await utilities.executeQuickPick(workbench, `SFDX: ${operation} This Source ${fromTo} Org`, 5);
 
     await validateCommand(workbench, operation, fromTo, type, prefix);
   };

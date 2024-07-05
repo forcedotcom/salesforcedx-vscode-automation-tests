@@ -44,11 +44,7 @@ describe('Run LWC Tests', async () => {
       const workbench = await utilities.getWorkbench();
 
       // Run SFDX: Run All Lightning Web Component Tests.
-      await utilities.runCommandFromCommandPrompt(
-        workbench,
-        'SFDX: Run All Lightning Web Component Tests',
-        1
-      );
+      await utilities.executeQuickPick('SFDX: Run All Lightning Web Component Tests', 1);
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
@@ -95,11 +91,7 @@ describe('Run LWC Tests', async () => {
       let lwcTestsItems = (await lwcTestsSection.getVisibleItems()) as TreeItem[];
 
       // Run command SFDX: Run All Lightning Web Component Tests
-      await utilities.runCommandFromCommandPrompt(
-        workbench,
-        'SFDX: Run All Lightning Web Component Tests',
-        2
-      );
+      await utilities.executeQuickPick('SFDX: Run All Lightning Web Component Tests', 2);
 
       // Get tree items again
       lwcTestsItems = (await lwcTestsSection.getVisibleItems()) as TreeItem[];
@@ -117,11 +109,7 @@ describe('Run LWC Tests', async () => {
       }
 
       // Run command SFDX: Refresh Lightning Web Component Test Explorer again to reset status
-      await utilities.runCommandFromCommandPrompt(
-        workbench,
-        'SFDX: Refresh Lightning Web Component Test Explorer',
-        2
-      );
+      await utilities.executeQuickPick('SFDX: Refresh Lightning Web Component Test Explorer', 2);
 
       // Get tree items again
       lwcTestsItems = (await lwcTestsSection.getVisibleItems()) as TreeItem[];
@@ -361,11 +349,7 @@ describe('Run LWC Tests', async () => {
       const workbench = await utilities.getWorkbench();
 
       // Run SFDX: Run Current Lightning Web Component Test File
-      await utilities.runCommandFromCommandPrompt(
-        workbench,
-        'SFDX: Run Current Lightning Web Component Test File',
-        1
-      );
+      await utilities.executeQuickPick('SFDX: Run Current Lightning Web Component Test File', 1);
 
       // Verify test results are listed on vscode's Output section
       // Also verify that all tests pass

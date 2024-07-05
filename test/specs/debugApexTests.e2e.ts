@@ -26,8 +26,7 @@ describe('Debug Apex Tests', async () => {
 
     // Push source to org
     const workbench = await utilities.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
+    await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org and Ignore Conflicts',
       1
     );

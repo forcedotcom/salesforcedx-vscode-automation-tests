@@ -127,11 +127,7 @@ describe('Authentication', async () => {
 
   step('Run SFDX: Create a Default Scratch Org', async () => {
     const workbench = await utilities.getWorkbench();
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Create a Default Scratch Org...',
-      1
-    );
+    prompt = await utilities.executeQuickPick('SFDX: Create a Default Scratch Org...', 1);
 
     // Select a project scratch definition file (config/project-scratch-def.json)
     // Press Enter/Return to use the default (config/project-scratch-def.json)
