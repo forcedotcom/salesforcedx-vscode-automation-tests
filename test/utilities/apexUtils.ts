@@ -6,7 +6,7 @@
  */
 
 import { TextEditor } from 'wdio-vscode-service';
-import { runCommandFromCommandPrompt } from './commandPrompt.ts';
+import { executeQuickPick, runCommandFromCommandPrompt } from './commandPrompt.ts';
 import { getTextEditor, pause } from './miscellaneous.ts';
 
 export async function createApexClass(
@@ -17,7 +17,7 @@ export async function createApexClass(
   const workbench = await (await browser.getWorkbench()).wait();
 
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Apex Class', 1);
+  const inputBox = await executeQuickPick('SFDX: Create Apex Class', 1);
 
   // Set the name of the new Apex Class
   await inputBox.setText(name);
