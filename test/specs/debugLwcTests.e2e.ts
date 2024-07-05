@@ -59,7 +59,7 @@ describe('Debug LWC Tests', async () => {
         `${testSetup.testSuiteSuffixName} - Debug All tests on a LWC via the Test Sidebar`
       );
       const workbench = await utilities.getWorkbench();
-      await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 3);
+      await utilities.executeQuickPick('Testing: Focus on LWC Tests View', 3);
 
       // Open the Test Sidebar
       const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
@@ -119,7 +119,7 @@ describe('Debug LWC Tests', async () => {
       );
 
       // Verify the tests that are passing are labeled with a green dot on the Test sidebar
-      await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 3);
+      await utilities.executeQuickPick('Testing: Focus on LWC Tests View', 3);
       const icon = await (await lwcTestItem.elem).$('.custom-view-tree-node-item-icon');
       const iconStyle = await icon.getAttribute('style');
       // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
@@ -187,7 +187,7 @@ describe('Debug LWC Tests', async () => {
       );
 
       // Verify the tests that are passing are labeled with a green dot on the Test sidebar
-      await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 3);
+      await utilities.executeQuickPick('Testing: Focus on LWC Tests View', 3);
       const icon = await (await lwcTestItem.elem).$('.custom-view-tree-node-item-icon');
       const iconStyle = await icon.getAttribute('style');
       // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote

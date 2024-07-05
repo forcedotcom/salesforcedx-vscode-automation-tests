@@ -106,7 +106,7 @@ describe('Debug Apex Tests', async () => {
 
   step('Debug all Apex Methods on a Class via the Test Sidebar', async () => {
     const workbench = await utilities.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on Apex Tests View', 1);
+    await utilities.executeQuickPick('Testing: Focus on Apex Tests View', 1);
 
     // Open the Test Sidebar
     const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');
@@ -149,7 +149,7 @@ describe('Debug Apex Tests', async () => {
 
   step('Debug a Single Apex Test Method via the Test Sidebar', async () => {
     const workbench = await utilities.getWorkbench();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on Apex Tests View', 1);
+    await utilities.executeQuickPick('Testing: Focus on Apex Tests View', 1);
 
     // Open the Test Sidebar
     const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');

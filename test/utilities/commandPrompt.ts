@@ -137,8 +137,14 @@ export async function waitForQuickPick(
   );
 }
 
-export async function executeQuickPick(command: string, wait = 1): Promise<InputBox | QuickOpenBox> {
+export async function executeQuickPick(
+  command: string,
+  wait = 1
+): Promise<InputBox | QuickOpenBox> {
   const workbench = await getWorkbench();
+  await browser.keys(['Escape']);
+  await pause(1);
+  await browser.keys(['Escape']);
   const prompt = await workbench.executeQuickPick(command);
   pause(wait);
   return prompt;

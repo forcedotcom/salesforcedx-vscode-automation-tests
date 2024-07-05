@@ -87,13 +87,9 @@ describe('Run LWC Tests', async () => {
         `${testSetup.testSuiteSuffixName} - SFDX: Refresh Lightning Web Component Test Explorer`
       );
       const workbench = await utilities.getWorkbench();
-      await utilities.runCommandFromCommandPrompt(workbench, 'Testing: Focus on LWC Tests View', 1);
+      await utilities.executeQuickPick('Testing: Focus on LWC Tests View', 1);
       // Run command SFDX: Refresh Lightning Web Component Test Explorer
-      await utilities.runCommandFromCommandPrompt(
-        workbench,
-        'SFDX: Refresh Lightning Web Component Test Explorer',
-        2
-      );
+      await utilities.executeQuickPick('SFDX: Refresh Lightning Web Component Test Explorer', 2);
       // Open the Tests Sidebar
       const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
       let lwcTestsItems = (await lwcTestsSection.getVisibleItems()) as TreeItem[];
