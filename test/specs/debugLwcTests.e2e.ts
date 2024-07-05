@@ -11,8 +11,10 @@ import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import path from 'path';
 import util from 'util';
-import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { fail } from 'assert';
+
+import { Key } from 'webdriverio';
+const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 const exec = util.promisify(child_process.exec);
 
@@ -45,7 +47,7 @@ describe('Debug LWC Tests', async () => {
       // Using the Command palette, run Developer: Show Running Extensions
       await utilities.showRunningExtensions();
       utilities.zoom('Out', 4, 1);
-      // Verify Lightning Web Components extension is present and running  
+      // Verify Lightning Web Components extension is present and running
       const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
         'salesforcedx-vscode-lwc'
       ]);
