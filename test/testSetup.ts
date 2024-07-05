@@ -367,11 +367,7 @@ export class TestSetup {
 
     // Run SFDX: Set a Default Org
     utilities.log(`${this.testSuiteSuffixName} - selecting SFDX: Set a Default Org...`);
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Set a Default Org',
-      10
-    );
+    const inputBox = await utilities.executeQuickPick('SFDX: Set a Default Org', 10);
 
     utilities.log(`${this.testSuiteSuffixName} - calling findQuickPickItem()...`);
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
