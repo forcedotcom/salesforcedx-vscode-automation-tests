@@ -25,7 +25,8 @@ export type ExtensionId =
   | 'salesforcedx-vscode-apex-replay-debugger'
   | 'salesforcedx-vscode-lightning'
   | 'salesforcedx-vscode-lwc'
-  | 'salesforcedx-vscode-visualforce';
+  | 'salesforcedx-vscode-visualforce'
+  | 'salesforce.salesforce-vscode-slds';
 
 export type Extension = {
   id: string;
@@ -55,7 +56,7 @@ export type VerifyExtensionsOptions = {
   interval?: number;
 };
 
-const VERIFY_EXTENSIONS_TIMEOUT = Duration.milliseconds(20_000);
+const VERIFY_EXTENSIONS_TIMEOUT = Duration.seconds(20);
 
 const extensions: ExtensionType[] = [
   {
@@ -229,6 +230,13 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
     throw new Error(`No vsix files were found in dir ${extensionsDir}`);
   }
 
+  const mergeExcluded = Array.from(
+    new Set([
+      ...excludeExtensions,
+      ...extensions.filter((ext) => ext.shouldInstall === 'never').map((ext) => ext.extensionId)
+    ])
+  );
+
   // Refactored part to use the extensions array
   extensionsVsixs.forEach((vsix) => {
     const match = path
@@ -240,7 +248,7 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
       if (foundExtension) {
         foundExtension.vsixPath = vsix;
         // assign 'never' to this extension if its id is included in excluedExtensions
-        foundExtension.shouldInstall = excludeExtensions.includes(foundExtension.extensionId)
+        foundExtension.shouldInstall = mergeExcluded.includes(foundExtension.extensionId)
           ? 'never'
           : 'always';
         // if not installing, don't verify, otherwise use default value
@@ -252,7 +260,9 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
   });
 
   // Iterate over the extensions array to install extensions
-  for (const extensionObj of extensions.filter((ext) => ext.vsixPath !== '' && ext.shouldInstall)) {
+  for (const extensionObj of extensions.filter(
+    (ext) => ext.vsixPath !== '' && ext.shouldInstall !== 'never'
+  )) {
     await installExtension(extensionObj.vsixPath, extensionsDir);
   }
 

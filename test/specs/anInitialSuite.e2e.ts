@@ -64,8 +64,6 @@ describe('An Initial Suite', async () => {
         case 'SFDX: Create and Set Up Project for ISV Debugging':
         case 'SFDX: Create Project':
         case 'SFDX: Create Project with Manifest':
-        case 'SLDS: Do not scope SLDS Validator to SFDX project files':
-        case 'SLDS: Scope SLDS Validator to run for SFDX project files':
           expectedSfdxCommandsFound++;
           break;
 
@@ -79,7 +77,7 @@ describe('An Initial Suite', async () => {
       }
     }
 
-    expect(expectedSfdxCommandsFound).toBe(5);
+    expect(expectedSfdxCommandsFound).toBe(3);
     expect(unexpectedSfdxCommandWasFound).toBe(false);
 
     // Escape out of the pick list.
