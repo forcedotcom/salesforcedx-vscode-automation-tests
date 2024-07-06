@@ -27,11 +27,7 @@ describe('Apex Replay Debugger', async () => {
 
     // Push source to org
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Push Source to Default Org and Ignore Conflicts',
-      1
-    );
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org and Ignore Conflicts', 1);
 
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -57,14 +53,10 @@ describe('Apex Replay Debugger', async () => {
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
     // Clear output before running the command
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+    await utilities.executeQuickPick('View: Clear Output', 1);
 
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Turn On Apex Debug Log for Replay Debugger',
-      10
-    );
+    await utilities.executeQuickPick('SFDX: Turn On Apex Debug Log for Replay Debugger', 10);
 
     // Look for the success notification that appears which says, "SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -97,11 +89,10 @@ describe('Apex Replay Debugger', async () => {
     await utilities.pause(1);
 
     // Clear output before running the command
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+    await utilities.executeQuickPick('View: Clear Output', 1);
 
     // Run SFDX: Launch Apex Replay Debugger with Currently Selected Text.
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
+    await utilities.executeQuickPick(
       'SFDX: Execute Anonymous Apex with Currently Selected Text',
       1
     );
@@ -135,8 +126,8 @@ describe('Apex Replay Debugger', async () => {
   step('SFDX: Get Apex Debug Logs', async () => {
     // Run SFDX: Get Apex Debug Logs
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
-    prompt = await utilities.runCommandFromCommandPrompt(workbench, 'SFDX: Get Apex Debug Logs', 1);
+    await utilities.executeQuickPick('View: Clear Output', 1);
+    prompt = await utilities.executeQuickPick('SFDX: Get Apex Debug Logs', 1);
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(
@@ -192,8 +183,7 @@ describe('Apex Replay Debugger', async () => {
     const logFilePath = path.join(path.delimiter, 'tools', 'debug', 'logs', title!).slice(1);
 
     // Run SFDX: Launch Apex Replay Debugger with Last Log File
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
+    prompt = await utilities.executeQuickPick(
       'SFDX: Launch Apex Replay Debugger with Last Log File',
       1
     );
@@ -207,13 +197,8 @@ describe('Apex Replay Debugger', async () => {
 
   step('SFDX: Launch Apex Replay Debugger with Current File - log file', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Open Previous Editor');
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Launch Apex Replay Debugger with Current File',
-      1
-    );
+    await utilities.executeQuickPick('View: Open Previous Editor', 1);
+    await utilities.executeQuickPick('SFDX: Launch Apex Replay Debugger with Current File', 1);
 
     // Continue with the debug session
     await continueDebugging();
@@ -223,11 +208,7 @@ describe('Apex Replay Debugger', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
     const workbench = await (await browser.getWorkbench()).wait();
     await utilities.getTextEditor(workbench, 'ExampleApexClassTest.cls');
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Launch Apex Replay Debugger with Current File',
-      3
-    );
+    await utilities.executeQuickPick('SFDX: Launch Apex Replay Debugger with Current File', 3);
 
     // Continue with the debug session
     await continueDebugging();
@@ -247,14 +228,10 @@ describe('Apex Replay Debugger', async () => {
     await utilities.createAnonymousApexFile();
 
     // Clear output before running the command
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
+    await utilities.executeQuickPick('View: Clear Output', 1);
 
     // Run SFDX: Launch Apex Replay Debugger with Editor Contents", using the Command Palette.
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Execute Anonymous Apex with Editor Contents',
-      10
-    );
+    await utilities.executeQuickPick('SFDX: Execute Anonymous Apex with Editor Contents', 10);
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -280,9 +257,8 @@ describe('Apex Replay Debugger', async () => {
   step('SFDX: Turn Off Apex Debug Log for Replay Debugger', async () => {
     // Run SFDX: Turn Off Apex Debug Log for Replay Debugger
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'View: Clear Output', 1);
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
+    await utilities.executeQuickPick('View: Clear Output', 1);
+    prompt = await utilities.executeQuickPick(
       'SFDX: Turn Off Apex Debug Log for Replay Debugger',
       1
     );
