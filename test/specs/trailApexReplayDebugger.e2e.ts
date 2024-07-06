@@ -226,6 +226,8 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.pause(1);
     await browser.keys(['F5']);
     await utilities.pause(1);
+    await browser.keys(['F5']);
+    await utilities.pause(1);
   });
 
   step('Push Fixed Metadata to Org', async () => {
