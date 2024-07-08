@@ -74,7 +74,7 @@ describe('Deploy and Retrieve', async () => {
     const settingsEditor = await workbench.openSettings();
     await utilities.pause(2);
     const enableSourceTrackingSetting = await settingsEditor.findSetting(
-      'Salesforcedx-vscode-core > Experimental: Enable Source Tracking For Deploy And Retrieve'
+      'Enable Source Tracking For Deploy And Retrieve'
     );
     utilities.log(`Setting found: ${!!enableSourceTrackingSetting}`);
 
