@@ -219,9 +219,10 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Replay an Apex Debug Log', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
-    await utilities.executeQuickPick('SFDX: Launch Apex Replay Debugger with Current File', 5);
+    await utilities.executeQuickPick('SFDX: Launch Apex Replay Debugger with Current File', 10);
 
     // Continue with the debug session
+    await utilities.executeQuickPick('Debug: Continue', 3);
     await utilities.executeQuickPick('Debug: Continue', 3);
   });
 
