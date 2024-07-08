@@ -58,8 +58,8 @@ export async function attemptToFindOutputPanelText(
       return outputViewText.includes(searchString);
     },
     {
-      timeout: 1000 * attempts, // Convert attempts to milliseconds assuming each attempt is 1 second
-      interval: 500, // Check every second
+      timeout: 500 * attempts, // Convert attempts to milliseconds assuming each attempt is a half second
+      interval: 500, // Check every half second
       timeoutMsg: `Output view did not contain the search string after ${attempts} attempts.`
     }
   );

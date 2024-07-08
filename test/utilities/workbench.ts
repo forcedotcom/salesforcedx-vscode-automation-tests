@@ -59,7 +59,7 @@ export async function zoomReset(wait: Duration = Duration.seconds(1)): Promise<v
 async function handlePredicateOrWait(predicateOrWait: PredicateWithTimeout | Duration, prompt: unknown) {
   log('handlePredicateOrWait')
   if (isDuration(predicateOrWait)) {
-    if (predicateOrWait && predicateOrWait.milliseconds > 0) {
+    if (predicateOrWait.milliseconds > 0) {
       await pause(predicateOrWait);
     }
   } else {

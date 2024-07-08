@@ -121,11 +121,11 @@ describe('Manifest Builder', async () => {
     const workbench = await browser.getWorkbench();
     await utilities.getTextEditor(workbench, 'manifest.xml');
     // Clear output before running the command
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(Duration.seconds(1));
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'SFDX: Retrieve Source in Manifest from Org',
-      Duration.seconds(2)
+      Duration.seconds(1)
     );
 
     // Look for the success notification that appears which says, "SFDX: Retrieve This Source from Org successfully ran".
