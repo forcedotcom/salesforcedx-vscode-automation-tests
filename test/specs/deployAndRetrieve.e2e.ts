@@ -66,12 +66,11 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Verify Source Tracking Setting is enabled', async () => {
-    const workbench = await utilities.getWorkbench();
-    await utilities.executeQuickPick(workbench, 'Preferences: Open Workspace Settings', 5);
+    await utilities.executeQuickPick('Preferences: Open Workspace Settings', 5);
     await browser.keys(['enable source tracking']);
 
     // Clear all notifications so setting is reachable
-    await utilities.executeQuickPick(workbench, 'Notifications: Clear All Notifications', 1);
+    await utilities.executeQuickPick('Notifications: Clear All Notifications', 1);
 
     const enableSourceTrackingBtn = await utilities.findElementByText(
       'div',
@@ -144,7 +143,7 @@ describe('Deploy and Retrieve', async () => {
     // Clear the Output view first.
     await utilities.executeQuickPick('View: Clear Output', 2);
 
-    await utilities.executeQuickPick(workbench, 'Preferences: Open Workspace Settings', 3);
+    await utilities.executeQuickPick('Preferences: Open Workspace Settings', 3);
     await browser.keys(['push on save']);
 
     const pushOrDeployOnSaveBtn = await utilities.findElementByText(
@@ -155,7 +154,7 @@ describe('Deploy and Retrieve', async () => {
     await pushOrDeployOnSaveBtn.click();
     await utilities.pause(3);
 
-    await utilities.executeQuickPick(workbench, 'Preferences: Open Workspace Settings', 3);
+    await utilities.executeQuickPick('Preferences: Open Workspace Settings', 3);
     await browser.keys(['prefer deploy']);
 
     try {
@@ -172,7 +171,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.pause(3);
 
     // Clear all notifications so clear output button is reachable
-    await utilities.executeQuickPick(workbench, 'Notifications: Clear All Notifications', 1);
+    await utilities.executeQuickPick('Notifications: Clear All Notifications', 1);
 
     // Clear the Output view first.
     await utilities.executeQuickPick('View: Clear Output', 2);
@@ -187,12 +186,11 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Disable Source Tracking Setting', async () => {
-    const workbench = await utilities.getWorkbench();
-    await utilities.executeQuickPick(workbench, 'Preferences: Open Workspace Settings', 5);
+    await utilities.executeQuickPick('Preferences: Open Workspace Settings', 5);
     await browser.keys(['enable source tracking']);
 
     // Clear all notifications so setting is reachable
-    await utilities.executeQuickPick(workbench, 'Notifications: Clear All Notifications', 1);
+    await utilities.executeQuickPick('Notifications: Clear All Notifications', 1);
 
     const enableSourceTrackingBtn = await utilities.findElementByText(
       'div',
@@ -209,7 +207,7 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear all notifications so clear output button is visible
-    await utilities.executeQuickPick(workbench, 'Notifications: Clear All Notifications', 1);
+    await utilities.executeQuickPick('Notifications: Clear All Notifications', 1);
     // Clear the Output view first.
     await utilities.executeQuickPick('View: Clear Output', 2);
     await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -244,15 +242,11 @@ describe('Deploy and Retrieve', async () => {
     const workbench = await utilities.getWorkbench();
     await utilities.getTextEditor(workbench, 'MyClass.cls');
     // Run SFDX: Push Source to Default Org and Ignore Conflicts to be in sync with remote
-    await utilities.executeQuickPick(
-      workbench,
-      'SFDX: Push Source to Default Org and Ignore Conflicts',
-      10
-    );
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org and Ignore Conflicts', 10);
     // Clear the Output view first.
     await utilities.executeQuickPick('View: Clear Output', 2);
 
-    await utilities.executeQuickPick(workbench, 'SFDX: Delete This from Project and Org', 2);
+    await utilities.executeQuickPick('SFDX: Delete This from Project and Org', 2);
 
     // Make sure we get a confirmation dialog
     const confirmationDialogText =
@@ -307,7 +301,7 @@ describe('Deploy and Retrieve', async () => {
     type: string,
     prefix?: string
   ): Promise<void> => {
-    await utilities.executeQuickPick(workbench, `SFDX: ${operation} This Source ${fromTo} Org`, 5);
+    await utilities.executeQuickPick(`SFDX: ${operation} This Source ${fromTo} Org`, 5);
 
     await validateCommand(workbench, operation, fromTo, type, prefix);
   };

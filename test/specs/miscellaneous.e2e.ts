@@ -88,7 +88,7 @@ describe('Miscellaneous', async () => {
     ].join('\n');
 
     // Create simple lwc.html file
-    const inputBox = await utilities.executeQuickPick(workbench, 'Create: New File...', 1);
+    const inputBox = await utilities.executeQuickPick('Create: New File...', 1);
     await inputBox.setText('lwc.html');
     await browser.keys(['Enter']);
     await browser.keys(['Enter']);
@@ -119,7 +119,7 @@ describe('Miscellaneous', async () => {
     const lwcSnippet = 'this.dispatchEvent(new CustomEvent("event-name"));';
 
     // Create simple lwc.js file
-    const inputBox = await utilities.executeQuickPick(workbench, 'Create: New File...', 1);
+    const inputBox = await utilities.executeQuickPick('Create: New File...', 1);
     await inputBox.setText('lwc.js');
     await browser.keys(['Enter']);
     await browser.keys(['Enter']);

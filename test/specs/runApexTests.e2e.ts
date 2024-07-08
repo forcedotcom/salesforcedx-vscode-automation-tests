@@ -29,7 +29,6 @@ describe('Run Apex Tests', async () => {
     // Push source to org
     const workbench = await utilities.getWorkbench();
     await utilities.executeQuickPick(
-      workbench,
       'SFDX: Push Source to Default Org and Ignore Conflicts',
       1
     );
@@ -400,7 +399,6 @@ describe('Run Apex Tests', async () => {
     // Push source to org
     const workbench = await utilities.getWorkbench();
     await utilities.executeQuickPick(
-      workbench,
       'SFDX: Push Source to Default Org and Ignore Conflicts',
       1
     );
@@ -450,7 +448,6 @@ describe('Run Apex Tests', async () => {
 
     // Push source to org
     await utilities.executeQuickPick(
-      workbench,
       'SFDX: Push Source to Default Org and Ignore Conflicts',
       1
     );
@@ -496,7 +493,7 @@ describe('Run Apex Tests', async () => {
   step('Create Apex Test Suite', async () => {
     // Run SFDX: Create Apex Test Suite.
     const workbench = await utilities.getWorkbench();
-    prompt = await utilities.executeQuickPick(workbench, 'SFDX: Create Apex Test Suite', 1);
+    prompt = await utilities.executeQuickPick('SFDX: Create Apex Test Suite', 1);
 
     // Set the name of the new Apex Test Suite
     await prompt.setText('ApexTestSuite');
@@ -521,7 +518,7 @@ describe('Run Apex Tests', async () => {
   step('Add test to Apex Test Suite', async () => {
     // Run SFDX: Add Tests to Apex Test Suite.
     const workbench = await utilities.getWorkbench();
-    prompt = await utilities.executeQuickPick(workbench, 'SFDX: Add Tests to Apex Test Suite', 1);
+    prompt = await utilities.executeQuickPick('SFDX: Add Tests to Apex Test Suite', 1);
 
     // Select the suite recently created called ApexTestSuite
     await prompt.selectQuickPick('ApexTestSuite');

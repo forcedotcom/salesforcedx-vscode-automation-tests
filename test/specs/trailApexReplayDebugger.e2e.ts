@@ -28,11 +28,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     // Push source to org
     const workbench = await utilities.getWorkbench();
-    await utilities.executeQuickPick(
-      workbench,
-      'SFDX: Push Source to Default Org and Ignore Conflicts',
-      1
-    );
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org and Ignore Conflicts', 1);
 
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -106,7 +102,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     expect(breakpoints.length).toEqual(1);
 
     // Run SFDX: Update Checkpoints in Org.
-    prompt = await utilities.executeQuickPick(workbench, 'SFDX: Update Checkpoints in Org', 20);
+    prompt = await utilities.executeQuickPick('SFDX: Update Checkpoints in Org', 20);
     // Verify checkpoints updating results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Apex Replay Debugger',
@@ -124,11 +120,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
     const workbench = await utilities.getWorkbench();
     await utilities.executeQuickPick('View: Clear Output', 1);
-    await utilities.executeQuickPick(
-      workbench,
-      'SFDX: Turn On Apex Debug Log for Replay Debugger',
-      10
-    );
+    await utilities.executeQuickPick('SFDX: Turn On Apex Debug Log for Replay Debugger', 10);
 
     // Look for the success notification that appears which says, "SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -225,12 +217,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Replay an Apex Debug Log', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
-    const workbench = await utilities.getWorkbench();
-    await utilities.executeQuickPick(
-      workbench,
-      'SFDX: Launch Apex Replay Debugger with Current File',
-      5
-    );
+    await utilities.executeQuickPick('SFDX: Launch Apex Replay Debugger with Current File', 5);
 
     // Continue with the debug session
     await browser.keys(['F5']);
@@ -248,11 +235,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.pause(2);
 
     // Push source to org
-    await utilities.executeQuickPick(
-      workbench,
-      'SFDX: Push Source to Default Org and Ignore Conflicts',
-      1
-    );
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org and Ignore Conflicts', 1);
 
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,

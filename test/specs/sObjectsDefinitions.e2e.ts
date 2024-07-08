@@ -87,11 +87,7 @@ describe('SObjects Definitions', async () => {
   step('Refresh SObject Definitions for Custom SObjects', async () => {
     const workbench = await utilities.getWorkbench();
     await utilities.executeQuickPick('View: Clear Output', 2);
-    const prompt = await utilities.executeQuickPick(
-      workbench,
-      'SFDX: Refresh SObject Definitions',
-      2
-    );
+    const prompt = await utilities.executeQuickPick('SFDX: Refresh SObject Definitions', 2);
     await prompt.setText('Custom SObjects');
     await prompt.selectQuickPick('Custom SObjects');
     await utilities.pause(1);
@@ -168,11 +164,7 @@ describe('SObjects Definitions', async () => {
   step('Refresh SObject Definitions for Standard SObjects', async () => {
     const workbench = await utilities.getWorkbench();
     await utilities.executeQuickPick('View: Clear Output', 2);
-    const prompt = await utilities.executeQuickPick(
-      workbench,
-      'SFDX: Refresh SObject Definitions',
-      5
-    );
+    const prompt = await utilities.executeQuickPick('SFDX: Refresh SObject Definitions', 5);
     await prompt.setText('Standard SObjects');
     await prompt.selectQuickPick('Standard SObjects');
     await utilities.pause(1);
@@ -232,11 +224,7 @@ describe('SObjects Definitions', async () => {
     const workbench = await utilities.getWorkbench();
     await utilities.executeQuickPick('View: Clear Output', 2);
 
-    const prompt = await utilities.executeQuickPick(
-      workbench,
-      'SFDX: Refresh SObject Definitions',
-      5
-    );
+    const prompt = await utilities.executeQuickPick('SFDX: Refresh SObject Definitions', 5);
     await prompt.setText('All SObjects');
     await prompt.selectQuickPick('All SObjects');
     await utilities.pause(1);
