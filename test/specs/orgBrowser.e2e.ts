@@ -169,7 +169,7 @@ describe('Org Browser', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Retrieve and Open Source`);
     const myClassLabelEl = await utilities.findElementByText('div', 'aria-label', 'MyClass');
     myClassLabelEl.click();
-    utilities.pause(Duration.seconds(2));
+    await utilities.pause(Duration.seconds(2));
     const retrieveAndOpenButton = await utilities.findElementByText(
       'li',
       'title',
