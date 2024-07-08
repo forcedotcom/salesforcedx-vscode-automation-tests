@@ -13,6 +13,7 @@
         "esModuleInterop": true,
         "allowImportingTsExtensions": true,
         "noEmit": true, 
-        "strict": true
+        "strict": true,
+        "skipLibCheck": true
     }
 }

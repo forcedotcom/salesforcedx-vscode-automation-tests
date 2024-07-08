@@ -6,21 +6,21 @@
  */
 
 import { Duration } from '@salesforce/kit';
-import { runCommandFromCommandPrompt } from './commandPrompt.ts';
+import { executeQuickPick } from './commandPrompt.ts';
 import { getTextEditor, log, pause } from './miscellaneous.ts';
 import { Key } from 'webdriverio';
+import { getWorkbench } from './workbench.ts';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 export async function createLwc(name: string): Promise<void> {
   log('createLwc() - calling browser.getWorkbench()');
-  const workbench = await (await browser.getWorkbench()).wait();
+  const workbench = await getWorkbench();
 
   log('createLwc() - Running SFDX: Create Lightning Web Component');
   // Using the Command palette, run SFDX: Create Lightning Web Component.
-  const inputBox = await runCommandFromCommandPrompt(
-    workbench,
+  const inputBox = await executeQuickPick(
     'SFDX: Create Lightning Web Component',
-    1
+    Duration.seconds(1)
   );
 
   log('createLwc() - Set the name of the new component');
@@ -109,14 +109,14 @@ export async function createLwc(name: string): Promise<void> {
   await browser.keys(`expect(div.textContent).toBe('Hello, World!');`);
   await browser.keys(['Escape']);
   await browser.keys(['ArrowRight']);
-  await runCommandFromCommandPrompt(workbench, 'Debug: Inline Breakpoint', 2);
+  await executeQuickPick('Debug: Inline Breakpoint', Duration.seconds(2));
 
   await browser.keys([CMD_KEY, 'f']);
   await pause(Duration.seconds(1));
   await browser.keys(`await expect(element).toBeDefined();`);
   await browser.keys(['Escape']);
   await browser.keys(['ArrowRight']);
-  await runCommandFromCommandPrompt(workbench, 'Debug: Inline Breakpoint', 2);
+  await executeQuickPick('Debug: Inline Breakpoint', Duration.seconds(2));
 }
 
 export async function createAura(name: string): Promise<void> {
@@ -124,7 +124,7 @@ export async function createAura(name: string): Promise<void> {
   const workbench = await (await browser.getWorkbench()).wait();
 
   log('createAura() - Running SFDX: Create Aura Component');
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Aura Component', 1);
+  const inputBox = await executeQuickPick('SFDX: Create Aura Component', Duration.seconds(1));
 
   log('createAura() - Set the name of the new component');
   // Set the name of the new component
