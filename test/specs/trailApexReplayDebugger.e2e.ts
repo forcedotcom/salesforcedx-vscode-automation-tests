@@ -222,10 +222,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.executeQuickPick('SFDX: Launch Apex Replay Debugger with Current File', 5);
 
     // Continue with the debug session
-    await browser.keys('F5');
-    await utilities.pause(1);
-    await browser.keys('F5');
-    await utilities.pause(1);
+    await utilities.executeQuickPick('Debug: Continue', 3);
   });
 
   step('Push Fixed Metadata to Org', async () => {
