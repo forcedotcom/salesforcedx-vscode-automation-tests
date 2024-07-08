@@ -13,7 +13,7 @@ export async function createVisualforcePage(): Promise<void> {
   const workbench = await browser.getWorkbench();
 
   // Using the Command palette, run SFDX: Create Visualforce Page
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Visualforce Page', 1);
+  const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Visualforce Page', Duration.seconds(1));
 
   // Set the name of the new Visualforce Page
   await inputBox.setText('FooPage');

@@ -109,14 +109,14 @@ export async function createLwc(name: string): Promise<void> {
   await browser.keys(`expect(div.textContent).toBe('Hello, World!');`);
   await browser.keys(['Escape']);
   await browser.keys(['ArrowRight']);
-  await runCommandFromCommandPrompt(workbench, 'Debug: Inline Breakpoint', 2);
+  await executeQuickPick('Debug: Inline Breakpoint', Duration.seconds(2));
 
   await browser.keys([CMD_KEY, 'f']);
   await pause(Duration.seconds(1));
   await browser.keys(`await expect(element).toBeDefined();`);
   await browser.keys(['Escape']);
   await browser.keys(['ArrowRight']);
-  await runCommandFromCommandPrompt(workbench, 'Debug: Inline Breakpoint', 2);
+  await executeQuickPick('Debug: Inline Breakpoint', Duration.seconds(2));
 }
 
 export async function createAura(name: string): Promise<void> {
@@ -124,7 +124,7 @@ export async function createAura(name: string): Promise<void> {
   const workbench = await (await browser.getWorkbench()).wait();
 
   log('createAura() - Running SFDX: Create Aura Component');
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Aura Component', 1);
+  const inputBox = await executeQuickPick('SFDX: Create Aura Component', Duration.seconds(1));
 
   log('createAura() - Set the name of the new component');
   // Set the name of the new component

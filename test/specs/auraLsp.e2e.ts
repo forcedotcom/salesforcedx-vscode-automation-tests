@@ -24,7 +24,7 @@ describe('Aura LSP', async () => {
     await utilities.createAura('aura1');
 
     // Reload the VSCode window to allow the Aura Component to be indexed by the Aura Language Server
-    await utilities.reloadWindow(70);
+    await utilities.reloadWindow(Duration.seconds(70));
   });
 
   step('Verify Extension is Running', async () => {

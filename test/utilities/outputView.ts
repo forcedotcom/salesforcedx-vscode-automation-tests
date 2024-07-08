@@ -52,20 +52,17 @@ export async function attemptToFindOutputPanelText(
 ): Promise<string | undefined> {
   await selectOutputChannel(outputChannelName);
 
-  browser.waitUntil(
-    async () => {
+  while (attempts > 0) {
       const outputViewText = await getOutputViewText();
-      return outputViewText.includes(searchString);
-    },
-    {
-      timeout: 500 * attempts, // Convert attempts to milliseconds assuming each attempt is a half second
-      interval: 500, // Check every half second
-      timeoutMsg: `Output view did not contain the search string after ${attempts} attempts.`
+    if (outputViewText.includes(searchString)) {
+      return outputViewText;
     }
-  );
 
-  const outputViewText = await getOutputViewText(); // Retrieve the text one more time if needed outside
-  return outputViewText.includes(searchString) ? outputViewText : undefined;
+    await pause(Duration.seconds(1));
+    attempts--;
+    }
+
+  return undefined;
 }
 
 export async function getOperationTime(outputText: string): Promise<string> {
