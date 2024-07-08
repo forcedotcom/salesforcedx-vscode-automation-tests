@@ -14,7 +14,8 @@ import util from 'util';
 import { fail } from 'assert';
 
 import { Key } from 'webdriverio';
-const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;import { Duration } from '@salesforce/kit';
+const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
+import { Duration } from '@salesforce/kit';
 
 const exec = util.promisify(child_process.exec);
 
