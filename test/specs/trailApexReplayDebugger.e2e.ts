@@ -223,7 +223,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     // Continue with the debug session
     await utilities.executeQuickPick('Debug: Continue', 3);
-    await utilities.executeQuickPick('Debug: Continue', 3);
   });
 
   step('Push Fixed Metadata to Org', async () => {
