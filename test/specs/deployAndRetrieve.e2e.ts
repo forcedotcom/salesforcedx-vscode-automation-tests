@@ -74,7 +74,7 @@ describe('Deploy and Retrieve', async () => {
 
     const enableSourceTrackingBtn = await utilities.findElementByText(
       'div',
-      'title',
+      'aria-label',
       'salesforcedx-vscode-core.experimental.enableSourceTrackingForDeployAndRetrieve'
     );
     expect(await enableSourceTrackingBtn.getAttribute('aria-checked')).toBe('true');
