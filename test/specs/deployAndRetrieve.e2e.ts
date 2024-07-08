@@ -66,11 +66,20 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Verify Source Tracking Setting is enabled', async () => {
-    await utilities.executeQuickPick('Preferences: Open Workspace Settings', 5);
-    await browser.keys(['enable source tracking']);
-
     // Clear all notifications so setting is reachable
     await utilities.executeQuickPick('Notifications: Clear All Notifications', 1);
+
+    const workbench = await utilities.getWorkbench();
+
+    const settingsEditor = await workbench.openSettings();
+    await utilities.pause(2);
+    const enableSourceTrackingSetting = await settingsEditor.findSetting(
+      'Salesforcedx-vscode-core > Experimental: Enable Source Tracking For Deploy And Retrieve'
+    );
+    utilities.log(`Setting found: ${!!enableSourceTrackingSetting}`);
+
+    await utilities.executeQuickPick('Preferences: Open Workspace Settings', 5);
+    await browser.keys(['enable source tracking']);
 
     const enableSourceTrackingBtn = await utilities.findElementByText(
       'div',
