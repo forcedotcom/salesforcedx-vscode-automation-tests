@@ -12,7 +12,7 @@ export async function createSfdxProjectJsonWithAllFields(): Promise<void> {
     `\t],`,
     `\t"namespace": "",`,
     `\t"sourceApiVersion": "61.0",`,
-    `\t"sourceBehaviorOptions": ["decomposeCustomLabelsBeta, decomposePermissionSetBeta, decomposeWorkflowBeta, decomposeSharingRulesBeta"]`,
+    `\t"sourceBehaviorOptions": ["decomposeCustomLabelsBeta", "decomposePermissionSetBeta", "decomposeWorkflowBeta", "decomposeSharingRulesBeta"]`,
     `}`
   ].join('\n');
   const textEditor = await getTextEditor(workbench, 'sfdx-project.json');
