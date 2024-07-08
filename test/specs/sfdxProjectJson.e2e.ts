@@ -1,5 +1,4 @@
 import { step } from 'mocha-steps';
-import { InputBox, QuickOpenBox, SideBarView, TreeItem } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
