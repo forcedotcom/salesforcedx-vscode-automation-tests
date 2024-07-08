@@ -8,7 +8,7 @@
 import os from 'os';
 import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings.ts';
-import { attemptToFindOutputPanelText, clearOutputView } from './outputView.ts';
+import { attemptToFindOutputPanelText } from './outputView.ts';
 import { executeQuickPick } from './commandPrompt.ts';
 import { notificationIsPresentWithTimeout } from './notifications.ts';
 import { Duration } from '@salesforce/kit';
@@ -120,4 +120,11 @@ export async function createCommand(
   );
   expect(outputPanelText).toContain(`create ${metadataPath}`);
   return outputPanelText;
+}
+
+// Type guard function to check if the argument is a Duration
+export function isDuration(
+  predicateOrWait: PredicateWithTimeout | Duration
+): predicateOrWait is Duration {
+  return (predicateOrWait as Duration).milliseconds !== undefined;
 }
