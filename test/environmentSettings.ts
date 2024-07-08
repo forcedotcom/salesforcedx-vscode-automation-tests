@@ -17,7 +17,7 @@ export class EnvironmentSettings {
 
   private _vscodeVersion = 'stable';
   private _specFiles = [
-    // './specs/**/*.e2e.ts'
+    './specs/**/*.e2e.ts'
     // OR
     // './specs/**/anInitialSuite.e2e.ts',
     // './specs/**/apexLsp.e2e.ts',
@@ -32,7 +32,7 @@ export class EnvironmentSettings {
     // './specs/**/pushAndPull.e2e.ts',
     // './specs/**/runApexTests.e2e.ts',
     // './specs/**/sObjectsDefinitions.e2e.ts',
-    './specs/**/templates.e2e.ts',
+    // './specs/**/templates.e2e.ts',
     // './specs/**/trailApexReplayDebugger.e2e.ts',
     // './specs/**/visualforceLsp.e2e.ts',
     // './specs/**/runEinsteinForDeveloper.e2e.ts',
