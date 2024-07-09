@@ -509,7 +509,7 @@ describe('Run Apex Tests', async () => {
   step('Add test to Apex Test Suite', async () => {
     // Run SFDX: Add Tests to Apex Test Suite.
     const workbench = await (await browser.getWorkbench()).wait();
-    prompt = await utilities.executeQuickPick('SFDX: Add Tests to Apex Test Suite', 1);
+    prompt = await utilities.executeQuickPick('SFDX: Add Tests to Apex Test Suite', 5);
 
     // Select the suite recently created called ApexTestSuite
     await prompt.setText('ApexTestSuite');
@@ -538,7 +538,7 @@ describe('Run Apex Tests', async () => {
     await utilities.executeQuickPick('View: Clear Output', 2);
 
     // Run SFDX: Run Apex Test Suite.
-    prompt = await utilities.executeQuickPick('SFDX: Run Apex Test Suite', 1);
+    prompt = await utilities.executeQuickPick('SFDX: Run Apex Test Suite', 5);
 
     // Select the suite recently created called ApexTestSuite
     await prompt.setText('ApexTestSuite');
