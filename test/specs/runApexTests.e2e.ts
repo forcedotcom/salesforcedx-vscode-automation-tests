@@ -512,8 +512,9 @@ describe('Run Apex Tests', async () => {
     prompt = await utilities.executeQuickPick('SFDX: Add Tests to Apex Test Suite', 1);
 
     // Select the suite recently created called ApexTestSuite
-    await prompt.selectQuickPick('ApexTestSuite');
-    await utilities.pause(2);
+    await prompt.setText('ApexTestSuite');
+    await prompt.confirm();
+    await utilities.pause(1);
 
     // Choose tests that will belong to the already created Apex Test Suite
     await browser.keys(['2']);
@@ -540,7 +541,8 @@ describe('Run Apex Tests', async () => {
     prompt = await utilities.executeQuickPick('SFDX: Run Apex Test Suite', 1);
 
     // Select the suite recently created called ApexTestSuite
-    await prompt.selectQuickPick('ApexTestSuite');
+    await prompt.setText('ApexTestSuite');
+    await prompt.confirm();
 
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
