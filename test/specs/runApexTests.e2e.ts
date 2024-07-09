@@ -509,7 +509,7 @@ describe('Run Apex Tests', async () => {
   step('Add test to Apex Test Suite', async () => {
     // Run SFDX: Add Tests to Apex Test Suite.
     const workbench = await (await browser.getWorkbench()).wait();
-    prompt = await utilities.executeQuickPick('SFDX: Add Tests to Apex Test Suite', 10);
+    prompt = await utilities.executeQuickPick('SFDX: Add Tests to Apex Test Suite', 15);
 
     // Select the suite recently created called ApexTestSuite
     await prompt.setText('ApexTestSuite');
