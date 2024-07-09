@@ -509,12 +509,15 @@ describe('Run Apex Tests', async () => {
   step('Add test to Apex Test Suite', async () => {
     // Run SFDX: Add Tests to Apex Test Suite.
     const workbench = await (await browser.getWorkbench()).wait();
-    prompt = await utilities.executeQuickPick('SFDX: Add Tests to Apex Test Suite', 30);
+    prompt = await workbench.executeQuickPick('SFDX: Add Tests to Apex Test Suite');
+    await utilities.waitForQuickPick(prompt, 'ApexTestSuite', {
+      msg: 'Expected ApexTestSuite option to be available within 50 seconds',
+      timeout: 50_000
+    });
 
     // Select the suite recently created called ApexTestSuite
-    await prompt.setText('ApexTestSuite');
-    await prompt.confirm();
-    await utilities.pause(1);
+    // await prompt.setText('ApexTestSuite');
+    // await prompt.confirm();
 
     // Choose tests that will belong to the already created Apex Test Suite
     await browser.keys(['2']);
