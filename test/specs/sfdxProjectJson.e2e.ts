@@ -13,6 +13,6 @@ describe('Customize sfdx-project.json', async () => {
   });
 
   step('Verify our extensions are loaded after updating sfdx-project.json', async () => {
-    await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
+    expect(await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive())).toBe(true);
   });
 });
