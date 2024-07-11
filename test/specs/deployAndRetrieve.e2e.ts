@@ -37,16 +37,16 @@ describe('Deploy and Retrieve', async () => {
       'SFDX: Create Apex Class successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
       'Finished SFDX: Create Apex Class',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain(`${pathToClass}.cls`);
-    expect(outputPanelText).toContain(`${pathToClass}.cls-meta.xml`);
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain(`${pathToClass}.cls`);
+    await expect(outputPanelText).toContain(`${pathToClass}.cls-meta.xml`);
 
     // Check for expected items in the Explorer view.
     const sidebar = workbench.getSideBar();
@@ -62,8 +62,8 @@ describe('Deploy and Retrieve', async () => {
 
     // It's a tree, but it's also a list.  Everything in the view is actually flat
     // and returned from the call to visibleItems.reduce().
-    expect(filteredTreeViewItems.includes('MyClass.cls')).toBe(true);
-    expect(filteredTreeViewItems.includes('MyClass.cls-meta.xml')).toBe(true);
+    await expect(filteredTreeViewItems.includes('MyClass.cls')).toBe(true);
+    await expect(filteredTreeViewItems.includes('MyClass.cls-meta.xml')).toBe(true);
   });
 
   step('Verify Source Tracking Setting is enabled', async () => {
@@ -87,7 +87,7 @@ describe('Deploy and Retrieve', async () => {
       'title',
       'salesforcedx-vscode-core.experimental.enableSourceTrackingForDeployAndRetrieve'
     );
-    expect(await enableSourceTrackingBtn.getAttribute('aria-checked')).toBe('true');
+    await expect(await enableSourceTrackingBtn.getAttribute('aria-checked')).toBe('true');
   });
 
   step('Deploy with SFDX: Deploy This Source to Org - ST enabled', async () => {
@@ -145,7 +145,7 @@ describe('Deploy and Retrieve', async () => {
     await runAndValidateCommand(workbench, 'Retrieve', 'from', 'ST');
     // Retrieve operation will overwrite the file, hence the the comment will remain as before the modification
     const textAfterRetrieve = await textEditor.getText();
-    expect(textAfterRetrieve).not.toContain('modified comment');
+    await expect(textAfterRetrieve).not.toContain('modified comment');
   });
 
   step('Prefer Deploy on Save when `Push or deploy on save` is enabled', async () => {
@@ -213,6 +213,7 @@ describe('Deploy and Retrieve', async () => {
 
   step('Disable Source Tracking Setting', async () => {
     const workbench = await (await browser.getWorkbench()).wait();
+    await utilities.enableBooleanSetting('salesforcedx-vscode-core.experimental.enableSourceTrackingForDeployAndRetrieve')
     await utilities.runCommandFromCommandPrompt(
       workbench,
       'Preferences: Open Workspace Settings',
@@ -307,7 +308,7 @@ describe('Deploy and Retrieve', async () => {
       'aria-label',
       confirmationDialogText
     );
-    expect(confirmationDialogEl).toBeTruthy();
+    await expect(confirmationDialogEl).toBeTruthy();
 
     // Confirm deletion
     const deleteSourceBtn = await utilities.findElementByText(
@@ -322,7 +323,7 @@ describe('Deploy and Retrieve', async () => {
       'SFDX: Delete from Project and Org successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -331,14 +332,14 @@ describe('Deploy and Retrieve', async () => {
       10
     );
     const outputPanelLineText = `MyClass   ApexClass ${path.join(pathToClass)}.cls`.toLowerCase();
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('*** Deleting with SOAP API ***');
-    expect(outputPanelText).toContain('Status: Succeeded | 1/1 Components');
-    expect(outputPanelText).toContain(`=== Deleted Source`);
-    expect(outputPanelText?.toLowerCase()).toContain(outputPanelLineText);
-    expect(outputPanelText?.toLowerCase()).toContain(`${outputPanelLineText}-meta.xml`);
-    expect(outputPanelText).toContain('Updating source tracking... done');
-    expect(outputPanelText).toContain('ended with exit code 0');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('*** Deleting with SOAP API ***');
+    await expect(outputPanelText).toContain('Status: Succeeded | 1/1 Components');
+    await expect(outputPanelText).toContain(`=== Deleted Source`);
+    await expect(outputPanelText?.toLowerCase()).toContain(outputPanelLineText);
+    await expect(outputPanelText?.toLowerCase()).toContain(`${outputPanelLineText}-meta.xml`);
+    await expect(outputPanelText).toContain('Updating source tracking... done');
+    await expect(outputPanelText).toContain('ended with exit code 0');
   });
 
   step('Tear down and clean up the testing environment', async () => {
@@ -373,7 +374,7 @@ describe('Deploy and Retrieve', async () => {
       `SFDX: ${operation} This Source ${fromTo} Org successfully ran`,
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -384,10 +385,14 @@ describe('Deploy and Retrieve', async () => {
     utilities.log(
       `${operation} time ${type}: ` + (await utilities.getOperationTime(outputPanelText!))
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain(`${operation}ed Source`.replace('Retrieveed', 'Retrieved'));
-    expect(outputPanelText).toContain(`${prefix}MyClass    ApexClass  ${pathToClass}.cls`);
-    expect(outputPanelText).toContain(`${prefix}MyClass    ApexClass  ${pathToClass}.cls-meta.xml`);
-    expect(outputPanelText).toContain(`ended SFDX: ${operation} This Source ${fromTo} Org`);
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain(
+      `${operation}ed Source`.replace('Retrieveed', 'Retrieved')
+    );
+    await expect(outputPanelText).toContain(`${prefix}MyClass    ApexClass  ${pathToClass}.cls`);
+    await expect(outputPanelText).toContain(
+      `${prefix}MyClass    ApexClass  ${pathToClass}.cls-meta.xml`
+    );
+    await expect(outputPanelText).toContain(`ended SFDX: ${operation} This Source ${fromTo} Org`);
   };
 });

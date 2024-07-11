@@ -39,7 +39,7 @@ describe('Apex Replay Debugger', async () => {
       'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successPushNotificationWasFound).toBe(true);
+    await expect(successPushNotificationWasFound).toBe(true);
   });
 
   step('Verify LSP finished indexing', async () => {
@@ -52,7 +52,7 @@ describe('Apex Replay Debugger', async () => {
       'Editor Language Status'
     );
     await statusBar.click();
-    expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
+    await expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
   });
 
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
@@ -73,7 +73,7 @@ describe('Apex Replay Debugger', async () => {
       'SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify content on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -81,9 +81,9 @@ describe('Apex Replay Debugger', async () => {
       'Starting SFDX: Turn On Apex Debug Log for Replay Debugger',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('SFDX: Turn On Apex Debug Log for Replay Debugger ');
-    expect(outputPanelText).toContain('ended with exit code 0');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('SFDX: Turn On Apex Debug Log for Replay Debugger ');
+    await expect(outputPanelText).toContain('ended with exit code 0');
   });
 
   step('Run the Anonymous Apex Debugger with Currently Selected Text', async () => {
@@ -112,7 +112,7 @@ describe('Apex Replay Debugger', async () => {
       'Execute Anonymous Apex successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Close finder tool
     await browser.keys(['Escape']);
@@ -125,12 +125,12 @@ describe('Apex Replay Debugger', async () => {
       'Starting Execute Anonymous Apex',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Compiled successfully.');
-    expect(outputPanelText).toContain('Executed successfully.');
-    expect(outputPanelText).toContain('|EXECUTION_STARTED');
-    expect(outputPanelText).toContain('|EXECUTION_FINISHED');
-    expect(outputPanelText).toContain('ended Execute Anonymous Apex');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('Compiled successfully.');
+    await expect(outputPanelText).toContain('Executed successfully.');
+    await expect(outputPanelText).toContain('|EXECUTION_STARTED');
+    await expect(outputPanelText).toContain('|EXECUTION_FINISHED');
+    await expect(outputPanelText).toContain('ended Execute Anonymous Apex');
   });
 
   step('SFDX: Get Apex Debug Logs', async () => {
@@ -152,8 +152,8 @@ describe('Apex Replay Debugger', async () => {
 
     // Select a log file
     const quickPicks = await prompt.getQuickPicks();
-    expect(quickPicks).not.toBeUndefined();
-    expect(quickPicks.length).toBeGreaterThanOrEqual(1);
+    await expect(quickPicks).not.toBeUndefined();
+    await expect(quickPicks.length).toBeGreaterThanOrEqual(1);
     await prompt.selectQuickPick('User User - Api');
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -161,7 +161,7 @@ describe('Apex Replay Debugger', async () => {
       'SFDX: Get Apex Debug Logs successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify content on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -169,10 +169,10 @@ describe('Apex Replay Debugger', async () => {
       'Starting SFDX: Get Apex Debug Logs',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('|EXECUTION_STARTED');
-    expect(outputPanelText).toContain('|EXECUTION_FINISHED');
-    expect(outputPanelText).toContain('ended SFDX: Get Apex Debug Logs');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('|EXECUTION_STARTED');
+    await expect(outputPanelText).toContain('|EXECUTION_FINISHED');
+    await expect(outputPanelText).toContain('ended SFDX: Get Apex Debug Logs');
 
     // Verify content on log file
     const editorView = workbench.getEditorView();
@@ -181,8 +181,8 @@ describe('Apex Replay Debugger', async () => {
     const textEditor = (await editorView.openEditor(title!)) as TextEditor;
     const executionStarted = await textEditor.getLineOfText('|EXECUTION_STARTED');
     const executionFinished = await textEditor.getLineOfText('|EXECUTION_FINISHED');
-    expect(executionStarted).toBeGreaterThanOrEqual(1);
-    expect(executionFinished).toBeGreaterThanOrEqual(1);
+    await expect(executionStarted).toBeGreaterThanOrEqual(1);
+    await expect(executionFinished).toBeGreaterThanOrEqual(1);
   });
 
   step('SFDX: Launch Apex Replay Debugger with Last Log File', async () => {
@@ -192,7 +192,7 @@ describe('Apex Replay Debugger', async () => {
 
     // Get file path from open text editor
     const activeTab = await editorView.getActiveTab();
-    expect(activeTab).not.toBe(undefined);
+    await expect(activeTab).not.toBe(undefined);
     const title = await activeTab?.getTitle();
     const logFilePath = path.join(path.delimiter, 'tools', 'debug', 'logs', title!).slice(1);
 
@@ -242,7 +242,7 @@ describe('Apex Replay Debugger', async () => {
       'Debug Test(s) successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
   });
 
   step('Run the Anonymous Apex Debugger using the Command Palette', async () => {
@@ -266,7 +266,7 @@ describe('Apex Replay Debugger', async () => {
       'Execute Anonymous Apex successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify content on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -274,12 +274,12 @@ describe('Apex Replay Debugger', async () => {
       'Starting Execute Anonymous Apex',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Compiled successfully.');
-    expect(outputPanelText).toContain('Executed successfully.');
-    expect(outputPanelText).toContain('|EXECUTION_STARTED');
-    expect(outputPanelText).toContain('|EXECUTION_FINISHED');
-    expect(outputPanelText).toContain('ended Execute Anonymous Apex');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('Compiled successfully.');
+    await expect(outputPanelText).toContain('Executed successfully.');
+    await expect(outputPanelText).toContain('|EXECUTION_STARTED');
+    await expect(outputPanelText).toContain('|EXECUTION_FINISHED');
+    await expect(outputPanelText).toContain('ended Execute Anonymous Apex');
   });
 
   step('SFDX: Turn Off Apex Debug Log for Replay Debugger', async () => {
@@ -298,7 +298,7 @@ describe('Apex Replay Debugger', async () => {
       'SFDX: Turn Off Apex Debug Log for Replay Debugger successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify content on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -306,11 +306,11 @@ describe('Apex Replay Debugger', async () => {
       'Starting SFDX: Turn Off Apex Debug Log for Replay Debugger',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Deleting Record...');
-    expect(outputPanelText).toContain('Success');
-    expect(outputPanelText).toContain('Successfully deleted record:');
-    expect(outputPanelText).toContain('ended with exit code 0');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('Deleting Record...');
+    await expect(outputPanelText).toContain('Success');
+    await expect(outputPanelText).toContain('Successfully deleted record:');
+    await expect(outputPanelText).toContain('ended with exit code 0');
   });
 
   step('Tear down and clean up the testing environment', async () => {

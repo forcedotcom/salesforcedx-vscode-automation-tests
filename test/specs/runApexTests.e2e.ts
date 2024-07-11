@@ -41,7 +41,7 @@ describe('Run Apex Tests', async () => {
       'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successPushNotificationWasFound).toBe(true);
+    await expect(successPushNotificationWasFound).toBe(true);
   });
 
   step('Verify LSP finished indexing', async () => {
@@ -54,7 +54,7 @@ describe('Run Apex Tests', async () => {
       'Editor Language Status'
     );
     await statusBar.click();
-    expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
+    await expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
   });
 
   step('Run All Tests via Apex Class', async () => {
@@ -77,7 +77,7 @@ describe('Run Apex Tests', async () => {
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     // Also verify that all tests pass
@@ -86,14 +86,14 @@ describe('Run Apex Tests', async () => {
       '=== Test Results',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('=== Test Summary');
-    expect(outputPanelText).toContain('Outcome              Passed');
-    expect(outputPanelText).toContain('Tests Ran            1');
-    expect(outputPanelText).toContain('Pass Rate            100%');
-    expect(outputPanelText).toContain('TEST NAME');
-    expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
-    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('=== Test Summary');
+    await expect(outputPanelText).toContain('Outcome              Passed');
+    await expect(outputPanelText).toContain('Tests Ran            1');
+    await expect(outputPanelText).toContain('Pass Rate            100%');
+    await expect(outputPanelText).toContain('TEST NAME');
+    await expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
+    await expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
   });
 
   step('Run Single Test via Apex Class', async () => {
@@ -116,7 +116,7 @@ describe('Run Apex Tests', async () => {
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     // Also verify that all tests pass
@@ -125,14 +125,14 @@ describe('Run Apex Tests', async () => {
       '=== Test Results',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('=== Test Summary');
-    expect(outputPanelText).toContain('Outcome              Passed');
-    expect(outputPanelText).toContain('Tests Ran            1');
-    expect(outputPanelText).toContain('Pass Rate            100%');
-    expect(outputPanelText).toContain('TEST NAME');
-    expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello  Pass');
-    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('=== Test Summary');
+    await expect(outputPanelText).toContain('Outcome              Passed');
+    await expect(outputPanelText).toContain('Tests Ran            1');
+    await expect(outputPanelText).toContain('Pass Rate            100%');
+    await expect(outputPanelText).toContain('TEST NAME');
+    await expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello  Pass');
+    await expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
   });
 
   step('Run All Tests via Command Palette', async () => {
@@ -157,7 +157,7 @@ describe('Run Apex Tests', async () => {
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     // Also verify that all tests pass
@@ -166,16 +166,16 @@ describe('Run Apex Tests', async () => {
       '=== Test Results',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('=== Test Summary');
-    expect(outputPanelText).toContain('Outcome              Passed');
-    expect(outputPanelText).toContain('Tests Ran            3');
-    expect(outputPanelText).toContain('Pass Rate            100%');
-    expect(outputPanelText).toContain('TEST NAME');
-    expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
-    expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello  Pass');
-    expect(outputPanelText).toContain('ExampleApexClass3Test.validateSayHello  Pass');
-    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('=== Test Summary');
+    await expect(outputPanelText).toContain('Outcome              Passed');
+    await expect(outputPanelText).toContain('Tests Ran            3');
+    await expect(outputPanelText).toContain('Pass Rate            100%');
+    await expect(outputPanelText).toContain('TEST NAME');
+    await expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
+    await expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello  Pass');
+    await expect(outputPanelText).toContain('ExampleApexClass3Test.validateSayHello  Pass');
+    await expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
   });
 
   step('Run Single Class via Command Palette', async () => {
@@ -200,7 +200,7 @@ describe('Run Apex Tests', async () => {
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     // Also verify that all tests pass
@@ -209,14 +209,14 @@ describe('Run Apex Tests', async () => {
       '=== Test Results',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('=== Test Summary');
-    expect(outputPanelText).toContain('Outcome              Passed');
-    expect(outputPanelText).toContain('Tests Ran            1');
-    expect(outputPanelText).toContain('Pass Rate            100%');
-    expect(outputPanelText).toContain('TEST NAME');
-    expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
-    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('=== Test Summary');
+    await expect(outputPanelText).toContain('Outcome              Passed');
+    await expect(outputPanelText).toContain('Tests Ran            1');
+    await expect(outputPanelText).toContain('Pass Rate            100%');
+    await expect(outputPanelText).toContain('TEST NAME');
+    await expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
+    await expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
   });
 
   step('Run All tests via Test Sidebar', async () => {
@@ -225,7 +225,7 @@ describe('Run Apex Tests', async () => {
 
     // Open the Test Sidebar
     const testingSideBarView = await testingView?.openView();
-    expect(testingSideBarView).toBeInstanceOf(SideBarView);
+    await expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
     const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');
 
@@ -236,13 +236,13 @@ describe('Run Apex Tests', async () => {
     );
 
     // Make sure all the tests are present in the sidebar
-    expect(apexTestsItems.length).toBe(6);
-    expect(await apexTestsSection.findItem('ExampleApexClass1Test')).toBeTruthy();
-    expect(await apexTestsSection.findItem('ExampleApexClass2Test')).toBeTruthy();
-    expect(await apexTestsSection.findItem('ExampleApexClass3Test')).toBeTruthy();
-    expect(await apexTestsItems[0].getLabel()).toBe('ExampleApexClass1Test');
-    expect(await apexTestsItems[2].getLabel()).toBe('ExampleApexClass2Test');
-    expect(await apexTestsItems[4].getLabel()).toBe('ExampleApexClass3Test');
+    await expect(apexTestsItems.length).toBe(6);
+    await expect(await apexTestsSection.findItem('ExampleApexClass1Test')).toBeTruthy();
+    await expect(await apexTestsSection.findItem('ExampleApexClass2Test')).toBeTruthy();
+    await expect(await apexTestsSection.findItem('ExampleApexClass3Test')).toBeTruthy();
+    await expect(await apexTestsItems[0].getLabel()).toBe('ExampleApexClass1Test');
+    await expect(await apexTestsItems[2].getLabel()).toBe('ExampleApexClass2Test');
+    await expect(await apexTestsItems[4].getLabel()).toBe('ExampleApexClass3Test');
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
@@ -259,7 +259,7 @@ describe('Run Apex Tests', async () => {
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     // Also verify that all tests pass
@@ -268,16 +268,16 @@ describe('Run Apex Tests', async () => {
       '=== Test Results',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('=== Test Summary');
-    expect(outputPanelText).toContain('Outcome              Passed');
-    expect(outputPanelText).toContain('Tests Ran            3');
-    expect(outputPanelText).toContain('Pass Rate            100%');
-    expect(outputPanelText).toContain('TEST NAME');
-    expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
-    expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
-    expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
-    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('=== Test Summary');
+    await expect(outputPanelText).toContain('Outcome              Passed');
+    await expect(outputPanelText).toContain('Tests Ran            3');
+    await expect(outputPanelText).toContain('Pass Rate            100%');
+    await expect(outputPanelText).toContain('TEST NAME');
+    await expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
+    await expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
+    await expect(outputPanelText).toContain('ExampleApexClass1Test.validateSayHello  Pass');
+    await expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
     for (const item of apexTestsItems) {
@@ -285,7 +285,7 @@ describe('Run Apex Tests', async () => {
       const iconStyle = await icon.getAttribute('style');
       // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
       try {
-        expect(iconStyle).toContain('testPass');
+        await expect(iconStyle).toContain('testPass');
       } catch {
         utilities.log('ERROR: icon did not turn green after test successfully ran');
       }
@@ -298,7 +298,7 @@ describe('Run Apex Tests', async () => {
 
     // Open the Test Sidebar
     const testingSideBarView = await testingView?.openView();
-    expect(testingSideBarView).toBeInstanceOf(SideBarView);
+    await expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
     const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');
 
@@ -318,7 +318,7 @@ describe('Run Apex Tests', async () => {
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     // Also verify that all tests pass
@@ -327,21 +327,21 @@ describe('Run Apex Tests', async () => {
       '=== Test Results',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('=== Test Summary');
-    expect(outputPanelText).toContain('Outcome              Passed');
-    expect(outputPanelText).toContain('Tests Ran            1');
-    expect(outputPanelText).toContain('Pass Rate            100%');
-    expect(outputPanelText).toContain('TEST NAME');
-    expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello  Pass');
-    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('=== Test Summary');
+    await expect(outputPanelText).toContain('Outcome              Passed');
+    await expect(outputPanelText).toContain('Tests Ran            1');
+    await expect(outputPanelText).toContain('Pass Rate            100%');
+    await expect(outputPanelText).toContain('TEST NAME');
+    await expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello  Pass');
+    await expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
     const icon = await (await apexTestItem.elem).$('.custom-view-tree-node-item-icon');
     const iconStyle = await icon.getAttribute('style');
     // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
     try {
-      expect(iconStyle).toContain('testPass');
+      await expect(iconStyle).toContain('testPass');
     } catch {
       utilities.log('ERROR: icon did not turn green after test successfully ran');
     }
@@ -353,7 +353,7 @@ describe('Run Apex Tests', async () => {
 
     // Open the Test Sidebar
     const testingSideBarView = await testingView?.openView();
-    expect(testingSideBarView).toBeInstanceOf(SideBarView);
+    await expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
     const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');
 
@@ -373,7 +373,7 @@ describe('Run Apex Tests', async () => {
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     // Also verify that all tests pass
@@ -382,21 +382,21 @@ describe('Run Apex Tests', async () => {
       '=== Test Results',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('=== Test Summary');
-    expect(outputPanelText).toContain('Outcome              Passed');
-    expect(outputPanelText).toContain('Tests Ran            1');
-    expect(outputPanelText).toContain('Pass Rate            100%');
-    expect(outputPanelText).toContain('TEST NAME');
-    expect(outputPanelText).toContain('ExampleApexClass3Test.validateSayHello  Pass');
-    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('=== Test Summary');
+    await expect(outputPanelText).toContain('Outcome              Passed');
+    await expect(outputPanelText).toContain('Tests Ran            1');
+    await expect(outputPanelText).toContain('Pass Rate            100%');
+    await expect(outputPanelText).toContain('TEST NAME');
+    await expect(outputPanelText).toContain('ExampleApexClass3Test.validateSayHello  Pass');
+    await expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
     const icon = await (await apexTestItem.elem).$('.custom-view-tree-node-item-icon');
     const iconStyle = await icon.getAttribute('style');
     // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
     try {
-      expect(iconStyle).toContain('testPass');
+      await expect(iconStyle).toContain('testPass');
     } catch {
       utilities.log('ERROR: icon did not turn green after test successfully ran');
     }
@@ -420,7 +420,7 @@ describe('Run Apex Tests', async () => {
       'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successPushNotificationWasFound).toBe(true);
+    await expect(successPushNotificationWasFound).toBe(true);
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
@@ -442,7 +442,7 @@ describe('Run Apex Tests', async () => {
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     // Also verify that the test fails
@@ -451,9 +451,9 @@ describe('Run Apex Tests', async () => {
       '=== Test Results',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
-    expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
+    await expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
 
     // Fix test
     const textEditor = await utilities.getTextEditor(workbench, 'AccountService.cls');
@@ -474,7 +474,7 @@ describe('Run Apex Tests', async () => {
       'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successPushNotification2WasFound).toBe(true);
+    await expect(successPushNotification2WasFound).toBe(true);
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
@@ -496,18 +496,18 @@ describe('Run Apex Tests', async () => {
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotification2WasFound).toBe(true);
+    await expect(successNotification2WasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     outputPanelText = await utilities.attemptToFindOutputPanelText('Apex', '=== Test Results', 10);
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('=== Test Summary');
-    expect(outputPanelText).toContain('Outcome              Passed');
-    expect(outputPanelText).toContain('Tests Ran            1');
-    expect(outputPanelText).toContain('Pass Rate            100%');
-    expect(outputPanelText).toContain('TEST NAME');
-    expect(outputPanelText).toContain('AccountServiceTest.should_create_account  Pass');
-    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('=== Test Summary');
+    await expect(outputPanelText).toContain('Outcome              Passed');
+    await expect(outputPanelText).toContain('Tests Ran            1');
+    await expect(outputPanelText).toContain('Pass Rate            100%');
+    await expect(outputPanelText).toContain('TEST NAME');
+    await expect(outputPanelText).toContain('AccountServiceTest.should_create_account  Pass');
+    await expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
   });
 
   step('Create Apex Test Suite', async () => {
@@ -536,7 +536,7 @@ describe('Run Apex Tests', async () => {
       'SFDX: Build Apex Test Suite successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
   });
 
   step('Add test to Apex Test Suite', async () => {
@@ -564,7 +564,7 @@ describe('Run Apex Tests', async () => {
       'SFDX: Build Apex Test Suite successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
   });
 
   step('Run Apex Test Suite', async () => {
@@ -589,7 +589,7 @@ describe('Run Apex Tests', async () => {
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     // Also verify that all tests pass
@@ -598,18 +598,18 @@ describe('Run Apex Tests', async () => {
       '=== Test Results',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('=== Test Summary');
-    expect(outputPanelText).toContain('TEST NAME');
-    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('=== Test Summary');
+    await expect(outputPanelText).toContain('TEST NAME');
+    await expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
 
-    expect(outputPanelText).toContain('Outcome              Passed');
-    expect(outputPanelText).toContain('Tests Ran            2');
-    expect(outputPanelText).toContain('Pass Rate            100%');
-    expect(outputPanelText).toContain('TEST NAME');
-    expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello  Pass');
-    expect(outputPanelText).toContain('ExampleApexClass3Test.validateSayHello  Pass');
-    expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
+    await expect(outputPanelText).toContain('Outcome              Passed');
+    await expect(outputPanelText).toContain('Tests Ran            2');
+    await expect(outputPanelText).toContain('Pass Rate            100%');
+    await expect(outputPanelText).toContain('TEST NAME');
+    await expect(outputPanelText).toContain('ExampleApexClass2Test.validateSayHello  Pass');
+    await expect(outputPanelText).toContain('ExampleApexClass3Test.validateSayHello  Pass');
+    await expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
   });
 
   step('Tear down and clean up the testing environment', async () => {

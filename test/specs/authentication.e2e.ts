@@ -45,7 +45,7 @@ describe('Authentication', async () => {
       workbench,
       'No Default Org Set'
     );
-    expect(noDefaultOrgSetItem).toBeDefined();
+    await expect(noDefaultOrgSetItem).toBeDefined();
 
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
     await testSetup.authorizeDevHub();
@@ -55,7 +55,7 @@ describe('Authentication', async () => {
       workbench,
       'No Default Org Set'
     );
-    expect(noDefaultOrgSetItem).toBeDefined();
+    await expect(noDefaultOrgSetItem).toBeDefined();
   });
 
   step('Run SFDX: Set a Default Org', async () => {
@@ -68,7 +68,7 @@ describe('Authentication', async () => {
       workbench,
       'No Default Org Set'
     );
-    expect(changeDefaultOrgSetItem).toBeDefined();
+    await expect(changeDefaultOrgSetItem).toBeDefined();
     await changeDefaultOrgSetItem.click();
     await utilities.pause(Duration.seconds(5));
 
@@ -95,7 +95,7 @@ describe('Authentication', async () => {
     if (expectedSfdxCommands.length !== foundSfdxCommands.length) {
       // Something is wrong - the count of matching menus isn't what we expected.
       expectedSfdxCommands.forEach((expectedSfdxCommand) => {
-        expect(foundSfdxCommands).toContain(expectedSfdxCommand);
+        await expect(foundSfdxCommands).toContain(expectedSfdxCommand);
       });
     }
 
@@ -115,19 +115,19 @@ describe('Authentication', async () => {
       'SFDX: Set a Default Org successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     const expectedOutputWasFound = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
       `target-org  ${devHubAliasName}  true`,
       5
     );
-    expect(expectedOutputWasFound).toBeDefined();
+    await expect(expectedOutputWasFound).toBeDefined();
 
     // Look for "vscodeOrg" in the status bar.
     const statusBar = workbench.getStatusBar();
     const vscodeOrgItem = await statusBar.getItem(`plug  ${devHubAliasName}, Change Default Org`);
-    expect(vscodeOrgItem).toBeDefined();
+    await expect(vscodeOrgItem).toBeDefined();
   });
 
   step('Run SFDX: Create a Default Scratch Org', async () => {
@@ -212,14 +212,14 @@ describe('Authentication', async () => {
         );
       }
     }
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Look for the org's alias name in the list of status bar items.
     const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       scratchOrgAliasName
     );
-    expect(scratchOrgStatusBarItem).toBeDefined();
+    await expect(scratchOrgStatusBarItem).toBeDefined();
   });
 
   step('Run SFDX: Set the Scratch Org As the Default Org', async () => {
@@ -236,7 +236,7 @@ describe('Authentication', async () => {
       false,
       true
     );
-    expect(scratchOrgQuickPickItemWasFound).toBe(true);
+    await expect(scratchOrgQuickPickItemWasFound).toBe(true);
 
     await utilities.pause(Duration.seconds(3));
 
@@ -245,14 +245,14 @@ describe('Authentication', async () => {
       'SFDX: Set a Default Org successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Look for the org's alias name in the list of status bar items.
     const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       scratchOrgAliasName
     );
-    expect(scratchOrgStatusBarItem).toBeDefined();
+    await expect(scratchOrgStatusBarItem).toBeDefined();
   });
 
   step('Tear down and clean up the testing environment', async () => {

@@ -35,11 +35,13 @@ describe('Aura LSP', async () => {
     await utilities.zoom('Out', 4, Duration.seconds(1));
 
     // Verify Aura Components extension is present and running.
-    const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
-      'salesforcedx-vscode-lightning'
-    ]);
-    utilities.zoomReset();
-    expect(foundExtensions.length).toBe(1);
+    const foundExtensions = await utilities.verifyExtensionsAreRunning(
+      utilities
+        .getExtensionsToVerifyActive()
+        .filter((ext) => ext.extensionId === 'salesforcedx-vscode-lightning')
+    );
+    await utilities.zoomReset();
+    await expect(foundExtensions).toBe(true);
   });
 
   step('Verify LSP finished indexing', async () => {
@@ -47,7 +49,7 @@ describe('Aura LSP', async () => {
 
     // Get output text from the LSP
     const outputViewText = await utilities.getOutputViewText('Aura Language Server');
-    expect(outputViewText).toContain('language server started');
+    await expect(outputViewText).toContain('language server started');
     utilities.log('Output view text');
     utilities.log(outputViewText);
   });
@@ -76,12 +78,12 @@ describe('Aura LSP', async () => {
     await browser.keys([CMD_KEY, 's']);
     await utilities.pause(Duration.seconds(1));
     const line3Text = await textEditor.getTextAtLine(3);
-    expect(line3Text).toContain('name="elephantsimpleNewContact"');
+    await expect(line3Text).toContain('name="elephantsimpleNewContact"');
 
     // The following code uses WDIO's provided function to get the position of the cursor, but `textEditor.getCoordinates();` causes a `coordinates is not iterable` error in Ubuntu. Thus we have to use the workaround above instead.
     // const definition = await textEditor.getCoordinates();
-    // expect(definition[0]).toBe(3);
-    // expect(definition[1]).toBe(27);
+    // await expect(definition[0]).toBe(3);
+    // await expect(definition[1]).toBe(27);
   });
 
   step('Autocompletion', async () => {
@@ -102,8 +104,8 @@ describe('Aura LSP', async () => {
 
     // Verify autocompletion options are present
     const autocompletionOptions = await $$('textarea.inputarea.monaco-mouse-cursor-text');
-    expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe('true');
-    expect(await autocompletionOptions[0].getAttribute('aria-autocomplete')).toBe('list');
+    await expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe('true');
+    await expect(await autocompletionOptions[0].getAttribute('aria-autocomplete')).toBe('list');
 
     // Verify autocompletion options can be selected and therefore automatically inserted into the file
     await browser.keys(['Enter']);
@@ -111,7 +113,7 @@ describe('Aura LSP', async () => {
     await textEditor.save();
     await utilities.pause(Duration.seconds(1));
     const line3Text = await textEditor.getTextAtLine(2);
-    expect(line3Text).toContain('aura:application');
+    await expect(line3Text).toContain('aura:application');
   });
 
   step('Tear down and clean up the testing environment', async () => {

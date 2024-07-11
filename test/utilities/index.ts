@@ -15,6 +15,7 @@ export * from './notifications.ts';
 export * from './outputView.ts';
 export * from './predicates.ts';
 export * from './sideBar.ts';
+export * from './settings.ts';
 export * from './statusBar.ts';
 export * from './terminalView.ts';
 export * from './screenshot.ts';

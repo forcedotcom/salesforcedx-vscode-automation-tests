@@ -35,7 +35,7 @@ describe('Visualforce LSP', async () => {
       'Starting SFDX: Create Visualforce Page',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).not.toBeUndefined();
     const pathToPagesFolder = path.join(
       testSetup.projectFolderPath!,
       'force-app',
@@ -43,19 +43,19 @@ describe('Visualforce LSP', async () => {
       'default',
       'pages'
     );
-    expect(outputPanelText?.toLowerCase()).toContain(
+    await expect(outputPanelText?.toLowerCase()).toContain(
       `target dir = ${pathToPagesFolder.toLowerCase()}`
     );
     const pathToPage = path.join('force-app', 'main', 'default', 'pages', 'FooPage.page');
-    expect(outputPanelText).toContain(`create ${pathToPage}`);
-    expect(outputPanelText).toContain(`create ${pathToPage}-meta.xml`);
-    expect(outputPanelText).toContain('Finished SFDX: Create Visualforce Page');
+    await expect(outputPanelText).toContain(`create ${pathToPage}`);
+    await expect(outputPanelText).toContain(`create ${pathToPage}-meta.xml`);
+    await expect(outputPanelText).toContain('Finished SFDX: Create Visualforce Page');
 
     // Get open text editor and verify file content
     const textEditor = await utilities.getTextEditor(workbench, 'FooPage.page');
     const fileContent = await textEditor.getText();
-    expect(fileContent).toContain('<apex:page controller="myController" tabStyle="Account">');
-    expect(fileContent).toContain('</apex:page>');
+    await expect(fileContent).toContain('<apex:page controller="myController" tabStyle="Account">');
+    await expect(fileContent).toContain('</apex:page>');
   });
 
   step('Verify Extension is Running', async () => {
@@ -63,14 +63,14 @@ describe('Visualforce LSP', async () => {
 
     // Using the Command palette, run Developer: Show Running Extensions
     await utilities.showRunningExtensions();
-    utilities.zoom('Out', 4, Duration.seconds(1));
+    await utilities.zoom('Out', 4, Duration.seconds(1));
     // Verify Visualforce extension is present and running
 
     const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
       'salesforcedx-vscode-visualforce'
     ]);
-    utilities.zoomReset();
-    expect(foundExtensions.length).toBe(1);
+    await utilities.zoomReset();
+    await expect(foundExtensions.length).toBe(1);
   });
 
   xstep('Go to Definition', async () => {
@@ -89,7 +89,7 @@ describe('Visualforce LSP', async () => {
     // // Verify 'Go to definition' took us to the definition file
     // const activeTab = await editorView.getActiveTab();
     // const title = await activeTab?.getTitle();
-    // expect(title).toBe('MyController.cls');
+    // await expect(title).toBe('MyController.cls');
   });
 
   step('Autocompletion', async () => {
@@ -103,11 +103,11 @@ describe('Visualforce LSP', async () => {
     // Verify autocompletion options are present
     const autocompletionOptions = await $$('textarea.inputarea.monaco-mouse-cursor-text');
     const ariaHasPopupAttribute = await autocompletionOptions[0].getAttribute('aria-haspopup');
-    expect(ariaHasPopupAttribute).toBe('true');
+    await expect(ariaHasPopupAttribute).toBe('true');
 
     const ariaAutocompleteAttribute =
       await autocompletionOptions[0].getAttribute('aria-autocomplete');
-    expect(ariaAutocompleteAttribute).toBe('list');
+    await expect(ariaAutocompleteAttribute).toBe('list');
 
     // Verify autocompletion options can be selected and therefore automatically inserted into the file
     await browser.keys(['Enter']);
@@ -115,7 +115,7 @@ describe('Visualforce LSP', async () => {
     await textEditor.save();
     await utilities.pause(Duration.seconds(1));
     const line3Text = await textEditor.getTextAtLine(3);
-    expect(line3Text).toContain('apex:pageMessage');
+    await expect(line3Text).toContain('apex:pageMessage');
   });
 
   step('Tear down and clean up the testing environment', async () => {

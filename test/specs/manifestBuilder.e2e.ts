@@ -82,7 +82,7 @@ describe('Manifest Builder', async () => {
       'SFDX: Deploy This Source to Org successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -90,9 +90,9 @@ describe('Manifest Builder', async () => {
       'Starting SFDX: Deploy This Source to Org',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Deployed Source');
-    expect(outputPanelText).toContain(
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('Deployed Source');
+    await expect(outputPanelText).toContain(
       `Customer__c  CustomObject  ${path.join(
         'force-app',
         'main',
@@ -102,7 +102,7 @@ describe('Manifest Builder', async () => {
         'Customer__c.object-meta.xml'
       )}`
     );
-    expect(outputPanelText).toContain(
+    await expect(outputPanelText).toContain(
       `Product__c   CustomObject  ${path.join(
         'force-app',
         'main',
@@ -112,7 +112,7 @@ describe('Manifest Builder', async () => {
         'Product__c.object-meta.xml'
       )}`
     );
-    expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
+    await expect(outputPanelText).toContain('ended SFDX: Deploy This Source to Org');
   });
 
   step('SFDX: Retrieve Source in Manifest from Org', async () => {
@@ -134,7 +134,7 @@ describe('Manifest Builder', async () => {
       'SFDX: Retrieve This Source from Org successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify Output tab
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -142,9 +142,9 @@ describe('Manifest Builder', async () => {
       'Starting SFDX: Retrieve This Source from Org',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Retrieved Source');
-    expect(outputPanelText).toContain(
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('Retrieved Source');
+    await expect(outputPanelText).toContain(
       `Customer__c  CustomObject  ${path.join(
         'force-app',
         'main',
@@ -154,7 +154,7 @@ describe('Manifest Builder', async () => {
         'Customer__c.object-meta.xml'
       )}`
     );
-    expect(outputPanelText).toContain(
+    await expect(outputPanelText).toContain(
       `Product__c   CustomObject  ${path.join(
         'force-app',
         'main',

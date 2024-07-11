@@ -37,7 +37,7 @@ describe('Apex LSP', async () => {
       'salesforcedx-vscode-apex'
     ]);
     await utilities.zoomReset();
-    expect(foundExtensions.length).toBe(1);
+    await expect(foundExtensions.length).toBe(1);
     // Close running extensions view
     await browser.keys([CMD_KEY, 'w']);
   });
@@ -52,7 +52,7 @@ describe('Apex LSP', async () => {
       'Editor Language Status'
     );
     await statusBar.click();
-    expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
+    await expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
 
     // Get output text from the LSP
     const outputViewText = await utilities.getOutputViewText('Apex Language Server');
@@ -84,7 +84,7 @@ describe('Apex LSP', async () => {
     const editorView = workbench.getEditorView();
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
-    expect(title).toBe('ExampleClass.cls');
+    await expect(title).toBe('ExampleClass.cls');
   });
 
   step('Autocompletion', async () => {
@@ -106,8 +106,8 @@ describe('Apex LSP', async () => {
 
     // Verify autocompletion options are present
     const autocompletionOptions = await $$('textarea.inputarea.monaco-mouse-cursor-text');
-    expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe('true');
-    expect(await autocompletionOptions[0].getAttribute('aria-autocomplete')).toBe('list');
+    await expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe('true');
+    await expect(await autocompletionOptions[0].getAttribute('aria-autocomplete')).toBe('list');
 
     // Verify autocompletion options can be selected and therefore automatically inserted into the file
     await browser.keys(['Enter']);
@@ -118,7 +118,7 @@ describe('Apex LSP', async () => {
     await textEditor.save();
     await utilities.pause(Duration.seconds(1));
     const line7Text = await textEditor.getTextAtLine(7);
-    expect(line7Text).toContain(`ExampleClass.SayHello('Jack');`);
+    await expect(line7Text).toContain(`ExampleClass.SayHello('Jack');`);
   });
 
   step('Tear down and clean up the testing environment', async () => {

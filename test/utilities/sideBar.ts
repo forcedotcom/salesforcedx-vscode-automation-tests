@@ -169,6 +169,6 @@ export async function getTestsSection(workbench: Workbench, type: string) {
   const sidebar = workbench.getSideBar();
   const sidebarView = sidebar.getContent();
   const testsSection = await sidebarView.getSection(type);
-  expect(testsSection.elem).toBePresent();
+  await expect(testsSection.elem).toBePresent();
   return testsSection;
 }

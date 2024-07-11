@@ -28,13 +28,15 @@ describe('LWC LSP', async () => {
 
     // Using the Command palette, run Developer: Show Running Extensions
     await utilities.showRunningExtensions();
-    utilities.zoom('Out', 4, Duration.seconds(1));
+    await utilities.zoom('Out', 4, Duration.seconds(1));
     // Verify Lightning Web Components extension is present and running
-    const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
-      'salesforcedx-vscode-lwc'
-    ]);
-    utilities.zoomReset();
-    expect(foundExtensions.length).toBe(1);
+    const foundExtensions = await utilities.verifyExtensionsAreRunning(
+      utilities
+        .getExtensionsToVerifyActive()
+        .filter((ext) => ext.extensionId === 'salesforcedx-vscode-lwc')
+    );
+    await utilities.zoomReset();
+    await expect(foundExtensions).toBe(true);
   });
 
   step('Go to Definition (JavaScript)', async () => {
@@ -59,7 +61,7 @@ describe('LWC LSP', async () => {
     const editorView = workbench.getEditorView();
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
-    expect(title).toBe('engine.d.ts');
+    await expect(title).toBe('engine.d.ts');
   });
 
   xstep('Go to Definition (HTML)', async () => {
@@ -82,7 +84,7 @@ describe('LWC LSP', async () => {
     const editorView = workbench.getEditorView();
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
-    expect(title).toBe('lwc1.js');
+    await expect(title).toBe('lwc1.js');
   });
 
   step('Autocompletion', async () => {
@@ -101,15 +103,15 @@ describe('LWC LSP', async () => {
 
     // Verify autocompletion options are present
     const autocompletionOptions = await $$('textarea.inputarea.monaco-mouse-cursor-text');
-    expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe('true');
-    expect(await autocompletionOptions[0].getAttribute('aria-autocomplete')).toBe('list');
+    await expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe('true');
+    await expect(await autocompletionOptions[0].getAttribute('aria-autocomplete')).toBe('list');
 
     // Verify autocompletion options can be selected and therefore automatically inserted into the file
     await browser.keys(['Enter']);
     await textEditor.save();
     await utilities.pause(Duration.seconds(1));
     const line3Text = await textEditor.getTextAtLine(3);
-    expect(line3Text).toContain('lwc:else');
+    await expect(line3Text).toContain('lwc:else');
   });
 
   step('Tear down and clean up the testing environment', async () => {

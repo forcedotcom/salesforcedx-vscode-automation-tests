@@ -23,7 +23,7 @@ async function verifyPushSuccess(workbench: Workbench, wait = utilities.TEN_MINU
     'SFDX: Push Source to Default Org successfully ran',
     wait
   );
-  expect(successNotificationWasFound).toBe(true);
+  await expect(successNotificationWasFound).toBe(true);
 }
 
 async function verifyPullSuccess(workbench: Workbench, wait = utilities.TEN_MINUTES) {
@@ -32,7 +32,7 @@ async function verifyPullSuccess(workbench: Workbench, wait = utilities.TEN_MINU
     'SFDX: Pull Source from Default Org successfully ran',
     wait
   );
-  expect(successNotificationWasFound).toBe(true);
+  await expect(successNotificationWasFound).toBe(true);
 }
 
 describe('Push and Pull', async () => {
@@ -60,7 +60,7 @@ describe('Push and Pull', async () => {
       10
     );
 
-    expect(outputPanelText).toContain('No local or remote changes found');
+    await expect(outputPanelText).toContain('No local or remote changes found');
   });
 
   step('Create an Apex class', async () => {
@@ -83,8 +83,8 @@ describe('Push and Pull', async () => {
 
     // It's a tree, but it's also a list.  Everything in the view is actually flat
     // and returned from the call to visibleItems.reduce().
-    expect(filteredTreeViewItems.includes('ExampleApexClass1.cls')).toBe(true);
-    expect(filteredTreeViewItems.includes('ExampleApexClass1.cls-meta.xml')).toBe(true);
+    await expect(filteredTreeViewItems.includes('ExampleApexClass1.cls')).toBe(true);
+    await expect(filteredTreeViewItems.includes('ExampleApexClass1.cls-meta.xml')).toBe(true);
   });
 
   step('SFDX: View Local Changes', async () => {
@@ -102,10 +102,10 @@ describe('Push and Pull', async () => {
       10
     );
 
-    expect(outputPanelText).toContain(
+    await expect(outputPanelText).toContain(
       `Local Add  ExampleApexClass1  ApexClass  ${path.join('force-app', 'main', 'default', 'classes', 'ExampleApexClass1.cls')}`
     );
-    expect(outputPanelText).toContain(
+    await expect(outputPanelText).toContain(
       `Local Add  ExampleApexClass1  ApexClass  ${path.join('force-app', 'main', 'default', 'classes', 'ExampleApexClass1.cls-meta.xml')}`
     );
   });
@@ -185,7 +185,7 @@ describe('Push and Pull', async () => {
 
     // Check the output.
     const outputPanelText = await verifyPushAndPullOutputText(workbench, 'Push', 'to', 'Changed');
-    expect(outputPanelText).toContain(
+    await expect(outputPanelText).toContain(
       path.join(
         'e2e-temp',
         'TempProject-PushAndPull',
@@ -196,7 +196,7 @@ describe('Push and Pull', async () => {
         'ExampleApexClass1.cls'
       )
     );
-    expect(outputPanelText).toContain(
+    await expect(outputPanelText).toContain(
       path.join(
         'e2e-temp',
         'TempProject-PushAndPull',
@@ -226,7 +226,7 @@ describe('Push and Pull', async () => {
     // Check the output.
     let outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from', 'Created');
     // The first time a pull is performed, force-app/main/default/profiles/Admin.profile-meta.xml is pulled down.
-    expect(outputPanelText).toContain(
+    await expect(outputPanelText).toContain(
       path.join('force-app', 'main', 'default', 'profiles', 'Admin.profile-meta.xml')
     );
 
@@ -244,7 +244,7 @@ describe('Push and Pull', async () => {
 
     // Check the output.
     outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
-    expect(outputPanelText).not.toContain('Created  Admin');
+    await expect(outputPanelText).not.toContain('Created  Admin');
   });
 
   step("Modify the file (but don't save), then pull", async () => {
@@ -298,13 +298,13 @@ describe('Push and Pull', async () => {
     // Verify CLI Integration Extension is present and running.
     await utilities.reloadAndEnableExtensions();
     await utilities.showRunningExtensions();
-    utilities.zoom('Out', 4, Duration.seconds(1));
+    await utilities.zoom('Out', 4, Duration.seconds(1));
     // Verify Apex extension is present and running
     const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
       'salesforcedx-vscode-core'
     ]);
-    utilities.zoomReset();
-    expect(foundExtensions.length).toBe(1);
+    await utilities.zoomReset();
+    await expect(foundExtensions.length).toBe(1);
 
     //Run SFDX: View Changes in Default Org command to view remote changes
     await utilities.runCommandFromCommandPrompt(
@@ -320,7 +320,7 @@ describe('Push and Pull', async () => {
       10
     );
 
-    expect(outputPanelText).toContain(`Remote Add  ExampleApexClass1  ApexClass`);
+    await expect(outputPanelText).toContain(`Remote Add  ExampleApexClass1  ApexClass`);
   });
 
   xstep('Create an additional system admin user', async () => {
@@ -356,7 +356,7 @@ describe('Push and Pull', async () => {
     const sfOrgCreateUserResult = await exec(
       `sf org:create:user --definition-file ${systemAdminUserDefPath} --target-org ${testSetup.scratchOrgAliasName}`
     );
-    expect(sfOrgCreateUserResult.stdout).toContain(
+    await expect(sfOrgCreateUserResult.stdout).toContain(
       `Successfully created user "${adminEmailAddress}"`
     );
   });
@@ -431,25 +431,25 @@ describe('Push and Pull', async () => {
       `SFDX: ${operation} Source ${fromTo} Default Org successfully ran`,
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
     // Check the output.
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
       `Salesforce CLI`,
       `=== ${operation}ed Source`,
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).not.toBeUndefined();
 
     if (type) {
       if (operation === 'Push') {
-        expect(outputPanelText).toContain(`${type}  ExampleApexClass1  ApexClass`);
+        await expect(outputPanelText).toContain(`${type}  ExampleApexClass1  ApexClass`);
       } else {
-        expect(outputPanelText).toContain(`${type}  Admin`);
+        await expect(outputPanelText).toContain(`${type}  Admin`);
       }
     } else {
-      expect(outputPanelText).toContain('No results found');
+      await expect(outputPanelText).toContain('No results found');
     }
-    expect(outputPanelText).toContain('ended with exit code 0');
+    await expect(outputPanelText).toContain('ended with exit code 0');
     return outputPanelText;
   };
 });

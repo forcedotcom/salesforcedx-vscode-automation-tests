@@ -129,7 +129,7 @@ export async function executeQuickPick(
 ): Promise<InputBox | QuickOpenBox> {
   const workbench = await getWorkbench();
   const prompt = await workbench.executeQuickPick(command);
-  pause(wait);
+  await pause(wait);
   return prompt;
 }
 
@@ -140,9 +140,9 @@ export async function clickFilePathOkButton(): Promise<void> {
     throw new Error('Ok button not found');
   }
   await okButton.waitForClickable({
-    timeout: Duration.seconds(2).milliseconds,
-    interval: Duration.milliseconds(100).milliseconds,
-    timeoutMsg: `Ok button not clickable within 2 seconds`
+    timeout: Duration.seconds(5).milliseconds,
+    interval: Duration.milliseconds(500).milliseconds,
+    timeoutMsg: `Ok button not clickable within 5 seconds`
   });
 
   await okButton.click();
@@ -154,12 +154,13 @@ export async function clickFilePathOkButton(): Promise<void> {
     if (text.includes('Overwrite')) {
       log('clickFilePathOkButton() - folder already exists');
       await item.waitForClickable({
-        timeout: Duration.seconds(2).milliseconds,
-        interval: Duration.milliseconds(100).milliseconds,
-        timeoutMsg: `Overwrite button not clickable within 2 seconds`
+        timeout: Duration.seconds(5).milliseconds,
+        interval: Duration.milliseconds(500).milliseconds,
+        timeoutMsg: `Overwrite button not clickable within 5 seconds`
       });
       await item.click();
     }
   }
   await pause(Duration.seconds(2));
 }
+

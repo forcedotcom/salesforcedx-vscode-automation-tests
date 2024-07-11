@@ -27,13 +27,17 @@ describe('Miscellaneous', async () => {
 
     // Type snippet "isb" in a new line and check it inserted the expected string
     const textEditor = await utilities.getTextEditor(workbench, 'Anonymous.apex');
-    await utilities.runCommandFromCommandPrompt(workbench, 'Snippets: Insert Snippet', Duration.seconds(1));
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Snippets: Insert Snippet',
+      Duration.seconds(1)
+    );
     await browser.keys(['isb']);
     await utilities.pause(Duration.seconds(2));
     await browser.keys(['Enter']);
     await textEditor.save();
     const fileContent = await textEditor.getText();
-    expect(fileContent).toContain(apexSnippet);
+    await expect(fileContent).toContain(apexSnippet);
   });
 
   step('Use Custom Apex Snippets', async () => {
@@ -41,7 +45,11 @@ describe('Miscellaneous', async () => {
 
     // Using the Command palette, run Snippets: Configure User Snippets
     const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Snippets: Configure User Snippets', Duration.seconds(1));
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Snippets: Configure User Snippets',
+      Duration.seconds(1)
+    );
     await browser.keys(['New Global Snippets file...', 'Enter']);
     await utilities.pause(Duration.seconds(1));
     await browser.keys(['apex.json', 'Enter']);
@@ -62,7 +70,11 @@ describe('Miscellaneous', async () => {
     const textEditor = await utilities.getTextEditor(workbench, 'apex.json.code-snippets');
     await textEditor.setText(apexSnippet);
     await textEditor.save();
-    await utilities.runCommandFromCommandPrompt(workbench, 'Developer: Reload Window', Duration.seconds(50));
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Developer: Reload Window',
+      Duration.seconds(50)
+    );
 
     // Create anonymous apex file
     await utilities.createAnonymousApexFile();
@@ -73,7 +85,7 @@ describe('Miscellaneous', async () => {
     await utilities.pause(Duration.seconds(2));
     await browser.keys(['Enter']);
     const fileContent = await textEditor.getText();
-    expect(fileContent).toContain('[SELECT field1, field2 FROM SobjectName WHERE clause];');
+    await expect(fileContent).toContain('[SELECT field1, field2 FROM SobjectName WHERE clause];');
   });
 
   step('Use out-of-the-box LWC Snippets - HTML', async () => {
@@ -101,7 +113,11 @@ describe('Miscellaneous', async () => {
     // Type snippet "lwc-button" and check it inserted the right lwc
     const textEditor = await utilities.getTextEditor(workbench, 'lwc.html');
 
-    await utilities.runCommandFromCommandPrompt(workbench, 'Snippets: Insert Snippet', Duration.seconds(1));
+    await utilities.runCommandFromCommandPrompt(
+      workbench,
+      'Snippets: Insert Snippet',
+      Duration.seconds(1)
+    );
     await browser.keys(['lwc-button']);
     await utilities.pause(Duration.seconds(2));
     await browser.keys(['Enter']);
@@ -114,7 +130,7 @@ describe('Miscellaneous', async () => {
       .map((line) => line.trimEnd())
       .join('\n');
 
-    expect(fileContentWithoutTrailingSpaces).toContain(lwcSnippet);
+    await expect(fileContentWithoutTrailingSpaces).toContain(lwcSnippet);
   });
 
   step('Use out-of-the-box LWC Snippets - JS', async () => {
@@ -141,7 +157,7 @@ describe('Miscellaneous', async () => {
     await browser.keys(['Enter']);
     const fileContent = await textEditor.getText();
 
-    expect(fileContent).toContain(lwcSnippet);
+    await expect(fileContent).toContain(lwcSnippet);
   });
 
   step('Tear down and clean up the testing environment', async () => {

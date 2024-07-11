@@ -77,8 +77,8 @@ describe('An Initial Suite', async () => {
       }
     }
 
-    expect(expectedSfdxCommandsFound).toBe(3);
-    expect(unexpectedSfdxCommandWasFound).toBe(false);
+    await expect(expectedSfdxCommandsFound).toBe(3);
+    await expect(unexpectedSfdxCommandWasFound).toBe(false);
 
     // Escape out of the pick list.
     await prompt.cancel();
@@ -95,38 +95,41 @@ describe('An Initial Suite', async () => {
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {
     await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
-    browser.keys(['Escape']);
+    await browser.keys(['Escape']);
     await utilities.pause(Duration.seconds(1));
-    browser.keys(['Escape']);
+    await browser.keys(['Escape']);
     await utilities.pause(Duration.seconds(1));
   });
 
-  step('Verify that SFDX commands are present after an SFDX project has been created', async () => {
-    const workbench = await utilities.getWorkbench();
-    await utilities.enableAllExtensions();
-    await utilities.executeQuickPick('Extensions: Show Enabled Extensions', Duration.seconds(2));
-    const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
-    const quickPicks = await prompt.getQuickPicks();
-    const commands = await Promise.all(quickPicks.map((quickPick) => quickPick.getLabel()));
+  step(
+    'Verify that SFDX commands are present after an SFDX project has been created',
+    async () => {
+      const workbench = await utilities.getWorkbench();
+      await utilities.enableAllExtensions();
+      await utilities.executeQuickPick('Extensions: Show Enabled Extensions', Duration.seconds(2));
+      const prompt = await utilities.openCommandPromptWithCommand(workbench, 'SFDX:');
+      const quickPicks = await prompt.getQuickPicks();
+      const commands = await Promise.all(quickPicks.map((quickPick) => quickPick.getLabel()));
 
-    // Look for the first few SFDX commands.
-    expect(commands).toContain('SFDX: Create Project');
-    expect(commands).toContain('SFDX: Authorize a Dev Hub');
-    expect(commands).toContain('SFDX: Authorize an Org');
-    expect(commands).toContain('SFDX: Authorize an Org using Session ID');
-    expect(commands).toContain('SFDX: Cancel Active Command');
-    expect(commands).toContain('SFDX: Configure Apex Debug Exceptions');
-    expect(commands).toContain('SFDX: Create a Default Scratch Org...');
-    expect(commands).toContain('SFDX: Create and Set Up Project for ISV Debugging');
-    expect(commands).toContain('SFDX: Create Apex Class');
-    expect(commands).toContain('SFDX: Create Apex Trigger');
-    // There are more, but just look for the first few commands.
+      // Look for the first few SFDX commands.
+      await expect(commands).toContain('SFDX: Create Project');
+      await expect(commands).toContain('SFDX: Authorize a Dev Hub');
+      await expect(commands).toContain('SFDX: Authorize an Org');
+      await expect(commands).toContain('SFDX: Authorize an Org using Session ID');
+      await expect(commands).toContain('SFDX: Cancel Active Command');
+      await expect(commands).toContain('SFDX: Configure Apex Debug Exceptions');
+      await expect(commands).toContain('SFDX: Create a Default Scratch Org...');
+      await expect(commands).toContain('SFDX: Create and Set Up Project for ISV Debugging');
+      await expect(commands).toContain('SFDX: Create Apex Class');
+      await expect(commands).toContain('SFDX: Create Apex Trigger');
+      // There are more, but just look for the first few commands.
 
-    // Escape out of the pick list.
-    await prompt.cancel();
-  });
+      // Escape out of the pick list.
+      await prompt.cancel();
+    }
+  );
 
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
 });

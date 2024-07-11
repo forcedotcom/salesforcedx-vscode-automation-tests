@@ -22,8 +22,15 @@ export async function pause(duration: Duration = Duration.seconds(1)): Promise<v
   await sleep(duration.milliseconds * EnvironmentSettings.getInstance().throttleFactor);
 }
 
-export function log(message: string) {
+export function log(message: string): void {
   console.log(message);
+}
+
+export function debug(message: string): void {
+  if (EnvironmentSettings.getInstance().debug) {
+    const timestamp = new Date().toISOString();
+    log(`${timestamp}:${message}`);
+  }
 }
 
 export function currentOsUserName(): string {
@@ -100,16 +107,16 @@ export async function createCommand(
     `SFDX: Create ${type} successfully ran`,
     TEN_MINUTES
   );
-  expect(successNotificationWasFound).toBe(true);
+  await expect(successNotificationWasFound).toBe(true);
 
   const outputPanelText = await attemptToFindOutputPanelText(
     `Salesforce CLI`,
     `Finished SFDX: Create ${type}`,
     10
   );
-  expect(outputPanelText).not.toBeUndefined();
+  await expect(outputPanelText).not.toBeUndefined();
   const typePath = path.join(`force-app`, `main`, `default`, folder, `${name}.${extension}`);
-  expect(outputPanelText).toContain(`create ${typePath}`);
+  await expect(outputPanelText).toContain(`create ${typePath}`);
 
   const metadataPath = path.join(
     `force-app`,
@@ -118,7 +125,7 @@ export async function createCommand(
     folder,
     `${name}.${extension}-meta.xml`
   );
-  expect(outputPanelText).toContain(`create ${metadataPath}`);
+  await expect(outputPanelText).toContain(`create ${metadataPath}`);
   return outputPanelText;
 }
 

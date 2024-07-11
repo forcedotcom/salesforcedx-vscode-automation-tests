@@ -38,13 +38,13 @@ describe('An Initial SetUp', async () => {
     fs.writeFileSync(authFilePath, sfdxAuthUrl);
 
     const authorizeOrg = await exec(`sf org:login:sfdx-url -d -f ${authFilePath}`);
-    expect(authorizeOrg.stdout).toContain(
+    await expect(authorizeOrg.stdout).toContain(
       `Successfully authorized ${devHubUserName} with org ID ${orgId}`
     );
 
     const setAlias = await exec(`sf alias:set ${devHubAliasName}=${devHubUserName}`);
-    expect(setAlias.stdout).toContain(devHubAliasName);
-    expect(setAlias.stdout).toContain(devHubUserName);
-    expect(setAlias.stdout).toContain('true');
+    await expect(setAlias.stdout).toContain(devHubAliasName);
+    await expect(setAlias.stdout).toContain(devHubUserName);
+    await expect(setAlias.stdout).toContain('true');
   });
 });

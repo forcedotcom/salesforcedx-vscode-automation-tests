@@ -87,7 +87,7 @@ export async function createLwc(name: string): Promise<void> {
     `        });`,
     `        document.body.appendChild(element);`,
     `        const div = element.shadowRoot.querySelector('div');`,
-    `        expect(div.textContent).toBe('Hello, World!');`,
+    `        await expect(div.textContent).toBe('Hello, World!');`,
     `    });`,
     ``,
     `    it('is defined', async () => {`,
@@ -106,7 +106,7 @@ export async function createLwc(name: string): Promise<void> {
   // Set breakpoints
   await browser.keys([CMD_KEY, 'f']);
   await pause(Duration.seconds(1));
-  await browser.keys(`expect(div.textContent).toBe('Hello, World!');`);
+  await browser.keys(`await expect(div.textContent).toBe('Hello, World!');`);
   await browser.keys(['Escape']);
   await browser.keys(['ArrowRight']);
   await executeQuickPick('Debug: Inline Breakpoint', Duration.seconds(2));

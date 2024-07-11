@@ -26,7 +26,7 @@ export class TestSetup {
   private reuseScratchOrg = false;
   private static aliasAndUserNameWereVerified = false;
   public tempFolderPath: string | undefined = undefined;
-  public projectFolderPath: string | undefined = undefined;
+  public projectFolderPath: string | undefined;
   private prompt: QuickOpenBox | InputBox | undefined;
   public scratchOrgAliasName: string | undefined;
 
@@ -83,7 +83,7 @@ export class TestSetup {
       utilities.log(`Extension ${ext.extensionId}:${ext.version ?? 'unknown'} has a bug`);
     });
 
-    expect(uncaughtErrors.length).toBe(0);
+    await expect(uncaughtErrors.length).toBe(0);
   }
 
   public async setUpTestingEnvironment(): Promise<void> {
@@ -91,6 +91,7 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Starting setUpTestingEnvironment()...`);
 
     this.tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
+
     this.projectFolderPath = path.join(this.tempFolderPath, this.tempProjectName);
     utilities.log(
       `${this.testSuiteSuffixName} - creating project files in ${this.projectFolderPath}`
@@ -105,7 +106,6 @@ export class TestSetup {
     if (!fs.existsSync(this.tempFolderPath)) {
       utilities.createFolder(this.tempFolderPath);
     }
-
     utilities.log(`${this.testSuiteSuffixName} - ...finished setUpTestingEnvironment()`);
     utilities.log('');
   }
@@ -157,6 +157,7 @@ export class TestSetup {
 
   public async createProject(scratchOrgEdition: utilities.OrgEdition, projectName?: string) {
     utilities.log('');
+
     utilities.log(`${projectName ?? this.testSuiteSuffixName} - Starting createProject()...`);
     this.prompt = await utilities.executeQuickPick('SFDX: Create Project');
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
@@ -182,7 +183,6 @@ export class TestSetup {
     // Verify the project was created and was loaded.
     await this.verifyProjectCreated(projectName ?? this.tempProjectName);
     this.updateScratchOrgDefWithEdition(scratchOrgEdition);
-
     // Extra config needed for Apex LSP on GHA
     if (process.platform === 'darwin') {
       this.setJavaHomeConfigEntry();
@@ -366,7 +366,10 @@ export class TestSetup {
 
     // Run SFDX: Set a Default Org
     utilities.log(`${this.testSuiteSuffixName} - selecting SFDX: Set a Default Org...`);
-    const inputBox = await utilities.executeQuickPick('SFDX: Set a Default Org', Duration.seconds(10));
+    const inputBox = await utilities.executeQuickPick(
+      'SFDX: Set a Default Org',
+      Duration.seconds(10)
+    );
 
     utilities.log(`${this.testSuiteSuffixName} - calling findQuickPickItem()...`);
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
@@ -417,7 +420,10 @@ export class TestSetup {
   }
 
   private async setDefaultOrg(workbench: Workbench): Promise<void> {
-    const inputBox = await utilities.executeQuickPick('SFDX: Set a Default Org', Duration.seconds(2));
+    const inputBox = await utilities.executeQuickPick(
+      'SFDX: Set a Default Org',
+      Duration.seconds(2)
+    );
 
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
       inputBox,

@@ -42,7 +42,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successPushNotificationWasFound).toBe(true);
+    await expect(successPushNotificationWasFound).toBe(true);
   });
 
   step('Verify LSP finished indexing', async () => {
@@ -55,7 +55,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       'Editor Language Status'
     );
     await statusBar.click();
-    expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
+    await expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
   });
 
   step('Run Apex Tests', async () => {
@@ -76,7 +76,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -84,9 +84,9 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       '=== Test Results',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
-    expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
+    await expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
   });
 
   step('Set Breakpoints and Checkpoints', async () => {
@@ -114,7 +114,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     // Verify checkpoint is present
     const breakpoints = await $$('.codicon-debug-breakpoint-conditional');
-    expect(breakpoints.length).toEqual(1);
+    await expect(breakpoints.length).toEqual(1);
 
     // Run SFDX: Update Checkpoints in Org.
     prompt = await utilities.runCommandFromCommandPrompt(
@@ -128,11 +128,11 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       'Starting SFDX: Update Checkpoints in Org',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain(
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain(
       'SFDX: Update Checkpoints in Org, Step 6 of 6: Confirming successful checkpoint creation'
     );
-    expect(outputPanelText).toContain('Ending SFDX: Update Checkpoints in Org');
+    await expect(outputPanelText).toContain('Ending SFDX: Update Checkpoints in Org');
   });
 
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
@@ -151,7 +151,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       'SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify content on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -159,9 +159,9 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       'Starting SFDX: Turn On Apex Debug Log for Replay Debugger',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('SFDX: Turn On Apex Debug Log for Replay Debugger ');
-    expect(outputPanelText).toContain('ended with exit code 0');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('SFDX: Turn On Apex Debug Log for Replay Debugger ');
+    await expect(outputPanelText).toContain('ended with exit code 0');
   });
 
   step('Run Apex Tests', async () => {
@@ -182,7 +182,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -190,9 +190,9 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       '=== Test Results',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
-    expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('Assertion Failed: incorrect ticker symbol');
+    await expect(outputPanelText).toContain('Expected: CRM, Actual: SFDC');
   });
 
   step('SFDX: Get Apex Debug Logs', async () => {
@@ -213,8 +213,8 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     // Select a log file
     const quickPicks = await prompt.getQuickPicks();
-    expect(quickPicks).not.toBeUndefined();
-    expect(quickPicks.length).toBeGreaterThanOrEqual(1);
+    await expect(quickPicks).not.toBeUndefined();
+    await expect(quickPicks.length).toBeGreaterThanOrEqual(1);
     await prompt.selectQuickPick('User User - ApexTestHandler');
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -222,7 +222,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       'SFDX: Get Apex Debug Logs successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify content on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -230,10 +230,10 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       'Starting SFDX: Get Apex Debug Logs',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('|EXECUTION_STARTED');
-    expect(outputPanelText).toContain('|EXECUTION_FINISHED');
-    expect(outputPanelText).toContain('ended SFDX: Get Apex Debug Logs');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('|EXECUTION_STARTED');
+    await expect(outputPanelText).toContain('|EXECUTION_FINISHED');
+    await expect(outputPanelText).toContain('ended SFDX: Get Apex Debug Logs');
 
     // Verify content on log file
     const editorView = workbench.getEditorView();
@@ -242,8 +242,8 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     const textEditor = (await editorView.openEditor(title!)) as TextEditor;
     const executionStarted = await textEditor.getLineOfText('|EXECUTION_STARTED');
     const executionFinished = await textEditor.getLineOfText('|EXECUTION_FINISHED');
-    expect(executionStarted).toBeGreaterThanOrEqual(1);
-    expect(executionFinished).toBeGreaterThanOrEqual(1);
+    await expect(executionStarted).toBeGreaterThanOrEqual(1);
+    await expect(executionFinished).toBeGreaterThanOrEqual(1);
   });
 
   step('Replay an Apex Debug Log', async () => {
@@ -282,7 +282,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successPushNotificationWasFound).toBe(true);
+    await expect(successPushNotificationWasFound).toBe(true);
   });
 
   step('Run Apex Tests to Verify Fix', async () => {
@@ -303,7 +303,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Verify test results are listed on vscode's Output section
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -311,9 +311,9 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
       '=== Test Results',
       10
     );
-    expect(outputPanelText).not.toBeUndefined();
-    expect(outputPanelText).toContain('AccountServiceTest.should_create_account');
-    expect(outputPanelText).toContain('Pass');
+    await expect(outputPanelText).not.toBeUndefined();
+    await expect(outputPanelText).toContain('AccountServiceTest.should_create_account');
+    await expect(outputPanelText).toContain('Pass');
   });
 
   step('Tear down and clean up the testing environment', async () => {

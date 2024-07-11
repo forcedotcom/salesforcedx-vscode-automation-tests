@@ -25,8 +25,7 @@ export type ExtensionId =
   | 'salesforcedx-vscode-apex-replay-debugger'
   | 'salesforcedx-vscode-lightning'
   | 'salesforcedx-vscode-lwc'
-  | 'salesforcedx-vscode-visualforce'
-  | 'salesforce.salesforce-vscode-slds';
+  | 'salesforcedx-vscode-visualforce';
 
 export type Extension = {
   id: string;
