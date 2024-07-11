@@ -10,6 +10,7 @@ import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import { Workbench } from 'wdio-vscode-service';
 import { Duration } from '@salesforce/kit';
+import { WORKSPACE_SETTING_KEYS as WSK } from '../utilities/index.ts';
 
 describe('Deploy and Retrieve', async () => {
   let testSetup: TestSetup;
@@ -31,7 +32,7 @@ describe('Deploy and Retrieve', async () => {
       `}`
     ].join('\n');
     await utilities.createApexClass('MyClass', classText);
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Create Apex Class successfully ran',
@@ -67,31 +68,13 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Verify Source Tracking Setting is enabled', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Preferences: Open Workspace Settings',
-      Duration.seconds(5)
+    expect(
+      await utilities.isBooleanSettingEnabled(WSK.ENABLE_SOURCE_TRACKING_FOR_DEPLOY_AND_RETRIEVE)
     );
-    await browser.keys(['enable source tracking']);
-
-    // Clear all notifications so setting is reachable
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Notifications: Clear All Notifications',
-      Duration.seconds(1)
-    );
-
-    const enableSourceTrackingBtn = await utilities.findElementByText(
-      'div',
-      'title',
-      'salesforcedx-vscode-core.experimental.enableSourceTrackingForDeployAndRetrieve'
-    );
-    await expect(await enableSourceTrackingBtn.getAttribute('aria-checked')).toBe('true');
   });
 
   step('Deploy with SFDX: Deploy This Source to Org - ST enabled', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -99,7 +82,7 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Deploy again (with no changes) - ST enabled', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -108,7 +91,7 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Modify the file and deploy again - ST enabled', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
 
@@ -122,7 +105,7 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Retrieve with SFDX: Retrieve This Source from Org', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -131,7 +114,7 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Modify the file and retrieve again', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
 
@@ -149,55 +132,20 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Prefer Deploy on Save when `Push or deploy on save` is enabled', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
 
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Preferences: Open Workspace Settings',
-      Duration.seconds(3)
+    await expect(await utilities.enableBooleanSetting(WSK.PUSH_OR_DEPLOY_ON_SAVE_ENABLED)).toBe(
+      true
     );
-    await browser.keys(['push on save']);
 
-    const pushOrDeployOnSaveBtn = await utilities.findElementByText(
-      'div',
-      'title',
-      'salesforcedx-vscode-core.push-or-deploy-on-save.enabled'
-    );
-    await pushOrDeployOnSaveBtn.click();
-    await utilities.pause(Duration.seconds(3));
-
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Preferences: Open Workspace Settings',
-      Duration.seconds(3)
-    );
-    await browser.keys(['prefer deploy']);
-
-    try {
-      await utilities.runCommandFromCommandPrompt(
-        workbench,
-        'View: Close Panel',
-        Duration.seconds(2)
-      );
-    } catch {
-      utilities.log('Panel is already closed');
-    }
-    const preferDeployOnSaveBtn = await utilities.findElementByText(
-      'div',
-      'title',
-      'salesforcedx-vscode-core.push-or-deploy-on-save.preferDeployOnSave'
-    );
-    await preferDeployOnSaveBtn.click();
-    await utilities.pause(Duration.seconds(3));
+    await expect(
+      await utilities.enableBooleanSetting(WSK.PUSH_OR_DEPLOY_ON_SAVE_PREFER_DEPLOY_ON_SAVE)
+    ).toBe(true);
 
     // Clear all notifications so clear output button is reachable
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Notifications: Clear All Notifications',
-      Duration.seconds(1)
-    );
+    await utilities.executeQuickPick('Notifications: Clear All Notifications', Duration.seconds(1));
 
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
@@ -212,46 +160,24 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Disable Source Tracking Setting', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.enableBooleanSetting('salesforcedx-vscode-core.experimental.enableSourceTrackingForDeployAndRetrieve')
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Preferences: Open Workspace Settings',
-      Duration.seconds(5)
-    );
-    await browser.keys(['enable source tracking']);
+    await utilities.executeQuickPick('Notifications: Clear All Notifications', Duration.seconds(1));
 
-    // Clear all notifications so setting is reachable
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Notifications: Clear All Notifications',
-      Duration.seconds(1)
-    );
+    await expect(
+      await utilities.disableBooleanSetting(WSK.ENABLE_SOURCE_TRACKING_FOR_DEPLOY_AND_RETRIEVE)
+    ).toBe(false);
 
-    const enableSourceTrackingBtn = await utilities.findElementByText(
-      'div',
-      'title',
-      'salesforcedx-vscode-core.experimental.enableSourceTrackingForDeployAndRetrieve'
-    );
-    await enableSourceTrackingBtn.click();
-    await utilities.pause(Duration.seconds(1));
     // Reload window to update cache and get the setting behavior to work
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Developer: Reload Window',
+    await utilities.reloadAndEnableExtensions();
+    await utilities.verifyExtensionsAreRunning(
+      utilities.getExtensionsToVerifyActive(),
       Duration.seconds(100)
     );
-    await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
   });
 
   step('Deploy with SFDX: Deploy This Source to Org - ST disabled', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     // Clear all notifications so clear output button is visible
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Notifications: Clear All Notifications',
-      Duration.seconds(1)
-    );
+    await utilities.executeQuickPick('Notifications: Clear All Notifications');
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -260,7 +186,7 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Deploy again (with no changes) - ST disabled', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -269,7 +195,7 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('Modify the file and deploy again - ST disabled', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
 
@@ -283,22 +209,17 @@ describe('Deploy and Retrieve', async () => {
   });
 
   step('SFDX: Delete This from Project and Org', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.getTextEditor(workbench, 'MyClass.cls');
     // Run SFDX: Push Source to Default Org and Ignore Conflicts to be in sync with remote
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
+    await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org and Ignore Conflicts',
       Duration.seconds(10)
     );
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
 
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Delete This from Project and Org',
-      Duration.seconds(2)
-    );
+    await utilities.executeQuickPick('SFDX: Delete This from Project and Org', Duration.seconds(2));
 
     // Make sure we get a confirmation dialog
     const confirmationDialogText =
@@ -342,7 +263,7 @@ describe('Deploy and Retrieve', async () => {
     await expect(outputPanelText).toContain('ended with exit code 0');
   });
 
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
 

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2024, salesforce.com, inc.
+ * All rights reserved.
+ * Licensed under the BSD 3-Clause license.
+ * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+
 import { Duration } from '@salesforce/kit';
 import { InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import * as changeCase from 'change-case';
@@ -10,9 +17,7 @@ const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 async function findAndCheckSetting(
   id: string
 ): Promise<{ checkButton: WebdriverIO.Element; checkButtonValue: string | null }> {
-  const idParts = id.split('.');
-  const name = idParts.pop()!;
-  const search = changeCase.capitalCase(name);
+  const search = changeCase.capitalCase(id);
   await browser.keys(search);
   let checkButton: WebdriverIO.Element | null = null;
   let checkButtonValue: string | null = null;
@@ -52,7 +57,10 @@ export async function inWorkspaceSettings<T>(
 ): Promise<T> {
   try {
     debug('inWorkspaceSettings - enter');
-    const settings = await executeQuickPick('Preferences: Open Workspace Settings', Duration.seconds(1));
+    const settings = await executeQuickPick(
+      'Preferences: Open Workspace Settings',
+      Duration.seconds(1)
+    );
     debug('inWorkspaceSettings - after open');
     // Wait for the specified XPath after the action is complete
     await browser.waitUntil(

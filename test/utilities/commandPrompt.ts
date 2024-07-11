@@ -122,7 +122,12 @@ export async function waitForQuickPick(
     }
   );
 }
-
+/**
+ * Runs exact command from command palette
+ * @param command 
+ * @param wait - default is  1 second
+ * @returns 
+ */
 export async function executeQuickPick(
   command: string,
   wait: Duration = Duration.seconds(1)
