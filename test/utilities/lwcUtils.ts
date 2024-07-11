@@ -6,7 +6,7 @@
  */
 
 import { Duration } from '@salesforce/kit';
-import { runCommandFromCommandPrompt } from './commandPrompt.ts';
+import { runCommandFromCommandPrompt, executeQuickPick } from './commandPrompt.ts';
 import { getTextEditor, log, pause } from './miscellaneous.ts';
 import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
@@ -20,7 +20,7 @@ export async function createLwc(name: string): Promise<void> {
   const inputBox = await runCommandFromCommandPrompt(
     workbench,
     'SFDX: Create Lightning Web Component',
-    1
+    Duration.seconds(1)
   );
 
   log('createLwc() - Set the name of the new component');
