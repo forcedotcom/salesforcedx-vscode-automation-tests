@@ -12,10 +12,10 @@ import * as utilities from '../utilities/index.ts';
 import path from 'path';
 import util from 'util';
 import { fail } from 'assert';
+import { Duration } from '@salesforce/kit';
 
 import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
-import { Duration } from '@salesforce/kit';
 
 const exec = util.promisify(child_process.exec);
 
@@ -49,18 +49,19 @@ describe('Debug LWC Tests', async () => {
       await utilities.showRunningExtensions();
       await utilities.zoom('Out', 4, Duration.seconds(1));
       // Verify Lightning Web Components extension is present and running
-      const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
-        'salesforcedx-vscode-lwc'
-      ]);
-      await utilities.zoomReset();
-      await expect(foundExtensions.length).toBe(1);
+      const extensionWasFound = await utilities.verifyExtensionsAreRunning(
+        utilities.getExtensionsToVerifyActive(
+          (ext) => ext.extensionId === 'salesforcedx-vscode-lwc'
+        )
+      );
+      expect(extensionWasFound).toBe(true);
     });
 
     step('Debug All Tests on a LWC via the Test Sidebar', async () => {
       utilities.log(
         `${testSetup.testSuiteSuffixName} - Debug All tests on a LWC via the Test Sidebar`
       );
-      const workbench = await (await browser.getWorkbench()).wait();
+      const workbench = await utilities.getWorkbench();
       await utilities.executeQuickPick('Testing: Focus on LWC Tests View', Duration.seconds(3));
 
       // Open the Test Sidebar
@@ -104,11 +105,7 @@ describe('Debug LWC Tests', async () => {
       );
 
       // Verify the tests that are passing are labeled with a green dot on the Test sidebar
-      await utilities.runCommandFromCommandPrompt(
-        workbench,
-        'Testing: Focus on LWC Tests View',
-        Duration.seconds(3)
-      );
+      await utilities.executeQuickPick('Testing: Focus on LWC Tests View', Duration.seconds(3));
       const icon = await (await lwcTestItem.elem).$('.custom-view-tree-node-item-icon');
       const iconStyle = await icon.getAttribute('style');
       // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
@@ -121,7 +118,7 @@ describe('Debug LWC Tests', async () => {
 
     step('Debug Single Test via the Test Sidebar', async () => {
       utilities.log(`${testSetup.testSuiteSuffixName} - Debug Single Test via the Test Sidebar`);
-      const workbench = await (await browser.getWorkbench()).wait();
+      const workbench = await utilities.getWorkbench();
       const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
       // Open the Test Sidebar
@@ -180,9 +177,8 @@ describe('Debug LWC Tests', async () => {
       );
 
       // Debug SFDX: Debug Current Lightning Web Component Test File
-      const workbench = await (await browser.getWorkbench()).wait();
-      await utilities.runCommandFromCommandPrompt(
-        workbench,
+      const workbench = await utilities.getWorkbench();
+      await utilities.executeQuickPick(
         'SFDX: Debug Current Lightning Web Component Test File',
         Duration.seconds(10)
       );
@@ -206,7 +202,7 @@ describe('Debug LWC Tests', async () => {
     });
 
     xstep('Debug All Tests via Code Lens action', async () => {
-      const workbench = await (await browser.getWorkbench()).wait();
+      const workbench = await utilities.getWorkbench();
       const textEditor = await utilities.getTextEditor(workbench, 'lwc1.test.js');
 
       // Click the "Debug" code lens at the top of the class
@@ -241,7 +237,7 @@ describe('Debug LWC Tests', async () => {
       utilities.log(`${testSetup.testSuiteSuffixName} - Debug Single Test via Code Lens action`);
 
       // Click the "Debug Test" code lens at the top of one of the test methods
-      const workbench = await (await browser.getWorkbench()).wait();
+      const workbench = await utilities.getWorkbench();
       const textEditor = await utilities.getTextEditor(workbench, 'lwc2.test.js');
       await browser.keys([CMD_KEY, 'ArrowUp']);
       const codeLens = await textEditor.getCodeLens('Run Test');
@@ -290,7 +286,7 @@ describe('Debug LWC Tests', async () => {
 
       // Verify test results are listed on vscode's Output section
       // Also verify that all tests pass
-      const workbench = await (await browser.getWorkbench()).wait();
+      const workbench = await utilities.getWorkbench();
       const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(10));
       await expect(terminalText).not.toBeUndefined();
       await expect(terminalText).toContain(

@@ -24,7 +24,7 @@ describe('SObjects Definitions', async () => {
   });
 
   step('Check Custom Objects Customer and Product are within objects folder', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const sidebar = workbench.getSideBar();
     const content = sidebar.getContent();
 
@@ -65,9 +65,8 @@ describe('SObjects Definitions', async () => {
   });
 
   step('Push Source to Org', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
+    const workbench = await utilities.getWorkbench();
+    await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org',
       Duration.seconds(5)
     );
@@ -90,10 +89,9 @@ describe('SObjects Definitions', async () => {
   });
 
   step('Refresh SObject Definitions for Custom SObjects', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView(Duration.seconds(2));
-    const prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
+    const prompt = await utilities.executeQuickPick(
       'SFDX: Refresh SObject Definitions',
       Duration.seconds(2)
     );
@@ -171,10 +169,9 @@ describe('SObjects Definitions', async () => {
   });
 
   step('Refresh SObject Definitions for Standard SObjects', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView(Duration.seconds(2));
-    const prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
+    const prompt = await utilities.executeQuickPick(
       'SFDX: Refresh SObject Definitions',
       Duration.seconds(5)
     );
@@ -234,11 +231,10 @@ describe('SObjects Definitions', async () => {
 
   step('Refresh SObject Definitions for All SObjects', async () => {
     // Clear the output for correct test validation.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView(Duration.seconds(2));
 
-    const prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
+    const prompt = await utilities.executeQuickPick(
       'SFDX: Refresh SObject Definitions',
       Duration.seconds(5)
     );

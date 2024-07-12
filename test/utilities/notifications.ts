@@ -7,6 +7,7 @@
 
 import { Workbench } from 'wdio-vscode-service';
 import { log, pause } from './miscellaneous.ts';
+import { getWorkbench } from './workbench.ts';
 import { Duration } from '@salesforce/kit';
 
 export async function waitForNotificationToGoAway(
@@ -65,8 +66,6 @@ export async function notificationIsPresentWithTimeout(
   durationInSeconds: Duration,
   matchExactString: boolean = true
 ): Promise<boolean> {
-  // Change timeout from seconds to milliseconds
-
   const startDate = new Date();
   let currentDate: Date;
   let secondsPassed: number = 0;
@@ -141,7 +140,7 @@ export async function attemptToFindNotification(
 }
 
 export async function dismissAllNotifications(): Promise<void> {
-  const workbench = await (await browser.getWorkbench()).wait();
+  const workbench = await getWorkbench();
   await browser.waitUntil(async () => {
     const notifications = await workbench.getNotifications();
     for (const notification of notifications) {

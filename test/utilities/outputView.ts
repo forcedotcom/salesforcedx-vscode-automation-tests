@@ -9,9 +9,9 @@ import clipboard from 'clipboardy';
 import { pause } from './miscellaneous.ts';
 import { dismissAllNotifications } from './notifications.ts';
 import { executeQuickPick } from './commandPrompt.ts';
+import { Duration } from '@salesforce/kit';
 
 import { Key } from 'webdriverio';
-import { Duration } from '@salesforce/kit';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 export async function selectOutputChannel(name: string): Promise<void> {

@@ -12,9 +12,9 @@ import util from 'util';
 import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
 import { EnvironmentSettings } from './environmentSettings.ts';
 import * as utilities from './utilities/index.ts';
+import { fail } from 'assert';
 
 import { fileURLToPath } from 'url';
-import { fail } from 'assert';
 import { Duration } from '@salesforce/kit';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -106,6 +106,7 @@ export class TestSetup {
     if (!fs.existsSync(this.tempFolderPath)) {
       utilities.createFolder(this.tempFolderPath);
     }
+
     utilities.log(`${this.testSuiteSuffixName} - ...finished setUpTestingEnvironment()`);
     utilities.log('');
   }
@@ -133,8 +134,7 @@ export class TestSetup {
 
     const coreIsActive = await utilities.verifyExtensionsAreRunning(
       utilities
-        .getExtensionsToVerifyActive()
-        .filter((ext) => ext.extensionId === 'salesforcedx-vscode-core')
+        .getExtensionsToVerifyActive((ext) => ext.extensionId === 'salesforcedx-vscode-core')
     );
 
     if (!coreIsActive) {
@@ -157,7 +157,6 @@ export class TestSetup {
 
   public async createProject(scratchOrgEdition: utilities.OrgEdition, projectName?: string) {
     utilities.log('');
-
     utilities.log(`${projectName ?? this.testSuiteSuffixName} - Starting createProject()...`);
     this.prompt = await utilities.executeQuickPick('SFDX: Create Project');
     // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
@@ -183,6 +182,7 @@ export class TestSetup {
     // Verify the project was created and was loaded.
     await this.verifyProjectCreated(projectName ?? this.tempProjectName);
     this.updateScratchOrgDefWithEdition(scratchOrgEdition);
+
     // Extra config needed for Apex LSP on GHA
     if (process.platform === 'darwin') {
       this.setJavaHomeConfigEntry();

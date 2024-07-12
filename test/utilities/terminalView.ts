@@ -8,10 +8,10 @@
 import clipboard from 'clipboardy';
 import { TerminalView, Workbench } from 'wdio-vscode-service';
 import { log, pause } from './miscellaneous.ts';
+import { Duration } from '@salesforce/kit';
+import { executeQuickPick } from './commandPrompt.ts';
 
 import { Key } from 'webdriverio';
-import { Duration } from '@salesforce/kit';
-import { runCommandFromCommandPrompt } from './commandPrompt.ts';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 export async function getTerminalView(workbench: Workbench): Promise<TerminalView> {
@@ -22,7 +22,7 @@ export async function getTerminalView(workbench: Workbench): Promise<TerminalVie
 }
 
 export async function getTerminalViewText(workbench: Workbench, seconds: Duration): Promise<string> {
-  await runCommandFromCommandPrompt(workbench, 'Terminal: Focus Terminal', Duration.seconds(1));
+  await executeQuickPick('Terminal: Focus Terminal', Duration.seconds(1));
   await pause(seconds);
 
   await browser.keys([process.platform == 'darwin' ? CMD_KEY : 'Control', 'a', 'c']);

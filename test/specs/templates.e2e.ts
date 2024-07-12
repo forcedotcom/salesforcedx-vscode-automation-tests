@@ -32,7 +32,7 @@ describe('Templates', async () => {
     await utilities.createCommand('Apex Class', 'ApexClass1', 'classes', 'cls');
 
     // Check for expected items in the Explorer view.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.expandSideBar(workbench, projectName);
 
     // Get the matching (visible) items within the tree which contains "ApexClass1".
@@ -54,7 +54,7 @@ describe('Templates', async () => {
       '    }',
       '}'
     ].join('\n');
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'ApexClass1.cls');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     await expect(textGeneratedFromTemplate).toEqual(expectedText);
@@ -66,7 +66,7 @@ describe('Templates', async () => {
     await utilities.createCommand('Apex Unit Test Class', 'ApexUnitTestClass1', 'classes', 'cls');
 
     // Check for expected items in the Explorer view.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.expandSideBar(workbench, projectName);
 
     // Get the matching (visible) items within the tree which contains "ApexUnitTestClass1".
@@ -91,7 +91,7 @@ describe('Templates', async () => {
       '    }',
       '}'
     ].join('\n');
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'ApexUnitTestClass1.cls');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     await expect(textGeneratedFromTemplate).toContain(expectedText);
@@ -103,7 +103,7 @@ describe('Templates', async () => {
     await utilities.createCommand('Apex Trigger', 'ApexTrigger1', 'triggers', 'trigger');
 
     // Check for expected items in the Explorer view.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.expandSideBar(workbench, projectName);
 
     // Get the matching (visible) items within the tree which contains "ApexTrigger1".
@@ -119,7 +119,7 @@ describe('Templates', async () => {
   step('Verify the contents of the Apex Trigger', async () => {
     // Verify the default trigger.
     const expectedText = ['trigger ApexTrigger1 on SOBJECT (before insert) {', '', '}'].join('\n');
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'ApexTrigger1.trigger');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     await expect(textGeneratedFromTemplate).toEqual(expectedText);
@@ -154,7 +154,7 @@ describe('Templates', async () => {
     await expect(outputPanelText).toContain(`create ${rendererPath}`);
 
     // Get the matching (visible) items within the tree which contains "AuraApp1".
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
       workbench,
       projectName,
@@ -173,7 +173,7 @@ describe('Templates', async () => {
   step('Verify the contents of the Aura App', async () => {
     // Verify the default code for an Aura App.
     const expectedText = ['<aura:application>', '', '</aura:application>'].join('\n');
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'AuraApp1.app');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     await expect(textGeneratedFromTemplate).toEqual(expectedText);
@@ -213,7 +213,7 @@ describe('Templates', async () => {
 
   step('Verify the contents of the Aura Component', async () => {
     const expectedText = ['<aura:component>', '', '</aura:component>'].join('\n');
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'auraComponent1.cmp');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     await expect(textGeneratedFromTemplate).toEqual(expectedText);
@@ -230,7 +230,7 @@ describe('Templates', async () => {
     );
 
     // Check for expected items in the Explorer view.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.expandSideBar(workbench, projectName);
 
     // Check for the presence of the directory, "auraEvent1".
@@ -248,7 +248,7 @@ describe('Templates', async () => {
     const expectedText = ['<aura:event type="APPLICATION" description="Event template"/>'].join(
       '\n'
     );
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'auraEvent1.evt');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     await expect(textGeneratedFromTemplate).toEqual(expectedText);
@@ -265,7 +265,7 @@ describe('Templates', async () => {
     );
 
     // Get the matching (visible) items within the tree which contains "AuraInterface1".
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
       workbench,
       projectName,
@@ -283,7 +283,7 @@ describe('Templates', async () => {
       '  <aura:attribute name="example" type="String" default="" description="An example attribute."/>',
       '</aura:interface>'
     ].join('\n');
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'AuraInterface1.intf');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     await expect(textGeneratedFromTemplate).toEqual(expectedText);
@@ -300,7 +300,7 @@ describe('Templates', async () => {
     );
 
     // Check for expected items in the Explorer view.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.expandSideBar(workbench, projectName);
 
     // Check for the presence of the directory, "lightningWebComponent1".
@@ -321,7 +321,7 @@ describe('Templates', async () => {
       '',
       'export default class LightningWebComponent1 extends LightningElement {}'
     ].join('\n');
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'lightningWebComponent1.js');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     await expect(textGeneratedFromTemplate).toEqual(expectedText);
@@ -330,7 +330,7 @@ describe('Templates', async () => {
   // Lightning Web Component Test
   xstep('Create Lightning Web Component Test', async () => {
     // Delete previous test file
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const pathToLwcTest = path.join(
       'force-app',
       'main',
@@ -345,8 +345,7 @@ describe('Templates', async () => {
     });
 
     // Using the Command palette, run SFDX: Create Lightning Web Component Test.
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
+    const inputBox = await utilities.executeQuickPick(
       'SFDX: Create Lightning Web Component Test',
       Duration.seconds(1)
     );
@@ -402,7 +401,7 @@ describe('Templates', async () => {
       '    });',
       '});'
     ].join('\n');
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'lightningWebComponent1.test.js');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     await expect(textGeneratedFromTemplate).toEqual(expectedText);
@@ -418,7 +417,7 @@ describe('Templates', async () => {
       'component'
     );
     // Get the matching (visible) items within the tree which contains "AuraInterface1".
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
       workbench,
       projectName,
@@ -438,7 +437,7 @@ describe('Templates', async () => {
       '<!-- End Default Content REMOVE THIS -->',
       '</apex:component>'
     ].join('\n');
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'VisualforceCmp1.component');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     await expect(textGeneratedFromTemplate).toEqual(expectedText);
@@ -450,7 +449,7 @@ describe('Templates', async () => {
     await utilities.createCommand('Visualforce Page', 'VisualforcePage1', 'pages', 'page');
 
     // Get the matching (visible) items within the tree which contains "AuraInterface1".
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
       workbench,
       projectName,
@@ -470,7 +469,7 @@ describe('Templates', async () => {
       '<!-- End Default Content REMOVE THIS -->',
       '</apex:page>'
     ].join('\n');
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'VisualforcePage1.page');
     const textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     await expect(textGeneratedFromTemplate).toEqual(expectedText);
@@ -479,10 +478,9 @@ describe('Templates', async () => {
   // Sample Analytics Template
   step('Create a Sample Analytics Template', async () => {
     // Clear the output panel, then use the Command palette to run, "SFDX: Create Sample Analytics Template".
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView();
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
+    const inputBox = await utilities.executeQuickPick(
       'SFDX: Create Sample Analytics Template',
       Duration.seconds(1)
     );
@@ -526,7 +524,7 @@ describe('Templates', async () => {
 
   step('Verify the contents of the Sample Analytics Template', async () => {
     // Verify the default code for a Sample Analytics Template.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     let textEditor = await utilities.getTextEditor(workbench, 'app-to-template-rules.json');
     let textGeneratedFromTemplate = (await textEditor.getText()).trimEnd().replace(/\r\n/g, '\n');
     await expect(textGeneratedFromTemplate).toEqual(analyticsTemplate.appToTemplateRules);

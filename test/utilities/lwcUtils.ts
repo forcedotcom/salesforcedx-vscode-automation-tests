@@ -5,20 +5,21 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Duration } from '@salesforce/kit';
-import { runCommandFromCommandPrompt, executeQuickPick } from './commandPrompt.ts';
+import { executeQuickPick, runCommandFromCommandPrompt } from './commandPrompt.ts';
 import { getTextEditor, log, pause } from './miscellaneous.ts';
+import { getWorkbench } from './workbench.ts';
+import { Duration } from '@salesforce/kit';
+
 import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 export async function createLwc(name: string): Promise<void> {
   log('createLwc() - calling browser.getWorkbench()');
-  const workbench = await (await browser.getWorkbench()).wait();
+  const workbench = await getWorkbench();
 
   log('createLwc() - Running SFDX: Create Lightning Web Component');
   // Using the Command palette, run SFDX: Create Lightning Web Component.
-  const inputBox = await runCommandFromCommandPrompt(
-    workbench,
+  const inputBox = await executeQuickPick(
     'SFDX: Create Lightning Web Component',
     Duration.seconds(1)
   );
@@ -87,7 +88,7 @@ export async function createLwc(name: string): Promise<void> {
     `        });`,
     `        document.body.appendChild(element);`,
     `        const div = element.shadowRoot.querySelector('div');`,
-    `        await expect(div.textContent).toBe('Hello, World!');`,
+    `        expect(div.textContent).toBe('Hello, World!');`,
     `    });`,
     ``,
     `    it('is defined', async () => {`,
@@ -121,7 +122,7 @@ export async function createLwc(name: string): Promise<void> {
 
 export async function createAura(name: string): Promise<void> {
   log('createAura() - calling browser.getWorkbench()');
-  const workbench = await (await browser.getWorkbench()).wait();
+  const workbench = await getWorkbench();
 
   log('createAura() - Running SFDX: Create Aura Component');
   const inputBox = await executeQuickPick('SFDX: Create Aura Component', Duration.seconds(1));

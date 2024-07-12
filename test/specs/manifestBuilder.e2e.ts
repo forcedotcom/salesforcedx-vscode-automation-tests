@@ -31,11 +31,7 @@ describe('Manifest Builder', async () => {
     const workbench = await browser.getWorkbench();
 
     // Using the Command palette, run File: New File...
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Create: New File...',
-      Duration.seconds(1)
-    );
+    const inputBox = await utilities.executeQuickPick('Create: New File...', Duration.seconds(1));
 
     // Set the name of the new manifest file
     const filePath = path.join('manifest', 'manifest.xml');
@@ -70,11 +66,7 @@ describe('Manifest Builder', async () => {
     const workbench = await browser.getWorkbench();
     // Clear output before running the command
     await utilities.clearOutputView();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Deploy Source in Manifest to Org',
-      Duration.seconds(1)
-    );
+    await utilities.executeQuickPick('SFDX: Deploy Source in Manifest to Org', Duration.seconds(1));
 
     // Look for the success notification that appears which says, "SFDX: Deploy This Source to Org successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -121,12 +113,8 @@ describe('Manifest Builder', async () => {
     const workbench = await browser.getWorkbench();
     await utilities.getTextEditor(workbench, 'manifest.xml');
     // Clear output before running the command
-    await utilities.clearOutputView(Duration.seconds(1));
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Retrieve Source in Manifest from Org',
-      Duration.seconds(1)
-    );
+    await utilities.clearOutputView();
+    await utilities.executeQuickPick('SFDX: Retrieve Source in Manifest from Org', Duration.seconds(1));
 
     // Look for the success notification that appears which says, "SFDX: Retrieve This Source from Org successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(

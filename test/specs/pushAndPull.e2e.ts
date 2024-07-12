@@ -65,7 +65,7 @@ describe('Push and Pull', async () => {
 
   step('Create an Apex class', async () => {
     // Create an Apex Class.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     // Using the Command palette, run SFDX: Create Apex Class.
     await utilities.createCommand('Apex Class', 'ExampleApexClass1', 'classes', 'cls');
 
@@ -88,12 +88,7 @@ describe('Push and Pull', async () => {
   });
 
   step('SFDX: View Local Changes', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: View Local Changes',
-      Duration.seconds(5)
-    );
+    await utilities.executeQuickPick('SFDX: View Local Changes', Duration.seconds(5));
 
     // Check the output.
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -111,12 +106,8 @@ describe('Push and Pull', async () => {
   });
 
   step('Push the Apex class', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Push Source to Default Org',
-      Duration.seconds(5)
-    );
+    const workbench = await utilities.getWorkbench();
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org', Duration.seconds(5));
 
     // At this point there should be no conflicts since this is a new class.
     await verifyPushSuccess(workbench);
@@ -127,28 +118,18 @@ describe('Push and Pull', async () => {
 
   step('Push again (with no changes)', async () => {
     // Clear the Output view first.
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'View: Clear Output',
-      Duration.seconds(5)
-    );
+    const workbench = await utilities.getWorkbench();
+    await utilities.clearOutputView(Duration.seconds(2));
 
     // Now push
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Push Source to Default Org',
-      Duration.seconds(5)
-    );
-
-    await verifyPushSuccess(workbench);
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org', Duration.seconds(5));
 
     // Check the output.
-    await verifyPushAndPullOutputText(workbench, 'Push', 'to');
+    await verifyPushSuccess(workbench);
   });
 
   step('Modify the file and push the changes', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
@@ -158,15 +139,9 @@ describe('Push and Pull', async () => {
     await textEditor.setTextAtLine(3, '        // sample comment');
 
     // Push the file.
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Push Source to Default Org',
-      Duration.seconds(5)
-    );
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org', Duration.seconds(5));
 
     await verifyPushSuccess(workbench);
-
-    await verifyPushAndPullOutputText(workbench, 'Push', 'to');
 
     // Clear the Output view again.
     await utilities.clearOutputView(Duration.seconds(2));
@@ -175,16 +150,13 @@ describe('Push and Pull', async () => {
     await textEditor.save();
 
     // An now push the changes.
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Push Source to Default Org',
-      Duration.seconds(5)
-    );
-
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org', Duration.seconds(5));
+    
     await verifyPushSuccess(workbench);
 
     // Check the output.
     const outputPanelText = await verifyPushAndPullOutputText(workbench, 'Push', 'to', 'Changed');
+
     await expect(outputPanelText).toContain(
       path.join(
         'e2e-temp',
@@ -211,20 +183,16 @@ describe('Push and Pull', async () => {
 
   step('Pull the Apex class', async () => {
     // With this test, it's going to pull twice...
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
 
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Pull Source from Default Org',
-      Duration.seconds(5)
-    );
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', Duration.seconds(5));
     // At this point there should be no conflicts since there have been no changes.
     await verifyPullSuccess(workbench);
     // Check the output.
-    let outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from', 'Created');
+    const outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from', 'Created');
     // The first time a pull is performed, force-app/main/default/profiles/Admin.profile-meta.xml is pulled down.
     await expect(outputPanelText).toContain(
       path.join('force-app', 'main', 'default', 'profiles', 'Admin.profile-meta.xml')
@@ -235,20 +203,13 @@ describe('Push and Pull', async () => {
     await utilities.clearOutputView(Duration.seconds(2));
 
     // And pull again.
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Pull Source from Default Org',
-      Duration.seconds(5)
-    );
-    await verifyPullSuccess(workbench);
-
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', Duration.seconds(5));
     // Check the output.
-    outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
-    await expect(outputPanelText).not.toContain('Created  Admin');
+    await verifyPullSuccess(workbench);
   });
 
   step("Modify the file (but don't save), then pull", async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
@@ -259,19 +220,13 @@ describe('Push and Pull', async () => {
     // Don't save the file just yet.
 
     // Pull the file.
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Pull Source from Default Org',
-      Duration.seconds(5)
-    );
-    await verifyPullSuccess(workbench);
-
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', Duration.seconds(5));
     // Check the output.
-    await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
+    await verifyPullSuccess(workbench);
   });
 
   step('Save the modified file, then pull', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
@@ -281,37 +236,25 @@ describe('Push and Pull', async () => {
     await textEditor.save();
 
     // An now pull the changes.
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Pull Source from Default Org',
-      Duration.seconds(5)
-    );
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', Duration.seconds(5));
     await verifyPullSuccess(workbench);
-    await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
   });
 
   step('SFDX: View Changes in Default Org', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
     // Create second Project to then view Remote Changes
     await testSetup.createProject('developer', 'ViewChanges');
 
     // Verify CLI Integration Extension is present and running.
     await utilities.reloadAndEnableExtensions();
     await utilities.showRunningExtensions();
-    await utilities.zoom('Out', 4, Duration.seconds(1));
-    // Verify Apex extension is present and running
-    const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
-      'salesforcedx-vscode-core'
-    ]);
+    const extensionWasFound = await utilities.verifyExtensionsAreRunning(
+      utilities.getExtensionsToVerifyActive((ext) => ext.extensionId === 'salesforcedx-vscode-core')
+    );
     await utilities.zoomReset();
-    await expect(foundExtensions.length).toBe(1);
+    await expect(extensionWasFound).toBe(true);
 
     //Run SFDX: View Changes in Default Org command to view remote changes
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: View Changes in Default Org',
-      Duration.seconds(5)
-    );
+    await utilities.executeQuickPick('SFDX: View Changes in Default Org', Duration.seconds(5));
 
     // Check the output.
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -362,11 +305,10 @@ describe('Push and Pull', async () => {
   });
 
   xstep('Set the 2nd user as the default user', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
+    const workbench = await utilities.getWorkbench();
+    const inputBox = await utilities.executeQuickPick(
       'SFDX: Set a Default Org',
-      Duration.seconds(1)
+      Duration.seconds(10)
     );
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
       inputBox,

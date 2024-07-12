@@ -19,7 +19,7 @@ describe('Miscellaneous', async () => {
 
   xstep('Use out-of-the-box Apex Snippets', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Use Apex Snippets`);
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const apexSnippet = 'String.isBlank(inputString)';
 
     // Create anonymous apex file
@@ -27,11 +27,7 @@ describe('Miscellaneous', async () => {
 
     // Type snippet "isb" in a new line and check it inserted the expected string
     const textEditor = await utilities.getTextEditor(workbench, 'Anonymous.apex');
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Snippets: Insert Snippet',
-      Duration.seconds(1)
-    );
+    await utilities.executeQuickPick('Snippets: Insert Snippet', Duration.seconds(1));
     await browser.keys(['isb']);
     await utilities.pause(Duration.seconds(2));
     await browser.keys(['Enter']);
@@ -44,12 +40,8 @@ describe('Miscellaneous', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Use Apex Snippets`);
 
     // Using the Command palette, run Snippets: Configure User Snippets
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Snippets: Configure User Snippets',
-      Duration.seconds(1)
-    );
+    const workbench = await utilities.getWorkbench();
+    await utilities.executeQuickPick('Snippets: Configure User Snippets', Duration.seconds(1));
     await browser.keys(['New Global Snippets file...', 'Enter']);
     await utilities.pause(Duration.seconds(1));
     await browser.keys(['apex.json', 'Enter']);
@@ -70,11 +62,7 @@ describe('Miscellaneous', async () => {
     const textEditor = await utilities.getTextEditor(workbench, 'apex.json.code-snippets');
     await textEditor.setText(apexSnippet);
     await textEditor.save();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Developer: Reload Window',
-      Duration.seconds(50)
-    );
+    await utilities.executeQuickPick('Developer: Reload Window', Duration.seconds(50));
 
     // Create anonymous apex file
     await utilities.createAnonymousApexFile();
@@ -90,7 +78,7 @@ describe('Miscellaneous', async () => {
 
   step('Use out-of-the-box LWC Snippets - HTML', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Use out-of-the-box LWC Snippets - HTML`);
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     const lwcSnippet = [
       '<lightning-button',
@@ -101,11 +89,7 @@ describe('Miscellaneous', async () => {
     ].join('\n');
 
     // Create simple lwc.html file
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Create: New File...',
-      Duration.seconds(2)
-    );
+    const inputBox = await utilities.executeQuickPick('Create: New File...', Duration.seconds(1));
     await inputBox.setText('lwc.html');
     await browser.keys(['Enter']);
     await browser.keys(['Enter']);
@@ -113,11 +97,7 @@ describe('Miscellaneous', async () => {
     // Type snippet "lwc-button" and check it inserted the right lwc
     const textEditor = await utilities.getTextEditor(workbench, 'lwc.html');
 
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Snippets: Insert Snippet',
-      Duration.seconds(1)
-    );
+    await utilities.executeQuickPick('Snippets: Insert Snippet', Duration.seconds(1));
     await browser.keys(['lwc-button']);
     await utilities.pause(Duration.seconds(2));
     await browser.keys(['Enter']);
@@ -135,16 +115,12 @@ describe('Miscellaneous', async () => {
 
   step('Use out-of-the-box LWC Snippets - JS', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Use out-of-the-box LWC Snippets - JS`);
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
 
     const lwcSnippet = 'this.dispatchEvent(new CustomEvent("event-name"));';
 
     // Create simple lwc.js file
-    const inputBox = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'Create: New File...',
-      Duration.seconds(1)
-    );
+    const inputBox = await utilities.executeQuickPick('Create: New File...', Duration.seconds(1));
     await inputBox.setText('lwc.js');
     await browser.keys(['Enter']);
     await browser.keys(['Enter']);

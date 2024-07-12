@@ -8,9 +8,9 @@ import { step } from 'mocha-steps';
 import { InputBox, QuickOpenBox, TextEditor } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
+import { Duration } from '@salesforce/kit';
 
 import { Key } from 'webdriverio';
-import { Duration } from '@salesforce/kit';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 /**
@@ -30,9 +30,8 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.createApexClassWithBugs();
 
     // Push source to org
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
+    const workbench = await utilities.getWorkbench();
+    await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org and Ignore Conflicts',
       Duration.seconds(1)
     );
@@ -49,7 +48,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
 
     // Get Apex LSP Status Bar
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const statusBar = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       'Editor Language Status'
@@ -60,13 +59,9 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Run Apex Tests', async () => {
     // Run SFDX: Run Apex tests.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView();
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Run Apex Tests',
-      Duration.seconds(1)
-    );
+    prompt = await utilities.executeQuickPick('SFDX: Run Apex Tests', Duration.seconds(1));
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
@@ -91,7 +86,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Set Breakpoints and Checkpoints', async () => {
     // Get open text editor
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.getTextEditor(workbench, 'AccountService.cls');
 
     // Move cursor to return line
@@ -103,11 +98,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.pause(Duration.seconds(1));
 
     // Run SFDX: Toggle Checkpoint.
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Toggle Checkpoint',
-      Duration.seconds(1)
-    );
+    prompt = await utilities.executeQuickPick('SFDX: Toggle Checkpoint', Duration.seconds(1));
 
     // Switch back to the AccountService.cls tab
     await utilities.getTextEditor(workbench, 'AccountService.cls');
@@ -117,8 +108,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await expect(breakpoints.length).toEqual(1);
 
     // Run SFDX: Update Checkpoints in Org.
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
+    prompt = await utilities.executeQuickPick(
       'SFDX: Update Checkpoints in Org',
       Duration.seconds(20)
     );
@@ -137,10 +127,9 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
+    await utilities.executeQuickPick(
       'SFDX: Turn On Apex Debug Log for Replay Debugger',
       Duration.seconds(10)
     );
@@ -166,13 +155,9 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Run Apex Tests', async () => {
     // Run SFDX: Run Apex tests.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView();
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Run Apex Tests',
-      Duration.seconds(1)
-    );
+    prompt = await utilities.executeQuickPick('SFDX: Run Apex Tests', Duration.seconds(1));
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
@@ -197,12 +182,8 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('SFDX: Get Apex Debug Logs', async () => {
     // Run SFDX: Get Apex Debug Logs
-    const workbench = await (await browser.getWorkbench()).wait();
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Get Apex Debug Logs',
-      Duration.seconds(1)
-    );
+    const workbench = await utilities.getWorkbench();
+    prompt = await utilities.executeQuickPick('SFDX: Get Apex Debug Logs', Duration.seconds(1));
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(
@@ -248,9 +229,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Replay an Apex Debug Log', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
+    await utilities.executeQuickPick(
       'SFDX: Launch Apex Replay Debugger with Current File',
       Duration.seconds(5)
     );
@@ -264,15 +243,14 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Push Fixed Metadata to Org', async () => {
     // Get open text editor
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'AccountService.cls');
     await textEditor.setTextAtLine(6, '\t\t\tTickerSymbol = tickerSymbol');
     await textEditor.save();
     await utilities.pause(Duration.seconds(2));
 
     // Push source to org
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
+    await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org and Ignore Conflicts',
       Duration.seconds(1)
     );
@@ -287,13 +265,9 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Run Apex Tests to Verify Fix', async () => {
     // Run SFDX: Run Apex tests.
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView();
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
-      'SFDX: Run Apex Tests',
-      Duration.seconds(1)
-    );
+    prompt = await utilities.executeQuickPick('SFDX: Run Apex Tests', Duration.seconds(1));
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');

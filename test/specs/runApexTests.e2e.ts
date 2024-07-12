@@ -28,9 +28,8 @@ describe('Run Apex Tests', async () => {
     await utilities.createApexClassWithTest('ExampleApexClass3');
 
     // Push source to org
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
+    const workbench = await utilities.getWorkbench();
+    await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org and Ignore Conflicts',
       Duration.seconds(1)
     );
@@ -48,7 +47,7 @@ describe('Run Apex Tests', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
 
     // Get Apex LSP Status Bar
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const statusBar = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       'Editor Language Status'
@@ -58,7 +57,7 @@ describe('Run Apex Tests', async () => {
   });
 
   step('Run All Tests via Apex Class', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass1Test.cls');
 
     // Clear the Output view.
@@ -97,7 +96,7 @@ describe('Run Apex Tests', async () => {
   });
 
   step('Run Single Test via Apex Class', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass2Test.cls');
 
     // Clear the Output view.
@@ -138,12 +137,11 @@ describe('Run Apex Tests', async () => {
   step('Run All Tests via Command Palette', async () => {
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView(Duration.seconds(2));
 
     // Run SFDX: Run Apex tests.
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
+    prompt = await utilities.executeQuickPick(
       'SFDX: Run Apex Tests',
       Duration.seconds(1)
     );
@@ -181,12 +179,11 @@ describe('Run Apex Tests', async () => {
   step('Run Single Class via Command Palette', async () => {
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView(Duration.seconds(2));
 
     // Run SFDX: Run Apex tests.
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
+    prompt = await utilities.executeQuickPick(
       'SFDX: Run Apex Tests',
       Duration.seconds(1)
     );
@@ -220,7 +217,7 @@ describe('Run Apex Tests', async () => {
   });
 
   step('Run All tests via Test Sidebar', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
     // Open the Test Sidebar
@@ -293,7 +290,7 @@ describe('Run Apex Tests', async () => {
   });
 
   step('Run All Tests on a Class via the Test Sidebar', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
     // Open the Test Sidebar
@@ -348,7 +345,7 @@ describe('Run Apex Tests', async () => {
   });
 
   step('Run Single Test via the Test Sidebar', async () => {
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
 
     // Open the Test Sidebar
@@ -407,9 +404,8 @@ describe('Run Apex Tests', async () => {
     await utilities.createApexClassWithBugs();
 
     // Push source to org
-    const workbench = await (await browser.getWorkbench()).wait();
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
+    const workbench = await utilities.getWorkbench();
+    await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org and Ignore Conflicts',
       Duration.seconds(1)
     );
@@ -427,8 +423,7 @@ describe('Run Apex Tests', async () => {
     await utilities.clearOutputView(Duration.seconds(2));
 
     // Run SFDX: Run Apex tests.
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
+    prompt = await utilities.executeQuickPick(
       'SFDX: Run Apex Tests',
       Duration.seconds(1)
     );
@@ -462,8 +457,7 @@ describe('Run Apex Tests', async () => {
     await utilities.pause(Duration.seconds(1));
 
     // Push source to org
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
+    await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org and Ignore Conflicts',
       Duration.seconds(1)
     );
@@ -481,8 +475,7 @@ describe('Run Apex Tests', async () => {
     await utilities.clearOutputView(Duration.seconds(2));
 
     // Run SFDX: Run Apex tests to verify fix
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
+    prompt = await utilities.executeQuickPick(
       'SFDX: Run Apex Tests',
       Duration.seconds(1)
     );
@@ -512,9 +505,8 @@ describe('Run Apex Tests', async () => {
 
   step('Create Apex Test Suite', async () => {
     // Run SFDX: Create Apex Test Suite.
-    const workbench = await (await browser.getWorkbench()).wait();
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
+    const workbench = await utilities.getWorkbench();
+    prompt = await utilities.executeQuickPick(
       'SFDX: Create Apex Test Suite',
       Duration.seconds(1)
     );
@@ -541,9 +533,8 @@ describe('Run Apex Tests', async () => {
 
   step('Add test to Apex Test Suite', async () => {
     // Run SFDX: Add Tests to Apex Test Suite.
-    const workbench = await (await browser.getWorkbench()).wait();
-    prompt = await utilities.runCommandFromCommandPrompt(
-      workbench,
+    const workbench = await utilities.getWorkbench();
+    prompt = await utilities.executeQuickPick(
       'SFDX: Add Tests to Apex Test Suite',
       Duration.seconds(1)
     );
@@ -570,12 +561,11 @@ describe('Run Apex Tests', async () => {
   step('Run Apex Test Suite', async () => {
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView(Duration.seconds(2));
 
     // Run SFDX: Run Apex Test Suite.
-    await utilities.runCommandFromCommandPrompt(
-      workbench,
+    await utilities.executeQuickPick(
       'SFDX: Run Apex Test Suite',
       Duration.seconds(1)
     );

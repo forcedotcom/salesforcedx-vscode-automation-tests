@@ -7,9 +7,9 @@
 import { step } from 'mocha-steps';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
+import { Duration } from '@salesforce/kit';
 
 import { Key } from 'webdriverio';
-import { Duration } from '@salesforce/kit';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Aura LSP', async () => {
@@ -35,10 +35,10 @@ describe('Aura LSP', async () => {
     await utilities.zoom('Out', 4, Duration.seconds(1));
 
     // Verify Aura Components extension is present and running.
-    const foundExtensions = await utilities.verifyExtensionsAreRunning(
-      utilities
-        .getExtensionsToVerifyActive()
-        .filter((ext) => ext.extensionId === 'salesforcedx-vscode-lightning')
+    const extensionWasFound = await utilities.verifyExtensionsAreRunning(
+      utilities.getExtensionsToVerifyActive(
+        (ext) => ext.extensionId === 'salesforcedx-vscode-lightning'
+      )
     );
     await utilities.zoomReset();
     await expect(foundExtensions).toBe(true);
@@ -57,7 +57,7 @@ describe('Aura LSP', async () => {
   step('Go to Definition', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Go to Definition`);
     // Get open text editor
-    const workbench = await (await browser.getWorkbench()).wait();
+    const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'aura1.cmp');
 
     // Move cursor to the middle of "simpleNewContact"

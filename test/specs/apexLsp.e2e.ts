@@ -33,11 +33,11 @@ describe('Apex LSP', async () => {
     await utilities.showRunningExtensions();
     await utilities.zoom('Out', 4, Duration.seconds(1));
     // Verify Apex extension is present and running
-    const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
-      'salesforcedx-vscode-apex'
-    ]);
+    const foundExtensions = await utilities.verifyExtensionsAreRunning(
+      utilities.getExtensionsToVerifyActive((ext) => ext.extensionId === 'salesforcedx-vscode-apex')
+    );
     await utilities.zoomReset();
-    await expect(foundExtensions.length).toBe(1);
+    await expect(foundExtensions).toBe(true);
     // Close running extensions view
     await browser.keys([CMD_KEY, 'w']);
   });

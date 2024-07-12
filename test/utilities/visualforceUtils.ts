@@ -5,9 +5,9 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Duration } from '@salesforce/kit';
 import { runCommandFromCommandPrompt } from './commandPrompt.ts';
 import { getTextEditor, pause } from './miscellaneous.ts';
+import { Duration } from '@salesforce/kit';
 
 export async function createVisualforcePage(): Promise<void> {
   const workbench = await browser.getWorkbench();

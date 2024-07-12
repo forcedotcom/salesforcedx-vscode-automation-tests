@@ -19,6 +19,7 @@ export async function getStatusBarItemWhichIncludes(
     const items = await statusBar.item$$;
     for (const item of items) {
       const itemTitle = await item.getAttribute(statusBar.locators.itemTitle);
+      log(`status bar item title ${itemTitle}`);
       if (itemTitle.includes(title)) {
         return item;
       }
