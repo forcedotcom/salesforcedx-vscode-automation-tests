@@ -555,7 +555,7 @@ describe('Templates', async () => {
   });
 
   // Tear down
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
 });

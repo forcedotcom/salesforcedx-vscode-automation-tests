@@ -247,7 +247,7 @@ describe('Authentication', async () => {
     await expect(scratchOrgStatusBarItem).toBeDefined();
   });
 
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
 

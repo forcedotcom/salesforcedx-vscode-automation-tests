@@ -300,7 +300,7 @@ describe('Apex Replay Debugger', async () => {
     await expect(outputPanelText).toContain('ended with exit code 0');
   });
 
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
 

@@ -113,7 +113,7 @@ describe('LWC LSP', async () => {
     await expect(line3Text).toContain('lwc:else');
   });
 
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     utilities.log(
       `${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`
     );

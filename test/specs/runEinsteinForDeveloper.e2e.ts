@@ -49,7 +49,7 @@ describe('Run Einstein for Developer Tests', async () => {
     // ask_btn.click();
   });
 
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
 });

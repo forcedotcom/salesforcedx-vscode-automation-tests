@@ -178,7 +178,7 @@ describe('Debug Apex Tests', async () => {
     await utilities.pause(Duration.seconds(1));
   });
 
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
 });

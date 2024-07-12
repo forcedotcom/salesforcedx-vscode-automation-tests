@@ -352,7 +352,7 @@ describe('Push and Pull', async () => {
   // (yet deploy & retrieve are).  Spoke with Ken and we think this will
   // be fixed with the check in of his PR this week.
 
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
 

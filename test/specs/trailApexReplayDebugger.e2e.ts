@@ -290,7 +290,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await expect(outputPanelText).toContain('Pass');
   });
 
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
 });

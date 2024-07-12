@@ -121,7 +121,7 @@ describe('Apex LSP', async () => {
     await expect(line7Text).toContain(`ExampleClass.SayHello('Jack');`);
   });
 
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     utilities.log(
       `${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`
     );

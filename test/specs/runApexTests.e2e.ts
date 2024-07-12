@@ -602,7 +602,7 @@ describe('Run Apex Tests', async () => {
     await expect(outputPanelText).toContain('ended SFDX: Run Apex Tests');
   });
 
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
 });

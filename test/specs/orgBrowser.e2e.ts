@@ -179,7 +179,7 @@ describe('Org Browser', async () => {
     await expect(title).toBe('MyClass.cls');
   });
 
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
 });

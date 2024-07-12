@@ -274,7 +274,7 @@ describe('SObjects Definitions', async () => {
     await expect(customObjectCount).toBe(2);
   });
 
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     await testSetup.tearDown();
   });
 });
