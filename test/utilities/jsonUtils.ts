@@ -18,5 +18,5 @@ export async function createSfdxProjectJsonWithAllFields(): Promise<void> {
   const textEditor = await getTextEditor(workbench, 'sfdx-project.json');
   await textEditor.setText(sfdxConfig);
   await textEditor.save();
-  await pause(1);
+  await pause();
 }

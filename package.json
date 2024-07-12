@@ -37,15 +37,9 @@
   "scripts": {
     "automation-tests": "wdio run test/wdio.conf.ts",
     "setup": "wdio run test/wdio.conf.ts --spec test/setup/anInitialSetUp.e2e.ts",
-    "commit": "git-cz",
     "lint": "eslint ./test --ext .ts",
+    "compile": "tsc --project ./test/tsconfig.json",
     "prepare": "husky install"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-push": "npm run lint && npm run reformat"
-    }
   },
   "config": {
     "commitizen": {
