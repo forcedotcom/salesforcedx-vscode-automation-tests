@@ -12,7 +12,6 @@ import { EnvironmentSettings } from '../environmentSettings';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
-import { fileURLToPath } from 'url';
 import { Duration } from '@salesforce/kit';
 
 describe('Authentication', async () => {
@@ -92,7 +91,7 @@ describe('Authentication', async () => {
 
     if (expectedSfdxCommands.length !== foundSfdxCommands.length) {
       // Something is wrong - the count of matching menus isn't what we expected.
-      expectedSfdxCommands.forEach((expectedSfdxCommand) => {
+      expectedSfdxCommands.forEach(async (expectedSfdxCommand) => {
         await expect(foundSfdxCommands).toContain(expectedSfdxCommand);
       });
     }

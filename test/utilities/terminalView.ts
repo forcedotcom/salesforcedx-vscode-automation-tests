@@ -21,7 +21,7 @@ export async function getTerminalView(workbench: Workbench): Promise<TerminalVie
 }
 
 export async function getTerminalViewText(workbench: Workbench, seconds: Duration): Promise<string> {
-  await executeQuickPick(workbench, 'Terminal: Focus Terminal', Duration.seconds(1));
+  await executeQuickPick('Terminal: Focus Terminal', Duration.seconds(1));
   await pause(seconds);
 
   await browser.keys([process.platform == 'darwin' ? CMD_KEY : 'Control', 'a', 'c']);

@@ -8,9 +8,9 @@ import { step } from 'mocha-steps';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities/index';
 import { EnvironmentSettings } from '../environmentSettings';
+import { Duration } from '@salesforce/kit';
 
 import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
-import { EnvironmentSettings } from '../environmentSettings';
 
 describe('Apex LSP', async () => {
   let testSetup: TestSetup;
@@ -36,7 +36,7 @@ describe('Apex LSP', async () => {
       utilities.getExtensionsToVerifyActive((ext) => ext.extensionId === 'salesforcedx-vscode-apex')
     );
     await utilities.zoomReset();
-    expect(foundExtensions).toBe(true);
+    await expect(foundExtensions).toBe(true);
     // Close running extensions view
     await browser.keys([CMD_KEY, 'w']);
   });

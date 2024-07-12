@@ -14,16 +14,7 @@
   "plugins": ["@typescript-eslint", "import"],
   "extends": ["plugin:@typescript-eslint/recommended", "prettier"],
   "rules": {
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        "js": "never",
-        "jsx": "never",
-        "ts": "always",
-        "tsx": "never"
-      }
-    ],
+    "import/extensions": "off",
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/no-floating-promises": "warn"
   },

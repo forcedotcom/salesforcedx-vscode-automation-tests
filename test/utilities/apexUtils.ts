@@ -8,6 +8,7 @@
 import { TextEditor } from 'wdio-vscode-service';
 import { executeQuickPick } from './commandPrompt';
 import { getTextEditor, pause } from './miscellaneous';
+import { getWorkbench } from './workbench';
 import { Duration } from '@salesforce/kit';
 
 export async function createApexClass(

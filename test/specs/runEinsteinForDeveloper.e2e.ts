@@ -6,7 +6,7 @@
  */
 import { step } from 'mocha-steps';
 import { SideBarView } from 'wdio-vscode-service';
-import { TestSetup } from '../testSetup.ts';
+import { TestSetup } from '../testSetup';
 
 describe('Run Einstein for Developer Tests', async () => {
   let testSetup: TestSetup;

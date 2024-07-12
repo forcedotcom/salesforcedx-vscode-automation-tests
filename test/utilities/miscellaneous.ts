@@ -14,7 +14,7 @@ import { notificationIsPresentWithTimeout } from './notifications';
 import { Duration } from '@salesforce/kit';
 import path from 'path';
 import { getWorkbench } from './workbench';
-import { PredicateWithTimeout } from './predicates.ts';
+import { PredicateWithTimeout } from './predicates';
 
 export const FIVE_MINUTES = Duration.minutes(5);
 export const TEN_MINUTES = Duration.minutes(10);
@@ -91,7 +91,7 @@ export async function createCommand(
   folder: string,
   extension: string
 ): Promise<string | undefined> {
-  const workbench = await (await browser.getWorkbench()).wait();
+  const workbench = await getWorkbench();
   await executeQuickPick('View: Clear Output', Duration.seconds(1));
   const inputBox = await executeQuickPick(`SFDX: Create ${type}`, Duration.seconds(1));
 

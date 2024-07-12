@@ -10,7 +10,7 @@ import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 import { Workbench } from 'wdio-vscode-service';
 import { Duration } from '@salesforce/kit';
-import { WORKSPACE_SETTING_KEYS as WSK } from '../utilities/index.ts';
+import { WORKSPACE_SETTING_KEYS as WSK } from '../utilities/index';
 
 describe('Deploy and Retrieve', async () => {
   let testSetup: TestSetup;
@@ -139,8 +139,7 @@ describe('Deploy and Retrieve', async () => {
     await expect(await utilities.enableBooleanSetting(WSK.PUSH_OR_DEPLOY_ON_SAVE_ENABLED)).toBe(
       true
     );
-    await pushOrDeployOnSaveBtn.click();
-    await utilities.pause(3);
+    await utilities.pause(Duration.seconds(3));
 
     await expect(
       await utilities.enableBooleanSetting(WSK.PUSH_OR_DEPLOY_ON_SAVE_PREFER_DEPLOY_ON_SAVE)
@@ -276,7 +275,7 @@ describe('Deploy and Retrieve', async () => {
     type: string,
     prefix?: string
   ): Promise<void> => {
-    await utilities.executeQuickPick(`SFDX: ${operation} This Source ${fromTo} Org`, 5);
+    await utilities.executeQuickPick(`SFDX: ${operation} This Source ${fromTo} Org`, Duration.seconds(5));
 
     await validateCommand(workbench, operation, fromTo, type, prefix);
   };

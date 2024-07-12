@@ -60,10 +60,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Run SFDX: Run Apex tests.
     const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView();
-    prompt = await utilities.executeQuickPick(
-      'SFDX: Run Apex Tests',
-      Duration.seconds(1)
-    );
+    prompt = await utilities.executeQuickPick('SFDX: Run Apex Tests', Duration.seconds(1));
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
@@ -100,10 +97,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.pause(Duration.seconds(1));
 
     // Run SFDX: Toggle Checkpoint.
-    prompt = await utilities.executeQuickPick(
-      'SFDX: Toggle Checkpoint',
-      Duration.seconds(1)
-    );
+    prompt = await utilities.executeQuickPick('SFDX: Toggle Checkpoint', Duration.seconds(1));
 
     // Switch back to the AccountService.cls tab
     await utilities.getTextEditor(workbench, 'AccountService.cls');
@@ -162,10 +156,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Run SFDX: Run Apex tests.
     const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView();
-    prompt = await utilities.executeQuickPick(
-      'SFDX: Run Apex Tests',
-      Duration.seconds(1)
-    );
+    prompt = await utilities.executeQuickPick('SFDX: Run Apex Tests', Duration.seconds(1));
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');
@@ -191,10 +182,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   step('SFDX: Get Apex Debug Logs', async () => {
     // Run SFDX: Get Apex Debug Logs
     const workbench = await utilities.getWorkbench();
-    prompt = await utilities.executeQuickPick(
-      'SFDX: Get Apex Debug Logs',
-      Duration.seconds(1)
-    );
+    prompt = await utilities.executeQuickPick('SFDX: Get Apex Debug Logs', Duration.seconds(1));
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(
@@ -240,7 +228,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Replay an Apex Debug Log', async () => {
     // Run SFDX: Launch Apex Replay Debugger with Current File
-    const workbench = await utilities.getWorkbench();
     await utilities.executeQuickPick(
       'SFDX: Launch Apex Replay Debugger with Current File',
       Duration.seconds(5)
@@ -279,10 +266,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Run SFDX: Run Apex tests.
     const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView();
-    prompt = await utilities.executeQuickPick(
-      'SFDX: Run Apex Tests',
-      Duration.seconds(1)
-    );
+    prompt = await utilities.executeQuickPick('SFDX: Run Apex Tests', Duration.seconds(1));
 
     // Select the "AccountServiceTest" file
     await prompt.selectQuickPick('AccountServiceTest');

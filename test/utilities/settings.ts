@@ -8,8 +8,8 @@
 import { Duration } from '@salesforce/kit';
 import { InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import * as changeCase from 'change-case';
-import { executeQuickPick } from './commandPrompt.ts';
-import { debug, findElementByText } from './miscellaneous.ts';
+import { executeQuickPick } from './commandPrompt';
+import { debug, findElementByText } from './miscellaneous';
 import { Key } from 'webdriverio';
 
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;

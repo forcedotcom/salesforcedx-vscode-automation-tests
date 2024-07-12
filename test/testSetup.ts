@@ -13,6 +13,7 @@ import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-
 import { EnvironmentSettings } from './environmentSettings';
 import * as utilities from './utilities';
 import { fail } from 'assert';
+import { Duration } from '@salesforce/kit';
 
 const exec = util.promisify(child_process.exec);
 

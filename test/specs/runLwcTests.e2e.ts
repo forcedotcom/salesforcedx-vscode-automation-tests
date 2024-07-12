@@ -12,6 +12,7 @@ import * as utilities from '../utilities';
 import path from 'path';
 import util from 'util';
 import { fail } from 'assert';
+import { Duration } from '@salesforce/kit';
 
 const exec = util.promisify(child_process.exec);
 
@@ -44,13 +45,13 @@ describe('Run LWC Tests', async () => {
       const workbench = await utilities.getWorkbench();
 
       // Run SFDX: Run All Lightning Web Component Tests.
-      await utilities.executeQuickPick('SFDX: Run All Lightning Web Component Tests', 1);
+      await utilities.executeQuickPick('SFDX: Run All Lightning Web Component Tests', Duration.seconds(1));
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 20);
-      expect(terminalText).not.toBeUndefined();
-      expect(terminalText).toContain(
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(20));
+      await expect(terminalText).not.toBeUndefined();
+      await expect(terminalText).toContain(
         `PASS  ${path.join(
           'force-app',
           'main',
@@ -61,7 +62,7 @@ describe('Run LWC Tests', async () => {
           'lwc1.test.js'
         )}`
       );
-      expect(terminalText).toContain(
+      await expect(terminalText).toContain(
         `PASS  ${path.join(
           'force-app',
           'main',
@@ -72,10 +73,10 @@ describe('Run LWC Tests', async () => {
           'lwc2.test.js'
         )}`
       );
-      expect(terminalText).toContain('Test Suites: 2 passed, 2 total');
-      expect(terminalText).toContain('Tests:       4 passed, 4 total');
-      expect(terminalText).toContain('Snapshots:   0 total');
-      expect(terminalText).toContain('Ran all test suites.');
+      await expect(terminalText).toContain('Test Suites: 2 passed, 2 total');
+      await expect(terminalText).toContain('Tests:       4 passed, 4 total');
+      await expect(terminalText).toContain('Snapshots:   0 total');
+      await expect(terminalText).toContain('Ran all test suites.');
     });
 
     step('SFDX: Refresh Lightning Web Component Test Explorer', async () => {
@@ -83,15 +84,15 @@ describe('Run LWC Tests', async () => {
         `${testSetup.testSuiteSuffixName} - SFDX: Refresh Lightning Web Component Test Explorer`
       );
       const workbench = await utilities.getWorkbench();
-      await utilities.executeQuickPick('Testing: Focus on LWC Tests View', 1);
+      await utilities.executeQuickPick('Testing: Focus on LWC Tests View', Duration.seconds(1));
       // Run command SFDX: Refresh Lightning Web Component Test Explorer
-      await utilities.executeQuickPick('SFDX: Refresh Lightning Web Component Test Explorer', 2);
+      await utilities.executeQuickPick('SFDX: Refresh Lightning Web Component Test Explorer', Duration.seconds(2));
       // Open the Tests Sidebar
       const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
       let lwcTestsItems = (await lwcTestsSection.getVisibleItems()) as TreeItem[];
 
       // Run command SFDX: Run All Lightning Web Component Tests
-      await utilities.executeQuickPick('SFDX: Run All Lightning Web Component Tests', 2);
+      await utilities.executeQuickPick('SFDX: Run All Lightning Web Component Tests', Duration.seconds(2));
 
       // Get tree items again
       lwcTestsItems = (await lwcTestsSection.getVisibleItems()) as TreeItem[];
@@ -102,14 +103,14 @@ describe('Run LWC Tests', async () => {
         const iconStyle = await icon.getAttribute('style');
         // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
         try {
-          expect(iconStyle).toContain('testPass');
+          await expect(iconStyle).toContain('testPass');
         } catch {
           utilities.log('ERROR: icon did not turn green after test successfully ran');
         }
       }
 
       // Run command SFDX: Refresh Lightning Web Component Test Explorer again to reset status
-      await utilities.executeQuickPick('SFDX: Refresh Lightning Web Component Test Explorer', 2);
+      await utilities.executeQuickPick('SFDX: Refresh Lightning Web Component Test Explorer', Duration.seconds(2));
 
       // Get tree items again
       lwcTestsItems = (await lwcTestsSection.getVisibleItems()) as TreeItem[];
@@ -120,7 +121,7 @@ describe('Run LWC Tests', async () => {
         const iconStyle = await icon.getAttribute('style');
         // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
         try {
-          expect(iconStyle).toContain('testNotRun');
+          await expect(iconStyle).toContain('testNotRun');
         } catch {
           utilities.log('ERROR: icon did not turn green after test successfully ran');
         }
@@ -134,7 +135,7 @@ describe('Run LWC Tests', async () => {
 
       // Open the Test Sidebar
       const testingSideBarView = await testingView?.openView();
-      expect(testingSideBarView).toBeInstanceOf(SideBarView);
+      await expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
       const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
       const lwcTestsItems = await utilities.retrieveExpectedNumTestsFromSidebar(
@@ -147,11 +148,11 @@ describe('Run LWC Tests', async () => {
       await lwcTestsItems[1].expand();
 
       // Make sure all the tests are present in the sidebar
-      expect(lwcTestsItems.length).toBe(2);
-      expect(await lwcTestsSection.findItem('lwc1')).toBeTruthy();
-      expect(await lwcTestsSection.findItem('lwc2')).toBeTruthy();
-      expect(await lwcTestsSection.findItem('displays greeting')).toBeTruthy();
-      expect(await lwcTestsSection.findItem('is defined')).toBeTruthy();
+      await expect(lwcTestsItems.length).toBe(2);
+      await expect(await lwcTestsSection.findItem('lwc1')).toBeTruthy();
+      await expect(await lwcTestsSection.findItem('lwc2')).toBeTruthy();
+      await expect(await lwcTestsSection.findItem('displays greeting')).toBeTruthy();
+      await expect(await lwcTestsSection.findItem('is defined')).toBeTruthy();
 
       // Click the run tests button on the top right corner of the Test sidebar
       await lwcTestsSection.elem.click();
@@ -165,9 +166,9 @@ describe('Run LWC Tests', async () => {
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 15);
-      expect(terminalText).not.toBeUndefined();
-      expect(terminalText).toContain(
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
+      await expect(terminalText).not.toBeUndefined();
+      await expect(terminalText).toContain(
         `PASS  ${path.join(
           'force-app',
           'main',
@@ -178,7 +179,7 @@ describe('Run LWC Tests', async () => {
           'lwc1.test.js'
         )}`
       );
-      expect(terminalText).toContain(
+      await expect(terminalText).toContain(
         `PASS  ${path.join(
           'force-app',
           'main',
@@ -189,10 +190,10 @@ describe('Run LWC Tests', async () => {
           'lwc2.test.js'
         )}`
       );
-      expect(terminalText).toContain('Test Suites: 2 passed, 2 total');
-      expect(terminalText).toContain('Tests:       4 passed, 4 total');
-      expect(terminalText).toContain('Snapshots:   0 total');
-      expect(terminalText).toContain('Ran all test suites.');
+      await expect(terminalText).toContain('Test Suites: 2 passed, 2 total');
+      await expect(terminalText).toContain('Tests:       4 passed, 4 total');
+      await expect(terminalText).toContain('Snapshots:   0 total');
+      await expect(terminalText).toContain('Ran all test suites.');
 
       // Verify the tests that are passing are labeled with a green dot on the Test sidebar
       for (const item of lwcTestsItems) {
@@ -200,7 +201,7 @@ describe('Run LWC Tests', async () => {
         const iconStyle = await icon.getAttribute('style');
         // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
         try {
-          expect(iconStyle).toContain('testPass');
+          await expect(iconStyle).toContain('testPass');
         } catch {
           utilities.log('ERROR: icon did not turn green after test successfully ran');
         }
@@ -216,7 +217,7 @@ describe('Run LWC Tests', async () => {
 
       // Open the Test Sidebar
       const testingSideBarView = await testingView?.openView();
-      expect(testingSideBarView).toBeInstanceOf(SideBarView);
+      await expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
       // Click the run test button that is shown to the right when you hover a test class name on the Test sidebar
       const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
@@ -232,9 +233,9 @@ describe('Run LWC Tests', async () => {
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 15);
-      expect(terminalText).not.toBeUndefined();
-      expect(terminalText).toContain(
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
+      await expect(terminalText).not.toBeUndefined();
+      await expect(terminalText).toContain(
         `PASS  ${path.join(
           'force-app',
           'main',
@@ -245,10 +246,10 @@ describe('Run LWC Tests', async () => {
           'lwc1.test.js'
         )}`
       );
-      expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
-      expect(terminalText).toContain('Tests:       2 passed, 2 total');
-      expect(terminalText).toContain('Snapshots:   0 total');
-      expect(terminalText).toContain(
+      await expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
+      await expect(terminalText).toContain('Tests:       2 passed, 2 total');
+      await expect(terminalText).toContain('Snapshots:   0 total');
+      await expect(terminalText).toContain(
         `Ran all test suites within paths "${path.join(
           projectFolderPath,
           'force-app',
@@ -266,7 +267,7 @@ describe('Run LWC Tests', async () => {
       const iconStyle = await icon.getAttribute('style');
       // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
       try {
-        expect(iconStyle).toContain('testPass');
+        await expect(iconStyle).toContain('testPass');
       } catch {
         utilities.log('ERROR: icon did not turn green after test successfully ran');
       }
@@ -279,7 +280,7 @@ describe('Run LWC Tests', async () => {
 
       // Open the Test Sidebar
       const testingSideBarView = await testingView?.openView();
-      expect(testingSideBarView).toBeInstanceOf(SideBarView);
+      await expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
       // Hover a test name under one of the test lwc sections and click the run button that is shown to the right of the test name on the Test sidebar
       const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
@@ -295,9 +296,9 @@ describe('Run LWC Tests', async () => {
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 15);
-      expect(terminalText).not.toBeUndefined();
-      expect(terminalText).toContain(
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
+      await expect(terminalText).not.toBeUndefined();
+      await expect(terminalText).toContain(
         `PASS  ${path.join(
           'force-app',
           'main',
@@ -308,10 +309,10 @@ describe('Run LWC Tests', async () => {
           'lwc2.test.js'
         )}`
       );
-      expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
-      expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
-      expect(terminalText).toContain('Snapshots:   0 total');
-      expect(terminalText).toContain(
+      await expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
+      await expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
+      await expect(terminalText).toContain('Snapshots:   0 total');
+      await expect(terminalText).toContain(
         `Ran all test suites within paths "${path.join(
           projectFolderPath,
           'force-app',
@@ -329,7 +330,7 @@ describe('Run LWC Tests', async () => {
       const iconStyle = await icon.getAttribute('style');
       // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
       try {
-        expect(iconStyle).toContain('testPass');
+        await expect(iconStyle).toContain('testPass');
       } catch {
         utilities.log('ERROR: icon did not turn green after test successfully ran');
       }
@@ -339,7 +340,7 @@ describe('Run LWC Tests', async () => {
       const editorView = workbench.getEditorView();
       const activeTab = await editorView.getActiveTab();
       const title = await activeTab?.getTitle();
-      expect(title).toBe('lwc2.test.js');
+      await expect(title).toBe('lwc2.test.js');
     });
 
     step('SFDX: Run Current Lightning Web Component Test File from Command Palette', async () => {
@@ -349,13 +350,13 @@ describe('Run LWC Tests', async () => {
       const workbench = await utilities.getWorkbench();
 
       // Run SFDX: Run Current Lightning Web Component Test File
-      await utilities.executeQuickPick('SFDX: Run Current Lightning Web Component Test File', 1);
+      await utilities.executeQuickPick('SFDX: Run Current Lightning Web Component Test File', Duration.seconds(1));
 
       // Verify test results are listed on vscode's Output section
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 15);
-      expect(terminalText).not.toBeUndefined();
-      expect(terminalText).toContain(
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
+      await expect(terminalText).not.toBeUndefined();
+      await expect(terminalText).toContain(
         `PASS  ${path.join(
           'force-app',
           'main',
@@ -366,10 +367,10 @@ describe('Run LWC Tests', async () => {
           'lwc2.test.js'
         )}`
       );
-      expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
-      expect(terminalText).toContain('Tests:       2 passed, 2 total');
-      expect(terminalText).toContain('Snapshots:   0 total');
-      expect(terminalText).toContain(
+      await expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
+      await expect(terminalText).toContain('Tests:       2 passed, 2 total');
+      await expect(terminalText).toContain('Snapshots:   0 total');
+      await expect(terminalText).toContain(
         `Ran all test suites within paths "${path.join(
           projectFolderPath,
           'force-app',
@@ -400,9 +401,9 @@ describe('Run LWC Tests', async () => {
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 15);
-      expect(terminalText).not.toBeUndefined();
-      expect(terminalText).toContain(
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
+      await expect(terminalText).not.toBeUndefined();
+      await expect(terminalText).toContain(
         `PASS  ${path.join(
           'force-app',
           'main',
@@ -413,10 +414,10 @@ describe('Run LWC Tests', async () => {
           'lwc1.test.js'
         )}`
       );
-      expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
-      expect(terminalText).toContain('Tests:       2 passed, 2 total');
-      expect(terminalText).toContain('Snapshots:   0 total');
-      expect(terminalText).toContain(
+      await expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
+      await expect(terminalText).toContain('Tests:       2 passed, 2 total');
+      await expect(terminalText).toContain('Snapshots:   0 total');
+      await expect(terminalText).toContain(
         `Ran all test suites within paths "${path.join(
           projectFolderPath,
           'force-app',
@@ -446,9 +447,9 @@ describe('Run LWC Tests', async () => {
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, 15);
-      expect(terminalText).not.toBeUndefined();
-      expect(terminalText).toContain(
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
+      await expect(terminalText).not.toBeUndefined();
+      await expect(terminalText).toContain(
         `PASS  ${path.join(
           'force-app',
           'main',
@@ -459,10 +460,10 @@ describe('Run LWC Tests', async () => {
           'lwc2.test.js'
         )}`
       );
-      expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
-      expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
-      expect(terminalText).toContain('Snapshots:   0 total');
-      expect(terminalText).toContain(
+      await expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
+      await expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
+      await expect(terminalText).toContain('Snapshots:   0 total');
+      await expect(terminalText).toContain(
         `Ran all test suites within paths "${path.join(
           projectFolderPath,
           'force-app',
@@ -492,9 +493,9 @@ describe('Run LWC Tests', async () => {
       // Verify test results are listed on vscode's Output section
       // Also verify that all tests pass
       const workbench = await utilities.getWorkbench();
-      const terminalText = await utilities.getTerminalViewText(workbench, 15);
-      expect(terminalText).not.toBeUndefined();
-      expect(terminalText).toContain(
+      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
+      await expect(terminalText).not.toBeUndefined();
+      await expect(terminalText).toContain(
         `PASS  ${path.join(
           'force-app',
           'main',
@@ -505,10 +506,10 @@ describe('Run LWC Tests', async () => {
           'lwc2.test.js'
         )}`
       );
-      expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
-      expect(terminalText).toContain('Tests:       2 passed, 2 total');
-      expect(terminalText).toContain('Snapshots:   0 total');
-      expect(terminalText).toContain(
+      await expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
+      await expect(terminalText).toContain('Tests:       2 passed, 2 total');
+      await expect(terminalText).toContain('Snapshots:   0 total');
+      await expect(terminalText).toContain(
         `Ran all test suites within paths "${path.join(
           projectFolderPath,
           'force-app',

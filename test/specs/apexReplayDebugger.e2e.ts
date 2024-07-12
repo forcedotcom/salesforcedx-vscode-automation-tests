@@ -133,7 +133,7 @@ describe('Apex Replay Debugger', async () => {
     // Run SFDX: Get Apex Debug Logs
     const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView();
-    prompt = await utilities.executeQuickPick('SFDX: Get Apex Debug Logs', Duration.seconds(10);
+    prompt = await utilities.executeQuickPick('SFDX: Get Apex Debug Logs', Duration.seconds(10));
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(
@@ -195,7 +195,7 @@ describe('Apex Replay Debugger', async () => {
     );
     await prompt.setText(logFilePath);
     await prompt.confirm();
-    await utilities.pause(1);
+    await utilities.pause();
 
     // Continue with the debug session
     await continueDebugging();

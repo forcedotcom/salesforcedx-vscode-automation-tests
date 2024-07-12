@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { executeQuickPick, runCommandFromCommandPrompt } from './commandPrompt';
+import { executeQuickPick } from './commandPrompt';
 import { getTextEditor, log, pause } from './miscellaneous';
 import { getWorkbench } from './workbench';
 import { Duration } from '@salesforce/kit';
@@ -96,7 +96,7 @@ export async function createLwc(name: string): Promise<void> {
     `            is: ${nameCapitalized}`,
     `        });`,
     `        document.body.appendChild(element);`,
-    `        await expect(element).toBeDefined();`,
+    `        expect(element).toBeDefined();`,
     `    });`,
     `});`
   ].join('\n');

@@ -7,8 +7,6 @@
 
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { EnvironmentSettings } from '../environmentSettings';
 
 export async function saveFailedTestScreenshot(

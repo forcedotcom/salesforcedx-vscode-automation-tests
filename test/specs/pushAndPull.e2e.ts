@@ -122,7 +122,7 @@ describe('Push and Pull', async () => {
     await utilities.clearOutputView(Duration.seconds(2));
 
     // Now push
-    await utilities.executeQuickPick('SFDX: Push Source to Default Org', 5);
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org', Duration.seconds(5));
 
     // Check the output.
     await verifyPushSuccess(workbench);
@@ -141,7 +141,7 @@ describe('Push and Pull', async () => {
     // Push the file.
     await utilities.executeQuickPick('SFDX: Push Source to Default Org', Duration.seconds(5));
 
-    await verifyPushSuccess(workbench)
+    await verifyPushSuccess(workbench);
 
     // Clear the Output view again.
     await utilities.clearOutputView(Duration.seconds(2));
@@ -151,9 +151,12 @@ describe('Push and Pull', async () => {
 
     // An now push the changes.
     await utilities.executeQuickPick('SFDX: Push Source to Default Org', Duration.seconds(5));
-    
+
     await verifyPushSuccess(workbench);
-    
+
+    // Check the output.
+    const outputPanelText = await verifyPushAndPullOutputText(workbench, 'Push', 'to', 'Changed');
+
     await expect(outputPanelText).toContain(
       path.join(
         'e2e-temp',
@@ -185,12 +188,11 @@ describe('Push and Pull', async () => {
     // Clear the Output view first.
     await utilities.clearOutputView(Duration.seconds(2));
 
-     await utilities.executeQuickPick(
-     'SFDX: Pull Source from Default Org',
-      Duration.seconds(5)
-    );
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', Duration.seconds(5));
     // At this point there should be no conflicts since there have been no changes.
     await verifyPullSuccess(workbench);
+    // Check the output.
+    const outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from', 'Created');
     // The first time a pull is performed, force-app/main/default/profiles/Admin.profile-meta.xml is pulled down.
     await expect(outputPanelText).toContain(
       path.join('force-app', 'main', 'default', 'profiles', 'Admin.profile-meta.xml')
@@ -201,10 +203,7 @@ describe('Push and Pull', async () => {
     await utilities.clearOutputView(Duration.seconds(2));
 
     // And pull again.
-    await utilities.executeQuickPick(
-      'SFDX: Pull Source from Default Org',
-      Duration.seconds(5)
-    );
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', Duration.seconds(5));
     // Check the output.
     await verifyPullSuccess(workbench);
   });
@@ -221,10 +220,7 @@ describe('Push and Pull', async () => {
     // Don't save the file just yet.
 
     // Pull the file.
-    await utilities.executeQuickPick(
-      'SFDX: Pull Source from Default Org',
-      Duration.seconds(5)
-    );
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', Duration.seconds(5));
     // Check the output.
     await verifyPullSuccess(workbench);
   });
@@ -240,10 +236,7 @@ describe('Push and Pull', async () => {
     await textEditor.save();
 
     // An now pull the changes.
-    await utilities.executeQuickPick(
-      'SFDX: Pull Source from Default Org',
-      Duration.seconds(5)
-    );
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', Duration.seconds(5));
     await verifyPullSuccess(workbench);
   });
 
@@ -258,13 +251,10 @@ describe('Push and Pull', async () => {
       utilities.getExtensionsToVerifyActive((ext) => ext.extensionId === 'salesforcedx-vscode-core')
     );
     await utilities.zoomReset();
-    expect(extensionWasFound).toBe(true);
+    await expect(extensionWasFound).toBe(true);
 
     //Run SFDX: View Changes in Default Org command to view remote changes
-    await utilities.executeQuickPick(
-      'SFDX: View Changes in Default Org',
-      Duration.seconds(5)
-    );
+    await utilities.executeQuickPick('SFDX: View Changes in Default Org', Duration.seconds(5));
 
     // Check the output.
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
