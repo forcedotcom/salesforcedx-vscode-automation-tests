@@ -1,0 +1,1 @@
+npx --no-install commitizen init cz-conventional-changelog --save-dev --save-exact
