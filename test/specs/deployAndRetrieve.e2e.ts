@@ -275,7 +275,7 @@ describe('Deploy and Retrieve', async () => {
     type: string,
     prefix?: string
   ): Promise<void> => {
-    await utilities.executeQuickPick(`SFDX: ${operation} This Source ${fromTo} Org`, 5);
+    await utilities.executeQuickPick(`SFDX: ${operation} This Source ${fromTo} Org`, Duration.seconds(5));
 
     await validateCommand(workbench, operation, fromTo, type, prefix);
   };

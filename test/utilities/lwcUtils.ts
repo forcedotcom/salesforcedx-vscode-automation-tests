@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { executeQuickPick, runCommandFromCommandPrompt } from './commandPrompt.ts';
+import { executeQuickPick } from './commandPrompt.ts';
 import { getTextEditor, log, pause } from './miscellaneous.ts';
 import { getWorkbench } from './workbench.ts';
 import { Duration } from '@salesforce/kit';

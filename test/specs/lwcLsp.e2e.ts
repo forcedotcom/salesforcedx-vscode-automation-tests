@@ -35,7 +35,7 @@ describe('LWC LSP', async () => {
       utilities.getExtensionsToVerifyActive((ext) => ext.extensionId === 'salesforcedx-vscode-lwc')
     );
     await utilities.zoomReset();
-    await expect(foundExtensions).toBe(true);
+    await expect(extensionWasFound).toBe(true);
   });
 
   step('Go to Definition (JavaScript)', async () => {

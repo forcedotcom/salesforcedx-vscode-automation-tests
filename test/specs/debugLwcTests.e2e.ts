@@ -54,7 +54,7 @@ describe('Debug LWC Tests', async () => {
           (ext) => ext.extensionId === 'salesforcedx-vscode-lwc'
         )
       );
-      expect(extensionWasFound).toBe(true);
+      await expect(extensionWasFound).toBe(true);
     });
 
     step('Debug All Tests on a LWC via the Test Sidebar', async () => {

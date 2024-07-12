@@ -41,7 +41,7 @@ describe('Aura LSP', async () => {
       )
     );
     await utilities.zoomReset();
-    await expect(foundExtensions).toBe(true);
+    await expect(extensionWasFound).toBe(true);
   });
 
   step('Verify LSP finished indexing', async () => {
