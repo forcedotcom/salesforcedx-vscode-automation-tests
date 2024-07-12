@@ -12,6 +12,7 @@ import FastGlob from 'fast-glob';
 import { EnvironmentSettings } from '../environmentSettings';
 import { exec } from 'child_process';
 import * as utilities from './index';
+import { Duration } from '@salesforce/kit';
 
 export type ExtensionId =
   | 'salesforcedx-vscode'
@@ -47,6 +48,7 @@ export type ExtensionActivation = {
   version?: string;
   activationTime?: string;
   hasBug?: boolean;
+  isActivationComplete?: boolean;
 };
 
 export type VerifyExtensionsOptions = {
@@ -54,7 +56,7 @@ export type VerifyExtensionsOptions = {
   interval?: number;
 };
 
-const VERIFY_EXTENSIONS_TIMEOUT = 20_000;
+const VERIFY_EXTENSIONS_TIMEOUT = Duration.seconds(30);
 
 const extensions: ExtensionType[] = [
   {
@@ -141,7 +143,7 @@ export async function showRunningExtensions(): Promise<void> {
   await browser.waitUntil(
     async () => {
       const runningExtensionsTab = await $(
-        "//a[@class='label-name' and text()='Running Extensions']"
+        "//div[contains(@class, 'active') and contains(@class, 'selected') and .//*[contains(text(), 'Running Extensions')]]"
       );
       return runningExtensionsTab.isDisplayed();
     },
@@ -267,7 +269,7 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
   }
 
   await utilities.enableAllExtensions();
-  await utilities.reloadWindow(10);
+  await utilities.reloadWindow(Duration.seconds(10));
 }
 
 export function getExtensionsToVerifyActive(
@@ -330,7 +332,7 @@ export async function verifyExtensionsAreRunning(
 
   await showRunningExtensions();
 
-  await utilities.zoom('Out', 4, 1);
+  await utilities.zoom('Out', 4, Duration.seconds(1));
 
   let extensionsStatus: ExtensionActivation[] = [];
   let allActivated = false;
@@ -338,7 +340,7 @@ export async function verifyExtensionsAreRunning(
   const timeoutPromise = new Promise((_, reject) =>
     setTimeout(
       () => reject(new Error('findExtensionsInRunningExtensionsList timeout')),
-      timeout ?? VERIFY_EXTENSIONS_TIMEOUT
+      timeout.milliseconds * EnvironmentSettings.getInstance().throttleFactor
     )
   );
 
@@ -356,8 +358,12 @@ export async function verifyExtensionsAreRunning(
             );
           }
 
-          allActivated = extensionsStatus.every(
-            (extensionStatus) => extensionStatus.activationTime
+          allActivated =
+            extensionsToVerify.every(
+              (extensionId) =>
+                extensionsStatus.find(
+                  (extensionStatus) => extensionStatus.extensionId === extensionId
+                )?.isActivationComplete
           );
         } while (!allActivated);
       })(),
@@ -367,7 +373,7 @@ export async function verifyExtensionsAreRunning(
     log(`Error while waiting for extensions to activate: ${error}`);
   }
 
-  await utilities.zoomReset(1);
+  await utilities.zoomReset();
 
   log('... Finished verifyExtensionsAreRunning()');
   log('');
@@ -384,7 +390,7 @@ export async function findExtensionsInRunningExtensionsList(
   // Close the panel and clear notifications so we can see as many of the running extensions as we can.
   try {
     // await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
-    await utilities.executeQuickPick('Notifications: Clear All Notifications', 1);
+    await utilities.executeQuickPick('Notifications: Clear All Notifications', Duration.seconds(1));
   } catch {
     // Close the command prompt by hitting the Escape key
     await browser.keys(['Escape']);
@@ -400,9 +406,17 @@ export async function findExtensionsInRunningExtensionsList(
     const extensionId = await parent.getAttribute('aria-label');
     const version = await extension.$('.version').getText();
     const activationTime = await extension.$('.activation-time').getText();
+    const isActivationComplete = /\:\s*?[0-9]{1,}ms/.test(activationTime);
     const bugSpan = await parent.$('span.codicon-bug');
     const hasBug = bugSpan?.error?.message.startsWith('no such element') ? false : true;
-    runningExtensions.push({ extensionId, activationTime, version, isPresent: true, hasBug });
+    runningExtensions.push({
+      extensionId,
+      activationTime,
+      version,
+      isPresent: true,
+      hasBug,
+      isActivationComplete
+    });
   }
 
   // limit runningExtensions to those whose property extensionId is in the list of extensionIds

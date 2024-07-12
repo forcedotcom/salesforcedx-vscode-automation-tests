@@ -7,9 +7,11 @@
 
 import clipboard from 'clipboardy';
 import { TerminalView, Workbench } from 'wdio-vscode-service';
-import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { log, pause } from './miscellaneous';
+import { Duration } from '@salesforce/kit';
 import { executeQuickPick } from './commandPrompt';
+
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 
 export async function getTerminalView(workbench: Workbench): Promise<TerminalView> {
   const bottomBar = await workbench.getBottomBar().wait();
@@ -18,8 +20,8 @@ export async function getTerminalView(workbench: Workbench): Promise<TerminalVie
   return terminalView;
 }
 
-export async function getTerminalViewText(workbench: Workbench, seconds: number): Promise<string> {
-  executeQuickPick('Terminal: Focus Terminal', 2);
+export async function getTerminalViewText(workbench: Workbench, seconds: Duration): Promise<string> {
+  await executeQuickPick(workbench, 'Terminal: Focus Terminal', Duration.seconds(1));
   await pause(seconds);
 
   await browser.keys([process.platform == 'darwin' ? CMD_KEY : 'Control', 'a', 'c']);
@@ -38,7 +40,7 @@ export async function executeCommand(workbench: Workbench, command: string): Pro
       'In executeCommand(), the terminal view returned from getTerminalView() was null (or undefined)'
     );
   }
-  await pause(5);
+  await pause(Duration.seconds(5));
   await terminalView.executeCommand(command);
 
   return terminalView;

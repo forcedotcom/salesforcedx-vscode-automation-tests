@@ -5,10 +5,13 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
 import { executeQuickPick, runCommandFromCommandPrompt } from './commandPrompt';
 import { getTextEditor, log, pause } from './miscellaneous';
 import { getWorkbench } from './workbench';
+import { Duration } from '@salesforce/kit';
+
+import { CMD_KEY } from 'wdio-vscode-service/dist/constants';
+
 
 export async function createLwc(name: string): Promise<void> {
   log('createLwc() - calling browser.getWorkbench()');
@@ -16,18 +19,21 @@ export async function createLwc(name: string): Promise<void> {
 
   log('createLwc() - Running SFDX: Create Lightning Web Component');
   // Using the Command palette, run SFDX: Create Lightning Web Component.
-  const inputBox = await executeQuickPick('SFDX: Create Lightning Web Component', 1);
+  const inputBox = await executeQuickPick(
+    'SFDX: Create Lightning Web Component',
+    Duration.seconds(1)
+  );
 
   log('createLwc() - Set the name of the new component');
   // Set the name of the new component
   await inputBox.setText(name);
   await inputBox.confirm();
-  await pause(1);
+  await pause(Duration.seconds(1));
 
   log('createLwc() - Select the default directory');
   // Select the default directory (press Enter/Return).
   await inputBox.confirm();
-  await pause(3);
+  await pause(Duration.seconds(3));
 
   log('createLwc() - Modify js content');
   // Modify js content
@@ -41,7 +47,7 @@ export async function createLwc(name: string): Promise<void> {
   ].join('\n');
   await textEditor.setText(jsText);
   await textEditor.save();
-  await pause(1);
+  await pause(Duration.seconds(1));
 
   log('createLwc() - Modify html content');
   log('');
@@ -59,7 +65,7 @@ export async function createLwc(name: string): Promise<void> {
   // `\t\t</c-view-source>`,
   await textEditor.setText(htmlText);
   await textEditor.save();
-  await pause(1);
+  await pause(Duration.seconds(1));
 
   log('createLwc() - Modify test content');
   log('');
@@ -96,22 +102,22 @@ export async function createLwc(name: string): Promise<void> {
   ].join('\n');
   await textEditor.setText(testText);
   await textEditor.save();
-  await pause(1);
+  await pause(Duration.seconds(1));
 
   // Set breakpoints
   await browser.keys([CMD_KEY, 'f']);
-  await pause(1);
-  await browser.keys(`expect(div.textContent).toBe('Hello, World!');`);
+  await pause(Duration.seconds(1));
+  await browser.keys(`await expect(div.textContent).toBe('Hello, World!');`);
   await browser.keys(['Escape']);
   await browser.keys(['ArrowRight']);
-  await runCommandFromCommandPrompt(workbench, 'Debug: Inline Breakpoint', 2);
+  await executeQuickPick('Debug: Inline Breakpoint', Duration.seconds(2));
 
   await browser.keys([CMD_KEY, 'f']);
-  await pause(1);
+  await pause(Duration.seconds(1));
   await browser.keys(`await expect(element).toBeDefined();`);
   await browser.keys(['Escape']);
   await browser.keys(['ArrowRight']);
-  await runCommandFromCommandPrompt(workbench, 'Debug: Inline Breakpoint', 2);
+  await executeQuickPick('Debug: Inline Breakpoint', Duration.seconds(2));
 }
 
 export async function createAura(name: string): Promise<void> {
@@ -119,18 +125,18 @@ export async function createAura(name: string): Promise<void> {
   const workbench = await getWorkbench();
 
   log('createAura() - Running SFDX: Create Aura Component');
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Aura Component', 1);
+  const inputBox = await executeQuickPick('SFDX: Create Aura Component', Duration.seconds(1));
 
   log('createAura() - Set the name of the new component');
   // Set the name of the new component
   await inputBox.setText(name);
   await inputBox.confirm();
-  await pause(1);
+  await pause(Duration.seconds(1));
 
   log('createAura() - Select the default directory');
   // Select the default directory (press Enter/Return).
   await inputBox.confirm();
-  await pause(3);
+  await pause(Duration.seconds(3));
 
   log('createAura() - Modify html content');
   // Modify html content
@@ -149,5 +155,5 @@ export async function createAura(name: string): Promise<void> {
   ].join('\n');
   await textEditor.setText(htmlText);
   await textEditor.save();
-  await pause(1);
+  await pause(Duration.seconds(1));
 }

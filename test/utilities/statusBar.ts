@@ -7,6 +7,7 @@
 
 import { Workbench } from 'wdio-vscode-service';
 import { log, pause } from './miscellaneous';
+import { Duration } from '@salesforce/kit';
 
 export async function getStatusBarItemWhichIncludes(
   workbench: Workbench,
@@ -24,7 +25,7 @@ export async function getStatusBarItemWhichIncludes(
       }
     }
 
-    await pause(1);
+    await pause(Duration.seconds(1));
   }
 
   throw new Error(`Status bar item containing ${title} was not found`);

@@ -8,6 +8,7 @@
 import { DefaultTreeItem, TreeItem, ViewItem, Workbench, ViewSection } from 'wdio-vscode-service';
 import { pause } from './miscellaneous';
 import { fail } from 'assert';
+import { Duration } from '@salesforce/kit';
 
 export async function expandSideBar(
   workbench: Workbench,
@@ -154,7 +155,7 @@ export async function retrieveExpectedNumTestsFromSidebar(
         fail('Could not find debug tests action button');
       }
       await refreshAction.elem.click();
-      pause(10);
+      await pause(Duration.seconds(10));
       testsItems = (await testsSection.getVisibleItems()) as TreeItem[];
     } else if (testsItems.length === expectedNumTests) {
       break;
@@ -168,6 +169,6 @@ export async function getTestsSection(workbench: Workbench, type: string) {
   const sidebar = workbench.getSideBar();
   const sidebarView = sidebar.getContent();
   const testsSection = await sidebarView.getSection(type);
-  expect(testsSection.elem).toBePresent();
+  await expect(testsSection.elem).toBePresent();
   return testsSection;
 }

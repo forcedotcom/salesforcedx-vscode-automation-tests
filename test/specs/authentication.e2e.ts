@@ -12,6 +12,9 @@ import { EnvironmentSettings } from '../environmentSettings';
 import { TestSetup } from '../testSetup';
 import * as utilities from '../utilities';
 
+import { fileURLToPath } from 'url';
+import { Duration } from '@salesforce/kit';
+
 describe('Authentication', async () => {
   const tempProjectName = 'TempProject-Authentication';
   let tempFolderPath: string;
@@ -40,7 +43,7 @@ describe('Authentication', async () => {
       workbench,
       'No Default Org Set'
     );
-    expect(noDefaultOrgSetItem).toBeDefined();
+    await expect(noDefaultOrgSetItem).toBeDefined();
 
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
     await testSetup.authorizeDevHub();
@@ -50,7 +53,7 @@ describe('Authentication', async () => {
       workbench,
       'No Default Org Set'
     );
-    expect(noDefaultOrgSetItem).toBeDefined();
+    await expect(noDefaultOrgSetItem).toBeDefined();
   });
 
   step('Run SFDX: Set a Default Org', async () => {
@@ -63,9 +66,9 @@ describe('Authentication', async () => {
       workbench,
       'No Default Org Set'
     );
-    expect(changeDefaultOrgSetItem).toBeDefined();
+    await expect(changeDefaultOrgSetItem).toBeDefined();
     await changeDefaultOrgSetItem.click();
-    await utilities.pause(5);
+    await utilities.pause(Duration.seconds(5));
 
     const orgPickerOptions = await $('div.monaco-list#quickInput_list')
       .$('div.monaco-scrollable-element')
@@ -90,7 +93,7 @@ describe('Authentication', async () => {
     if (expectedSfdxCommands.length !== foundSfdxCommands.length) {
       // Something is wrong - the count of matching menus isn't what we expected.
       expectedSfdxCommands.forEach((expectedSfdxCommand) => {
-        expect(foundSfdxCommands).toContain(expectedSfdxCommand);
+        await expect(foundSfdxCommands).toContain(expectedSfdxCommand);
       });
     }
 
@@ -102,7 +105,7 @@ describe('Authentication', async () => {
     await browser.keys(['Enter']);
 
     // Need to pause here for the "set a default org" command to finish.
-    await utilities.pause(5);
+    await utilities.pause(Duration.seconds(5));
 
     // Look for the notification that appears which says, "SFDX: Set a Default Org successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -110,24 +113,24 @@ describe('Authentication', async () => {
       'SFDX: Set a Default Org successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     const expectedOutputWasFound = await utilities.attemptToFindOutputPanelText(
       'Salesforce CLI',
       `target-org  ${devHubAliasName}  true`,
       5
     );
-    expect(expectedOutputWasFound).toBeDefined();
+    await expect(expectedOutputWasFound).toBeDefined();
 
     // Look for "vscodeOrg" in the status bar.
     const statusBar = workbench.getStatusBar();
     const vscodeOrgItem = await statusBar.getItem(`plug  ${devHubAliasName}, Change Default Org`);
-    expect(vscodeOrgItem).toBeDefined();
+    await expect(vscodeOrgItem).toBeDefined();
   });
 
   step('Run SFDX: Create a Default Scratch Org', async () => {
     const workbench = await utilities.getWorkbench();
-    prompt = await utilities.executeQuickPick('SFDX: Create a Default Scratch Org...', 1);
+    prompt = await utilities.executeQuickPick('SFDX: Create a Default Scratch Org...', Duration.seconds(1));
 
     // Select a project scratch definition file (config/project-scratch-def.json)
     // Press Enter/Return to use the default (config/project-scratch-def.json)
@@ -143,14 +146,14 @@ describe('Authentication', async () => {
     scratchOrgAliasName = `TempScratchOrg_${year}_${month}_${day}_${currentOsUserName}_${ticks}_OrgAuth`;
 
     await prompt.setText(scratchOrgAliasName);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Press Enter/Return.
     await prompt.confirm();
 
     // Enter the number of days.
     await prompt.setText('1');
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Press Enter/Return.
     await prompt.confirm();
@@ -203,19 +206,19 @@ describe('Authentication', async () => {
         );
       }
     }
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Look for the org's alias name in the list of status bar items.
     const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       scratchOrgAliasName
     );
-    expect(scratchOrgStatusBarItem).toBeDefined();
+    await expect(scratchOrgStatusBarItem).toBeDefined();
   });
 
   step('Run SFDX: Set the Scratch Org As the Default Org', async () => {
     const workbench = await utilities.getWorkbench();
-    const inputBox = await utilities.executeQuickPick('SFDX: Set a Default Org', 10);
+    const inputBox = await utilities.executeQuickPick('SFDX: Set a Default Org', Duration.seconds(10));
 
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
       inputBox,
@@ -223,23 +226,23 @@ describe('Authentication', async () => {
       false,
       true
     );
-    expect(scratchOrgQuickPickItemWasFound).toBe(true);
+    await expect(scratchOrgQuickPickItemWasFound).toBe(true);
 
-    await utilities.pause(3);
+    await utilities.pause(Duration.seconds(3));
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
       'SFDX: Set a Default Org successfully ran',
       utilities.TEN_MINUTES
     );
-    expect(successNotificationWasFound).toBe(true);
+    await expect(successNotificationWasFound).toBe(true);
 
     // Look for the org's alias name in the list of status bar items.
     const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(
       workbench,
       scratchOrgAliasName
     );
-    expect(scratchOrgStatusBarItem).toBeDefined();
+    await expect(scratchOrgStatusBarItem).toBeDefined();
   });
 
   step('Tear down and clean up the testing environment', async () => {
