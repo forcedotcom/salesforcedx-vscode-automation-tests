@@ -13,7 +13,6 @@ import util from 'util';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import { Workbench } from 'wdio-vscode-service';
-import { Duration } from '@salesforce/kit';
 
 const exec = util.promisify(child_process.exec);
 
@@ -50,7 +49,7 @@ describe('Push and Pull', async () => {
   step('SFDX: View All Changes (Local and in Default Org)', async () => {
     await utilities.executeQuickPick(
       'SFDX: View All Changes (Local and in Default Org)',
-      Duration.seconds(5)
+      utilities.Duration.seconds(5)
     );
 
     // Check the output.
@@ -88,7 +87,7 @@ describe('Push and Pull', async () => {
   });
 
   step('SFDX: View Local Changes', async () => {
-    await utilities.executeQuickPick('SFDX: View Local Changes', Duration.seconds(5));
+    await utilities.executeQuickPick('SFDX: View Local Changes', utilities.Duration.seconds(5));
 
     // Check the output.
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -107,7 +106,7 @@ describe('Push and Pull', async () => {
 
   step('Push the Apex class', async () => {
     const workbench = await utilities.getWorkbench();
-    await utilities.executeQuickPick('SFDX: Push Source to Default Org', Duration.seconds(5));
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org', utilities.Duration.seconds(5));
 
     // At this point there should be no conflicts since this is a new class.
     await verifyPushSuccess(workbench);
@@ -119,10 +118,10 @@ describe('Push and Pull', async () => {
   step('Push again (with no changes)', async () => {
     // Clear the Output view first.
     const workbench = await utilities.getWorkbench();
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Now push
-    await utilities.executeQuickPick('SFDX: Push Source to Default Org', Duration.seconds(5));
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org', utilities.Duration.seconds(5));
 
     // Check the output.
     await verifyPushSuccess(workbench);
@@ -134,26 +133,26 @@ describe('Push and Pull', async () => {
     const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Modify the file by adding a comment.
     const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass1.cls');
     await textEditor.setTextAtLine(3, '        // sample comment');
 
     // Push the file.
-    await utilities.executeQuickPick('SFDX: Push Source to Default Org', Duration.seconds(5));
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org', utilities.Duration.seconds(5));
 
     await verifyPushSuccess(workbench);
     await verifyPushAndPullOutputText(workbench, 'Push', 'to');
 
     // Clear the Output view again.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Now save the file.
     await textEditor.save();
 
     // An now push the changes.
-    await utilities.executeQuickPick('SFDX: Push Source to Default Org', Duration.seconds(5));
+    await utilities.executeQuickPick('SFDX: Push Source to Default Org', utilities.Duration.seconds(5));
 
     await verifyPushSuccess(workbench);
     // Check the output.
@@ -188,9 +187,9 @@ describe('Push and Pull', async () => {
     const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
-    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', Duration.seconds(5));
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', utilities.Duration.seconds(5));
     // At this point there should be no conflicts since there have been no changes.
     await verifyPullSuccess(workbench);
     // Check the output.
@@ -202,10 +201,10 @@ describe('Push and Pull', async () => {
 
     // Second pull...
     // Clear the output again.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // And pull again.
-    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', Duration.seconds(5));
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', utilities.Duration.seconds(5));
     // Check the output.
     await verifyPullSuccess(workbench);
     outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
@@ -216,7 +215,7 @@ describe('Push and Pull', async () => {
     const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Modify the file by adding a comment.
     const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass1.cls');
@@ -224,7 +223,7 @@ describe('Push and Pull', async () => {
     // Don't save the file just yet.
 
     // Pull the file.
-    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', Duration.seconds(5));
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', utilities.Duration.seconds(5));
     // Check the output.
     await verifyPullSuccess(workbench);
     await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
@@ -234,14 +233,14 @@ describe('Push and Pull', async () => {
     const workbench = await utilities.getWorkbench();
 
     // Clear the Output view first.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Now save the file.
     const textEditor = await utilities.getTextEditor(workbench, 'ExampleApexClass1.cls');
     await textEditor.save();
 
     // An now pull the changes.
-    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', Duration.seconds(5));
+    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', utilities.Duration.seconds(5));
     await verifyPullSuccess(workbench);
     await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
   });
@@ -260,7 +259,7 @@ describe('Push and Pull', async () => {
     await expect(extensionWasFound).toBe(true);
 
     //Run SFDX: View Changes in Default Org command to view remote changes
-    await utilities.executeQuickPick('SFDX: View Changes in Default Org', Duration.seconds(5));
+    await utilities.executeQuickPick('SFDX: View Changes in Default Org', utilities.Duration.seconds(5));
 
     // Check the output.
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -314,7 +313,7 @@ describe('Push and Pull', async () => {
     const workbench = await utilities.getWorkbench();
     const inputBox = await utilities.executeQuickPick(
       'SFDX: Set a Default Org',
-      Duration.seconds(10)
+      utilities.Duration.seconds(10)
     );
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
       inputBox,
@@ -326,7 +325,7 @@ describe('Push and Pull', async () => {
       throw new Error(`${adminEmailAddress} was not found in the the scratch org pick list`);
     }
 
-    await utilities.pause(Duration.seconds(3));
+    await utilities.pause(utilities.Duration.seconds(3));
 
     // Look for the success notification.
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
