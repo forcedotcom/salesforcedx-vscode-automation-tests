@@ -144,6 +144,7 @@ describe('Push and Pull', async () => {
     await utilities.executeQuickPick('SFDX: Push Source to Default Org', Duration.seconds(5));
 
     await verifyPushSuccess(workbench);
+    await verifyPushAndPullOutputText(workbench, 'Push', 'to');
 
     // Clear the Output view again.
     await utilities.clearOutputView(Duration.seconds(2));
@@ -153,7 +154,7 @@ describe('Push and Pull', async () => {
 
     // An now push the changes.
     await utilities.executeQuickPick('SFDX: Push Source to Default Org', Duration.seconds(5));
-    
+
     await verifyPushSuccess(workbench);
     // Check the output.
     const outputPanelText = await verifyPushAndPullOutputText(workbench, 'Push', 'to', 'Changed');
