@@ -126,6 +126,8 @@ describe('Push and Pull', async () => {
 
     // Check the output.
     await verifyPushSuccess(workbench);
+    // Check the output.
+    await verifyPushAndPullOutputText(workbench, 'Push', 'to');
   });
 
   step('Modify the file and push the changes', async () => {
@@ -153,7 +155,6 @@ describe('Push and Pull', async () => {
     await utilities.executeQuickPick('SFDX: Push Source to Default Org', Duration.seconds(5));
     
     await verifyPushSuccess(workbench);
-
     // Check the output.
     const outputPanelText = await verifyPushAndPullOutputText(workbench, 'Push', 'to', 'Changed');
 
@@ -192,7 +193,7 @@ describe('Push and Pull', async () => {
     // At this point there should be no conflicts since there have been no changes.
     await verifyPullSuccess(workbench);
     // Check the output.
-    const outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from', 'Created');
+    let outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from', 'Created');
     // The first time a pull is performed, force-app/main/default/profiles/Admin.profile-meta.xml is pulled down.
     await expect(outputPanelText).toContain(
       path.join('force-app', 'main', 'default', 'profiles', 'Admin.profile-meta.xml')
@@ -206,6 +207,8 @@ describe('Push and Pull', async () => {
     await utilities.executeQuickPick('SFDX: Pull Source from Default Org', Duration.seconds(5));
     // Check the output.
     await verifyPullSuccess(workbench);
+    outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
+    await expect(outputPanelText).not.toContain('Created  Admin');
   });
 
   step("Modify the file (but don't save), then pull", async () => {
@@ -223,6 +226,7 @@ describe('Push and Pull', async () => {
     await utilities.executeQuickPick('SFDX: Pull Source from Default Org', Duration.seconds(5));
     // Check the output.
     await verifyPullSuccess(workbench);
+    await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
   });
 
   step('Save the modified file, then pull', async () => {
@@ -238,6 +242,7 @@ describe('Push and Pull', async () => {
     // An now pull the changes.
     await utilities.executeQuickPick('SFDX: Pull Source from Default Org', Duration.seconds(5));
     await verifyPullSuccess(workbench);
+    await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
   });
 
   step('SFDX: View Changes in Default Org', async () => {

@@ -35,7 +35,6 @@ export class EnvironmentSettings {
     // './specs/**/templates.e2e.ts',
     // './specs/**/trailApexReplayDebugger.e2e.ts',
     // './specs/**/visualforceLsp.e2e.ts',
-    // './specs/**/runEinsteinForDeveloper.e2e.ts',
     // './specs/**/sfdxProjectJson.e2e.ts'
   ];
   private _devHubAliasName = 'vscodeOrg';

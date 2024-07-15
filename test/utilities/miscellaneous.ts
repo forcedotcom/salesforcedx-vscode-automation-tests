@@ -8,7 +8,7 @@
 import os from 'os';
 import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings.ts';
-import { attemptToFindOutputPanelText } from './outputView.ts';
+import { attemptToFindOutputPanelText, clearOutputView } from './outputView.ts';
 import { executeQuickPick } from './commandPrompt.ts';
 import { notificationIsPresentWithTimeout } from './notifications.ts';
 import { Duration } from '@salesforce/kit';
@@ -92,7 +92,7 @@ export async function createCommand(
   extension: string
 ): Promise<string | undefined> {
   const workbench = await getWorkbench();
-  await executeQuickPick('View: Clear Output', Duration.seconds(1));
+  await clearOutputView();
   const inputBox = await executeQuickPick(`SFDX: Create ${type}`, Duration.seconds(1));
 
   // Set the name of the new component to name.
