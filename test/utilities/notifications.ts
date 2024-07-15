@@ -7,17 +7,16 @@
 
 import { Workbench } from 'wdio-vscode-service';
 import { log, pause } from './miscellaneous.ts';
+import { getWorkbench } from './workbench.ts';
+import { Duration } from '@salesforce/kit';
 
 export async function waitForNotificationToGoAway(
   workbench: Workbench,
   notificationMessage: string,
-  durationInSeconds: number,
+  durationInSeconds: Duration,
   matchExactString: boolean = true
 ): Promise<void> {
-  // Change timeout from seconds to milliseconds
-  durationInSeconds *= 1000;
-
-  await pause(5);
+  await pause(Duration.seconds(5));
   const startDate = new Date();
   while (true) {
     const notificationWasFound = await notificationIsPresent(
@@ -30,8 +29,8 @@ export async function waitForNotificationToGoAway(
     }
 
     const currentDate = new Date();
-    const secondsPassed = Math.abs(currentDate.getTime() - startDate.getTime()) / 1000;
-    if (secondsPassed >= durationInSeconds) {
+    const secondsPassed = Math.abs(currentDate.getTime() - startDate.getTime());
+    if (secondsPassed >= durationInSeconds.milliseconds) {
       throw new Error(
         `Exceeded time limit - notification "${notificationMessage}" is still present`
       );
@@ -64,24 +63,21 @@ export async function notificationIsPresent(
 export async function notificationIsPresentWithTimeout(
   workbench: Workbench,
   notificationMessage: string,
-  durationInSeconds: number,
+  durationInSeconds: Duration,
   matchExactString: boolean = true
 ): Promise<boolean> {
-  // Change timeout from seconds to milliseconds
-  durationInSeconds *= 1000;
-
   const startDate = new Date();
   let currentDate: Date;
   let secondsPassed: number = 0;
 
   // Keep on searching for the notification until it is found or the timeout is reached
-  while (secondsPassed < durationInSeconds) {
+  while (secondsPassed < durationInSeconds.seconds) {
     // Get a list of all the notifications that are currently present
     const notifications = await workbench.getNotifications();
 
     // If there are no notifications present, wait 3 seconds before trying again
     if (notifications.length === 0) {
-      pause(3);
+     await pause(Duration.seconds(3));
     }
 
     // If there are notifications present, check each one to see if it matches
@@ -99,7 +95,7 @@ export async function notificationIsPresentWithTimeout(
           }
         }
       }
-      pause(1);
+     await pause(Duration.seconds(1));
     }
 
     // Get the amount of time that passed
@@ -136,7 +132,7 @@ export async function attemptToFindNotification(
       return true;
     }
 
-    await pause(1);
+    await pause(Duration.seconds(1));
     attempts--;
   }
 
@@ -144,7 +140,7 @@ export async function attemptToFindNotification(
 }
 
 export async function dismissAllNotifications(): Promise<void> {
-  const workbench = await (await browser.getWorkbench()).wait();
+  const workbench = await getWorkbench();
   await browser.waitUntil(async () => {
     const notifications = await workbench.getNotifications();
     for (const notification of notifications) {

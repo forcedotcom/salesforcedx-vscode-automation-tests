@@ -7,12 +7,13 @@
 
 import { runCommandFromCommandPrompt } from './commandPrompt.ts';
 import { getTextEditor, pause } from './miscellaneous.ts';
+import { Duration } from '@salesforce/kit';
 
 export async function createVisualforcePage(): Promise<void> {
   const workbench = await browser.getWorkbench();
 
   // Using the Command palette, run SFDX: Create Visualforce Page
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Visualforce Page', 1);
+  const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Visualforce Page', Duration.seconds(1));
 
   // Set the name of the new Visualforce Page
   await inputBox.setText('FooPage');
@@ -20,7 +21,7 @@ export async function createVisualforcePage(): Promise<void> {
 
   // Select the default directory (press Enter/Return).
   await inputBox.confirm();
-  await pause(1);
+  await pause(Duration.seconds(1));
 
   // Modify page content
   const textEditor = await getTextEditor(workbench, 'FooPage.page');
@@ -37,5 +38,5 @@ export async function createVisualforcePage(): Promise<void> {
   ].join('\n');
   await textEditor.setText(pageText);
   await textEditor.save();
-  await pause(1);
+  await pause(Duration.seconds(1));
 }

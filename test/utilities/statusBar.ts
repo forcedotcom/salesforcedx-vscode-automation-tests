@@ -6,7 +6,8 @@
  */
 
 import { Workbench } from 'wdio-vscode-service';
-import { pause } from './miscellaneous.ts';
+import { debug, pause } from './miscellaneous.ts';
+import { Duration } from '@salesforce/kit';
 
 export async function getStatusBarItemWhichIncludes(
   workbench: Workbench,
@@ -18,12 +19,13 @@ export async function getStatusBarItemWhichIncludes(
     const items = await statusBar.item$$;
     for (const item of items) {
       const itemTitle = await item.getAttribute(statusBar.locators.itemTitle);
+      debug(`status bar item title ${itemTitle}`);
       if (itemTitle.includes(title)) {
         return item;
       }
     }
 
-    await pause(1);
+    await pause(Duration.seconds(1));
   }
 
   throw new Error(`Status bar item containing ${title} was not found`);

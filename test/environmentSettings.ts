@@ -35,7 +35,7 @@ export class EnvironmentSettings {
     // './specs/**/templates.e2e.ts',
     // './specs/**/trailApexReplayDebugger.e2e.ts',
     // './specs/**/visualforceLsp.e2e.ts',
-    // './specs/**/runEinsteinForDeveloper.e2e.ts'
+    // './specs/**/sfdxProjectJson.e2e.ts'
   ];
   private _devHubAliasName = 'vscodeOrg';
   private _devHubUserName = 'svcideebot@salesforce.com';
@@ -46,8 +46,10 @@ export class EnvironmentSettings {
   private _startTime = new Date(Date.now()).toLocaleTimeString([], { timeStyle: 'short' });
   private _throttleFactor = 1;
   private _javaHome = process.env.JAVA_HOME;
+  private _useExistingProject: string | undefined;
+  private _debug = false;
 
-  private constructor() {}
+  private constructor() { }
 
   public static getInstance(): EnvironmentSettings {
     if (!EnvironmentSettings._instance) {
@@ -75,6 +77,10 @@ export class EnvironmentSettings {
       EnvironmentSettings._instance._extensionPath =
         process.env.SALESFORCEDX_VSCODE_EXTENSIONS_PATH ||
         EnvironmentSettings._instance._extensionPath;
+      EnvironmentSettings._instance._useExistingProject =
+        process.env.USE_EXISTING_PROJECT_PATH || EnvironmentSettings._instance._useExistingProject;
+      EnvironmentSettings._instance._debug =
+        process.env.E2E_DEBUG === 'true' || EnvironmentSettings._instance._debug;
     }
 
     return EnvironmentSettings._instance;
@@ -115,7 +121,16 @@ export class EnvironmentSettings {
   public get orgId(): string | undefined {
     return this._orgId;
   }
+
   public get javaHome(): string | undefined {
     return this._javaHome;
+  }
+
+  public get useExistingProject(): string | undefined {
+    return this._useExistingProject;
+  }
+
+  public get debug(): boolean {
+    return this._debug;
   }
 }

@@ -9,16 +9,10 @@ import clipboard from 'clipboardy';
 import { pause } from './miscellaneous.ts';
 import { dismissAllNotifications } from './notifications.ts';
 import { executeQuickPick } from './commandPrompt.ts';
+import { Duration } from '@salesforce/kit';
 
 import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
-
-type TimeParts = {
-  hours: string;
-  minutes: string;
-  seconds: string;
-  secondFraction: string;
-};
 
 export async function selectOutputChannel(name: string): Promise<void> {
   // Wait for all notifications to go away.  If there is a notification that is overlapping and hiding the Output channel's
@@ -27,9 +21,9 @@ export async function selectOutputChannel(name: string): Promise<void> {
   await dismissAllNotifications();
 
   // Find the given channel in the Output view
-  await executeQuickPick('Output: Show Output Channels...', 1);
+  await executeQuickPick('Output: Show Output Channels...', Duration.seconds(1));
   await browser.keys([name, 'Enter']);
-  await pause(2);
+  await pause(Duration.seconds(2));
 }
 
 export async function getOutputViewText(outputChannelName: string = ''): Promise<string> {
@@ -39,7 +33,7 @@ export async function getOutputViewText(outputChannelName: string = ''): Promise
   }
 
   // Set focus to the contents in the Output panel.
-  await executeQuickPick('Output: Focus on Output View', 2);
+  await executeQuickPick('Output: Focus on Output View', Duration.seconds(2));
 
   // Select all of the text within the panel.
   await browser.keys([CMD_KEY, 'a', 'c']);
@@ -59,14 +53,14 @@ export async function attemptToFindOutputPanelText(
   await selectOutputChannel(outputChannelName);
 
   while (attempts > 0) {
-    const outputViewText = await getOutputViewText();
+      const outputViewText = await getOutputViewText();
     if (outputViewText.includes(searchString)) {
       return outputViewText;
     }
 
-    await pause(1);
+    await pause(Duration.seconds(1));
     attempts--;
-  }
+    }
 
   return undefined;
 }
@@ -74,52 +68,40 @@ export async function attemptToFindOutputPanelText(
 export async function getOperationTime(outputText: string): Promise<string> {
   const tRegex = /((?<hours>\d+):(?<minutes>\d+):(?<seconds>\d+)(?<secondFraction>\.\d+))/g;
   let matches;
-  const groups: TimeParts[] = [];
+  const times: Date[] = [];
   while ((matches = tRegex.exec(outputText)) !== null) {
-    const group = matches.groups as TimeParts; // Type assertion
-    groups.push(group);
+    if (matches.groups) {
+      const { hours, minutes, seconds, secondFraction } = matches.groups;
+      const time = new Date(
+        1970,
+        0,
+        1,
+        Number(hours),
+        Number(minutes),
+        Number(seconds),
+        Number(secondFraction) * 1000
+      );
+      times.push(time);
+    }
   }
-  const [startTime, endTime] = groups.map((group) =>
-    Object.entries(group)
-      .map(([key, value]) => ({ [key]: Number(value) }))
-      .reduce(
-        (acc, curr, index) => {
-          switch (index) {
-            case 0:
-              acc.setHours(curr.hours);
-              break;
-            case 1:
-              acc.setMinutes(curr.minutes);
-              break;
-            case 2:
-              acc.setSeconds(curr.seconds);
-              break;
-            case 3:
-              acc.setMilliseconds(curr.secondFraction * 1000);
-              break;
-            default:
-              break;
-          }
-          return acc;
-        },
-        new Date(1970, 0, 1)
-      )
-  );
+  if (times.length < 2) {
+    return 'Insufficient timestamps found.';
+  }
+  const [startTime, endTime] = times;
   let diff = endTime.getTime() - startTime.getTime();
-  // Convert the difference to hours, minutes, and seconds
-  const hours = Math.floor(diff / 1000 / 60 / 60);
-  diff -= hours * 1000 * 60 * 60;
-  const minutes = Math.floor(diff / 1000 / 60);
-  diff -= minutes * 1000 * 60;
+
+  const hours = Math.floor(diff / 3600000); // 1000 * 60 * 60
+  diff %= 3600000;
+  const minutes = Math.floor(diff / 60000); // 1000 * 60
+  diff %= 60000;
   const seconds = Math.floor(diff / 1000);
-  diff -= seconds * 1000;
-  const milliseconds = diff;
+  const milliseconds = diff % 1000;
 
-  // return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+  return `${formatTimeComponent(hours)}:${formatTimeComponent(minutes)}:${formatTimeComponent(seconds)}.${formatTimeComponent(milliseconds, 3)}`;
+}
 
-  return `${formatTimeComponent(hours)}:${formatTimeComponent(minutes)}:${formatTimeComponent(
-    seconds
-  )}.${formatTimeComponent(milliseconds, 3)}`;
+export async function clearOutputView(wait = Duration.seconds(1)) {
+  await executeQuickPick('View: Clear Output',wait);
 }
 
 function formatTimeComponent(component: number, padLength: number = 2): string {

@@ -12,6 +12,7 @@ import FastGlob from 'fast-glob';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import { exec } from 'child_process';
 import * as utilities from './index.ts';
+import { Duration } from '@salesforce/kit';
 
 export type ExtensionId =
   | 'salesforcedx-vscode'
@@ -47,6 +48,7 @@ export type ExtensionActivation = {
   version?: string;
   activationTime?: string;
   hasBug?: boolean;
+  isActivationComplete?: boolean;
 };
 
 export type VerifyExtensionsOptions = {
@@ -54,7 +56,7 @@ export type VerifyExtensionsOptions = {
   interval?: number;
 };
 
-const VERIFY_EXTENSIONS_TIMEOUT = 20_000;
+const VERIFY_EXTENSIONS_TIMEOUT = Duration.seconds(30);
 
 const extensions: ExtensionType[] = [
   {
@@ -228,6 +230,13 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
     throw new Error(`No vsix files were found in dir ${extensionsDir}`);
   }
 
+  const mergeExcluded = Array.from(
+    new Set([
+      ...excludeExtensions,
+      ...extensions.filter((ext) => ext.shouldInstall === 'never').map((ext) => ext.extensionId)
+    ])
+  );
+
   // Refactored part to use the extensions array
   extensionsVsixs.forEach((vsix) => {
     const match = path
@@ -239,7 +248,7 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
       if (foundExtension) {
         foundExtension.vsixPath = vsix;
         // assign 'never' to this extension if its id is included in excluedExtensions
-        foundExtension.shouldInstall = excludeExtensions.includes(foundExtension.extensionId)
+        foundExtension.shouldInstall = mergeExcluded.includes(foundExtension.extensionId)
           ? 'never'
           : 'always';
         // if not installing, don't verify, otherwise use default value
@@ -253,18 +262,24 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
   });
 
   // Iterate over the extensions array to install extensions
-  for (const extensionObj of extensions.filter((ext) => ext.vsixPath !== '' && ext.shouldInstall)) {
+  for (const extensionObj of extensions.filter(
+    (ext) => ext.vsixPath !== '' && ext.shouldInstall !== 'never'
+  )) {
     await installExtension(extensionObj.vsixPath, extensionsDir);
   }
 
   await utilities.enableAllExtensions();
-  await utilities.reloadWindow(10);
+  await utilities.reloadWindow(Duration.seconds(10));
 }
 
-export function getExtensionsToVerifyActive(): ExtensionType[] {
-  return extensions.filter((ext) => {
+export function getExtensionsToVerifyActive(
+  predicate: (ext: ExtensionType) => boolean = (ext) => !!ext
+): ExtensionType[] {
+  return extensions
+    .filter((ext) => {
     return ext.shouldVerifyActivation;
-  });
+    })
+    .filter(predicate);
 }
 
 export async function findVSCodeBinary(): Promise<string> {
@@ -317,7 +332,7 @@ export async function verifyExtensionsAreRunning(
 
   await showRunningExtensions();
 
-  await utilities.zoom('Out', 4, 1);
+  await utilities.zoom('Out', 4, Duration.seconds(1));
 
   let extensionsStatus: ExtensionActivation[] = [];
   let allActivated = false;
@@ -325,7 +340,7 @@ export async function verifyExtensionsAreRunning(
   const timeoutPromise = new Promise((_, reject) =>
     setTimeout(
       () => reject(new Error('findExtensionsInRunningExtensionsList timeout')),
-      timeout ?? VERIFY_EXTENSIONS_TIMEOUT
+      timeout.milliseconds * EnvironmentSettings.getInstance().throttleFactor
     )
   );
 
@@ -338,13 +353,18 @@ export async function verifyExtensionsAreRunning(
           // Log the current state of the activation check for each extension
           for (const extensionStatus of extensionsStatus) {
             log(
+              // prettier-ignore
               `Extension ${extensionStatus.extensionId}: ${extensionStatus.activationTime ?? 'Not activated'}`
             );
           }
 
-          allActivated = extensionsStatus.every(
-            (extensionStatus) => extensionStatus.activationTime
-          );
+          allActivated =
+            extensionsToVerify.every(
+              (extensionId) =>
+                extensionsStatus.find(
+                  (extensionStatus) => extensionStatus.extensionId === extensionId
+                )?.isActivationComplete
+            );
         } while (!allActivated);
       })(),
       timeoutPromise
@@ -353,7 +373,7 @@ export async function verifyExtensionsAreRunning(
     log(`Error while waiting for extensions to activate: ${error}`);
   }
 
-  await utilities.zoomReset(1);
+  await utilities.zoomReset();
 
   log('... Finished verifyExtensionsAreRunning()');
   log('');
@@ -370,7 +390,7 @@ export async function findExtensionsInRunningExtensionsList(
   // Close the panel and clear notifications so we can see as many of the running extensions as we can.
   try {
     // await runCommandFromCommandPrompt(workbench, 'View: Close Panel', 1);
-    await utilities.executeQuickPick('Notifications: Clear All Notifications', 1);
+    await utilities.executeQuickPick('Notifications: Clear All Notifications', Duration.seconds(1));
   } catch {
     // Close the command prompt by hitting the Escape key
     await browser.keys(['Escape']);
@@ -386,9 +406,17 @@ export async function findExtensionsInRunningExtensionsList(
     const extensionId = await parent.getAttribute('aria-label');
     const version = await extension.$('.version').getText();
     const activationTime = await extension.$('.activation-time').getText();
+    const isActivationComplete = /\:\s*?[0-9]{1,}ms/.test(activationTime);
     const bugSpan = await parent.$('span.codicon-bug');
     const hasBug = bugSpan?.error?.message.startsWith('no such element') ? false : true;
-    runningExtensions.push({ extensionId, activationTime, version, isPresent: true, hasBug });
+    runningExtensions.push({
+      extensionId,
+      activationTime,
+      version,
+      isPresent: true,
+      hasBug,
+      isActivationComplete
+    });
   }
 
   // limit runningExtensions to those whose property extensionId is in the list of extensionIds

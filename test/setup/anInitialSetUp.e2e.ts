@@ -11,6 +11,7 @@ import { step } from 'mocha-steps';
 import util from 'util';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import * as utilities from '../utilities/index.ts';
+import { Duration } from '@salesforce/kit';
 
 const exec = util.promisify(child_process.exec);
 
@@ -25,7 +26,7 @@ describe('An Initial SetUp', async () => {
     utilities.log('About to start authorizing to devhub');
     for (let i = 5; i > 0; i--) {
       utilities.log(`${i}...`);
-      await utilities.pause(1);
+      await utilities.pause(Duration.seconds(1));
     }
   });
 
@@ -37,13 +38,13 @@ describe('An Initial SetUp', async () => {
     fs.writeFileSync(authFilePath, sfdxAuthUrl);
 
     const authorizeOrg = await exec(`sf org:login:sfdx-url -d -f ${authFilePath}`);
-    expect(authorizeOrg.stdout).toContain(
+    await expect(authorizeOrg.stdout).toContain(
       `Successfully authorized ${devHubUserName} with org ID ${orgId}`
     );
 
     const setAlias = await exec(`sf alias:set ${devHubAliasName}=${devHubUserName}`);
-    expect(setAlias.stdout).toContain(devHubAliasName);
-    expect(setAlias.stdout).toContain(devHubUserName);
-    expect(setAlias.stdout).toContain('true');
+    await expect(setAlias.stdout).toContain(devHubAliasName);
+    await expect(setAlias.stdout).toContain(devHubUserName);
+    await expect(setAlias.stdout).toContain('true');
   });
 });

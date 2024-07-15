@@ -12,9 +12,10 @@ import util from 'util';
 import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
 import { EnvironmentSettings } from './environmentSettings.ts';
 import * as utilities from './utilities/index.ts';
+import { fail } from 'assert';
 
 import { fileURLToPath } from 'url';
-import { fail } from 'assert';
+import { Duration } from '@salesforce/kit';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -25,7 +26,7 @@ export class TestSetup {
   private reuseScratchOrg = false;
   private static aliasAndUserNameWereVerified = false;
   public tempFolderPath: string | undefined = undefined;
-  public projectFolderPath: string | undefined = undefined;
+  public projectFolderPath: string | undefined;
   private prompt: QuickOpenBox | InputBox | undefined;
   public scratchOrgAliasName: string | undefined;
 
@@ -68,7 +69,7 @@ export class TestSetup {
     await utilities.showRunningExtensions();
 
     // Zoom out so all the extensions are visible
-    await utilities.zoom('Out', 4, 1);
+    await utilities.zoom('Out', 4, Duration.seconds(1));
 
     const uncaughtErrors = (
       await utilities.findExtensionsInRunningExtensionsList(
@@ -76,13 +77,13 @@ export class TestSetup {
       )
     ).filter((ext) => ext.hasBug);
 
-    await utilities.zoomReset(1);
+    await utilities.zoomReset();
 
     uncaughtErrors.forEach((ext) => {
       utilities.log(`Extension ${ext.extensionId}:${ext.version ?? 'unknown'} has a bug`);
     });
 
-    expect(uncaughtErrors.length).toBe(0);
+    await expect(uncaughtErrors.length).toBe(0);
   }
 
   public async setUpTestingEnvironment(): Promise<void> {
@@ -90,6 +91,7 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Starting setUpTestingEnvironment()...`);
 
     this.tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
+
     this.projectFolderPath = path.join(this.tempFolderPath, this.tempProjectName);
     utilities.log(
       `${this.testSuiteSuffixName} - creating project files in ${this.projectFolderPath}`
@@ -124,16 +126,15 @@ export class TestSetup {
     const prompt = await workbench.executeQuickPick('SFDX: Create Project');
     await utilities.waitForQuickPick(prompt, 'Standard', {
       msg: 'Expected extension salesforcedx-core to be available within 5 seconds',
-      timeout: 5_000
+      timeout: Duration.seconds(5)
     });
     await browser.keys(['Escape']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys(['Escape']);
 
     const coreIsActive = await utilities.verifyExtensionsAreRunning(
       utilities
-        .getExtensionsToVerifyActive()
-        .filter((ext) => ext.extensionId === 'salesforcedx-vscode-core')
+        .getExtensionsToVerifyActive((ext) => ext.extensionId === 'salesforcedx-vscode-core')
     );
 
     if (!coreIsActive) {
@@ -162,12 +163,12 @@ export class TestSetup {
     // Select the "Standard" project type.
     await utilities.waitForQuickPick(this.prompt, 'Standard', {
       msg: 'Expected extension salesforcedx-core to be available within 5 seconds',
-      timeout: 5_000
+      timeout: Duration.seconds(5)
     });
 
     // Enter the project's name.
     await this.prompt.setText(projectName ?? this.tempProjectName);
-    await utilities.pause(2);
+    await utilities.pause(Duration.seconds(2));
 
     // Press Enter/Return.
     await this.prompt.confirm();
@@ -175,9 +176,7 @@ export class TestSetup {
     // Set the location of the project.
     const input = await this.prompt.input$;
     await input.setValue(this.tempFolderPath!);
-    await utilities.pause(2);
-
-    // Click the OK button.
+    await utilities.pause(Duration.seconds(2));
     await utilities.clickFilePathOkButton();
 
     // Verify the project was created and was loaded.
@@ -342,7 +341,7 @@ export class TestSetup {
     const endDate = Date.now();
     const time = endDate - startDate;
     utilities.log(
-      `Creating ${this.scratchOrgAliasName} took ${time} ticks (${time / 1000.0} seconds)`
+      `Creating ${this.scratchOrgAliasName} took ${time} ticks (${time / 1_000.0} seconds)`
     );
 
     if (!result.authFields) {
@@ -367,7 +366,10 @@ export class TestSetup {
 
     // Run SFDX: Set a Default Org
     utilities.log(`${this.testSuiteSuffixName} - selecting SFDX: Set a Default Org...`);
-    const inputBox = await utilities.executeQuickPick('SFDX: Set a Default Org', 10);
+    const inputBox = await utilities.executeQuickPick(
+      'SFDX: Set a Default Org',
+      Duration.seconds(10)
+    );
 
     utilities.log(`${this.testSuiteSuffixName} - calling findQuickPickItem()...`);
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
@@ -382,7 +384,7 @@ export class TestSetup {
       );
     }
 
-    await utilities.pause(3);
+    await utilities.pause(Duration.seconds(3));
 
     // Warning! This only works if the item (the scratch org) is visible.
     // If there are many scratch orgs, not all of them may be displayed.
@@ -418,7 +420,10 @@ export class TestSetup {
   }
 
   private async setDefaultOrg(workbench: Workbench): Promise<void> {
-    const inputBox = await utilities.executeQuickPick('SFDX: Set a Default Org', 2);
+    const inputBox = await utilities.executeQuickPick(
+      'SFDX: Set a Default Org',
+      Duration.seconds(2)
+    );
 
     const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
       inputBox,
@@ -430,7 +435,7 @@ export class TestSetup {
       throw new Error(`In setDefaultOrg(), the scratch org's quick pick item was not found`);
     }
 
-    await utilities.pause(3);
+    await utilities.pause(Duration.seconds(3));
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,

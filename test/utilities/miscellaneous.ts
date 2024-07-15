@@ -8,20 +8,30 @@
 import os from 'os';
 import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings.ts';
-import { attemptToFindOutputPanelText } from './outputView.ts';
+import { attemptToFindOutputPanelText, clearOutputView } from './outputView.ts';
 import { executeQuickPick } from './commandPrompt.ts';
 import { notificationIsPresentWithTimeout } from './notifications.ts';
+import { Duration } from '@salesforce/kit';
 import path from 'path';
+import { getWorkbench } from './workbench.ts';
+import { PredicateWithTimeout } from './predicates.ts';
 
-export const FIVE_MINUTES = 5 * 60;
-export const TEN_MINUTES = 10 * 60;
+export const FIVE_MINUTES = Duration.minutes(5);
+export const TEN_MINUTES = Duration.minutes(10);
 
-export async function pause(durationInSeconds: number): Promise<void> {
-  await sleep(durationInSeconds * EnvironmentSettings.getInstance().throttleFactor * 1000);
+export async function pause(duration: Duration = Duration.seconds(1)): Promise<void> {
+  await sleep(duration.milliseconds * EnvironmentSettings.getInstance().throttleFactor);
 }
 
-export function log(message: string) {
+export function log(message: string): void {
   console.log(message);
+}
+
+export function debug(message: string): void {
+  if (EnvironmentSettings.getInstance().debug) {
+    const timestamp = new Date().toISOString();
+    log(`${timestamp}:${message}`);
+  }
 }
 
 export function currentOsUserName(): string {
@@ -66,10 +76,10 @@ export async function findElementByText(
  * @returns editor for the given file name
  */
 export async function getTextEditor(workbench: Workbench, fileName: string): Promise<TextEditor> {
-  const inputBox = await executeQuickPick('Go to File...', 1);
+  const inputBox = await executeQuickPick('Go to File...', Duration.seconds(1));
   await inputBox.setText(fileName);
   await inputBox.confirm();
-  await pause(1);
+  await pause(Duration.seconds(1));
   const editorView = workbench.getEditorView();
   const textEditor = (await editorView.openEditor(fileName)) as TextEditor;
   return textEditor;
@@ -81,14 +91,14 @@ export async function createCommand(
   folder: string,
   extension: string
 ): Promise<string | undefined> {
-  const workbench = await (await browser.getWorkbench()).wait();
-  await executeQuickPick('View: Clear Output', 1);
-  const inputBox = await executeQuickPick(`SFDX: Create ${type}`, 1);
+  const workbench = await getWorkbench();
+  await clearOutputView();
+  const inputBox = await executeQuickPick(`SFDX: Create ${type}`, Duration.seconds(1));
 
   // Set the name of the new component to name.
   await inputBox.setText(name);
   await inputBox.confirm();
-  await pause(1);
+  await pause(Duration.seconds(1));
 
   // Select the default directory (press Enter/Return).
   await inputBox.confirm();
@@ -98,16 +108,16 @@ export async function createCommand(
     `SFDX: Create ${type} successfully ran`,
     TEN_MINUTES
   );
-  expect(successNotificationWasFound).toBe(true);
+  await expect(successNotificationWasFound).toBe(true);
 
   const outputPanelText = await attemptToFindOutputPanelText(
     `Salesforce CLI`,
     `Finished SFDX: Create ${type}`,
     10
   );
-  expect(outputPanelText).not.toBeUndefined();
+  await expect(outputPanelText).not.toBeUndefined();
   const typePath = path.join(`force-app`, `main`, `default`, folder, `${name}.${extension}`);
-  expect(outputPanelText).toContain(`create ${typePath}`);
+  await expect(outputPanelText).toContain(`create ${typePath}`);
 
   const metadataPath = path.join(
     `force-app`,
@@ -116,6 +126,13 @@ export async function createCommand(
     folder,
     `${name}.${extension}-meta.xml`
   );
-  expect(outputPanelText).toContain(`create ${metadataPath}`);
+  await expect(outputPanelText).toContain(`create ${metadataPath}`);
   return outputPanelText;
+}
+
+// Type guard function to check if the argument is a Duration
+export function isDuration(
+  predicateOrWait: PredicateWithTimeout | Duration
+): predicateOrWait is Duration {
+  return (predicateOrWait as Duration).milliseconds !== undefined;
 }

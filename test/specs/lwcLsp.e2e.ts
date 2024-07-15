@@ -7,6 +7,8 @@
 import { step, xstep } from 'mocha-steps';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
+import { Duration } from '@salesforce/kit';
+
 import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
@@ -27,13 +29,13 @@ describe('LWC LSP', async () => {
 
     // Using the Command palette, run Developer: Show Running Extensions
     await utilities.showRunningExtensions();
-    utilities.zoom('Out', 4, 1);
+    await utilities.zoom('Out', 4, Duration.seconds(1));
     // Verify Lightning Web Components extension is present and running
-    const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
-      'salesforcedx-vscode-lwc'
-    ]);
-    utilities.zoomReset();
-    expect(foundExtensions.length).toBe(1);
+    const extensionWasFound = await utilities.verifyExtensionsAreRunning(
+      utilities.getExtensionsToVerifyActive((ext) => ext.extensionId === 'salesforcedx-vscode-lwc')
+    );
+    await utilities.zoomReset();
+    await expect(extensionWasFound).toBe(true);
   });
 
   step('Go to Definition (JavaScript)', async () => {
@@ -44,21 +46,21 @@ describe('LWC LSP', async () => {
 
     // Move cursor to the middle of "LightningElement"
     await browser.keys([CMD_KEY, 'f']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys(['LightningElement']);
     await browser.keys(['Escape']);
     await browser.keys(['ArrowRight', 'ArrowLeft', 'ArrowLeft']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Go to definition through F12
     await browser.keys(['F12']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Verify 'Go to definition' took us to the definition file
     const editorView = workbench.getEditorView();
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
-    expect(title).toBe('engine.d.ts');
+    await expect(title).toBe('engine.d.ts');
   });
 
   xstep('Go to Definition (HTML)', async () => {
@@ -69,19 +71,19 @@ describe('LWC LSP', async () => {
 
     // Move cursor to the middle of "greeting"
     await browser.keys([CMD_KEY, 'f']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys(['greeting', 'Escape', 'ArrowRight', 'ArrowLeft', 'ArrowLeft']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Go to definition through F12
     await browser.keys(['F12']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
 
     // Verify 'Go to definition' took us to the definition file
     const editorView = workbench.getEditorView();
     const activeTab = await editorView.getActiveTab();
     const title = await activeTab?.getTitle();
-    expect(title).toBe('lwc1.js');
+    await expect(title).toBe('lwc1.js');
   });
 
   step('Autocompletion', async () => {
@@ -92,26 +94,26 @@ describe('LWC LSP', async () => {
 
     // Move cursor to right after the first 'div' tag and type ' lwc'
     await browser.keys([CMD_KEY, 'f']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys(['div', 'Escape', 'ArrowRight']);
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     await browser.keys([' lwc']);
-    await utilities.pause(2);
+    await utilities.pause(Duration.seconds(2));
 
     // Verify autocompletion options are present
     const autocompletionOptions = await $$('textarea.inputarea.monaco-mouse-cursor-text');
-    expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe('true');
-    expect(await autocompletionOptions[0].getAttribute('aria-autocomplete')).toBe('list');
+    await expect(await autocompletionOptions[0].getAttribute('aria-haspopup')).toBe('true');
+    await expect(await autocompletionOptions[0].getAttribute('aria-autocomplete')).toBe('list');
 
     // Verify autocompletion options can be selected and therefore automatically inserted into the file
     await browser.keys(['Enter']);
     await textEditor.save();
-    await utilities.pause(1);
+    await utilities.pause(Duration.seconds(1));
     const line3Text = await textEditor.getTextAtLine(3);
-    expect(line3Text).toContain('lwc:else');
+    await expect(line3Text).toContain('lwc:else');
   });
 
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     utilities.log(
       `${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`
     );

@@ -8,26 +8,28 @@
 import { TextEditor } from 'wdio-vscode-service';
 import { executeQuickPick } from './commandPrompt.ts';
 import { getTextEditor, pause } from './miscellaneous.ts';
+import { Duration } from '@salesforce/kit';
+import { getWorkbench } from './workbench.ts';
 
 export async function createApexClass(
   name: string,
   classText: string,
   breakpoint?: number
 ): Promise<void> {
-  const workbench = await (await browser.getWorkbench()).wait();
+  const workbench = await getWorkbench();
 
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
-  const inputBox = await executeQuickPick('SFDX: Create Apex Class', 1);
+  const inputBox = await executeQuickPick('SFDX: Create Apex Class', Duration.seconds(1));
 
   // Set the name of the new Apex Class
   await inputBox.setText(name);
-  await pause(1);
+  await pause(Duration.seconds(1));
   await browser.keys(['Enter']);
-  await pause(1);
+  await pause(Duration.seconds(1));
 
   // Select the default directory (press Enter/Return).
   await browser.keys(['Enter']);
-  await pause(1);
+  await pause(Duration.seconds(1));
 
   // Modify class content
   const textEditor = await getTextEditor(workbench, name + '.cls');
@@ -36,7 +38,7 @@ export async function createApexClass(
   if (breakpoint) {
     await textEditor.toggleBreakpoint(breakpoint);
   }
-  await pause(1);
+  await pause(Duration.seconds(1));
 }
 
 export async function createApexClassWithTest(name: string): Promise<void> {
@@ -104,11 +106,11 @@ export async function createApexClassWithBugs(): Promise<void> {
 }
 
 export async function createAnonymousApexFile(): Promise<void> {
-  const workbench = await (await browser.getWorkbench()).wait();
+  const workbench = await getWorkbench();
   const editorView = workbench.getEditorView();
 
   // Using the Command palette, run File: New File...
-  const inputBox = await executeQuickPick('Create: New File...', 1);
+  const inputBox = await executeQuickPick('Create: New File...', Duration.seconds(1));
 
   // Set the name of the new Anonymous Apex file
   await inputBox.setText('Anonymous.apex');
@@ -118,7 +120,7 @@ export async function createAnonymousApexFile(): Promise<void> {
   const textEditor = (await editorView.openEditor('Anonymous.apex')) as TextEditor;
   await textEditor.setText("System.debug('¡Hola mundo!');");
   await textEditor.save();
-  await pause(1);
+  await pause(Duration.seconds(1));
 }
 
 export async function createApexController(): Promise<void> {

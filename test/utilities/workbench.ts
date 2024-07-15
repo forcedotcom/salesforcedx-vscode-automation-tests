@@ -1,14 +1,15 @@
 import { Workbench } from 'wdio-vscode-service';
-import { log, pause } from './miscellaneous.ts';
+import { isDuration, log, pause } from './miscellaneous.ts';
 import { executeQuickPick } from './commandPrompt.ts';
 import { PredicateWithTimeout } from './predicates.ts';
+import { Duration } from '@salesforce/kit';
 
 export async function getWorkbench(wait = 5): Promise<Workbench> {
   return await (await browser.getWorkbench()).wait(wait * 1_000);
 }
 // { predicate: standardPredicates.alwaysTrue, maxWaitTime: 5_000 }
 export async function reloadWindow(
-  predicateOrWait: PredicateWithTimeout | number = 0
+  predicateOrWait: PredicateWithTimeout | Duration = Duration.milliseconds(0)
 ): Promise<void> {
   log(`Reloading window`);
   const prompt = await executeQuickPick('Developer: Reload Window');
@@ -43,7 +44,7 @@ export async function showExplorerView(): Promise<void> {
 export async function zoom(
   zoomIn: 'In' | 'Out',
   zoomLevel: number,
-  wait: number = 1
+  wait: Duration = Duration.seconds(1)
 ): Promise<void> {
   await zoomReset(wait);
   for (let level = 0; level < zoomLevel; level++) {
@@ -51,16 +52,20 @@ export async function zoom(
   }
 }
 
-export async function zoomReset(wait: number = 1): Promise<void> {
+export async function zoomReset(wait: Duration = Duration.seconds(1)): Promise<void> {
   await executeQuickPick('View: Reset Zoom', wait);
 }
 
-async function handlePredicateOrWait(predicateOrWait: PredicateWithTimeout | number, prompt: unknown) {
-  if (typeof predicateOrWait === 'number') {
-    if (predicateOrWait > 0) {
+async function handlePredicateOrWait(
+  predicateOrWait: PredicateWithTimeout | Duration,
+  prompt: unknown
+) {
+  log('handlePredicateOrWait');
+  if (isDuration(predicateOrWait)) {
+    if (predicateOrWait.milliseconds > 0) {
       await pause(predicateOrWait);
     }
-  } else if (typeof predicateOrWait === 'object') {
+  } else {
     const { predicate, maxWaitTime } = predicateOrWait;
     const safePredicate = withFailsafe(predicate, maxWaitTime, prompt);
 
@@ -78,12 +83,12 @@ async function handlePredicateOrWait(predicateOrWait: PredicateWithTimeout | num
 
 function withFailsafe(
   predicate: (...args: unknown[]) => Promise<boolean>,
-  timeout: number,
+  timeout: Duration,
   prompt: unknown
 ): () => Promise<boolean> {
   return async function () {
     const timeoutPromise = new Promise<boolean>((_, reject) =>
-      setTimeout(() => reject(new Error('Predicate timed out')), timeout)
+      setTimeout(() => reject(new Error('Predicate timed out')), timeout.milliseconds)
     );
 
     return Promise.race([predicate(prompt), timeoutPromise]);

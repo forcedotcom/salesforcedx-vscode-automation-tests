@@ -7,6 +7,7 @@
 
 export * from './apexUtils.ts';
 export * from './commandPrompt.ts';
+export * from './constants.ts';
 export * from './extensionUtils.ts';
 export * from './fileSystem.ts';
 export * from './lwcUtils.ts';
@@ -15,9 +16,11 @@ export * from './notifications.ts';
 export * from './outputView.ts';
 export * from './predicates.ts';
 export * from './sideBar.ts';
+export * from './settings.ts';
 export * from './statusBar.ts';
 export * from './terminalView.ts';
 export * from './screenshot.ts';
 export * from './visualforceUtils.ts';
 export * from './workbench.ts';
 export * from './types.ts';
+export * from './jsonUtils.ts';

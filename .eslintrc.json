@@ -3,22 +3,29 @@
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
-    }
+    },
+    "project": "./test/tsconfig.json"
   },
   "env": {
-    "es6": true,
+    "es2022": true,
     "node": true
   },
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint","import"],
+  "plugins": ["@typescript-eslint", "import"],
   "extends": ["plugin:@typescript-eslint/recommended", "prettier"],
   "rules": {
-    "import/extensions": ["error", "ignorePackages", {
-      "js": "never",
-      "jsx": "never",
-      "ts": "always",
-      "tsx": "never"
-    }]
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "always",
+        "tsx": "never"
+      }
+    ],
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/no-floating-promises": "warn"
   },
   "settings": {
     "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
