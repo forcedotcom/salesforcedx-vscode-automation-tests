@@ -7,8 +7,7 @@
 
 import clipboard from 'clipboardy';
 import { TerminalView, Workbench } from 'wdio-vscode-service';
-import { log, pause } from './miscellaneous.ts';
-import { Duration } from '@salesforce/kit';
+import { Duration, log, pause } from './miscellaneous.ts';
 import { executeQuickPick } from './commandPrompt.ts';
 
 import { Key } from 'webdriverio';
@@ -21,7 +20,10 @@ export async function getTerminalView(workbench: Workbench): Promise<TerminalVie
   return terminalView;
 }
 
-export async function getTerminalViewText(workbench: Workbench, seconds: Duration): Promise<string> {
+export async function getTerminalViewText(
+  workbench: Workbench,
+  seconds: Duration
+): Promise<string> {
   await executeQuickPick('Terminal: Focus Terminal', Duration.seconds(1));
   await pause(seconds);
 

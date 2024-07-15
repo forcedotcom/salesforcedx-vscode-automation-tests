@@ -6,9 +6,8 @@
  */
 
 import { executeQuickPick } from './commandPrompt.ts';
-import { getTextEditor, log, pause } from './miscellaneous.ts';
+import { Duration, getTextEditor, log, pause } from './miscellaneous.ts';
 import { getWorkbench } from './workbench.ts';
-import { Duration } from '@salesforce/kit';
 
 import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;

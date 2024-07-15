@@ -9,7 +9,6 @@ import path from 'path';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import { Workbench } from 'wdio-vscode-service';
-import { Duration } from '@salesforce/kit';
 import { WORKSPACE_SETTING_KEYS as WSK } from '../utilities/index.ts';
 
 describe('Deploy and Retrieve', async () => {
@@ -76,7 +75,7 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy with SFDX: Deploy This Source to Org - ST enabled', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'ST');
   });
@@ -84,7 +83,7 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy again (with no changes) - ST enabled', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
 
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'ST', 'Unchanged  ');
@@ -93,7 +92,7 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and deploy again - ST enabled', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Modify the file by adding a comment.
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -107,7 +106,7 @@ describe('Deploy and Retrieve', async () => {
   step('Retrieve with SFDX: Retrieve This Source from Org', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
 
     await runAndValidateCommand(workbench, 'Retrieve', 'from', 'ST');
@@ -116,7 +115,7 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and retrieve again', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Modify the file by changing the comment.
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -134,34 +133,40 @@ describe('Deploy and Retrieve', async () => {
   step('Prefer Deploy on Save when `Push or deploy on save` is enabled', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     await expect(await utilities.enableBooleanSetting(WSK.PUSH_OR_DEPLOY_ON_SAVE_ENABLED)).toBe(
       true
     );
-    await utilities.pause(Duration.seconds(3));
+    await utilities.pause(utilities.Duration.seconds(3));
 
     await expect(
       await utilities.enableBooleanSetting(WSK.PUSH_OR_DEPLOY_ON_SAVE_PREFER_DEPLOY_ON_SAVE)
     ).toBe(true);
 
     // Clear all notifications so clear output button is reachable
-    await utilities.executeQuickPick('Notifications: Clear All Notifications', Duration.seconds(1));
+    await utilities.executeQuickPick(
+      'Notifications: Clear All Notifications',
+      utilities.Duration.seconds(1)
+    );
 
     // Clear the Output view first.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
     // Modify the file and save to trigger deploy
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
     await textEditor.setTextAtLine(2, `\t// let's trigger deploy`);
     await textEditor.save();
-    await utilities.pause(Duration.seconds(5));
+    await utilities.pause(utilities.Duration.seconds(5));
 
     // At this point there should be no conflicts since this is a new class.
     await validateCommand(workbench, 'Deploy', 'to', 'on save');
   });
 
   step('Disable Source Tracking Setting', async () => {
-    await utilities.executeQuickPick('Notifications: Clear All Notifications', Duration.seconds(1));
+    await utilities.executeQuickPick(
+      'Notifications: Clear All Notifications',
+      utilities.Duration.seconds(1)
+    );
 
     await expect(
       await utilities.disableBooleanSetting(WSK.ENABLE_SOURCE_TRACKING_FOR_DEPLOY_AND_RETRIEVE)
@@ -171,7 +176,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.reloadAndEnableExtensions();
     await utilities.verifyExtensionsAreRunning(
       utilities.getExtensionsToVerifyActive(),
-      Duration.seconds(100)
+      utilities.Duration.seconds(100)
     );
   });
 
@@ -180,7 +185,7 @@ describe('Deploy and Retrieve', async () => {
     // Clear all notifications so clear output button is visible
     await utilities.executeQuickPick('Notifications: Clear All Notifications');
     // Clear the Output view first.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
 
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'no-ST');
@@ -189,7 +194,7 @@ describe('Deploy and Retrieve', async () => {
   step('Deploy again (with no changes) - ST disabled', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
     await utilities.getTextEditor(workbench, 'MyClass.cls');
 
     await runAndValidateCommand(workbench, 'Deploy', 'to', 'no-ST', 'Unchanged  ');
@@ -198,7 +203,7 @@ describe('Deploy and Retrieve', async () => {
   step('Modify the file and deploy again - ST disabled', async () => {
     const workbench = await utilities.getWorkbench();
     // Clear the Output view first.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Modify the file by adding a comment.
     const textEditor = await utilities.getTextEditor(workbench, 'MyClass.cls');
@@ -215,12 +220,15 @@ describe('Deploy and Retrieve', async () => {
     // Run SFDX: Push Source to Default Org and Ignore Conflicts to be in sync with remote
     await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org and Ignore Conflicts',
-      Duration.seconds(10)
+      utilities.Duration.seconds(10)
     );
     // Clear the Output view first.
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
-    await utilities.executeQuickPick('SFDX: Delete This from Project and Org', Duration.seconds(2));
+    await utilities.executeQuickPick(
+      'SFDX: Delete This from Project and Org',
+      utilities.Duration.seconds(2)
+    );
 
     // Make sure we get a confirmation dialog
     const confirmationDialogText =
@@ -275,7 +283,10 @@ describe('Deploy and Retrieve', async () => {
     type: string,
     prefix?: string
   ): Promise<void> => {
-    await utilities.executeQuickPick(`SFDX: ${operation} This Source ${fromTo} Org`, Duration.seconds(5));
+    await utilities.executeQuickPick(
+      `SFDX: ${operation} This Source ${fromTo} Org`,
+      utilities.Duration.seconds(5)
+    );
 
     await validateCommand(workbench, operation, fromTo, type, prefix);
   };

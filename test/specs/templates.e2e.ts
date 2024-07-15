@@ -11,7 +11,6 @@ import util from 'util';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import * as analyticsTemplate from '../testData/sampleAnalyticsTemplateData.ts';
-import { Duration } from '@salesforce/kit';
 
 const exec = util.promisify(child_process.exec);
 
@@ -190,7 +189,7 @@ describe('Templates', async () => {
     );
     // Zoom out so all tree items are visible
     const workbench = await utilities.getWorkbench();
-    await utilities.zoom('Out', 1, Duration.seconds(2));
+    await utilities.zoom('Out', 1, utilities.Duration.seconds(2));
     // Check for the presence of the directory, "auraComponent1".
     const filteredTreeViewItems = await utilities.getFilteredVisibleTreeViewItemLabels(
       workbench,
@@ -347,14 +346,14 @@ describe('Templates', async () => {
     // Using the Command palette, run SFDX: Create Lightning Web Component Test.
     const inputBox = await utilities.executeQuickPick(
       'SFDX: Create Lightning Web Component Test',
-      Duration.seconds(1)
+      utilities.Duration.seconds(1)
     );
 
     // Set the name of the new test to lightningWebComponent1.
     await inputBox.confirm();
     await inputBox.setText('lightningWebComponent1');
     await inputBox.confirm();
-    await utilities.pause(Duration.seconds(60));
+    await utilities.pause(utilities.Duration.seconds(60));
 
     const failureNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -482,13 +481,13 @@ describe('Templates', async () => {
     await utilities.clearOutputView();
     const inputBox = await utilities.executeQuickPick(
       'SFDX: Create Sample Analytics Template',
-      Duration.seconds(1)
+      utilities.Duration.seconds(1)
     );
 
     // Set the name of the new page to sat1
     await inputBox.setText('sat1');
     await inputBox.confirm();
-    await utilities.pause(Duration.seconds(1));
+    await utilities.pause(utilities.Duration.seconds(1));
 
     // Select the default directory (press Enter/Return).
     await inputBox.confirm();

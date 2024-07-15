@@ -6,8 +6,7 @@
  */
 
 import { Workbench } from 'wdio-vscode-service';
-import { debug, pause } from './miscellaneous.ts';
-import { Duration } from '@salesforce/kit';
+import { Duration, debug, pause } from './miscellaneous.ts';
 
 export async function getStatusBarItemWhichIncludes(
   workbench: Workbench,

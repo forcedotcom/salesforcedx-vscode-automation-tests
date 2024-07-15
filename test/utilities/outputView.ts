@@ -6,10 +6,9 @@
  */
 
 import clipboard from 'clipboardy';
-import { pause } from './miscellaneous.ts';
+import { Duration, pause } from './miscellaneous.ts';
 import { dismissAllNotifications } from './notifications.ts';
 import { executeQuickPick } from './commandPrompt.ts';
-import { Duration } from '@salesforce/kit';
 
 import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
@@ -53,14 +52,14 @@ export async function attemptToFindOutputPanelText(
   await selectOutputChannel(outputChannelName);
 
   while (attempts > 0) {
-      const outputViewText = await getOutputViewText();
+    const outputViewText = await getOutputViewText();
     if (outputViewText.includes(searchString)) {
       return outputViewText;
     }
 
     await pause(Duration.seconds(1));
     attempts--;
-    }
+  }
 
   return undefined;
 }
@@ -101,7 +100,7 @@ export async function getOperationTime(outputText: string): Promise<string> {
 }
 
 export async function clearOutputView(wait = Duration.seconds(1)) {
-  await executeQuickPick('View: Clear Output',wait);
+  await executeQuickPick('View: Clear Output', wait);
 }
 
 function formatTimeComponent(component: number, padLength: number = 2): string {

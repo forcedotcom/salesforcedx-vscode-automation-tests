@@ -6,9 +6,8 @@
  */
 
 import { InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
-import { log, pause } from './miscellaneous.ts';
+import { Duration, log, pause } from './miscellaneous.ts';
 import { getWorkbench } from './workbench.ts';
-import { Duration } from '@salesforce/kit';
 
 export async function openCommandPromptWithCommand(
   workbench: Workbench,
@@ -124,9 +123,9 @@ export async function waitForQuickPick(
 }
 /**
  * Runs exact command from command palette
- * @param command 
+ * @param command
  * @param wait - default is  1 second
- * @returns 
+ * @returns
  */
 export async function executeQuickPick(
   command: string,
@@ -168,4 +167,3 @@ export async function clickFilePathOkButton(): Promise<void> {
   }
   await pause(Duration.seconds(2));
 }
-

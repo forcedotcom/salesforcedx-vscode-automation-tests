@@ -6,9 +6,8 @@
  */
 
 import { DefaultTreeItem, TreeItem, ViewItem, Workbench, ViewSection } from 'wdio-vscode-service';
-import { pause } from './miscellaneous.ts';
+import { Duration, pause } from './miscellaneous.ts';
 import { fail } from 'assert';
-import { Duration } from '@salesforce/kit';
 
 export async function expandSideBar(
   workbench: Workbench,

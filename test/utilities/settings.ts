@@ -5,11 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Duration } from '@salesforce/kit';
 import { InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import * as changeCase from 'change-case';
 import { executeQuickPick } from './commandPrompt.ts';
-import { debug, findElementByText } from './miscellaneous.ts';
+import { debug, Duration, findElementByText } from './miscellaneous.ts';
 import { Key } from 'webdriverio';
 
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;

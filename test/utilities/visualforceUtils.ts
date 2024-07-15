@@ -6,14 +6,17 @@
  */
 
 import { runCommandFromCommandPrompt } from './commandPrompt.ts';
-import { getTextEditor, pause } from './miscellaneous.ts';
-import { Duration } from '@salesforce/kit';
+import { Duration, getTextEditor, pause } from './miscellaneous.ts';
 
 export async function createVisualforcePage(): Promise<void> {
   const workbench = await browser.getWorkbench();
 
   // Using the Command palette, run SFDX: Create Visualforce Page
-  const inputBox = await runCommandFromCommandPrompt(workbench, 'SFDX: Create Visualforce Page', Duration.seconds(1));
+  const inputBox = await runCommandFromCommandPrompt(
+    workbench,
+    'SFDX: Create Visualforce Page',
+    Duration.seconds(1)
+  );
 
   // Set the name of the new Visualforce Page
   await inputBox.setText('FooPage');
