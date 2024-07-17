@@ -5,20 +5,16 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import child_process from 'child_process';
 import fs from 'fs';
 import path from 'path';
-import util from 'util';
 import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
 import { EnvironmentSettings } from './environmentSettings.ts';
 import * as utilities from './utilities/index.ts';
 import { fail } from 'assert';
-
 import { fileURLToPath } from 'url';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const exec = util.promisify(child_process.exec);
 
 export class TestSetup {
   public testSuiteSuffixName: string;
@@ -58,10 +54,7 @@ export class TestSetup {
 
   public async tearDown(): Promise<void> {
     await this.checkForUncaughtErrors();
-    if (this.scratchOrgAliasName && !this.reuseScratchOrg) {
-      // The Terminal view can be a bit unreliable, so directly call exec() instead:
-      await exec(`sf org:delete:scratch --target-org ${this.scratchOrgAliasName} --no-prompt`);
-    }
+    await utilities.deleteScratchOrg(this.scratchOrgAliasName, this.reuseScratchOrg);
   }
 
   private async checkForUncaughtErrors(): Promise<void> {
@@ -202,31 +195,15 @@ export class TestSetup {
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
     const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
     utilities.log(`${this.testSuiteSuffixName} - calling sf org:display...`);
-    const sfOrgDisplayResult = await exec(
-      `sf org:display --target-org ${
-        EnvironmentSettings.getInstance().devHubAliasName
-      } --verbose --json`
-    );
-    const json = this.removedEscapedCharacters(sfOrgDisplayResult.stdout);
+    const sfOrgDisplayResult = await utilities.orgDisplay(EnvironmentSettings.getInstance().devHubUserName);
 
     // Now write the file.
-    fs.writeFileSync(authFilePath, json);
+    fs.writeFileSync(authFilePath, sfOrgDisplayResult.stdout);
     utilities.log(`${this.testSuiteSuffixName} - finished writing the file...`);
 
     // Call org:login:sfdx-url and read in the JSON that was just created.
     utilities.log(`${this.testSuiteSuffixName} - calling sf org:login:sfdx-url...`);
-    const sfSfdxUrlStoreResult = await exec(`sf org:login:sfdx-url -d -f ${authFilePath}`);
-    if (
-      !sfSfdxUrlStoreResult.stdout.includes(
-        `Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID`
-      )
-    ) {
-      throw new Error(
-        `In authorizeDevHub(), sfSfdxUrlStoreResult does not contain "Successfully authorized ${
-          EnvironmentSettings.getInstance().devHubUserName
-        } with org ID"`
-      );
-    }
+    await utilities.orgLoginSfdxUrl(authFilePath);
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished authorizeDevHub()`);
     utilities.log('');
@@ -247,9 +224,8 @@ export class TestSetup {
       throw new Error('Error: devHubUserName was not set.');
     }
 
-    const execResult = await exec('sf org:list --json');
-    const sfOrgListJson = this.removedEscapedCharacters(execResult.stdout);
-    const sfOrgListResult = JSON.parse(sfOrgListJson).result;
+    const execResult = await utilities.orgList();
+    const sfOrgListResult = JSON.parse(execResult.stdout).result;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const nonScratchOrgs = sfOrgListResult.nonScratchOrgs as any[];
 
@@ -261,7 +237,7 @@ export class TestSetup {
     }
 
     throw new Error(
-      `Error: matching devHub alias '${devHubAliasName}' and devHub user name '${devHubUserName}' was not found.  Please consult README.md and make sure DEV_HUB_ALIAS_NAME and DEV_HUB_USER_NAME are set correctly.`
+      `Error: matching devHub alias '${devHubAliasName}' and devHub user name '${devHubUserName}' was not found.\nPlease consult README.md and make sure DEV_HUB_ALIAS_NAME and DEV_HUB_USER_NAME are set correctly.`
     );
   }
 
@@ -280,9 +256,8 @@ export class TestSetup {
     if (this.reuseScratchOrg) {
       utilities.log(`${this.testSuiteSuffixName} - looking for a scratch org to reuse...`);
 
-      const sfOrgListResult = await exec('sf org:list --json');
-      const resultJson = this.removedEscapedCharacters(sfOrgListResult.stdout);
-      const scratchOrgs = JSON.parse(resultJson).result.scratchOrgs as { alias: string }[];
+      const sfOrgListResult = await utilities.orgList();
+      const scratchOrgs = JSON.parse(sfOrgListResult.stdout).result.scratchOrgs as { alias: string }[];
 
       const foundScratchOrg = scratchOrgs.find((scratchOrg) => {
         const alias = scratchOrg.alias as string;
@@ -324,17 +299,14 @@ export class TestSetup {
     const startDate = Date.now();
     const durationDays = 1;
 
-    utilities.log(`${this.testSuiteSuffixName} - calling "sf org:create:scratch"...`);
-    const sfOrgCreateResult = await exec(
-      `sf org:create:scratch --edition ${edition} --definition-file ${definitionFile} --alias ${this.scratchOrgAliasName} --duration-days ${durationDays} --set-default --json`
+    const sfOrgCreateResult = await utilities.scratchOrgCreate(
+      edition,
+      definitionFile,
+      this.scratchOrgAliasName,
+      durationDays
     );
-    utilities.log(`${this.testSuiteSuffixName} - ..."sf org:create:scratch" finished`);
-
-    utilities.log(`${this.testSuiteSuffixName} - calling removedEscapedCharacters()...`);
-    const json = this.removedEscapedCharacters(sfOrgCreateResult.stdout);
-
     utilities.log(`${this.testSuiteSuffixName} - calling JSON.parse()...`);
-    const result = JSON.parse(json).result;
+    const result = JSON.parse(sfOrgCreateResult.stdout).result;
 
     const endDate = Date.now();
     const time = endDate - startDate;
@@ -456,14 +428,6 @@ export class TestSetup {
         'In setDefaultOrg(), getStatusBarItemWhichIncludes() returned a scratchOrgStatusBarItem with a value of null (or undefined)'
       );
     }
-  }
-
-  private removedEscapedCharacters(stdout: string): string {
-    // When calling exec(), the JSON returned contains escaped characters.
-    // Removed the extra escaped characters and carriage returns.
-    const resultJson = stdout.replace(/\u001B\[\d\dm/g, '').replace(/\\n/g, '');
-
-    return resultJson;
   }
 
   private setJavaHomeConfigEntry(): void {

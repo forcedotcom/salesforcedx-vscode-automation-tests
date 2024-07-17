@@ -5,16 +5,12 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import child_process from 'child_process';
 import fs from 'fs';
 import { step, xstep } from 'mocha-steps';
 import path from 'path';
-import util from 'util';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import { Workbench } from 'wdio-vscode-service';
-
-const exec = util.promisify(child_process.exec);
 
 async function verifyPushSuccess(workbench: Workbench, wait = utilities.TEN_MINUTES) {
   const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -106,7 +102,10 @@ describe('Push and Pull', async () => {
 
   step('Push the Apex class', async () => {
     const workbench = await utilities.getWorkbench();
-    await utilities.executeQuickPick('SFDX: Push Source to Default Org', utilities.Duration.seconds(5));
+    await utilities.executeQuickPick(
+      'SFDX: Push Source to Default Org',
+      utilities.Duration.seconds(5)
+    );
 
     // At this point there should be no conflicts since this is a new class.
     await verifyPushSuccess(workbench);
@@ -121,7 +120,10 @@ describe('Push and Pull', async () => {
     await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Now push
-    await utilities.executeQuickPick('SFDX: Push Source to Default Org', utilities.Duration.seconds(5));
+    await utilities.executeQuickPick(
+      'SFDX: Push Source to Default Org',
+      utilities.Duration.seconds(5)
+    );
 
     // Check the output.
     await verifyPushSuccess(workbench);
@@ -140,7 +142,10 @@ describe('Push and Pull', async () => {
     await textEditor.setTextAtLine(3, '        // sample comment');
 
     // Push the file.
-    await utilities.executeQuickPick('SFDX: Push Source to Default Org', utilities.Duration.seconds(5));
+    await utilities.executeQuickPick(
+      'SFDX: Push Source to Default Org',
+      utilities.Duration.seconds(5)
+    );
 
     await verifyPushSuccess(workbench);
     await verifyPushAndPullOutputText(workbench, 'Push', 'to');
@@ -152,7 +157,10 @@ describe('Push and Pull', async () => {
     await textEditor.save();
 
     // An now push the changes.
-    await utilities.executeQuickPick('SFDX: Push Source to Default Org', utilities.Duration.seconds(5));
+    await utilities.executeQuickPick(
+      'SFDX: Push Source to Default Org',
+      utilities.Duration.seconds(5)
+    );
 
     await verifyPushSuccess(workbench);
     // Check the output.
@@ -189,7 +197,10 @@ describe('Push and Pull', async () => {
     // Clear the Output view first.
     await utilities.clearOutputView(utilities.Duration.seconds(2));
 
-    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', utilities.Duration.seconds(5));
+    await utilities.executeQuickPick(
+      'SFDX: Pull Source from Default Org',
+      utilities.Duration.seconds(5)
+    );
     // At this point there should be no conflicts since there have been no changes.
     await verifyPullSuccess(workbench);
     // Check the output.
@@ -204,7 +215,10 @@ describe('Push and Pull', async () => {
     await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // And pull again.
-    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', utilities.Duration.seconds(5));
+    await utilities.executeQuickPick(
+      'SFDX: Pull Source from Default Org',
+      utilities.Duration.seconds(5)
+    );
     // Check the output.
     await verifyPullSuccess(workbench);
     outputPanelText = await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
@@ -223,7 +237,10 @@ describe('Push and Pull', async () => {
     // Don't save the file just yet.
 
     // Pull the file.
-    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', utilities.Duration.seconds(5));
+    await utilities.executeQuickPick(
+      'SFDX: Pull Source from Default Org',
+      utilities.Duration.seconds(5)
+    );
     // Check the output.
     await verifyPullSuccess(workbench);
     await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
@@ -240,7 +257,10 @@ describe('Push and Pull', async () => {
     await textEditor.save();
 
     // An now pull the changes.
-    await utilities.executeQuickPick('SFDX: Pull Source from Default Org', utilities.Duration.seconds(5));
+    await utilities.executeQuickPick(
+      'SFDX: Pull Source from Default Org',
+      utilities.Duration.seconds(5)
+    );
     await verifyPullSuccess(workbench);
     await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
   });
@@ -259,7 +279,10 @@ describe('Push and Pull', async () => {
     await expect(extensionWasFound).toBe(true);
 
     //Run SFDX: View Changes in Default Org command to view remote changes
-    await utilities.executeQuickPick('SFDX: View Changes in Default Org', utilities.Duration.seconds(5));
+    await utilities.executeQuickPick(
+      'SFDX: View Changes in Default Org',
+      utilities.Duration.seconds(5)
+    );
 
     // Check the output.
     const outputPanelText = await utilities.attemptToFindOutputPanelText(
@@ -301,12 +324,7 @@ describe('Push and Pull', async () => {
     );
     fs.writeFileSync(systemAdminUserDefPath, JSON.stringify(systemAdminUserDef), 'utf8');
 
-    const sfOrgCreateUserResult = await exec(
-      `sf org:create:user --definition-file ${systemAdminUserDefPath} --target-org ${testSetup.scratchOrgAliasName}`
-    );
-    await expect(sfOrgCreateUserResult.stdout).toContain(
-      `Successfully created user "${adminEmailAddress}"`
-    );
+    await utilities.createUser(systemAdminUserDefPath, testSetup.scratchOrgAliasName);
   });
 
   xstep('Set the 2nd user as the default user', async () => {

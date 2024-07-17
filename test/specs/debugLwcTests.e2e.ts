@@ -4,19 +4,15 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import child_process from 'child_process';
 import { step, xstep } from 'mocha-steps';
 import { SideBarView, TreeItem } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import path from 'path';
-import util from 'util';
 import { fail } from 'assert';
 
 import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
-
-const exec = util.promisify(child_process.exec);
 
 describe('Debug LWC Tests', async () => {
   if (process.platform === 'darwin') {
@@ -36,9 +32,7 @@ describe('Debug LWC Tests', async () => {
       await utilities.createLwc('lwc2');
 
       // Install Jest unit testing tools for LWC
-      await exec(`sf force:lightning:lwc:test:setup`, {
-        cwd: testSetup.projectFolderPath
-      });
+      await utilities.installJestUTToolsForLwc(testSetup.projectFolderPath);
     });
 
     step('Verify Extension is Running', async () => {

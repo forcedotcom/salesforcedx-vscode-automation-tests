@@ -6,3 +6,9 @@
  */
 
 export type OrgEdition = 'developer' | 'enterprise';
+
+export type SfCommandRunResults = {
+  stdout: string;
+  stderr: string;
+  exitCode: number;
+};

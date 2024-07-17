@@ -5,14 +5,10 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import child_process from 'child_process';
 import fs from 'fs';
 import { step } from 'mocha-steps';
-import util from 'util';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import * as utilities from '../utilities/index.ts';
-
-const exec = util.promisify(child_process.exec);
 
 describe('An Initial SetUp', async () => {
   const environmentSettings = EnvironmentSettings.getInstance();
@@ -36,14 +32,16 @@ describe('An Initial SetUp', async () => {
     // create and write in a text file
     fs.writeFileSync(authFilePath, sfdxAuthUrl);
 
-    const authorizeOrg = await exec(`sf org:login:sfdx-url -d -f ${authFilePath}`);
+    const authorizeOrg = await utilities.orgLoginSfdxUrl(authFilePath);
     await expect(authorizeOrg.stdout).toContain(
       `Successfully authorized ${devHubUserName} with org ID ${orgId}`
     );
 
-    const setAlias = await exec(`sf alias:set ${devHubAliasName}=${devHubUserName}`);
+    const setAlias = await utilities.setAlias(devHubAliasName, devHubUserName);
     await expect(setAlias.stdout).toContain(devHubAliasName);
     await expect(setAlias.stdout).toContain(devHubUserName);
     await expect(setAlias.stdout).toContain('true');
   });
 });
+
+

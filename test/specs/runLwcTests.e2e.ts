@@ -4,16 +4,12 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import child_process from 'child_process';
 import { step, xstep } from 'mocha-steps';
 import { SideBarView, TreeItem } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import path from 'path';
-import util from 'util';
 import { fail } from 'assert';
-
-const exec = util.promisify(child_process.exec);
 
 describe('Run LWC Tests', async () => {
   if (process.platform === 'darwin') {
@@ -32,9 +28,7 @@ describe('Run LWC Tests', async () => {
       await utilities.createLwc('lwc2');
 
       // Install Jest unit testing tools for LWC
-      await exec(`sf force:lightning:lwc:test:setup`, {
-        cwd: testSetup.projectFolderPath
-      });
+      await utilities.installJestUTToolsForLwc(testSetup.projectFolderPath);
     });
 
     step('SFDX: Run All Lightning Web Component Tests from Command Palette', async () => {
