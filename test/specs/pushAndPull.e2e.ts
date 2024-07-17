@@ -358,7 +358,7 @@ describe('Push and Pull', async () => {
   // be fixed with the check in of his PR this week.
 
   after('Tear down and clean up the testing environment', async () => {
-    await testSetup.tearDown();
+    await testSetup?.tearDown();
   });
 
   /**

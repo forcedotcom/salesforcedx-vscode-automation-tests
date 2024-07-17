@@ -305,6 +305,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   });
 
   after('Tear down and clean up the testing environment', async () => {
-    await testSetup.tearDown();
+    await testSetup?.tearDown();
   });
 });

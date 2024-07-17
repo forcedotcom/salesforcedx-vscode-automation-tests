@@ -49,7 +49,7 @@ export async function createCustomObjects(testSetup: TestSetup): Promise<void> {
     }
     log(`source was: '${source}'`);
     log(`destination was: '${destination}'`);
-    await testSetup.tearDown();
+    await testSetup?.tearDown();
     throw error;
   }
 }

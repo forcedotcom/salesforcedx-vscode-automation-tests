@@ -303,7 +303,7 @@ describe('Apex Replay Debugger', async () => {
   });
 
   after('Tear down and clean up the testing environment', async () => {
-    await testSetup.tearDown();
+    await testSetup?.tearDown();
   });
 
   const continueDebugging = async (): Promise<void> => {

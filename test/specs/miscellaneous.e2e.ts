@@ -148,6 +148,6 @@ describe('Miscellaneous', async () => {
     utilities.log(
       `${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`
     );
-    await testSetup.tearDown();
+    await testSetup?.tearDown();
   });
 });
