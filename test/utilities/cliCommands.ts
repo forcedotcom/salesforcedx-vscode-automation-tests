@@ -1,4 +1,5 @@
-import { spawn, SpawnOptionsWithoutStdio } from 'child_process';
+import spawn from 'cross-spawn';
+import { SpawnOptionsWithoutStdio } from 'child_process';
 import { debug, log } from './miscellaneous.ts';
 import { OrgEdition, SfCommandRunResults } from './types.ts';
 
@@ -25,11 +26,11 @@ export async function runCliCommand(
     let stdout = '';
     let stderr = '';
 
-    sfProcess.stdout.on('data', (data) => {
+    sfProcess.stdout?.on('data', (data) => {
       stdout += data.toString();
     });
 
-    sfProcess.stderr.on('data', (data) => {
+    sfProcess.stderr?.on('data', (data) => {
       stderr += data.toString();
     });
 
