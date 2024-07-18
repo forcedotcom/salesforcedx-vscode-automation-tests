@@ -181,7 +181,7 @@ export async function installJestUTToolsForLwc(projectFolder: string | undefined
 
   if (jestInstallResult.exitCode) {
     log(
-      `alias failed. Exit code: ${jestInstallResult.exitCode}. \nRaw stderr: ${jestInstallResult.stderr}`
+      `setup lwc tests failed. Exit code: ${jestInstallResult.exitCode}. \nRaw stderr: ${jestInstallResult.stderr}`
     );
     throw new Error(jestInstallResult.stderr);
   }
@@ -204,7 +204,7 @@ export async function createUser(
   );
   if (sfOrgCreateUserResult.exitCode) {
     log(
-      `org crate user failed Exit code: ${sfOrgCreateUserResult.exitCode}. \nRaw stderr: ${sfOrgCreateUserResult.stderr}`
+      `org create user failed Exit code: ${sfOrgCreateUserResult.exitCode}. \nRaw stderr: ${sfOrgCreateUserResult.stderr}`
     );
     throw new Error(sfOrgCreateUserResult.stderr);
   }
@@ -212,7 +212,7 @@ export async function createUser(
   return sfOrgCreateUserResult;
 }
 
-export function removedEscapedCharacters(result: string): string {
+export function removeEscapedCharacters(result: string): string {
   const resultJson = result.replace(/\u001B\[\d\dm/g, '').replace(/\\n/g, '');
 
   return resultJson;
