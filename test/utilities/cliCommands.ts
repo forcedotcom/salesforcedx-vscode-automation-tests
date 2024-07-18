@@ -72,8 +72,8 @@ export async function deleteScratchOrg(
 export async function orgLoginSfdxUrl(authFilePath: string): Promise<SfCommandRunResults> {
   const sfSfdxUrlStoreResult = await runCliCommand('org:login:sfdx-url', '-d', '-f', authFilePath);
   if (
-    sfSfdxUrlStoreResult.exitCode ||
-    !sfSfdxUrlStoreResult.stdout.includes(
+    !sfSfdxUrlStoreResult.exitCode ||
+    sfSfdxUrlStoreResult.stdout.includes(
       `Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID`
     )
   ) {
