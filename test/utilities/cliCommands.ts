@@ -81,7 +81,7 @@ export async function orgLoginSfdxUrl(
     debug('sfSfdxUrlStoreResult.exitCode = ' + sfSfdxUrlStoreResult.exitCode);
     debug('sfSfdxUrlStoreResult.stdout = ' + sfSfdxUrlStoreResult.stdout);
     throw new Error(
-      `In authorizeDevHub(), sfSfdxUrlStoreResult does not contain "Successfully authorized ${username} with org ID"`
+      `orgLoginSfdxUrl failed with exit code ${sfSfdxUrlStoreResult.exitCode}\nRaw stderr: ${sfSfdxUrlStoreResult.stderr}\nRaw stdout: ${sfSfdxUrlStoreResult.stdout}`
     );
   }
   debug(`orgLoginSfdxUrl results ${JSON.stringify(sfSfdxUrlStoreResult)}`);
