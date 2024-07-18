@@ -2,7 +2,7 @@ import { spawn, SpawnOptionsWithoutStdio } from 'child_process';
 import { debug, log } from './miscellaneous.ts';
 import { OrgEdition, SfCommandRunResults } from './types.ts';
 
-export type NONE = 'NONE'
+export type NONE = 'NONE';
 
 export async function runCliCommand(
   command: string,
@@ -70,14 +70,10 @@ export async function deleteScratchOrg(
 }
 
 export async function orgLoginSfdxUrl(
-  username: string,
   authFilePath: string
 ): Promise<SfCommandRunResults> {
   const sfSfdxUrlStoreResult = await runCliCommand('org:login:sfdx-url', '-d', '-f', authFilePath);
-  if (
-    sfSfdxUrlStoreResult.exitCode > 0 ||
-    !sfSfdxUrlStoreResult.stdout.includes(`Successfully authorized ${username} with org ID`)
-  ) {
+  if (sfSfdxUrlStoreResult.exitCode > 0) {
     debug('sfSfdxUrlStoreResult.exitCode = ' + sfSfdxUrlStoreResult.exitCode);
     debug('sfSfdxUrlStoreResult.stdout = ' + sfSfdxUrlStoreResult.stdout);
     throw new Error(

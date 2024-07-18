@@ -203,7 +203,7 @@ export class TestSetup {
 
     // Call org:login:sfdx-url and read in the JSON that was just created.
     utilities.log(`${this.testSuiteSuffixName} - calling sf org:login:sfdx-url...`);
-    await utilities.orgLoginSfdxUrl(EnvironmentSettings.getInstance().devHubUserName, authFilePath);
+    await utilities.orgLoginSfdxUrl(authFilePath);
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished authorizeDevHub()`);
     utilities.log('');

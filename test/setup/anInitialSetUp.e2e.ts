@@ -19,14 +19,6 @@ describe('An Initial SetUp', async () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let scratchOrg: any;
 
-  step('Countdown', async () => {
-    utilities.log('About to start authorizing to devhub');
-    for (let i = 5; i > 0; i--) {
-      utilities.log(`${i}...`);
-      await utilities.pause(utilities.Duration.seconds(1));
-    }
-  });
-
   step('Authorize to Testing Org', async () => {
     const sfdxAuthUrl = String(SFDX_AUTH_URL);
     const authFilePath = 'authFile.txt';
@@ -34,7 +26,7 @@ describe('An Initial SetUp', async () => {
     // create and write in a text file
     fs.writeFileSync(authFilePath, sfdxAuthUrl);
 
-    const authorizeOrg = await utilities.orgLoginSfdxUrl(devHubUserName, authFilePath);
+    const authorizeOrg = await utilities.orgLoginSfdxUrl(authFilePath);
     await expect(authorizeOrg.stdout).toContain(
       `Successfully authorized ${devHubUserName} with org ID ${orgId}`
     );
@@ -45,7 +37,7 @@ describe('An Initial SetUp', async () => {
     await expect(setAlias.stdout).toContain('true');
   });
 
-  step('Create a scratch org', async() => {
+  step('Create a scratch org', async () => {
     const scratchOrgResult = await utilities.scratchOrgCreate('developer', 'NONE', 'foo', 1);
     await expect(scratchOrgResult.exitCode).toBe(0);
   });
@@ -72,5 +64,3 @@ describe('An Initial SetUp', async () => {
     }
   });
 });
-
-
