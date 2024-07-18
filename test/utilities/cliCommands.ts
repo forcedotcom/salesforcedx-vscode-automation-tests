@@ -73,7 +73,7 @@ export async function orgLoginSfdxUrl(authFilePath: string): Promise<SfCommandRu
   const sfSfdxUrlStoreResult = await runCliCommand('org:login:sfdx-url', '-d', '-f', authFilePath);
   if (
     !sfSfdxUrlStoreResult.exitCode ||
-    sfSfdxUrlStoreResult.stdout.includes(
+    !sfSfdxUrlStoreResult.stdout.includes(
       `Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID`
     )
   ) {
