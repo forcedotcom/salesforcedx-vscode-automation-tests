@@ -173,7 +173,7 @@ describe('Deploy and Retrieve', async () => {
     ).toBe(false);
 
     // Reload window to update cache and get the setting behavior to work
-    await utilities.reloadAndEnableExtensions();
+    await utilities.reloadWindow();
     await utilities.verifyExtensionsAreRunning(
       utilities.getExtensionsToVerifyActive(),
       utilities.Duration.seconds(100)
@@ -223,7 +223,10 @@ describe('Deploy and Retrieve', async () => {
       utilities.Duration.seconds(10)
     );
     // Clear the Output view first.
-    await utilities.clearOutputView(utilities.Duration.seconds(2));
+    await utilities.clearOutputView();
+
+    // clear notifications
+    await utilities.executeQuickPick('Notifications: Clear All Notifications');
 
     await utilities.executeQuickPick(
       'SFDX: Delete This from Project and Org',
@@ -246,7 +249,8 @@ describe('Deploy and Retrieve', async () => {
       'class',
       'monaco-button monaco-text-button'
     );
-    await deleteSourceBtn.click();
+
+    await browser.elementClick(deleteSourceBtn.elementId);
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,

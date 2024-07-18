@@ -56,15 +56,37 @@ export function transformedUserName(): string {
  * @param type type of html tag we want to find
  * @param attribute attribute that holds the given text
  * @param labelText text of the element we want to find
+ * @param waitForClickable whether to wait until the element is clickable
+ * @param waitOptions options for waiting until the element is clickable
  * @returns element that contains the given text
  */
 export async function findElementByText(
   type: string,
   attribute: string,
-  labelText: string
+  labelText: string,
+  waitForClickable: boolean | undefined = false,
+  waitOptions?: {
+    timeout?: Duration;
+    interval?: Duration;
+    reverse?: boolean;
+    timeoutMsg?: string;
+  }
 ): Promise<WebdriverIO.Element> {
+  debug(`findElementByText ${type}[${attribute}="${labelText}"]`);
   const element = await $(`${type}[${attribute}="${labelText}"]`);
-  return element!;
+  if (!element) {
+    throw new Error(`Element with selector: "${type}[${attribute}=\"${labelText}\"]" not found}`);
+  }
+  if (waitForClickable) {
+    await element.waitForClickable({
+      timeout: waitOptions?.timeout?.milliseconds ?? Duration.seconds(5).milliseconds,
+      interval: waitOptions?.interval?.milliseconds ?? Duration.milliseconds(500).milliseconds,
+      reverse: waitOptions?.reverse,
+      timeoutMsg: waitOptions?.timeoutMsg
+    });
+  }
+
+  return element;
 }
 
 /**

@@ -6,7 +6,7 @@
  */
 
 import { Workbench } from 'wdio-vscode-service';
-import { Duration, log, pause } from './miscellaneous.ts';
+import { debug, Duration, log, pause } from './miscellaneous.ts';
 import { getWorkbench } from './workbench.ts';
 
 export async function waitForNotificationToGoAway(
@@ -65,6 +65,7 @@ export async function notificationIsPresentWithTimeout(
   durationInSeconds: Duration,
   matchExactString: boolean = true
 ): Promise<boolean> {
+  debug(`notificationIsPresentWithTimeout for message "${notificationMessage}"`);
   const startDate = new Date();
   let currentDate: Date;
   let secondsPassed: number = 0;
@@ -121,21 +122,28 @@ export async function dismissNotification(
   }
 }
 
-export async function attemptToFindNotification(
+export async function acceptNotification(
   workbench: Workbench,
   notificationMessage: string,
+  actionName: string,
   attempts: number
-): Promise<boolean> {
+): Promise<void> {
   while (attempts > 0) {
-    if (await notificationIsPresent(workbench, notificationMessage)) {
-      return true;
+    const notifications = await workbench.getNotifications();
+    for (const notification of notifications) {
+      const message = await notification.getMessage();
+      if (message === notificationMessage) {
+        await notification.takeAction(actionName);
+        return;
+      }
     }
 
     await pause(Duration.seconds(1));
     attempts--;
   }
-
-  return false;
+  throw new Error(
+    `Could not take action ${actionName} for notification with message ${notificationMessage}`
+  );
 }
 
 export async function dismissAllNotifications(): Promise<void> {
