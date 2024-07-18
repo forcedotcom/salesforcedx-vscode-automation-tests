@@ -77,6 +77,8 @@ export async function orgLoginSfdxUrl(authFilePath: string): Promise<SfCommandRu
       `Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID`
     )
   ) {
+    log('sfSfdxUrlStoreResult.exitCode = ' + sfSfdxUrlStoreResult.exitCode);
+    log('sfSfdxUrlStoreResult.stdout = ' + sfSfdxUrlStoreResult.stdout);
     throw new Error(
       `In authorizeDevHub(), sfSfdxUrlStoreResult does not contain "Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID"`
     );
