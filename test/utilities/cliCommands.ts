@@ -1,7 +1,8 @@
 import { spawn, SpawnOptionsWithoutStdio } from 'child_process';
 import { debug, log } from './miscellaneous.ts';
-import { EnvironmentSettings } from '../environmentSettings.ts';
-import { SfCommandRunResults } from './types.ts';
+import { OrgEdition, SfCommandRunResults } from './types.ts';
+
+export type NONE = 'NONE'
 
 export async function runCliCommand(
   command: string,
@@ -35,7 +36,7 @@ export async function runCliCommand(
     sfProcess.on('close', (code) => {
       // Post-command processing
       const result: SfCommandRunResults = { stdout, stderr, exitCode: code ?? 0 };
-      result.stdout = hadJsonFlag ? removedEscapedCharacters(result.stdout) : result.stdout;
+      result.stdout = hadJsonFlag ? removeEscapedCharacters(result.stdout) : result.stdout;
       // Perform any necessary post-processing here
       // For example, you can modify the result object or log additional information
       log(`Command finished with exit code ${result.exitCode}`);
@@ -60,27 +61,27 @@ export async function deleteScratchOrg(
       orgAliasName,
       '--no-prompt'
     );
-    if (sfOrgDeleteResults.exitCode) {
+    if (sfOrgDeleteResults.exitCode > 0) {
       log(
-        `deleteScratchOrg for org ${orgAliasName} failed with exit code ${sfOrgDeleteResults.exitCode}.`
+        `deleteScratchOrg for org ${orgAliasName} failed with exit code ${sfOrgDeleteResults.exitCode}.\nRaw stderr ${sfOrgDeleteResults.stderr}.`
       );
-      log(`deleteScratchOrg for org ${orgAliasName} stderr ${sfOrgDeleteResults.stderr}.`);
     }
   }
 }
 
-export async function orgLoginSfdxUrl(authFilePath: string): Promise<SfCommandRunResults> {
+export async function orgLoginSfdxUrl(
+  username: string,
+  authFilePath: string
+): Promise<SfCommandRunResults> {
   const sfSfdxUrlStoreResult = await runCliCommand('org:login:sfdx-url', '-d', '-f', authFilePath);
   if (
-    !sfSfdxUrlStoreResult.exitCode ||
-    !sfSfdxUrlStoreResult.stdout.includes(
-      `Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID`
-    )
+    sfSfdxUrlStoreResult.exitCode > 0 ||
+    !sfSfdxUrlStoreResult.stdout.includes(`Successfully authorized ${username} with org ID`)
   ) {
-    log('sfSfdxUrlStoreResult.exitCode = ' + sfSfdxUrlStoreResult.exitCode);
-    log('sfSfdxUrlStoreResult.stdout = ' + sfSfdxUrlStoreResult.stdout);
+    debug('sfSfdxUrlStoreResult.exitCode = ' + sfSfdxUrlStoreResult.exitCode);
+    debug('sfSfdxUrlStoreResult.stdout = ' + sfSfdxUrlStoreResult.stdout);
     throw new Error(
-      `In authorizeDevHub(), sfSfdxUrlStoreResult does not contain "Successfully authorized ${EnvironmentSettings.getInstance().devHubUserName} with org ID"`
+      `In authorizeDevHub(), sfSfdxUrlStoreResult does not contain "Successfully authorized ${username} with org ID"`
     );
   }
   debug(`orgLoginSfdxUrl results ${JSON.stringify(sfSfdxUrlStoreResult)}`);
@@ -95,13 +96,10 @@ export async function orgDisplay(usernameOrAlias: string): Promise<SfCommandRunR
     '--verbose',
     '--json'
   );
-  if (sfOrgDisplayResult.exitCode) {
-    log(
-      `sf org display failed with exit code: ${sfOrgDisplayResult.exitCode}.\n${sfOrgDisplayResult.stderr}`
-    );
-    throw new Error(
-      `sf org display failed with exit code: ${sfOrgDisplayResult.exitCode}.\n${sfOrgDisplayResult.stderr}`
-    );
+  if (sfOrgDisplayResult.exitCode > 0) {
+    const message = `sf org display failed with exit code: ${sfOrgDisplayResult.exitCode}.\n${sfOrgDisplayResult.stderr}`;
+    log(message);
+    throw new Error(message);
   }
   debug(`orgDisplay results ${JSON.stringify(sfOrgDisplayResult)}`);
   return sfOrgDisplayResult;
@@ -109,21 +107,18 @@ export async function orgDisplay(usernameOrAlias: string): Promise<SfCommandRunR
 
 export async function orgList(): Promise<SfCommandRunResults> {
   const sfOrgListResult = await runCliCommand('org:list', '--json');
-  if (sfOrgListResult.exitCode) {
-    log(
-      `org list failed with exit code ${sfOrgListResult.exitCode}\n stderr ${sfOrgListResult.stderr}`
-    );
-    throw new Error(
-      `org list failed with exit code ${sfOrgListResult.exitCode}\n stderr ${sfOrgListResult.stderr}`
-    );
+  if (sfOrgListResult.exitCode > 0) {
+    const message = `org list failed with exit code ${sfOrgListResult.exitCode}\n stderr ${sfOrgListResult.stderr}`;
+    log(message);
+    throw new Error(message);
   }
   debug(`orgList results ${JSON.stringify(sfOrgListResult)}`);
   return sfOrgListResult;
 }
 
 export async function scratchOrgCreate(
-  edition: string,
-  definitionFile: string,
+  edition: OrgEdition,
+  definitionFileOrNone: string | NONE,
   scratchOrgAliasName: string,
   durationDays: number
 ): Promise<SfCommandRunResults> {
@@ -131,19 +126,18 @@ export async function scratchOrgCreate(
   const args = [
     '--edition',
     edition,
-    '--definition-file',
-    definitionFile,
     '--alias',
     scratchOrgAliasName,
     '--duration-days',
     durationDays.toString(),
     '--set-default',
-    '--json'
+    '--json',
+    ...(definitionFileOrNone !== 'NONE' ? ['--definition-file', definitionFileOrNone] : [])
   ];
 
   const sfOrgCreateResult = await runCliCommand('org:create:scratch', ...args);
 
-  if (sfOrgCreateResult.exitCode) {
+  if (sfOrgCreateResult.exitCode > 0) {
     log(
       `create scratch org failed. Exit code: ${sfOrgCreateResult.exitCode}. \ncreate scratch org failed. Raw stderr: ${sfOrgCreateResult.stderr}`
     );
@@ -161,7 +155,7 @@ export async function setAlias(
   devHubUserName: string
 ): Promise<SfCommandRunResults> {
   const setAliasResult = await runCliCommand('alias:set', `${devHubAliasName}=${devHubUserName}`);
-  if (setAliasResult.exitCode) {
+  if (setAliasResult.exitCode > 0) {
     log(
       `alias failed. Exit code: ${setAliasResult.exitCode}. \nRaw stderr: ${setAliasResult.stderr}`
     );
@@ -179,7 +173,7 @@ export async function installJestUTToolsForLwc(projectFolder: string | undefined
     cwd: projectFolder
   });
 
-  if (jestInstallResult.exitCode) {
+  if (jestInstallResult.exitCode > 0) {
     log(
       `setup lwc tests failed. Exit code: ${jestInstallResult.exitCode}. \nRaw stderr: ${jestInstallResult.stderr}`
     );
@@ -202,7 +196,7 @@ export async function createUser(
     '--target-org',
     targetOrg
   );
-  if (sfOrgCreateUserResult.exitCode) {
+  if (sfOrgCreateUserResult.exitCode > 0) {
     log(
       `org create user failed Exit code: ${sfOrgCreateUserResult.exitCode}. \nRaw stderr: ${sfOrgCreateUserResult.stderr}`
     );

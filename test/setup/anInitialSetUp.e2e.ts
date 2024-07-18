@@ -16,6 +16,8 @@ describe('An Initial SetUp', async () => {
   const devHubAliasName = environmentSettings.devHubAliasName;
   const SFDX_AUTH_URL = environmentSettings.sfdxAuthUrl;
   const orgId = environmentSettings.orgId;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let scratchOrg: any;
 
   step('Countdown', async () => {
     utilities.log('About to start authorizing to devhub');
@@ -32,7 +34,7 @@ describe('An Initial SetUp', async () => {
     // create and write in a text file
     fs.writeFileSync(authFilePath, sfdxAuthUrl);
 
-    const authorizeOrg = await utilities.orgLoginSfdxUrl(authFilePath);
+    const authorizeOrg = await utilities.orgLoginSfdxUrl(devHubUserName, authFilePath);
     await expect(authorizeOrg.stdout).toContain(
       `Successfully authorized ${devHubUserName} with org ID ${orgId}`
     );
@@ -41,6 +43,33 @@ describe('An Initial SetUp', async () => {
     await expect(setAlias.stdout).toContain(devHubAliasName);
     await expect(setAlias.stdout).toContain(devHubUserName);
     await expect(setAlias.stdout).toContain('true');
+  });
+
+  step('Create a scratch org', async() => {
+    const scratchOrgResult = await utilities.scratchOrgCreate('developer', 'NONE', 'foo', 1);
+    await expect(scratchOrgResult.exitCode).toBe(0);
+  });
+
+  step('Find scratch org using org list', async () => {
+    const orgListResult = await utilities.orgList();
+    await expect(orgListResult.exitCode).toBe(0);
+    const orgs = JSON.parse(orgListResult.stdout);
+    await expect(orgs).not.toBeUndefined();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    scratchOrg = orgs.result.scratchOrgs.find((org: any) => org.alias === 'foo');
+    await expect(scratchOrg).not.toBeUndefined();
+  });
+
+  step('Display org using org display', async () => {
+    const orgDisplayResult = await utilities.orgDisplay('foo');
+    const org = JSON.parse(orgDisplayResult.stdout);
+    await expect(org).not.toBeUndefined();
+  });
+
+  after('Delete the scratch org', async () => {
+    if (scratchOrg) {
+      await utilities.deleteScratchOrg('foo', false);
+    }
   });
 });
 
