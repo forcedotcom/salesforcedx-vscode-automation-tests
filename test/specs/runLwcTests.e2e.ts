@@ -4,17 +4,12 @@
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-import child_process from 'child_process';
 import { step, xstep } from 'mocha-steps';
 import { SideBarView, TreeItem } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import path from 'path';
-import util from 'util';
 import { fail } from 'assert';
-import { Duration } from '@salesforce/kit';
-
-const exec = util.promisify(child_process.exec);
 
 describe('Run LWC Tests', async () => {
   if (process.platform === 'darwin') {
@@ -33,9 +28,7 @@ describe('Run LWC Tests', async () => {
       await utilities.createLwc('lwc2');
 
       // Install Jest unit testing tools for LWC
-      await exec(`sf force:lightning:lwc:test:setup`, {
-        cwd: testSetup.projectFolderPath
-      });
+      await utilities.installJestUTToolsForLwc(testSetup.projectFolderPath);
     });
 
     step('SFDX: Run All Lightning Web Component Tests from Command Palette', async () => {
@@ -45,11 +38,17 @@ describe('Run LWC Tests', async () => {
       const workbench = await utilities.getWorkbench();
 
       // Run SFDX: Run All Lightning Web Component Tests.
-      await utilities.executeQuickPick('SFDX: Run All Lightning Web Component Tests', Duration.seconds(1));
+      await utilities.executeQuickPick(
+        'SFDX: Run All Lightning Web Component Tests',
+        utilities.Duration.seconds(1)
+      );
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(20));
+      const terminalText = await utilities.getTerminalViewText(
+        workbench,
+        utilities.Duration.seconds(20)
+      );
       await expect(terminalText).not.toBeUndefined();
       await expect(terminalText).toContain(
         `PASS  ${path.join(
@@ -84,15 +83,24 @@ describe('Run LWC Tests', async () => {
         `${testSetup.testSuiteSuffixName} - SFDX: Refresh Lightning Web Component Test Explorer`
       );
       const workbench = await utilities.getWorkbench();
-      await utilities.executeQuickPick('Testing: Focus on LWC Tests View', Duration.seconds(1));
+      await utilities.executeQuickPick(
+        'Testing: Focus on LWC Tests View',
+        utilities.Duration.seconds(1)
+      );
       // Run command SFDX: Refresh Lightning Web Component Test Explorer
-      await utilities.executeQuickPick('SFDX: Refresh Lightning Web Component Test Explorer', Duration.seconds(2));
+      await utilities.executeQuickPick(
+        'SFDX: Refresh Lightning Web Component Test Explorer',
+        utilities.Duration.seconds(2)
+      );
       // Open the Tests Sidebar
       const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
       let lwcTestsItems = (await lwcTestsSection.getVisibleItems()) as TreeItem[];
 
       // Run command SFDX: Run All Lightning Web Component Tests
-      await utilities.executeQuickPick('SFDX: Run All Lightning Web Component Tests', Duration.seconds(2));
+      await utilities.executeQuickPick(
+        'SFDX: Run All Lightning Web Component Tests',
+        utilities.Duration.seconds(2)
+      );
 
       // Get tree items again
       lwcTestsItems = (await lwcTestsSection.getVisibleItems()) as TreeItem[];
@@ -110,7 +118,10 @@ describe('Run LWC Tests', async () => {
       }
 
       // Run command SFDX: Refresh Lightning Web Component Test Explorer again to reset status
-      await utilities.executeQuickPick('SFDX: Refresh Lightning Web Component Test Explorer', Duration.seconds(2));
+      await utilities.executeQuickPick(
+        'SFDX: Refresh Lightning Web Component Test Explorer',
+        utilities.Duration.seconds(2)
+      );
 
       // Get tree items again
       lwcTestsItems = (await lwcTestsSection.getVisibleItems()) as TreeItem[];
@@ -166,7 +177,10 @@ describe('Run LWC Tests', async () => {
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
+      const terminalText = await utilities.getTerminalViewText(
+        workbench,
+        utilities.Duration.seconds(15)
+      );
       await expect(terminalText).not.toBeUndefined();
       await expect(terminalText).toContain(
         `PASS  ${path.join(
@@ -233,7 +247,10 @@ describe('Run LWC Tests', async () => {
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
+      const terminalText = await utilities.getTerminalViewText(
+        workbench,
+        utilities.Duration.seconds(15)
+      );
       await expect(terminalText).not.toBeUndefined();
       await expect(terminalText).toContain(
         `PASS  ${path.join(
@@ -296,7 +313,10 @@ describe('Run LWC Tests', async () => {
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
+      const terminalText = await utilities.getTerminalViewText(
+        workbench,
+        utilities.Duration.seconds(15)
+      );
       await expect(terminalText).not.toBeUndefined();
       await expect(terminalText).toContain(
         `PASS  ${path.join(
@@ -350,11 +370,17 @@ describe('Run LWC Tests', async () => {
       const workbench = await utilities.getWorkbench();
 
       // Run SFDX: Run Current Lightning Web Component Test File
-      await utilities.executeQuickPick('SFDX: Run Current Lightning Web Component Test File', Duration.seconds(1));
+      await utilities.executeQuickPick(
+        'SFDX: Run Current Lightning Web Component Test File',
+        utilities.Duration.seconds(1)
+      );
 
       // Verify test results are listed on vscode's Output section
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
+      const terminalText = await utilities.getTerminalViewText(
+        workbench,
+        utilities.Duration.seconds(15)
+      );
       await expect(terminalText).not.toBeUndefined();
       await expect(terminalText).toContain(
         `PASS  ${path.join(
@@ -401,7 +427,10 @@ describe('Run LWC Tests', async () => {
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
+      const terminalText = await utilities.getTerminalViewText(
+        workbench,
+        utilities.Duration.seconds(15)
+      );
       await expect(terminalText).not.toBeUndefined();
       await expect(terminalText).toContain(
         `PASS  ${path.join(
@@ -447,7 +476,10 @@ describe('Run LWC Tests', async () => {
 
       // Verify test results are listed on the terminal
       // Also verify that all tests pass
-      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
+      const terminalText = await utilities.getTerminalViewText(
+        workbench,
+        utilities.Duration.seconds(15)
+      );
       await expect(terminalText).not.toBeUndefined();
       await expect(terminalText).toContain(
         `PASS  ${path.join(
@@ -493,7 +525,10 @@ describe('Run LWC Tests', async () => {
       // Verify test results are listed on vscode's Output section
       // Also verify that all tests pass
       const workbench = await utilities.getWorkbench();
-      const terminalText = await utilities.getTerminalViewText(workbench, Duration.seconds(15));
+      const terminalText = await utilities.getTerminalViewText(
+        workbench,
+        utilities.Duration.seconds(15)
+      );
       await expect(terminalText).not.toBeUndefined();
       await expect(terminalText).toContain(
         `PASS  ${path.join(
@@ -524,7 +559,7 @@ describe('Run LWC Tests', async () => {
     });
 
     after('Tear down and clean up the testing environment', async () => {
-      await testSetup.tearDown();
+      await testSetup?.tearDown();
     });
   }
 });

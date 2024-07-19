@@ -11,16 +11,13 @@ import { EnvironmentSettings } from '../environmentSettings.ts';
 import { attemptToFindOutputPanelText, clearOutputView } from './outputView.ts';
 import { executeQuickPick } from './commandPrompt.ts';
 import { notificationIsPresentWithTimeout } from './notifications.ts';
-import { Duration } from '@salesforce/kit';
+import * as DurationKit from '@salesforce/kit';
 import path from 'path';
 import { getWorkbench } from './workbench.ts';
 import { PredicateWithTimeout } from './predicates.ts';
 
-export const FIVE_MINUTES = Duration.minutes(5);
-export const TEN_MINUTES = Duration.minutes(10);
-
 export async function pause(duration: Duration = Duration.seconds(1)): Promise<void> {
-  await sleep(duration.milliseconds * EnvironmentSettings.getInstance().throttleFactor);
+  await sleep(duration.milliseconds);
 }
 
 export function log(message: string): void {
@@ -136,3 +133,77 @@ export function isDuration(
 ): predicateOrWait is Duration {
   return (predicateOrWait as Duration).milliseconds !== undefined;
 }
+
+export enum Unit {
+  MINUTES = DurationKit.Duration.Unit.MINUTES,
+  MILLISECONDS = DurationKit.Duration.Unit.MILLISECONDS,
+  SECONDS = DurationKit.Duration.Unit.SECONDS,
+  HOURS = DurationKit.Duration.Unit.HOURS,
+  DAYS = DurationKit.Duration.Unit.DAYS,
+  WEEKS = DurationKit.Duration.Unit.WEEKS
+}
+
+export class Duration extends DurationKit.Duration {
+  private scaleFactor: number;
+
+  constructor(quantity: number, unit: Unit, scaleFactor?: number) {
+    super(quantity, unit);
+    if (scaleFactor !== undefined) {
+      this.scaleFactor = scaleFactor;
+    } else {
+      this.scaleFactor = EnvironmentSettings.getInstance().throttleFactor;
+    }
+  }
+
+  public get minutes(): number {
+    return super.minutes * this.scaleFactor;
+  }
+
+  public get hours(): number {
+    return super.hours * this.scaleFactor;
+  }
+
+  public get milliseconds(): number {
+    return super.milliseconds * this.scaleFactor;
+  }
+
+  public get seconds(): number {
+    return super.seconds * this.scaleFactor;
+  }
+
+  public get days(): number {
+    return super.days * this.scaleFactor;
+  }
+
+  public get weeks(): number {
+    return super.weeks * this.scaleFactor;
+  }
+
+  // Static methods for creating new instances without specifying scaleFactor
+  public static milliseconds(quantity: number): Duration {
+    return new Duration(quantity, Unit.MILLISECONDS);
+  }
+
+  public static seconds(quantity: number): Duration {
+    return new Duration(quantity, Unit.SECONDS);
+  }
+
+  public static minutes(quantity: number): Duration {
+    return new Duration(quantity, Unit.MINUTES);
+  }
+
+  public static hours(quantity: number): Duration {
+    return new Duration(quantity, Unit.HOURS);
+  }
+
+  public static days(quantity: number): Duration {
+    return new Duration(quantity, Unit.DAYS);
+  }
+
+  public static weeks(quantity: number): Duration {
+    return new Duration(quantity, Unit.WEEKS);
+  }
+}
+
+export const FIVE_MINUTES = Duration.minutes(5);
+export const TEN_MINUTES = Duration.minutes(10);

@@ -1,8 +1,7 @@
 import { Workbench } from 'wdio-vscode-service';
-import { isDuration, log, pause } from './miscellaneous.ts';
+import { Duration, isDuration, log, pause } from './miscellaneous.ts';
 import { executeQuickPick } from './commandPrompt.ts';
 import { PredicateWithTimeout } from './predicates.ts';
-import { Duration } from '@salesforce/kit';
 
 export async function getWorkbench(wait = 5): Promise<Workbench> {
   return await (await browser.getWorkbench()).wait(wait * 1_000);

@@ -8,7 +8,6 @@ import { step } from 'mocha-steps';
 import { DefaultTreeItem, TreeItem } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
-import { Duration } from '@salesforce/kit';
 
 describe('SObjects Definitions', async () => {
   let testSetup: TestSetup;
@@ -68,9 +67,9 @@ describe('SObjects Definitions', async () => {
     const workbench = await utilities.getWorkbench();
     await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org',
-      Duration.seconds(5)
+      utilities.Duration.seconds(5)
     );
-    await utilities.pause(Duration.seconds(1));
+    await utilities.pause(utilities.Duration.seconds(1));
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -90,14 +89,14 @@ describe('SObjects Definitions', async () => {
 
   step('Refresh SObject Definitions for Custom SObjects', async () => {
     const workbench = await utilities.getWorkbench();
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
     const prompt = await utilities.executeQuickPick(
       'SFDX: Refresh SObject Definitions',
-      Duration.seconds(2)
+      utilities.Duration.seconds(2)
     );
     await prompt.setText('Custom SObjects');
     await prompt.selectQuickPick('Custom SObjects');
-    await utilities.pause(Duration.seconds(1));
+    await utilities.pause(utilities.Duration.seconds(1));
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -134,14 +133,14 @@ describe('SObjects Definitions', async () => {
     await expect(sfdxTreeItem).not.toEqual(undefined);
     await sfdxTreeItem.expand();
     await expect(await sfdxTreeItem.isExpanded()).toBe(true);
-    await utilities.pause(Duration.seconds(1));
+    await utilities.pause(utilities.Duration.seconds(1));
 
     // Verify if 'tools' folder is within '.sfdx'
     const toolsTreeItem = (await sfdxTreeItem.findChildItem('tools')) as TreeItem;
     await expect(toolsTreeItem).not.toEqual(undefined);
     await toolsTreeItem.expand();
     await expect(await toolsTreeItem.isExpanded()).toBe(true);
-    await utilities.pause(Duration.seconds(1));
+    await utilities.pause(utilities.Duration.seconds(1));
 
     // Verify if 'sobjects' folder is within 'tools'
     let sobjectsTreeItem = await utilities.getVisibleChild(sfdxTreeItem, 'sobjects');
@@ -150,7 +149,7 @@ describe('SObjects Definitions', async () => {
 
     await sobjectsTreeItem.expand();
     await expect(await sobjectsTreeItem.isExpanded()).toBe(true);
-    await utilities.pause(Duration.seconds(1));
+    await utilities.pause(utilities.Duration.seconds(1));
 
     // Verify if 'customObjects' folder is within 'sobjects'
     let customObjectsTreeItem = await utilities.getVisibleChild(sfdxTreeItem, 'customObjects');
@@ -159,7 +158,7 @@ describe('SObjects Definitions', async () => {
 
     await customObjectsTreeItem.expand();
     await expect(await customObjectsTreeItem.isExpanded()).toBe(true);
-    await utilities.pause(Duration.seconds(1));
+    await utilities.pause(utilities.Duration.seconds(1));
 
     // Verify if custom Objects Customer__c and Product__c are within 'customObjects' folder
     const customerCustomObject = await treeViewSection.findItem('Customer__c.cls');
@@ -170,14 +169,14 @@ describe('SObjects Definitions', async () => {
 
   step('Refresh SObject Definitions for Standard SObjects', async () => {
     const workbench = await utilities.getWorkbench();
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
     const prompt = await utilities.executeQuickPick(
       'SFDX: Refresh SObject Definitions',
-      Duration.seconds(5)
+      utilities.Duration.seconds(5)
     );
     await prompt.setText('Standard SObjects');
     await prompt.selectQuickPick('Standard SObjects');
-    await utilities.pause(Duration.seconds(1));
+    await utilities.pause(utilities.Duration.seconds(1));
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -215,7 +214,7 @@ describe('SObjects Definitions', async () => {
     await expect(standardObjectsTreeItem).not.toEqual(undefined);
     await standardObjectsTreeItem.expand();
     await expect(await standardObjectsTreeItem.isExpanded()).toBe(true);
-    await utilities.pause(Duration.seconds(1));
+    await utilities.pause(utilities.Duration.seconds(1));
 
     const accountSObject = await treeViewSection.findItem('Account.cls');
     await expect(accountSObject).not.toBe(undefined);
@@ -232,15 +231,15 @@ describe('SObjects Definitions', async () => {
   step('Refresh SObject Definitions for All SObjects', async () => {
     // Clear the output for correct test validation.
     const workbench = await utilities.getWorkbench();
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     const prompt = await utilities.executeQuickPick(
       'SFDX: Refresh SObject Definitions',
-      Duration.seconds(5)
+      utilities.Duration.seconds(5)
     );
     await prompt.setText('All SObjects');
     await prompt.selectQuickPick('All SObjects');
-    await utilities.pause(Duration.seconds(1));
+    await utilities.pause(utilities.Duration.seconds(1));
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       workbench,
@@ -275,6 +274,6 @@ describe('SObjects Definitions', async () => {
   });
 
   after('Tear down and clean up the testing environment', async () => {
-    await testSetup.tearDown();
+    await testSetup?.tearDown();
   });
 });

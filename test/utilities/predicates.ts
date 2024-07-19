@@ -1,4 +1,4 @@
-import { Duration } from '@salesforce/kit';
+import { Duration } from './miscellaneous.ts';
 
 export interface PredicateWithTimeout {
   predicate: () => Promise<boolean>;
@@ -12,15 +12,18 @@ export const standardPredicates = {
   },
   waitForCondition: async (condition: () => boolean) => {
     while (!condition()) {
-      await new Promise(resolve => setTimeout(resolve, 100)); // Adjust polling interval as needed
+      await new Promise((resolve) => setTimeout(resolve, 100)); // Adjust polling interval as needed
     }
     return true;
-  },
+  }
 };
 
-export function createPredicateWithTimeout(predicate: () => Promise<boolean>, maxWaitTime: Duration): PredicateWithTimeout {
+export function createPredicateWithTimeout(
+  predicate: () => Promise<boolean>,
+  maxWaitTime: Duration
+): PredicateWithTimeout {
   return {
     predicate,
-    maxWaitTime,
+    maxWaitTime
   };
 }

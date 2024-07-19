@@ -6,9 +6,8 @@
  */
 
 import { Workbench } from 'wdio-vscode-service';
-import { log, pause } from './miscellaneous.ts';
+import { Duration, log, pause } from './miscellaneous.ts';
 import { getWorkbench } from './workbench.ts';
-import { Duration } from '@salesforce/kit';
 
 export async function waitForNotificationToGoAway(
   workbench: Workbench,
@@ -77,7 +76,7 @@ export async function notificationIsPresentWithTimeout(
 
     // If there are no notifications present, wait 3 seconds before trying again
     if (notifications.length === 0) {
-     await pause(Duration.seconds(3));
+      await pause(Duration.seconds(3));
     }
 
     // If there are notifications present, check each one to see if it matches
@@ -95,7 +94,7 @@ export async function notificationIsPresentWithTimeout(
           }
         }
       }
-     await pause(Duration.seconds(1));
+      await pause(Duration.seconds(1));
     }
 
     // Get the amount of time that passed

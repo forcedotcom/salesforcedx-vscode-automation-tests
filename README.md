@@ -51,6 +51,9 @@ The following is a list of environment variables that are used with this project
 - THROTTLE_FACTOR
   - Default value: `1`
 
+- SFDX_AUTH_URL
+  - Provides the dev hub auth URL to be used to authenticate the dev hub as part of test setup. There is no default value.
+
 ### Dev Hub
 
 A requirement of this project is for a Dev Hub to have been enabled on the user's machine. The default Dev Hub name is "vscodeOrg" and the default username is "svcideebot@salesforce.com", though this can be configured with the `DEV_HUB_ALIAS_NAME` and `DEV_HUB_USER_NAME` environment variables.

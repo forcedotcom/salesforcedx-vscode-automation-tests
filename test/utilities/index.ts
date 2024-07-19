@@ -6,6 +6,7 @@
  */
 
 export * from './apexUtils.ts';
+export * from './cliCommands.ts';
 export * from './commandPrompt.ts';
 export * from './constants.ts';
 export * from './extensionUtils.ts';

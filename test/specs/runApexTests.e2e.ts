@@ -8,7 +8,6 @@ import { step } from 'mocha-steps';
 import { InputBox, QuickOpenBox, SideBarView, TreeItem } from 'wdio-vscode-service';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
-import { Duration } from '@salesforce/kit';
 
 describe('Run Apex Tests', async () => {
   let prompt: QuickOpenBox | InputBox;
@@ -31,7 +30,7 @@ describe('Run Apex Tests', async () => {
     const workbench = await utilities.getWorkbench();
     await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org and Ignore Conflicts',
-      Duration.seconds(1)
+      utilities.Duration.seconds(1)
     );
 
     // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Ignore Conflicts successfully ran".
@@ -62,7 +61,7 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Click the "Run All Tests" code lens at the top of the class
     const codeLens = await textEditor.getCodeLens('Run All Tests');
@@ -101,7 +100,7 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Click the "Run Test" code lens at the top of one of the test methods
     const codeLens = await textEditor.getCodeLens('Run Test');
@@ -138,12 +137,12 @@ describe('Run Apex Tests', async () => {
     // Clear the Output view.
     await utilities.dismissAllNotifications();
     const workbench = await utilities.getWorkbench();
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Run SFDX: Run Apex tests.
     prompt = await utilities.executeQuickPick(
       'SFDX: Run Apex Tests',
-      Duration.seconds(1)
+      utilities.Duration.seconds(1)
     );
 
     // Select the "All Tests" option
@@ -180,12 +179,12 @@ describe('Run Apex Tests', async () => {
     // Clear the Output view.
     await utilities.dismissAllNotifications();
     const workbench = await utilities.getWorkbench();
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Run SFDX: Run Apex tests.
     prompt = await utilities.executeQuickPick(
       'SFDX: Run Apex Tests',
-      Duration.seconds(1)
+      utilities.Duration.seconds(1)
     );
 
     // Select the "ExampleApexClass1Test" file
@@ -243,7 +242,7 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Click the run tests button on the top right corner of the Test sidebar
     await apexTestsSection.elem.click();
@@ -301,7 +300,7 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Click the run test button that is shown to the right when you hover a test class name on the Test sidebar
     const apexTestItem = (await apexTestsSection.findItem('ExampleApexClass2Test')) as TreeItem;
@@ -356,7 +355,7 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Hover a test name under one of the test class sections and click the run button that is shown to the right of the test name on the Test sidebar
     const apexTestItem = (await apexTestsSection.findItem('validateSayHello')) as TreeItem;
@@ -407,7 +406,7 @@ describe('Run Apex Tests', async () => {
     const workbench = await utilities.getWorkbench();
     await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org and Ignore Conflicts',
-      Duration.seconds(1)
+      utilities.Duration.seconds(1)
     );
 
     // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Ignore Conflicts successfully ran".
@@ -420,12 +419,12 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Run SFDX: Run Apex tests.
     prompt = await utilities.executeQuickPick(
       'SFDX: Run Apex Tests',
-      Duration.seconds(1)
+      utilities.Duration.seconds(1)
     );
 
     // Select the "AccountServiceTest" file
@@ -454,12 +453,12 @@ describe('Run Apex Tests', async () => {
     const textEditor = await utilities.getTextEditor(workbench, 'AccountService.cls');
     await textEditor.setTextAtLine(6, '\t\t\tTickerSymbol = tickerSymbol');
     await textEditor.save();
-    await utilities.pause(Duration.seconds(1));
+    await utilities.pause(utilities.Duration.seconds(1));
 
     // Push source to org
     await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org and Ignore Conflicts',
-      Duration.seconds(1)
+      utilities.Duration.seconds(1)
     );
 
     // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Ignore Conflicts successfully ran".
@@ -472,12 +471,12 @@ describe('Run Apex Tests', async () => {
 
     // Clear the Output view.
     await utilities.dismissAllNotifications();
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Run SFDX: Run Apex tests to verify fix
     prompt = await utilities.executeQuickPick(
       'SFDX: Run Apex Tests',
-      Duration.seconds(1)
+      utilities.Duration.seconds(1)
     );
 
     // Select the "AccountServiceTest" file
@@ -508,13 +507,13 @@ describe('Run Apex Tests', async () => {
     const workbench = await utilities.getWorkbench();
     prompt = await utilities.executeQuickPick(
       'SFDX: Create Apex Test Suite',
-      Duration.seconds(1)
+      utilities.Duration.seconds(1)
     );
 
     // Set the name of the new Apex Test Suite
     await prompt.setText('ApexTestSuite');
     await prompt.confirm();
-    await utilities.pause(Duration.seconds(2));
+    await utilities.pause(utilities.Duration.seconds(2));
 
     // Choose tests that will belong to the new Apex Test Suite
     await browser.keys(['3']);
@@ -536,12 +535,12 @@ describe('Run Apex Tests', async () => {
     const workbench = await utilities.getWorkbench();
     prompt = await utilities.executeQuickPick(
       'SFDX: Add Tests to Apex Test Suite',
-      Duration.seconds(1)
+      utilities.Duration.seconds(1)
     );
 
     // Select the suite recently created called ApexTestSuite
     await prompt.selectQuickPick('ApexTestSuite');
-    await utilities.pause(Duration.seconds(2));
+    await utilities.pause(utilities.Duration.seconds(2));
 
     // Choose tests that will belong to the already created Apex Test Suite
     await browser.keys(['2']);
@@ -562,13 +561,10 @@ describe('Run Apex Tests', async () => {
     // Clear the Output view.
     await utilities.dismissAllNotifications();
     const workbench = await utilities.getWorkbench();
-    await utilities.clearOutputView(Duration.seconds(2));
+    await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     // Run SFDX: Run Apex Test Suite.
-    await utilities.executeQuickPick(
-      'SFDX: Run Apex Test Suite',
-      Duration.seconds(1)
-    );
+    await utilities.executeQuickPick('SFDX: Run Apex Test Suite', utilities.Duration.seconds(1));
 
     // Select the suite recently created called ApexTestSuite
     await prompt.selectQuickPick('ApexTestSuite');
@@ -603,6 +599,6 @@ describe('Run Apex Tests', async () => {
   });
 
   after('Tear down and clean up the testing environment', async () => {
-    await testSetup.tearDown();
+    await testSetup?.tearDown();
   });
 });

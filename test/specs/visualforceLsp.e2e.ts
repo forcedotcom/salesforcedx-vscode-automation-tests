@@ -8,7 +8,6 @@ import { step, xstep } from 'mocha-steps';
 import path from 'path';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
-import { Duration } from '@salesforce/kit';
 
 describe('Visualforce LSP', async () => {
   let testSetup: TestSetup;
@@ -63,7 +62,7 @@ describe('Visualforce LSP', async () => {
 
     // Using the Command palette, run Developer: Show Running Extensions
     await utilities.showRunningExtensions();
-    await utilities.zoom('Out', 4, Duration.seconds(1));
+    await utilities.zoom('Out', 4, utilities.Duration.seconds(1));
     // Verify Visualforce extension is present and running
 
     const foundExtensions = await utilities.findExtensionsInRunningExtensionsList([
@@ -82,7 +81,7 @@ describe('Visualforce LSP', async () => {
 
     // Go to definition through F12
     await browser.keys(['F12']);
-    await utilities.pause(Duration.seconds(1));
+    await utilities.pause(utilities.Duration.seconds(1));
 
     // TODO: go to definition is actually not working
 
@@ -98,7 +97,7 @@ describe('Visualforce LSP', async () => {
     const workbench = await utilities.getWorkbench();
     const textEditor = await utilities.getTextEditor(workbench, 'FooPage.page');
     await textEditor.typeTextAt(3, 1, '\t\t<apex:pageM');
-    await utilities.pause(Duration.seconds(1));
+    await utilities.pause(utilities.Duration.seconds(1));
 
     // Verify autocompletion options are present
     const autocompletionOptions = await $$('textarea.inputarea.monaco-mouse-cursor-text');
@@ -113,7 +112,7 @@ describe('Visualforce LSP', async () => {
     await browser.keys(['Enter']);
     await textEditor.typeText('/>');
     await textEditor.save();
-    await utilities.pause(Duration.seconds(1));
+    await utilities.pause(utilities.Duration.seconds(1));
     const line3Text = await textEditor.getTextAtLine(3);
     await expect(line3Text).toContain('apex:pageMessage');
   });
@@ -122,6 +121,6 @@ describe('Visualforce LSP', async () => {
     utilities.log(
       `${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`
     );
-    await testSetup.tearDown();
+    await testSetup?.tearDown();
   });
 });

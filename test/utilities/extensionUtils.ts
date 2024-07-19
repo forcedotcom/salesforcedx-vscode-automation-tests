@@ -5,14 +5,13 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { log } from './miscellaneous.ts';
+import { Duration, log } from './miscellaneous.ts';
 import fs from 'fs/promises';
 import path from 'path';
 import FastGlob from 'fast-glob';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import { exec } from 'child_process';
 import * as utilities from './index.ts';
-import { Duration } from '@salesforce/kit';
 
 export type ExtensionId =
   | 'salesforcedx-vscode'
@@ -277,7 +276,7 @@ export function getExtensionsToVerifyActive(
 ): ExtensionType[] {
   return extensions
     .filter((ext) => {
-    return ext.shouldVerifyActivation;
+      return ext.shouldVerifyActivation;
     })
     .filter(predicate);
 }
@@ -340,7 +339,7 @@ export async function verifyExtensionsAreRunning(
   const timeoutPromise = new Promise((_, reject) =>
     setTimeout(
       () => reject(new Error('findExtensionsInRunningExtensionsList timeout')),
-      timeout.milliseconds * EnvironmentSettings.getInstance().throttleFactor
+      timeout.milliseconds
     )
   );
 
@@ -358,13 +357,12 @@ export async function verifyExtensionsAreRunning(
             );
           }
 
-          allActivated =
-            extensionsToVerify.every(
-              (extensionId) =>
-                extensionsStatus.find(
-                  (extensionStatus) => extensionStatus.extensionId === extensionId
-                )?.isActivationComplete
-            );
+          allActivated = extensionsToVerify.every(
+            (extensionId) =>
+              extensionsStatus.find(
+                (extensionStatus) => extensionStatus.extensionId === extensionId
+              )?.isActivationComplete
+          );
         } while (!allActivated);
       })(),
       timeoutPromise

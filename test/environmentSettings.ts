@@ -71,7 +71,7 @@ export class EnvironmentSettings {
       EnvironmentSettings._instance._throttleFactor =
         parseInt(process.env.THROTTLE_FACTOR!) || EnvironmentSettings._instance._throttleFactor;
       EnvironmentSettings._instance._sfdxAuthUrl =
-        process.env.SFDXAUTHURL_TEST || EnvironmentSettings._instance._sfdxAuthUrl;
+        process.env.SFDX_AUTH_URL || EnvironmentSettings._instance._sfdxAuthUrl;
       EnvironmentSettings._instance._orgId =
         process.env.ORG_ID || EnvironmentSettings._instance._orgId;
       EnvironmentSettings._instance._extensionPath =
