@@ -54,7 +54,11 @@ export class TestSetup {
 
   public async tearDown(): Promise<void> {
     await this.checkForUncaughtErrors();
-    await utilities.deleteScratchOrg(this.scratchOrgAliasName, this.reuseScratchOrg);
+    try {
+      await utilities.deleteScratchOrg(this.scratchOrgAliasName, this.reuseScratchOrg);
+    } catch (error) {
+      throw new Error(`Deleting scratch org failed with Error: ${(error as Error).message}`);
+    }
   }
 
   private async checkForUncaughtErrors(): Promise<void> {
@@ -195,7 +199,9 @@ export class TestSetup {
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
     const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
     utilities.log(`${this.testSuiteSuffixName} - calling sf org:display...`);
-    const sfOrgDisplayResult = await utilities.orgDisplay(EnvironmentSettings.getInstance().devHubUserName);
+    const sfOrgDisplayResult = await utilities.orgDisplay(
+      EnvironmentSettings.getInstance().devHubUserName
+    );
 
     // Now write the file.
     fs.writeFileSync(authFilePath, sfOrgDisplayResult.stdout);
@@ -257,7 +263,9 @@ export class TestSetup {
       utilities.log(`${this.testSuiteSuffixName} - looking for a scratch org to reuse...`);
 
       const sfOrgListResult = await utilities.orgList();
-      const scratchOrgs = JSON.parse(sfOrgListResult.stdout).result.scratchOrgs as { alias: string }[];
+      const scratchOrgs = JSON.parse(sfOrgListResult.stdout).result.scratchOrgs as {
+        alias: string;
+      }[];
 
       const foundScratchOrg = scratchOrgs.find((scratchOrg) => {
         const alias = scratchOrg.alias as string;
