@@ -167,16 +167,6 @@ export async function clickFilePathOkButton(): Promise<void> {
   await pause(Duration.milliseconds(500));
   await browser.keys(['Enter']);
 
-  // await okButton.waitForClickable({
-  //   timeout: Duration.seconds(5).milliseconds,
-  //   interval: Duration.milliseconds(500).milliseconds,
-  //   timeoutMsg: `Ok button not clickable within 5 seconds`,
-  // });
-
-  // await pause(Duration.milliseconds(500));
-  // debug(`clickFilePathOkButton isClickable: ${await okButton.isClickable()}`)
-  // await browser.elementClick(okButton.elementId);
-
   await pause(Duration.seconds(1));
   const buttons = await $$('a.monaco-button.monaco-text-button');
   for (const item of buttons) {

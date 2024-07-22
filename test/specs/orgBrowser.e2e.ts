@@ -101,7 +101,6 @@ describe('Org Browser', async () => {
 
     // Verify the deploy was successful
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Deploy This Source to Org successfully ran',
       utilities.FIVE_MINUTES
     );
@@ -144,9 +143,7 @@ describe('Org Browser', async () => {
     console.log('button 1', retrieveSourceButton);
     await retrieveSourceButton.click();
 
-    const workbench = await utilities.getWorkbench();
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Retrieve This Source from Org successfully ran',
       utilities.FIVE_MINUTES
     );
@@ -168,7 +165,6 @@ describe('Org Browser', async () => {
 
     const workbench = await utilities.getWorkbench();
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Retrieve This Source from Org successfully ran',
       utilities.FIVE_MINUTES
     );

@@ -8,29 +8,29 @@ async function showNotification(message: string) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function showNotificationWithActions(message: string, ...actions: string[]) {
-  await browser.executeWorkbench(async (vscode, message, ...actions) => {
-    vscode.window.showInformationNotification(
-      `${message}`,
+  await browser
+    .executeWorkbench(
+      async (vscode, message, ...actions) => {
+        vscode.window.showInformationMessage(`${message}`, ...actions);
+      },
+      message,
       ...actions
-    );
-  }, message, ...actions).then(() => {});
+    )
+    .then(() => {});
 }
 
 describe('Notifications', async () => {
   // Show a notification
-  it.skip('should show an info notification', async () => {
+  it('should show an info notification', async () => {
     await showNotification('Modify the file and retrieve again');
-    const workbench = await utilities.getWorkbench();
     let isPresent = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'Modify the file and retrieve again',
-      utilities.Duration.seconds(1)
+      utilities.Duration.seconds(2)
     );
-    await utilities.pause(utilities.Duration.seconds(5));
     await expect(isPresent).toBe(true);
-    await utilities.dismissNotification(workbench, 'Modify the file and retrieve again', true);
-    isPresent = await utilities.notificationIsPresentWithTimeout(
-      workbench,
+    await utilities.dismissNotification('Modify the file and retrieve again');
+    await utilities.pause(utilities.Duration.seconds(1));
+    isPresent = await utilities.notificationIsAbsentWithTimeout(
       'Modify the file and retrieve again',
       utilities.Duration.seconds(1)
     );
@@ -38,21 +38,19 @@ describe('Notifications', async () => {
     await utilities.pause(utilities.Duration.seconds(2));
   });
   it('should show a notification with two actions', async () => {
-    await utilities.executeQuickPick('Developer: Toggle Developer Tools');
     await showNotificationWithActions('Choose an action:', 'A', 'B');
-    const workbench = await utilities.getWorkbench();
     let isPresent = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'Choose an action:',
       utilities.Duration.seconds(1)
     );
     await expect(isPresent).toBe(true);
-    await utilities.pause(utilities.Duration.seconds(5));
-    await utilities.acceptNotification(workbench, 'Choose an action:', 'A', 5);
-    isPresent = await utilities.notificationIsPresentWithTimeout(
-      workbench,
+    await utilities.pause(utilities.Duration.seconds(1));
+
+    await utilities.acceptNotification('Choose an action:', 'A', utilities.Duration.seconds(1));
+
+    isPresent = await utilities.notificationIsAbsentWithTimeout(
       'Choose an action:',
-      utilities.Duration.seconds(1)
+      utilities.Duration.seconds(5)
     );
     await expect(isPresent).toBe(false);
   });

@@ -33,7 +33,6 @@ describe('Deploy and Retrieve', async () => {
     await utilities.createApexClass('MyClass', classText);
     const workbench = await utilities.getWorkbench();
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Create Apex Class successfully ran',
       utilities.TEN_MINUTES
     );
@@ -159,7 +158,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.pause(utilities.Duration.seconds(5));
 
     // At this point there should be no conflicts since this is a new class.
-    await validateCommand(workbench, 'Deploy', 'to', 'on save');
+    await validateCommand('Deploy', 'to', 'on save');
   });
 
   step('Disable Source Tracking Setting', async () => {
@@ -233,27 +232,22 @@ describe('Deploy and Retrieve', async () => {
       utilities.Duration.seconds(2)
     );
 
-    // Make sure we get a confirmation dialog
-    const confirmationDialogText =
-      'Deleting source files deletes the files from your computer and removes the corresponding metadata from your default org. Are you sure you want to delete this source from your project and your org?, source: Salesforce CLI Integration, notification, Inspect the response in the accessible view with Option+F2';
-    const confirmationDialogEl = await utilities.findElementByText(
-      'div',
-      'aria-label',
-      confirmationDialogText
+    // Make sure we get a notification for the source delete
+    const notificationFound = await utilities.notificationIsPresentWithTimeout(
+      'Deleting source files deletes the files from your computer and removes the corresponding metadata from your default org. Are you sure you want to delete this source from your project and your org?',
+      utilities.ONE_MINUTE
     );
-    await expect(confirmationDialogEl).toBeTruthy();
+
+    await expect(notificationFound).toBe(true);
 
     // Confirm deletion
-    const deleteSourceBtn = await utilities.findElementByText(
-      'a',
-      'class',
-      'monaco-button monaco-text-button'
+    await utilities.acceptNotification(
+      'Deleting source files deletes the files from your computer and removes the corresponding metadata from your default org. Are you sure you want to delete this source from your project and your org?',
+      'Delete Source',
+      utilities.Duration.seconds(5)
     );
 
-    await browser.elementClick(deleteSourceBtn.elementId);
-
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Delete from Project and Org successfully ran',
       utilities.TEN_MINUTES
     );
@@ -292,17 +286,15 @@ describe('Deploy and Retrieve', async () => {
       utilities.Duration.seconds(5)
     );
 
-    await validateCommand(workbench, operation, fromTo, type, prefix);
+    await validateCommand(operation, fromTo, type, prefix);
   };
   const validateCommand = async (
-    workbench: Workbench,
     operation: string,
     fromTo: string,
     type: string, // Text to identify operation type (if it has source tracking enabled, disabled or if it was a deploy on save)
     prefix: string = ''
   ): Promise<void> => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       `SFDX: ${operation} This Source ${fromTo} Org successfully ran`,
       utilities.TEN_MINUTES
     );

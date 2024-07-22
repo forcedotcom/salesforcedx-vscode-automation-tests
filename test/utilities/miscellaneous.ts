@@ -13,7 +13,6 @@ import { executeQuickPick } from './commandPrompt.ts';
 import { notificationIsPresentWithTimeout } from './notifications.ts';
 import * as DurationKit from '@salesforce/kit';
 import path from 'path';
-import { getWorkbench } from './workbench.ts';
 import { PredicateWithTimeout } from './predicates.ts';
 
 export async function pause(duration: Duration = Duration.seconds(1)): Promise<void> {
@@ -110,7 +109,6 @@ export async function createCommand(
   folder: string,
   extension: string
 ): Promise<string | undefined> {
-  const workbench = await getWorkbench();
   await clearOutputView();
   const inputBox = await executeQuickPick(`SFDX: Create ${type}`, Duration.seconds(1));
 
@@ -123,9 +121,8 @@ export async function createCommand(
   await inputBox.confirm();
 
   const successNotificationWasFound = await notificationIsPresentWithTimeout(
-    workbench,
     `SFDX: Create ${type} successfully ran`,
-    TEN_MINUTES
+    Duration.minutes(10)
   );
   await expect(successNotificationWasFound).toBe(true);
 
@@ -226,6 +223,3 @@ export class Duration extends DurationKit.Duration {
     return new Duration(quantity, Unit.WEEKS);
   }
 }
-
-export const FIVE_MINUTES = Duration.minutes(5);
-export const TEN_MINUTES = Duration.minutes(10);
