@@ -57,7 +57,7 @@ export class TestSetup {
     try {
       await utilities.deleteScratchOrg(this.scratchOrgAliasName, this.reuseScratchOrg);
     } catch (error) {
-      throw new Error(`Deleting scratch org failed with Error: ${(error as Error).message}`);
+      utilities.log(`Deleting scratch org failed with Error: ${(error as Error).message}`);
     }
   }
 
