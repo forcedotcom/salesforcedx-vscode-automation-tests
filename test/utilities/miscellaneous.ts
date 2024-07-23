@@ -13,7 +13,6 @@ import { executeQuickPick } from './commandPrompt.ts';
 import { notificationIsPresentWithTimeout } from './notifications.ts';
 import * as DurationKit from '@salesforce/kit';
 import path from 'path';
-import { getWorkbench } from './workbench.ts';
 import { PredicateWithTimeout } from './predicates.ts';
 
 export async function pause(duration: Duration = Duration.seconds(1)): Promise<void> {
@@ -56,15 +55,37 @@ export function transformedUserName(): string {
  * @param type type of html tag we want to find
  * @param attribute attribute that holds the given text
  * @param labelText text of the element we want to find
+ * @param waitForClickable whether to wait until the element is clickable
+ * @param waitOptions options for waiting until the element is clickable
  * @returns element that contains the given text
  */
 export async function findElementByText(
   type: string,
   attribute: string,
-  labelText: string
+  labelText: string,
+  waitForClickable: boolean | undefined = false,
+  waitOptions?: {
+    timeout?: Duration;
+    interval?: Duration;
+    reverse?: boolean;
+    timeoutMsg?: string;
+  }
 ): Promise<WebdriverIO.Element> {
+  debug(`findElementByText ${type}[${attribute}="${labelText}"]`);
   const element = await $(`${type}[${attribute}="${labelText}"]`);
-  return element!;
+  if (!element) {
+    throw new Error(`Element with selector: "${type}[${attribute}=\"${labelText}\"]" not found}`);
+  }
+  if (waitForClickable) {
+    await element.waitForClickable({
+      timeout: waitOptions?.timeout?.milliseconds ?? Duration.seconds(5).milliseconds,
+      interval: waitOptions?.interval?.milliseconds ?? Duration.milliseconds(500).milliseconds,
+      reverse: waitOptions?.reverse,
+      timeoutMsg: waitOptions?.timeoutMsg
+    });
+  }
+
+  return element;
 }
 
 /**
@@ -88,7 +109,6 @@ export async function createCommand(
   folder: string,
   extension: string
 ): Promise<string | undefined> {
-  const workbench = await getWorkbench();
   await clearOutputView();
   const inputBox = await executeQuickPick(`SFDX: Create ${type}`, Duration.seconds(1));
 
@@ -101,9 +121,8 @@ export async function createCommand(
   await inputBox.confirm();
 
   const successNotificationWasFound = await notificationIsPresentWithTimeout(
-    workbench,
     `SFDX: Create ${type} successfully ran`,
-    TEN_MINUTES
+    Duration.minutes(10)
   );
   await expect(successNotificationWasFound).toBe(true);
 
@@ -204,6 +223,3 @@ export class Duration extends DurationKit.Duration {
     return new Duration(quantity, Unit.WEEKS);
   }
 }
-
-export const FIVE_MINUTES = Duration.minutes(5);
-export const TEN_MINUTES = Duration.minutes(10);

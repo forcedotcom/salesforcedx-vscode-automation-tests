@@ -64,10 +64,9 @@ describe('Manifest Builder', async () => {
 
   step('SFDX: Deploy Source in Manifest to Org', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - SFDX: Deploy Source in Manifest to Org`);
-    // Using the Command palette, run SFDX: Deploy Source in Manifest to Org
-    const workbench = await browser.getWorkbench();
     // Clear output before running the command
     await utilities.clearOutputView();
+    // Using the Command palette, run SFDX: Deploy Source in Manifest to Org
     await utilities.executeQuickPick(
       'SFDX: Deploy Source in Manifest to Org',
       utilities.Duration.seconds(1)
@@ -75,7 +74,6 @@ describe('Manifest Builder', async () => {
 
     // Look for the success notification that appears which says, "SFDX: Deploy This Source to Org successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Deploy This Source to Org successfully ran',
       utilities.TEN_MINUTES
     );
@@ -126,7 +124,6 @@ describe('Manifest Builder', async () => {
 
     // Look for the success notification that appears which says, "SFDX: Retrieve This Source from Org successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Retrieve This Source from Org successfully ran',
       utilities.TEN_MINUTES
     );

@@ -25,7 +25,6 @@ describe('Debug Apex Tests', async () => {
     await utilities.pause(utilities.Duration.seconds(1));
 
     // Push source to org
-    const workbench = await utilities.getWorkbench();
     await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org and Ignore Conflicts',
       utilities.Duration.seconds(1)
@@ -33,7 +32,6 @@ describe('Debug Apex Tests', async () => {
 
     // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Ignore Conflicts successfully ran".
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
       utilities.TEN_MINUTES
     );
@@ -65,7 +63,6 @@ describe('Debug Apex Tests', async () => {
 
     // Look for the success notification that appears which says, "Debug Test(s) successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'Debug Test(s) successfully ran',
       utilities.TEN_MINUTES
     );
@@ -90,7 +87,6 @@ describe('Debug Apex Tests', async () => {
 
     // Look for the success notification that appears which says, "Debug Test(s) successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'Debug Test(s) successfully ran',
       utilities.TEN_MINUTES
     );
@@ -136,7 +132,6 @@ describe('Debug Apex Tests', async () => {
 
     // Look for the success notification that appears which says, "Debug Test(s) successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'Debug Test(s) successfully ran',
       utilities.TEN_MINUTES
     );
@@ -170,7 +165,6 @@ describe('Debug Apex Tests', async () => {
 
     // Look for the success notification that appears which says, "Debug Test(s) successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'Debug Test(s) successfully ran',
       utilities.TEN_MINUTES
     );
