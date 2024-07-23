@@ -6,18 +6,23 @@
  */
 
 import { Notification } from 'wdio-vscode-service';
-import { Duration, log } from './miscellaneous.ts';
+import { Duration } from './miscellaneous.ts';
 import { getWorkbench } from './workbench.ts';
+import { executeQuickPick } from './commandPrompt.ts';
 
 export async function waitForNotificationToGoAway(
   notificationMessage: string,
   durationInSeconds: Duration
 ): Promise<void> {
-  await findNotification(notificationMessage, false, durationInSeconds);
+  await findNotification(notificationMessage, false, durationInSeconds, true);
 }
 
 export async function notificationIsPresent(notificationMessage: string): Promise<boolean> {
-  const notification = await findNotification(notificationMessage, true, Duration.seconds(1));
+  const notification = await findNotification(
+    notificationMessage,
+    true,
+    Duration.milliseconds(500)
+  );
 
   return notification ? true : false;
 }
@@ -32,9 +37,13 @@ export async function notificationIsPresentWithTimeout(
 }
 
 export async function notificationIsAbsent(notificationMessage: string): Promise<boolean> {
-  const notification = await findNotification(notificationMessage, false, Duration.seconds(1));
+  const notification = await findNotification(
+    notificationMessage,
+    false,
+    Duration.milliseconds(500)
+  );
 
-  return notification ? true : false;
+  return notification ? false : true;
 }
 
 export async function notificationIsAbsentWithTimeout(
@@ -43,14 +52,14 @@ export async function notificationIsAbsentWithTimeout(
 ): Promise<boolean> {
   const notification = await findNotification(notificationMessage, false, durationInSeconds);
 
-  return notification ? true : false;
+  return notification ? false : true;
 }
 
 export async function dismissNotification(
   notificationMessage: string,
   timeout = Duration.seconds(1)
 ): Promise<void> {
-  const notification = await findNotification(notificationMessage, true, timeout);
+  const notification = await findNotification(notificationMessage, true, timeout, true);
   await notification?.dismiss();
 }
 
@@ -72,54 +81,49 @@ export async function acceptNotification(
 }
 
 export async function dismissAllNotifications(): Promise<void> {
-  const workbench = await getWorkbench();
-  await browser.waitUntil(async () => {
-    const notifications = await workbench.getNotifications();
-    for (const notification of notifications) {
-      try {
-        await notification.dismiss();
-      } catch {
-        log(
-          'ERROR: Can\'t call $ on element with selector ".notification-toast-container" because element wasn\'t found'
-        );
-      }
-    }
-    return !(await workbench.hasNotifications());
-  });
+  await executeQuickPick('Notifications: Clear All Notifications');
 }
 
-export async function findNotification(
+async function findNotification(
   message: string,
   shouldBePresent: boolean,
-  timeout: Duration = Duration.seconds(5)
+  timeout: Duration = Duration.milliseconds(500),
+  throwOnTimeout: boolean = false // New parameter to control throwing on timeout
 ): Promise<Notification | null> {
   const workbench = await getWorkbench();
 
-  const foundNotification = await browser.waitUntil(
-    async () => {
-      const notifications = await workbench.getNotifications();
-      let bestMatch: Notification | null = null;
+  try {
+    const foundNotification = await browser.waitUntil(
+      async () => {
+        const notifications = await workbench.getNotifications();
+        let bestMatch: Notification | null = null;
 
-      for (const notification of notifications) {
-        const notificationMessage = await notification.getMessage();
-
-        if (notificationMessage === message || notificationMessage.startsWith(message)) {
-          bestMatch = notification;
-          break;
+        for (const notification of notifications) {
+          const notificationMessage = await notification.getMessage();
+          if (notificationMessage === message || notificationMessage.startsWith(message)) {
+            bestMatch = notification;
+            break;
+          }
         }
-      }
 
-      if (shouldBePresent) {
-        return bestMatch;
-      } else {
-        return bestMatch === null;
+        if (shouldBePresent) {
+          return bestMatch;
+        } else {
+          return bestMatch === null;
+        }
+      },
+      {
+        timeout: timeout.milliseconds,
+        timeoutMsg: `Notification with message "${message}" ${shouldBePresent ? 'not found' : 'still present'} within the specified timeout of ${timeout.seconds} seconds.`
       }
-    },
-    {
-      timeout: timeout.milliseconds,
-      timeoutMsg: `Notification with message "${message}" ${shouldBePresent ? 'not found' : 'still present'} within the specified timeout of ${timeout.seconds} seconds.`
+    );
+
+    return shouldBePresent ? foundNotification : null;
+  } catch (error) {
+    if (throwOnTimeout) {
+      throw error; // Re-throw the error if throwOnTimeout is true
     }
-  );
-
-  return shouldBePresent ? foundNotification : null;
+    // Handle the timeout gracefully
+    return null;
+  }
 }

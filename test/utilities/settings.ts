@@ -46,48 +46,44 @@ async function openSettings<T>(
   doThis?: (settings: InputBox | QuickOpenBox) => Promise<T | void>,
   timeout: Duration = Duration.seconds(5)
 ): Promise<T> {
-  try {
-    debug('openSettings - enter');
-    const settings = await executeQuickPick(command, Duration.seconds(1));
-    debug('openSettings - after open');
+  debug('openSettings - enter');
+  const settings = await executeQuickPick(command, Duration.seconds(1));
+  debug('openSettings - after open');
 
-    // Clear the input box
-    await browser.keys(['Escape', 'Escape']);
+  // Clear the input box
+  await browser.keys(['Escape', 'Escape']);
 
-    await browser.waitUntil(
-      async () => {
-        const element = await browser.$(
-          '//div[@class="monaco-tl-contents group-title"]//div[text()="Commonly Used"]'
-        );
-        return element.isDisplayed();
-      },
-      {
-        timeout: Duration.seconds(20).milliseconds,
-        timeoutMsg: 'Expected element with text "Commonly Used" to be displayed'
-      }
-    );
-
-    if (!doThis) {
-      return settings as T;
+  await browser.waitUntil(
+    async () => {
+      const element = await browser.$(
+        '//div[@class="monaco-tl-contents group-title"]//div[text()="Commonly Used"]'
+      );
+      return element.isDisplayed();
+    },
+    {
+      timeout: Duration.seconds(20).milliseconds,
+      timeoutMsg: 'Expected element with text "Commonly Used" to be displayed'
     }
-    debug('openSettings - after Commonly Used wait');
+  );
 
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(() => {
-        reject(
-          new Error(
-            `openSettings doThis function timed out after ${timeout.milliseconds} milliseconds`
-          )
-        );
-      }, timeout.milliseconds);
-    });
-
-    const doThisPromise = doThis(settings).then((result) => result ?? settings);
-
-    return (await Promise.race([doThisPromise, timeoutPromise])) as T;
-  } finally {
-    // await browser.keys([CMD_KEY, 'w']);
+  if (!doThis) {
+    return settings as T;
   }
+  debug('openSettings - after Commonly Used wait');
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    setTimeout(() => {
+      reject(
+        new Error(
+          `openSettings doThis function timed out after ${timeout.milliseconds} milliseconds`
+        )
+      );
+    }, timeout.milliseconds);
+  });
+
+  const doThisPromise = doThis(settings).then((result) => result ?? settings);
+
+  return (await Promise.race([doThisPromise, timeoutPromise])) as T;
 }
 
 export async function inWorkspaceSettings<T>(

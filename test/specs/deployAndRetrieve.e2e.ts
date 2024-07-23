@@ -225,7 +225,7 @@ describe('Deploy and Retrieve', async () => {
     await utilities.clearOutputView();
 
     // clear notifications
-    await utilities.executeQuickPick('Notifications: Clear All Notifications');
+    await utilities.dismissAllNotifications();
 
     await utilities.executeQuickPick(
       'SFDX: Delete This from Project and Org',

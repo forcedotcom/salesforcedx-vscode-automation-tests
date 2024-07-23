@@ -10,6 +10,7 @@ import { join } from 'path';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { EnvironmentSettings } from '../environmentSettings.ts';
+import { log } from './miscellaneous.ts';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -20,8 +21,8 @@ export async function saveFailedTestScreenshot(
   testTitle: string
 ): Promise<void> {
   const saveDir = join(__dirname, '..', '..', 'screenshots', sanitizePath(specTitle));
-  console.log(`Test run failed! Saving a screenshot of the failure here: ${saveDir}`);
-  console.log('Time of screenshot: ', new Date().toTimeString());
+  log(`Test run failed! Saving a screenshot of the failure here: ${saveDir}`);
+  log(`Time of screenshot: ${new Date().toTimeString()}`);
   if (!existsSync(saveDir)) {
     mkdirSync(saveDir, { recursive: true });
   }

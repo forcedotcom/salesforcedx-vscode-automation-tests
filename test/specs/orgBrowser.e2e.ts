@@ -140,6 +140,7 @@ describe('Org Browser', async () => {
       'title',
       'Retrieve This Source from Org'
     );
+    utilities.debug(`button 2 ${JSON.stringify(retrieveSourceButton)}`);
     await retrieveSourceButton.click();
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
@@ -159,7 +160,7 @@ describe('Org Browser', async () => {
       'title',
       'Retrieve and Open Source'
     );
-    console.log('button 2', retrieveAndOpenButton);
+    utilities.debug(`button 2 ${JSON.stringify(retrieveAndOpenButton)}`);
     await retrieveAndOpenButton.click();
 
     const workbench = await utilities.getWorkbench();
