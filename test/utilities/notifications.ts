@@ -5,152 +5,125 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Workbench } from 'wdio-vscode-service';
-import { Duration, log, pause } from './miscellaneous.ts';
+import { Notification } from 'wdio-vscode-service';
+import { Duration } from './miscellaneous.ts';
 import { getWorkbench } from './workbench.ts';
+import { executeQuickPick } from './commandPrompt.ts';
 
 export async function waitForNotificationToGoAway(
-  workbench: Workbench,
   notificationMessage: string,
-  durationInSeconds: Duration,
-  matchExactString: boolean = true
+  durationInSeconds: Duration
 ): Promise<void> {
-  await pause(Duration.seconds(5));
-  const startDate = new Date();
-  while (true) {
-    const notificationWasFound = await notificationIsPresent(
-      workbench,
-      notificationMessage,
-      matchExactString
-    );
-    if (!notificationWasFound) {
-      return;
-    }
-
-    const currentDate = new Date();
-    const secondsPassed = Math.abs(currentDate.getTime() - startDate.getTime());
-    if (secondsPassed >= durationInSeconds.milliseconds) {
-      throw new Error(
-        `Exceeded time limit - notification "${notificationMessage}" is still present`
-      );
-    }
-  }
+  await findNotification(notificationMessage, false, durationInSeconds, true);
 }
 
-export async function notificationIsPresent(
-  workbench: Workbench,
-  notificationMessage: string,
-  matchExactString: boolean = true
-): Promise<boolean> {
-  const notifications = await workbench.getNotifications();
-  for (const notification of notifications) {
-    const message = await notification.getMessage();
-    if (matchExactString) {
-      if (message === notificationMessage) {
-        return true;
-      }
-    } else {
-      if (message.startsWith(notificationMessage)) {
-        return true;
-      }
-    }
-  }
+export async function notificationIsPresent(notificationMessage: string): Promise<boolean> {
+  const notification = await findNotification(
+    notificationMessage,
+    true,
+    Duration.milliseconds(500)
+  );
 
-  return false;
+  return notification ? true : false;
 }
 
 export async function notificationIsPresentWithTimeout(
-  workbench: Workbench,
   notificationMessage: string,
-  durationInSeconds: Duration,
-  matchExactString: boolean = true
+  durationInSeconds: Duration
 ): Promise<boolean> {
-  const startDate = new Date();
-  let currentDate: Date;
-  let secondsPassed: number = 0;
+  const notification = await findNotification(notificationMessage, true, durationInSeconds);
 
-  // Keep on searching for the notification until it is found or the timeout is reached
-  while (secondsPassed < durationInSeconds.seconds) {
-    // Get a list of all the notifications that are currently present
-    const notifications = await workbench.getNotifications();
+  return notification ? true : false;
+}
 
-    // If there are no notifications present, wait 3 seconds before trying again
-    if (notifications.length === 0) {
-      await pause(Duration.seconds(3));
-    }
+export async function notificationIsAbsent(notificationMessage: string): Promise<boolean> {
+  const notification = await findNotification(
+    notificationMessage,
+    false,
+    Duration.milliseconds(500)
+  );
 
-    // If there are notifications present, check each one to see if it matches
-    // If there is a match, then return True
-    else {
-      for (const notification of notifications) {
-        const message = await notification.getMessage();
-        if (matchExactString) {
-          if (message === notificationMessage) {
-            return true;
-          }
-        } else {
-          if (message.startsWith(notificationMessage)) {
-            return true;
-          }
-        }
-      }
-      await pause(Duration.seconds(1));
-    }
+  return notification ? false : true;
+}
 
-    // Get the amount of time that passed
-    currentDate = new Date();
-    secondsPassed = Math.abs(currentDate.getTime() - startDate.getTime()) / 1000;
-  }
+export async function notificationIsAbsentWithTimeout(
+  notificationMessage: string,
+  durationInSeconds: Duration
+): Promise<boolean> {
+  const notification = await findNotification(notificationMessage, false, durationInSeconds);
 
-  return false;
+  return notification ? false : true;
 }
 
 export async function dismissNotification(
-  workbench: Workbench,
   notificationMessage: string,
-  matchExactString: boolean = true
+  timeout = Duration.seconds(1)
 ): Promise<void> {
-  const notifications = await workbench.getNotifications();
-  for (const notification of notifications) {
-    const message = await notification.getMessage();
-    if (matchExactString) {
-      if (message === notificationMessage) {
-        await notification.dismiss();
-      }
-    }
-  }
+  const notification = await findNotification(notificationMessage, true, timeout, true);
+  await notification?.dismiss();
 }
 
-export async function attemptToFindNotification(
-  workbench: Workbench,
+export async function acceptNotification(
   notificationMessage: string,
-  attempts: number
-): Promise<boolean> {
-  while (attempts > 0) {
-    if (await notificationIsPresent(workbench, notificationMessage)) {
-      return true;
-    }
-
-    await pause(Duration.seconds(1));
-    attempts--;
+  actionName: string,
+  timeout: Duration
+): Promise<void> {
+  const notification = await findNotification(notificationMessage, true, timeout);
+  if (!notification) {
+    throw new Error(
+      `Could not take action ${actionName} for notification with message ${notificationMessage}`
+    );
   }
 
-  return false;
+  const elemment = await notification.elem;
+  const actionButton = await elemment.$(`.//a[@role="button"][text()="${actionName}"]`);
+  await actionButton.click();
 }
 
 export async function dismissAllNotifications(): Promise<void> {
+  await executeQuickPick('Notifications: Clear All Notifications');
+}
+
+async function findNotification(
+  message: string,
+  shouldBePresent: boolean,
+  timeout: Duration = Duration.milliseconds(500),
+  throwOnTimeout: boolean = false // New parameter to control throwing on timeout
+): Promise<Notification | null> {
   const workbench = await getWorkbench();
-  await browser.waitUntil(async () => {
-    const notifications = await workbench.getNotifications();
-    for (const notification of notifications) {
-      try {
-        await notification.dismiss();
-      } catch {
-        log(
-          'ERROR: Can\'t call $ on element with selector ".notification-toast-container" because element wasn\'t found'
-        );
+
+  try {
+    const foundNotification = await browser.waitUntil(
+      async () => {
+        const notifications = await workbench.getNotifications();
+        let bestMatch: Notification | null = null;
+
+        for (const notification of notifications) {
+          const notificationMessage = await notification.getMessage();
+          if (notificationMessage === message || notificationMessage.startsWith(message)) {
+            bestMatch = notification;
+            break;
+          }
+        }
+
+        if (shouldBePresent) {
+          return bestMatch;
+        } else {
+          return bestMatch === null;
+        }
+      },
+      {
+        timeout: timeout.milliseconds,
+        timeoutMsg: `Notification with message "${message}" ${shouldBePresent ? 'not found' : 'still present'} within the specified timeout of ${timeout.seconds} seconds.`
       }
+    );
+
+    return shouldBePresent ? foundNotification : null;
+  } catch (error) {
+    if (throwOnTimeout) {
+      throw error; // Re-throw the error if throwOnTimeout is true
     }
-    return !(await workbench.hasNotifications());
-  });
+    // Handle the timeout gracefully
+    return null;
+  }
 }

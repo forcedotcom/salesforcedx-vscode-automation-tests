@@ -64,7 +64,6 @@ describe('SObjects Definitions', async () => {
   });
 
   step('Push Source to Org', async () => {
-    const workbench = await utilities.getWorkbench();
     await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org',
       utilities.Duration.seconds(5)
@@ -72,7 +71,6 @@ describe('SObjects Definitions', async () => {
     await utilities.pause(utilities.Duration.seconds(1));
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Push Source to Default Org successfully ran',
       utilities.TEN_MINUTES
     );
@@ -99,7 +97,6 @@ describe('SObjects Definitions', async () => {
     await utilities.pause(utilities.Duration.seconds(1));
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Refresh SObject Definitions successfully ran',
       utilities.TEN_MINUTES
     );
@@ -179,7 +176,6 @@ describe('SObjects Definitions', async () => {
     await utilities.pause(utilities.Duration.seconds(1));
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Refresh SObject Definitions successfully ran',
       utilities.TEN_MINUTES
     );
@@ -230,7 +226,6 @@ describe('SObjects Definitions', async () => {
 
   step('Refresh SObject Definitions for All SObjects', async () => {
     // Clear the output for correct test validation.
-    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView(utilities.Duration.seconds(2));
 
     const prompt = await utilities.executeQuickPick(
@@ -242,7 +237,6 @@ describe('SObjects Definitions', async () => {
     await utilities.pause(utilities.Duration.seconds(1));
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Refresh SObject Definitions successfully ran',
       utilities.TEN_MINUTES
     );

@@ -6,7 +6,7 @@
  */
 
 import { InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
-import { Duration, log, pause } from './miscellaneous.ts';
+import { debug, Duration, log, pause } from './miscellaneous.ts';
 import { getWorkbench } from './workbench.ts';
 
 export async function openCommandPromptWithCommand(
@@ -131,10 +131,29 @@ export async function executeQuickPick(
   command: string,
   wait: Duration = Duration.seconds(1)
 ): Promise<InputBox | QuickOpenBox> {
-  const workbench = await getWorkbench();
-  const prompt = await workbench.executeQuickPick(command);
-  await pause(wait);
-  return prompt;
+  debug(`executeQuickPick command: ${command}`);
+  try {
+    const workbench = await getWorkbench();
+    const prompt = await workbench.executeQuickPick(command);
+    await pause(wait);
+    return prompt;
+  } catch (error) {
+    let errorMessage: string;
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    } else {
+      throw new Error(`Unknown error: ${error}`);
+    }
+
+    if (errorMessage.includes('Command not found')) {
+      throw new Error(`Command not found: ${command}`);
+    } else {
+      throw error;
+    }
+  }
 }
 
 export async function clickFilePathOkButton(): Promise<void> {
@@ -143,13 +162,10 @@ export async function clickFilePathOkButton(): Promise<void> {
   if (!okButton) {
     throw new Error('Ok button not found');
   }
-  await okButton.waitForClickable({
-    timeout: Duration.seconds(5).milliseconds,
-    interval: Duration.milliseconds(500).milliseconds,
-    timeoutMsg: `Ok button not clickable within 5 seconds`
-  });
 
-  await okButton.click();
+  await browser.keys(['Tab']);
+  await pause(Duration.milliseconds(500));
+  await browser.keys(['Enter']);
 
   await pause(Duration.seconds(1));
   const buttons = await $$('a.monaco-button.monaco-text-button');

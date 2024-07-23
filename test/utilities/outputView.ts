@@ -6,7 +6,7 @@
  */
 
 import clipboard from 'clipboardy';
-import { Duration, pause } from './miscellaneous.ts';
+import { debug, Duration, pause } from './miscellaneous.ts';
 import { dismissAllNotifications } from './notifications.ts';
 import { executeQuickPick } from './commandPrompt.ts';
 
@@ -49,6 +49,9 @@ export async function attemptToFindOutputPanelText(
   searchString: string,
   attempts: number
 ): Promise<string | undefined> {
+  debug(
+    `attemptToFindOutputPanelText in channel "${outputChannelName}: with string "${searchString}"`
+  );
   await selectOutputChannel(outputChannelName);
 
   while (attempts > 0) {
