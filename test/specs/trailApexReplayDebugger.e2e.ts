@@ -29,14 +29,12 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await utilities.createApexClassWithBugs();
 
     // Push source to org
-    const workbench = await utilities.getWorkbench();
     await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org and Ignore Conflicts',
       utilities.Duration.seconds(1)
     );
 
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
       utilities.TEN_MINUTES
     );
@@ -58,7 +56,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Run Apex Tests', async () => {
     // Run SFDX: Run Apex tests.
-    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView();
     prompt = await utilities.executeQuickPick(
       'SFDX: Run Apex Tests',
@@ -69,7 +66,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await prompt.selectQuickPick('AccountServiceTest');
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );
@@ -132,7 +128,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('SFDX: Turn On Apex Debug Log for Replay Debugger', async () => {
     // Run SFDX: Turn On Apex Debug Log for Replay Debugger
-    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView();
     await utilities.executeQuickPick(
       'SFDX: Turn On Apex Debug Log for Replay Debugger',
@@ -141,7 +136,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     // Look for the success notification that appears which says, "SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran',
       utilities.TEN_MINUTES
     );
@@ -160,7 +154,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Run Apex Tests', async () => {
     // Run SFDX: Run Apex tests.
-    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView();
     prompt = await utilities.executeQuickPick(
       'SFDX: Run Apex Tests',
@@ -171,7 +164,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await prompt.selectQuickPick('AccountServiceTest');
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );
@@ -198,7 +190,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(
-      workbench,
       'Getting Apex debug logs',
       utilities.TEN_MINUTES
     );
@@ -210,7 +201,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await prompt.selectQuickPick('User User - ApexTestHandler');
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Get Apex Debug Logs successfully ran',
       utilities.TEN_MINUTES
     );
@@ -267,7 +257,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     );
 
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
       utilities.TEN_MINUTES
     );
@@ -276,7 +265,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Run Apex Tests to Verify Fix', async () => {
     // Run SFDX: Run Apex tests.
-    const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView();
     prompt = await utilities.executeQuickPick(
       'SFDX: Run Apex Tests',
@@ -287,7 +275,6 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     await prompt.selectQuickPick('AccountServiceTest');
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Run Apex Tests successfully ran',
       utilities.TEN_MINUTES
     );

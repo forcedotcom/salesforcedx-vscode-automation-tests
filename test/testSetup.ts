@@ -398,7 +398,6 @@ export class TestSetup {
 
     // Look for the success notification.
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Set a Default Org successfully ran',
       utilities.TEN_MINUTES
     );
@@ -442,7 +441,6 @@ export class TestSetup {
     await utilities.pause(utilities.Duration.seconds(3));
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Set a Default Org successfully ran',
       utilities.TEN_MINUTES
     );

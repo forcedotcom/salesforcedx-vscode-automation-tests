@@ -356,7 +356,6 @@ describe('Templates', async () => {
     await utilities.pause(utilities.Duration.seconds(60));
 
     const failureNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Create Lightning Web Component Test failed to run',
       utilities.TEN_MINUTES
     );
@@ -493,7 +492,6 @@ describe('Templates', async () => {
     await inputBox.confirm();
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      workbench,
       'SFDX: Create Sample Analytics Template successfully ran',
       utilities.TEN_MINUTES
     );
