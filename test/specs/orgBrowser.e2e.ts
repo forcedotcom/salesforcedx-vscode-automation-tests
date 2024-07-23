@@ -140,7 +140,6 @@ describe('Org Browser', async () => {
       'title',
       'Retrieve This Source from Org'
     );
-    console.log('button 1', retrieveSourceButton);
     await retrieveSourceButton.click();
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
