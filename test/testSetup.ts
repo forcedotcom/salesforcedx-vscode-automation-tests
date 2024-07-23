@@ -66,17 +66,19 @@ export class TestSetup {
   }
 
   private async deleteScratchOrgInfo(): Promise<void> {
-    const sfDataDeleteRecord = await utilities.runCliCommand(
-      'data:delete:record',
-      '--sobject',
-      'ScratchOrgInfo',
-      '--where',
-      `Id=${this.scratchOrgId}`
-    );
-    if (sfDataDeleteRecord.exitCode > 0) {
-      const message = `data delete record failed with exit code ${sfDataDeleteRecord.exitCode}\n stderr ${sfDataDeleteRecord.stderr}`;
-      utilities.log(message);
-      throw new Error(message);
+    if (this.scratchOrgId) {
+      const sfDataDeleteRecord = await utilities.runCliCommand(
+        'data:delete:record',
+        '--sobject',
+        'ScratchOrgInfo',
+        '--where',
+        `Id=${this.scratchOrgId}`
+      );
+      if (sfDataDeleteRecord.exitCode > 0) {
+        const message = `data delete record failed with exit code ${sfDataDeleteRecord.exitCode}\n stderr ${sfDataDeleteRecord.stderr}`;
+        utilities.log(message);
+        throw new Error(message);
+      }
     }
   }
 
