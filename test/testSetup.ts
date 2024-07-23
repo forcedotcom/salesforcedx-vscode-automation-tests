@@ -299,7 +299,9 @@ export class TestSetup {
 
       if (foundScratchOrg) {
         this.scratchOrgAliasName = foundScratchOrg.alias as string;
-        this.scratchOrgId = (foundScratchOrg.orgId as string).slice(0, -3);
+        if (foundScratchOrg.orgId) {
+          this.scratchOrgId = (foundScratchOrg.orgId as string).slice(0, -3);
+        }
 
         // Set the current scratch org.
         await this.setDefaultOrg(workbench);
@@ -358,6 +360,7 @@ export class TestSetup {
     if (!result.orgId) {
       throw new Error('In createDefaultScratchOrg(), result.orgId is null (or undefined)');
     }
+    this.scratchOrgId = (result.orgId as string).slice(0, -3);
 
     if (!result.scratchOrgInfo.SignupEmail) {
       throw new Error(
