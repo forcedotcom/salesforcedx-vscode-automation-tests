@@ -24,6 +24,7 @@ export class TestSetup {
   public projectFolderPath: string | undefined;
   private prompt: QuickOpenBox | InputBox | undefined;
   public scratchOrgAliasName: string | undefined;
+  public scratchOrgId: string | undefined;
 
   public constructor(testSuiteSuffixName: string, reuseScratchOrg: boolean) {
     this.testSuiteSuffixName = testSuiteSuffixName;
@@ -54,7 +55,29 @@ export class TestSetup {
 
   public async tearDown(): Promise<void> {
     await this.checkForUncaughtErrors();
-    await utilities.deleteScratchOrg(this.scratchOrgAliasName, this.reuseScratchOrg);
+    try {
+      await utilities.deleteScratchOrg(this.scratchOrgAliasName, this.reuseScratchOrg);
+      await this.deleteScratchOrgInfo();
+    } catch (error) {
+      utilities.log(
+        `Deleting scratch org (or info) failed with Error: ${(error as Error).message}`
+      );
+    }
+  }
+
+  private async deleteScratchOrgInfo(): Promise<void> {
+    const sfDataDeleteRecord = await utilities.runCliCommand(
+      'data:delete:record',
+      '--sobject',
+      'ScratchOrgInfo',
+      '--where',
+      `Id=${this.scratchOrgId}`
+    );
+    if (sfDataDeleteRecord.exitCode > 0) {
+      const message = `data delete record failed with exit code ${sfDataDeleteRecord.exitCode}\n stderr ${sfDataDeleteRecord.stderr}`;
+      utilities.log(message);
+      throw new Error(message);
+    }
   }
 
   private async checkForUncaughtErrors(): Promise<void> {
@@ -195,7 +218,9 @@ export class TestSetup {
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
     const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
     utilities.log(`${this.testSuiteSuffixName} - calling sf org:display...`);
-    const sfOrgDisplayResult = await utilities.orgDisplay(EnvironmentSettings.getInstance().devHubUserName);
+    const sfOrgDisplayResult = await utilities.orgDisplay(
+      EnvironmentSettings.getInstance().devHubUserName
+    );
 
     // Now write the file.
     fs.writeFileSync(authFilePath, sfOrgDisplayResult.stdout);
@@ -257,7 +282,10 @@ export class TestSetup {
       utilities.log(`${this.testSuiteSuffixName} - looking for a scratch org to reuse...`);
 
       const sfOrgListResult = await utilities.orgList();
-      const scratchOrgs = JSON.parse(sfOrgListResult.stdout).result.scratchOrgs as { alias: string }[];
+      const scratchOrgs = JSON.parse(sfOrgListResult.stdout).result.scratchOrgs as {
+        alias: string;
+        orgId: string;
+      }[];
 
       const foundScratchOrg = scratchOrgs.find((scratchOrg) => {
         const alias = scratchOrg.alias as string;
@@ -271,11 +299,14 @@ export class TestSetup {
 
       if (foundScratchOrg) {
         this.scratchOrgAliasName = foundScratchOrg.alias as string;
+        this.scratchOrgId = (foundScratchOrg.orgId as string).slice(0, -3);
 
         // Set the current scratch org.
         await this.setDefaultOrg(workbench);
 
-        utilities.log(`${this.testSuiteSuffixName} - found one: ${this.scratchOrgAliasName}`);
+        utilities.log(
+          `${this.testSuiteSuffixName} - found one: ${this.scratchOrgAliasName} with ID ${this.scratchOrgId}`
+        );
         utilities.log(`${this.testSuiteSuffixName} - ...finished createDefaultScratchOrg()`);
         utilities.log('');
       }
