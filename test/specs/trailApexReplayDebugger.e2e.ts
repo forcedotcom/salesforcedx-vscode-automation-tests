@@ -36,7 +36,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successPushNotificationWasFound).toBe(true);
   });
@@ -67,7 +67,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Run Apex Tests successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -137,7 +137,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Look for the success notification that appears which says, "SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Turn On Apex Debug Log for Replay Debugger successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -165,7 +165,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Run Apex Tests successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -191,7 +191,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     // Wait for the command to execute
     await utilities.waitForNotificationToGoAway(
       'Getting Apex debug logs',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
 
     // Select a log file
@@ -202,7 +202,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Get Apex Debug Logs successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -258,7 +258,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successPushNotificationWasFound).toBe(true);
   });
@@ -276,7 +276,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Run Apex Tests successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 

@@ -111,7 +111,7 @@ describe('Authentication', async () => {
     // Look for the notification that appears which says, "SFDX: Set a Default Org successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Set a Default Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -163,12 +163,12 @@ describe('Authentication', async () => {
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Create a Default Scratch Org... successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     if (successNotificationWasFound !== true) {
       const failureNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
         'SFDX: Create a Default Scratch Org... failed to run',
-        utilities.TEN_MINUTES
+        utilities.Duration.TEN_MINUTES
       );
       if (failureNotificationWasFound === true) {
         if (
@@ -236,7 +236,7 @@ describe('Authentication', async () => {
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Set a Default Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 

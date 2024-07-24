@@ -7,20 +7,18 @@
 
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import { log } from './miscellaneous.ts';
-
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 export async function saveFailedTestScreenshot(
   specTitle: string,
   testTitle: string
 ): Promise<void> {
-  const saveDir = join(__dirname, '..', '..', 'screenshots', sanitizePath(specTitle));
+  const saveDir = join(
+    EnvironmentSettings.getInstance().storagePath,
+    'screenshots',
+    sanitizePath(specTitle)
+  );
   log(`Test run failed! Saving a screenshot of the failure here: ${saveDir}`);
   log(`Time of screenshot: ${new Date().toTimeString()}`);
   if (!existsSync(saveDir)) {

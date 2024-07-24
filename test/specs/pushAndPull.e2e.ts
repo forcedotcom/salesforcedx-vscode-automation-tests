@@ -12,7 +12,7 @@ import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import { Workbench } from 'wdio-vscode-service';
 
-async function verifyPushSuccess(workbench: Workbench, wait = utilities.TEN_MINUTES) {
+async function verifyPushSuccess(workbench: Workbench, wait = utilities.Duration.TEN_MINUTES) {
   const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
     'SFDX: Push Source to Default Org successfully ran',
     wait
@@ -20,7 +20,7 @@ async function verifyPushSuccess(workbench: Workbench, wait = utilities.TEN_MINU
   await expect(successNotificationWasFound).toBe(true);
 }
 
-async function verifyPullSuccess(workbench: Workbench, wait = utilities.TEN_MINUTES) {
+async function verifyPullSuccess(workbench: Workbench, wait = utilities.Duration.TEN_MINUTES) {
   const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
     'SFDX: Pull Source from Default Org successfully ran',
     wait
@@ -346,7 +346,7 @@ describe('Push and Pull', async () => {
     // Look for the success notification.
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Set a Default Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     if (!successNotificationWasFound) {
       throw new Error(
@@ -390,7 +390,7 @@ describe('Push and Pull', async () => {
   ): Promise<string | undefined> => {
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       `SFDX: ${operation} Source ${fromTo} Default Org successfully ran`,
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
     // Check the output.

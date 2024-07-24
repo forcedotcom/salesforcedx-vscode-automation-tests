@@ -357,7 +357,7 @@ describe('Templates', async () => {
 
     const failureNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Create Lightning Web Component Test failed to run',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(failureNotificationWasFound).toBe(true);
 
@@ -493,7 +493,7 @@ describe('Templates', async () => {
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Create Sample Analytics Template successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 

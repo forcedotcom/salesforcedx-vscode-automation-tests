@@ -54,6 +54,7 @@ export class TestSetup {
 
   public async tearDown(): Promise<void> {
     await this.checkForUncaughtErrors();
+
     try {
       await utilities.deleteScratchOrg(this.scratchOrgAliasName, this.reuseScratchOrg);
     } catch (error) {
@@ -373,7 +374,7 @@ export class TestSetup {
     // Look for the success notification.
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Set a Default Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     if (!successNotificationWasFound) {
       throw new Error(
@@ -416,7 +417,7 @@ export class TestSetup {
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Set a Default Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     if (!successNotificationWasFound) {
       throw new Error(
