@@ -134,8 +134,9 @@ export class EnvironmentSettings {
 
   public get storagePath(): string {
     if (!fs.existsSync(this._storagePath)) {
+      this._storagePath = path.resolve(this._storagePath);
       fs.mkdirSync(this._storagePath, { recursive: true });
     }
-    return path.resolve(this._storagePath);
+    return this._storagePath;
   }
 }
