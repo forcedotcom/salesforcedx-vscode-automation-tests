@@ -7,10 +7,9 @@
 
 import fs from 'fs';
 import path from 'path';
-import { DefaultTreeItem, InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
+import { DefaultTreeItem, InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import { EnvironmentSettings } from './environmentSettings.ts';
 import * as utilities from './utilities/index.ts';
-import { fail } from 'assert';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -18,7 +17,6 @@ const __dirname = path.dirname(__filename);
 
 export class TestSetup {
   public testSuiteSuffixName: string;
-  private reuseScratchOrg = false;
   private static aliasAndUserNameWereVerified = false;
   public tempFolderPath: string | undefined = undefined;
   public projectFolderPath: string | undefined;
@@ -26,12 +24,8 @@ export class TestSetup {
   public scratchOrgAliasName: string | undefined;
   public scratchOrgId: string | undefined;
 
-  public constructor(testSuiteSuffixName: string, reuseScratchOrg: boolean) {
+  public constructor(testSuiteSuffixName: string) {
     this.testSuiteSuffixName = testSuiteSuffixName;
-    this.reuseScratchOrg = reuseScratchOrg;
-
-    // To have all scratch orgs be reused, uncomment the following line:
-    // this.reuseScratchOrg = true;
   }
 
   public get tempProjectName(): string {
@@ -56,7 +50,7 @@ export class TestSetup {
   public async tearDown(): Promise<void> {
     await this.checkForUncaughtErrors();
     try {
-      await utilities.deleteScratchOrg(this.scratchOrgAliasName, this.reuseScratchOrg);
+      await utilities.deleteScratchOrg(this.scratchOrgAliasName);
       await this.deleteScratchOrgInfo();
     } catch (error) {
       utilities.log(
@@ -77,7 +71,6 @@ export class TestSetup {
       if (sfDataDeleteRecord.exitCode > 0) {
         const message = `data delete record failed with exit code ${sfDataDeleteRecord.exitCode}\n stderr ${sfDataDeleteRecord.stderr}`;
         utilities.log(message);
-        throw new Error(message);
       }
     }
   }
@@ -125,49 +118,6 @@ export class TestSetup {
     }
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished setUpTestingEnvironment()`);
-    utilities.log('');
-  }
-
-  /**
-   * @deprecated - this function has been overcome by events, will be removed soon
-   * @param scratchOrgEdition
-   */
-  public async createInitialProject(scratchOrgEdition: utilities.OrgEdition): Promise<void> {
-    utilities.log('');
-    utilities.log(`${this.testSuiteSuffixName} - Starting createInitialProject()...`);
-
-    // If you are not in a VSCode project, the Salesforce extensions are not running
-    // Force the CLI integration extension to load before creating the project
-    const workbench = await utilities.getWorkbench();
-    await utilities.showRunningExtensions();
-    const prompt = await workbench.executeQuickPick('SFDX: Create Project');
-    await utilities.waitForQuickPick(prompt, 'Standard', {
-      msg: 'Expected extension salesforcedx-core to be available within 5 seconds',
-      timeout: utilities.Duration.seconds(5)
-    });
-    await browser.keys(['Escape']);
-    await utilities.pause(utilities.Duration.seconds(1));
-    await browser.keys(['Escape']);
-
-    const coreIsActive = await utilities.verifyExtensionsAreRunning(
-      utilities.getExtensionsToVerifyActive((ext) => ext.extensionId === 'salesforcedx-vscode-core')
-    );
-
-    if (!coreIsActive) {
-      fail('Expected core extension to be active after 20 seconds');
-    }
-
-    utilities.log(`${this.testSuiteSuffixName} - Ready to create the standard project`);
-
-    await this.createProject(scratchOrgEdition);
-
-    // Extra config needed for Apex LSP on GHA
-    const os = process.platform;
-    if (os === 'darwin') {
-      this.setJavaHomeConfigEntry();
-    }
-
-    utilities.log(`${this.testSuiteSuffixName} - ...finished createInitialProject()`);
     utilities.log('');
   }
 
@@ -271,52 +221,8 @@ export class TestSetup {
   private async createDefaultScratchOrg(
     edition: utilities.OrgEdition = 'developer'
   ): Promise<void> {
-    utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`);
 
-    utilities.log(`${this.testSuiteSuffixName} - calling transformedUserName()...`);
-    const currentOsUserName = utilities.transformedUserName();
-
-    utilities.log(`${this.testSuiteSuffixName} - calling getWorkbench()...`);
-    const workbench = await utilities.getWorkbench();
-
-    if (this.reuseScratchOrg) {
-      utilities.log(`${this.testSuiteSuffixName} - looking for a scratch org to reuse...`);
-
-      const sfOrgListResult = await utilities.orgList();
-      const scratchOrgs = JSON.parse(sfOrgListResult.stdout).result.scratchOrgs as {
-        alias: string;
-        orgId: string;
-      }[];
-
-      const foundScratchOrg = scratchOrgs.find((scratchOrg) => {
-        const alias = scratchOrg.alias as string;
-        return (
-          alias &&
-          alias.includes('TempScratchOrg_') &&
-          alias.includes(currentOsUserName) &&
-          alias.includes(this.testSuiteSuffixName)
-        );
-      });
-
-      if (foundScratchOrg) {
-        this.scratchOrgAliasName = foundScratchOrg.alias as string;
-        if (foundScratchOrg.orgId) {
-          this.scratchOrgId = (foundScratchOrg.orgId as string).slice(0, -3);
-        }
-
-        // Set the current scratch org.
-        await this.setDefaultOrg(workbench);
-
-        utilities.log(
-          `${this.testSuiteSuffixName} - found one: ${this.scratchOrgAliasName} with ID ${this.scratchOrgId}`
-        );
-        utilities.log(`${this.testSuiteSuffixName} - ...finished createDefaultScratchOrg()`);
-        utilities.log('');
-      }
-    }
-
-    utilities.log(`${this.testSuiteSuffixName} - calling path.join()...`);
     const definitionFile = path.join(this.projectFolderPath!, 'config', 'project-scratch-def.json');
 
     utilities.log(`${this.testSuiteSuffixName} - constructing scratchOrgAliasName...`);
@@ -326,6 +232,7 @@ export class TestSetup {
     const day = ('0' + currentDate.getDate()).slice(-2);
     const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
     const year = currentDate.getFullYear();
+    const currentOsUserName = utilities.transformedUserName();
     this.scratchOrgAliasName = `TempScratchOrg_${year}_${month}_${day}_${currentOsUserName}_${ticks}_${this.testSuiteSuffixName}`;
     utilities.log(
       `${this.testSuiteSuffixName} - temporary scratch org name is ${this.scratchOrgAliasName}...`
@@ -348,83 +255,27 @@ export class TestSetup {
     utilities.log(
       `Creating ${this.scratchOrgAliasName} took ${time} ticks (${time / 1_000.0} seconds)`
     );
-
-    if (!result.authFields) {
-      throw new Error('In createDefaultScratchOrg(), result.authFields is null (or undefined)');
-    }
-
-    if (!result.authFields.accessToken) {
+    if (
+      !result.authFields ||
+      !result.authFields.accessToken ||
+      !result.orgId ||
+      !result.scratchOrgInfo.SignupEmail
+    ) {
       throw new Error(
-        'In createDefaultScratchOrg(), result.authFields.accessToken is null (or undefined)'
+        `In createDefaultScratchOrg(), result is missing required fields.\nAuth Fields: ${result.authFields}\nOrg ID: ${result.orgId}\nSign Up Email: ${result.scratchOrgInfo.SignupEmail}.`
       );
-    }
-
-    if (!result.orgId) {
-      throw new Error('In createDefaultScratchOrg(), result.orgId is null (or undefined)');
     }
     this.scratchOrgId = (result.orgId as string).slice(0, -3);
 
-    if (!result.scratchOrgInfo.SignupEmail) {
-      throw new Error(
-        'In createDefaultScratchOrg(), result.scratchOrgInfo.SignupEmail is null (or undefined)'
-      );
-    }
-
     // Run SFDX: Set a Default Org
-    utilities.log(`${this.testSuiteSuffixName} - selecting SFDX: Set a Default Org...`);
-    const inputBox = await utilities.executeQuickPick(
-      'SFDX: Set a Default Org',
-      utilities.Duration.seconds(10)
-    );
-
-    utilities.log(`${this.testSuiteSuffixName} - calling findQuickPickItem()...`);
-    const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
-      inputBox,
-      this.scratchOrgAliasName,
-      false,
-      true
-    );
-    if (!scratchOrgQuickPickItemWasFound) {
-      throw new Error(
-        `In createDefaultScratchOrg(), the scratch org's pick list item was not found`
-      );
-    }
-
-    await utilities.pause(utilities.Duration.seconds(3));
-
-    // Warning! This only works if the item (the scratch org) is visible.
-    // If there are many scratch orgs, not all of them may be displayed.
-    // If lots of scratch orgs are created and aren't deleted, this can
-    // result in this list growing one not being able to find the org
-    // they are looking for.
-
-    // Look for the success notification.
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      'SFDX: Set a Default Org successfully ran',
-      utilities.TEN_MINUTES
-    );
-    if (!successNotificationWasFound) {
-      throw new Error(
-        'In createDefaultScratchOrg(), the notification of "SFDX: Set a Default Org successfully ran" was not found'
-      );
-    }
-
-    // Look for this.scratchOrgAliasName in the list of status bar items.
-    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(
-      workbench,
-      this.scratchOrgAliasName
-    );
-    if (!scratchOrgStatusBarItem) {
-      throw new Error(
-        'In createDefaultScratchOrg(), getStatusBarItemWhichIncludes() returned a scratchOrgStatusBarItem with a value of null (or undefined)'
-      );
-    }
+    await this.setDefaultOrg();
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished createDefaultScratchOrg()`);
     utilities.log('');
   }
 
-  private async setDefaultOrg(workbench: Workbench): Promise<void> {
+  private async setDefaultOrg(): Promise<void> {
+    const workbench = await utilities.getWorkbench();
     const inputBox = await utilities.executeQuickPick(
       'SFDX: Set a Default Org',
       utilities.Duration.seconds(2)

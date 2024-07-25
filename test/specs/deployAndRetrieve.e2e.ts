@@ -17,7 +17,7 @@ describe('Deploy and Retrieve', async () => {
   const pathToClass = path.join('force-app', 'main', 'default', 'classes', 'MyClass');
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('DeployAndRetrieve', false);
+    testSetup = new TestSetup('DeployAndRetrieve');
     await testSetup.setUp();
     projectName = testSetup.tempProjectName.toUpperCase();
 

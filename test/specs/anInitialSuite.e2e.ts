@@ -84,7 +84,7 @@ describe('An Initial Suite', async () => {
   });
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('AnInitialSuite', false);
+    testSetup = new TestSetup('AnInitialSuite');
     // Don't call testSetup.setUp() b/c we don't need to authorize a scratch org,
     // just call setUpTestingEnvironment() and createProject().
     await testSetup.setUpTestingEnvironment();

@@ -6,7 +6,7 @@ describe('Customize sfdx-project.json', async () => {
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('sfdxProjectJson', false);
+    testSetup = new TestSetup('sfdxProjectJson');
     await testSetup.setUp();
     await utilities.createSfdxProjectJsonWithAllFields();
     await utilities.reloadAndEnableExtensions();

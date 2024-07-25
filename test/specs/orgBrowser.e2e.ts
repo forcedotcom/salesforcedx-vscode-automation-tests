@@ -15,7 +15,7 @@ describe('Org Browser', async () => {
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('OrgBrowser', false);
+    testSetup = new TestSetup('OrgBrowser');
     await testSetup.setUp();
   });
 
