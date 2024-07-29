@@ -66,11 +66,14 @@ export class TestSetup {
         '--sobject',
         'ScratchOrgInfo',
         '--where',
-        `Id=${this.scratchOrgId}`
+        `Id=${this.scratchOrgId}`,
+        '--target-org',
+        EnvironmentSettings.getInstance().devHubAliasName
       );
       if (sfDataDeleteRecord.exitCode > 0) {
         const message = `data delete record failed with exit code ${sfDataDeleteRecord.exitCode}\n stderr ${sfDataDeleteRecord.stderr}`;
         utilities.log(message);
+        throw new Error(message);
       }
     }
   }
