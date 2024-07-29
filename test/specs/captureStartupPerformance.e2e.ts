@@ -23,9 +23,12 @@ describe('Capture Startup Performance', async () => {
 
   step('Capture startup peformance data', async () => {
     // 1. Open `Developer: Startup Performance`
-    await utilities.executeQuickPick('Developer: Startup Performance',);
+    await utilities.executeQuickPick('Developer: Startup Performance');
     // 2. Parse the markdown to get the "Extension Activation Stats" using remark-parse
-      // a. Save the startup performance file locally (is the default directory always the home directory of the Salesforce project?)
+      // a. Save the startup performance file locally (need to use the workaround below because the default directory is NOT always the home directory of the Salesforce project if you hit Ctrl+S on the Startup Performance file)
+        // 1. Ctrl+A -> Ctrl+C (copy all the contents of the Startup Performance file)
+        // 2. `Output: Focus on Terminal View` in command palette (Terminal should default to the home directory of the Salesforce project)
+        // 3. `vi startupPerformance.md` -> `:set paste` -> Ctrl+V -> wait for the file to paste -> `:wq`
       // b. Read the saved startup performance file using fs.readFileSync()
       // c. Find the "Extension Activation Stats" section
       // d. Parse the table to get the startup performance for each Salesforce extension
