@@ -66,7 +66,7 @@ export class TestSetup {
         '--sobject',
         'ScratchOrgInfo',
         '--where',
-        `Id=${this.scratchOrgId}`,
+        `ScratchOrg=${this.scratchOrgId}`,
         '--target-org',
         EnvironmentSettings.getInstance().devHubAliasName
       );
