@@ -15,6 +15,7 @@ export * from './lwcUtils.ts';
 export * from './miscellaneous.ts';
 export * from './notifications.ts';
 export * from './outputView.ts';
+export * from './performanceUtils.ts';
 export * from './predicates.ts';
 export * from './sideBar.ts';
 export * from './settings.ts';
