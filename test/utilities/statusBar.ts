@@ -5,13 +5,11 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { Workbench } from 'wdio-vscode-service';
 import { Duration, debug, pause } from './miscellaneous.ts';
+import { getWorkbench } from './workbench.ts';
 
-export async function getStatusBarItemWhichIncludes(
-  workbench: Workbench,
-  title: string
-): Promise<WebdriverIO.Element> {
+export async function getStatusBarItemWhichIncludes(title: string): Promise<WebdriverIO.Element> {
+  const workbench = await getWorkbench();
   const retries = 10;
   for (let i = retries; i > 0; i--) {
     const statusBar = await workbench.getStatusBar().wait();

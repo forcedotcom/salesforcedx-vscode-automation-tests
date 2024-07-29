@@ -33,7 +33,7 @@ describe('Debug Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Ignore Conflicts successfully ran".
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successPushNotificationWasFound).toBe(true);
   });
@@ -42,9 +42,7 @@ describe('Debug Apex Tests', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
 
     // Get Apex LSP Status Bar
-    const workbench = await utilities.getWorkbench();
     const statusBar = await utilities.getStatusBarItemWhichIncludes(
-      workbench,
       'Editor Language Status'
     );
     await statusBar.click();
@@ -64,7 +62,7 @@ describe('Debug Apex Tests', async () => {
     // Look for the success notification that appears which says, "Debug Test(s) successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'Debug Test(s) successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -88,7 +86,7 @@ describe('Debug Apex Tests', async () => {
     // Look for the success notification that appears which says, "Debug Test(s) successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'Debug Test(s) successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -133,7 +131,7 @@ describe('Debug Apex Tests', async () => {
     // Look for the success notification that appears which says, "Debug Test(s) successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'Debug Test(s) successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -166,7 +164,7 @@ describe('Debug Apex Tests', async () => {
     // Look for the success notification that appears which says, "Debug Test(s) successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'Debug Test(s) successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 

@@ -8,7 +8,7 @@
 import fs from 'fs';
 import path from 'path';
 import { DefaultTreeItem, InputBox, QuickOpenBox } from 'wdio-vscode-service';
-import { EnvironmentSettings } from './environmentSettings.ts';
+import { EnvironmentSettings as Env } from './environmentSettings.ts';
 import * as utilities from './utilities/index.ts';
 import { fileURLToPath } from 'url';
 
@@ -68,7 +68,7 @@ export class TestSetup {
         '--where',
         `Id=${this.scratchOrgId}`,
         '--target-org',
-        EnvironmentSettings.getInstance().devHubAliasName
+        Env.getInstance().devHubAliasName
       );
       if (sfDataDeleteRecord.exitCode > 0) {
         const message = `data delete record failed with exit code ${sfDataDeleteRecord.exitCode}\n stderr ${sfDataDeleteRecord.stderr}`;
@@ -105,14 +105,18 @@ export class TestSetup {
 
     this.tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
 
-    this.projectFolderPath = path.join(this.tempFolderPath, this.tempProjectName);
+    this.projectFolderPath = Env.getInstance().useExistingProject
+      ? Env.getInstance().useExistingProject
+      : path.join(this.tempFolderPath, this.tempProjectName);
     utilities.log(
       `${this.testSuiteSuffixName} - creating project files in ${this.projectFolderPath}`
     );
 
-    // Remove the project folder, just in case there are stale files there.
-    if (fs.existsSync(this.projectFolderPath)) {
-      utilities.removeFolder(this.projectFolderPath);
+    // Remove the project folder, just in case there are stale files there, but only if it is not an existing projet.
+    if (this.projectFolderPath && !Env.getInstance().useExistingProject) {
+      if (fs.existsSync(this.projectFolderPath)) {
+        utilities.removeFolder(this.projectFolderPath);
+      }
     }
 
     // Now create the temp folder.  It should exist but create the folder if it is missing.
@@ -126,37 +130,43 @@ export class TestSetup {
 
   public async createProject(scratchOrgEdition: utilities.OrgEdition, projectName?: string) {
     utilities.log('');
-    utilities.log(`${projectName ?? this.testSuiteSuffixName} - Starting createProject()...`);
-    this.prompt = await utilities.executeQuickPick('SFDX: Create Project');
-    // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
-    // Select the "Standard" project type.
-    await utilities.waitForQuickPick(this.prompt, 'Standard', {
-      msg: 'Expected extension salesforcedx-core to be available within 5 seconds',
-      timeout: utilities.Duration.seconds(5)
-    });
+    if (!Env.getInstance().useExistingProject) {
+      utilities.log(`${projectName ?? this.testSuiteSuffixName} - Starting createProject()...`);
+      this.prompt = await utilities.executeQuickPick('SFDX: Create Project');
+      // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
+      // Select the "Standard" project type.
+      await utilities.waitForQuickPick(this.prompt, 'Standard', {
+        msg: 'Expected extension salesforcedx-core to be available within 5 seconds',
+        timeout: utilities.Duration.seconds(5)
+      });
 
-    // Enter the project's name.
-    await this.prompt.setText(projectName ?? this.tempProjectName);
-    await utilities.pause(utilities.Duration.seconds(2));
+      // Enter the project's name.
+      await this.prompt.setText(projectName ?? this.tempProjectName);
+      await utilities.pause(utilities.Duration.seconds(2));
 
-    // Press Enter/Return.
-    await this.prompt.confirm();
+      // Press Enter/Return.
+      await this.prompt.confirm();
 
-    // Set the location of the project.
-    const input = await this.prompt.input$;
-    await input.setValue(this.tempFolderPath!);
-    await utilities.pause(utilities.Duration.seconds(2));
-    await utilities.clickFilePathOkButton();
+      // Set the location of the project.
+      const input = await this.prompt.input$;
+      await input.setValue(this.tempFolderPath!);
+      await utilities.pause(utilities.Duration.seconds(2));
+      await utilities.clickFilePathOkButton();
 
-    // Verify the project was created and was loaded.
-    await this.verifyProjectCreated(projectName ?? this.tempProjectName);
-    this.updateScratchOrgDefWithEdition(scratchOrgEdition);
+      // Verify the project was created and was loaded.
+      await this.verifyProjectCreated(projectName ?? this.tempProjectName);
+      this.updateScratchOrgDefWithEdition(scratchOrgEdition);
 
-    // Extra config needed for Apex LSP on GHA
-    if (process.platform === 'darwin') {
-      this.setJavaHomeConfigEntry();
+      // Extra config needed for Apex LSP on GHA
+      if (process.platform === 'darwin') {
+        this.setJavaHomeConfigEntry();
+      }
+      utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
+    } else {
+      utilities.log(
+        `${this.testSuiteSuffixName} - skipping createProject() as test is using an existing project`
+      );
     }
-    utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
     utilities.log('');
   }
 
@@ -173,9 +183,7 @@ export class TestSetup {
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
     const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
     utilities.log(`${this.testSuiteSuffixName} - calling sf org:display...`);
-    const sfOrgDisplayResult = await utilities.orgDisplay(
-      EnvironmentSettings.getInstance().devHubUserName
-    );
+    const sfOrgDisplayResult = await utilities.orgDisplay(Env.getInstance().devHubUserName);
 
     // Now write the file.
     fs.writeFileSync(authFilePath, sfOrgDisplayResult.stdout);
@@ -192,7 +200,7 @@ export class TestSetup {
   // verifyAliasAndUserName() verifies that the alias and user name are set,
   // and also verifies there is a corresponding match in the org list.
   private async verifyAliasAndUserName() {
-    const environmentSettings = EnvironmentSettings.getInstance();
+    const environmentSettings = Env.getInstance();
 
     const devHubAliasName = environmentSettings.devHubAliasName;
     if (!devHubAliasName) {
@@ -224,37 +232,39 @@ export class TestSetup {
   private async createDefaultScratchOrg(
     edition: utilities.OrgEdition = 'developer'
   ): Promise<void> {
+    utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`);
 
     const definitionFile = path.join(this.projectFolderPath!, 'config', 'project-scratch-def.json');
 
-    utilities.log(`${this.testSuiteSuffixName} - constructing scratchOrgAliasName...`);
+    utilities.debug(`${this.testSuiteSuffixName} - constructing scratchOrgAliasName...`);
     // Org alias format: TempScratchOrg_yyyy_mm_dd_username_ticks_testSuiteSuffixName
     const currentDate = new Date();
-    const ticks = currentDate.getTime();
-    const day = ('0' + currentDate.getDate()).slice(-2);
-    const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+    const day = currentDate.getDate().toString().padStart(2, '0');
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
     const year = currentDate.getFullYear();
+
     const currentOsUserName = utilities.transformedUserName();
-    this.scratchOrgAliasName = `TempScratchOrg_${year}_${month}_${day}_${currentOsUserName}_${ticks}_${this.testSuiteSuffixName}`;
+
+    this.scratchOrgAliasName = `TempScratchOrg_${year}_${month}_${day}_${currentOsUserName}_${currentDate.getTime()}_${this.testSuiteSuffixName}`;
     utilities.log(
       `${this.testSuiteSuffixName} - temporary scratch org name is ${this.scratchOrgAliasName}...`
     );
 
-    const startDate = Date.now();
-    const durationDays = 1;
+    const startHr = process.hrtime();
 
     const sfOrgCreateResult = await utilities.scratchOrgCreate(
       edition,
       definitionFile,
       this.scratchOrgAliasName,
-      durationDays
+      1
     );
-    utilities.log(`${this.testSuiteSuffixName} - calling JSON.parse()...`);
+    utilities.debug(`${this.testSuiteSuffixName} - calling JSON.parse()...`);
     const result = JSON.parse(sfOrgCreateResult.stdout).result;
 
-    const endDate = Date.now();
-    const time = endDate - startDate;
+    const endHr = process.hrtime(startHr);
+    const time = endHr[0] * 1_000_000_000 + endHr[1] - (startHr[0] * 1_000_000_000 + startHr[1]);
+
     utilities.log(
       `Creating ${this.scratchOrgAliasName} took ${time} ticks (${time / 1_000.0} seconds)`
     );
@@ -268,59 +278,49 @@ export class TestSetup {
         `In createDefaultScratchOrg(), result is missing required fields.\nAuth Fields: ${result.authFields}\nOrg ID: ${result.orgId}\nSign Up Email: ${result.scratchOrgInfo.SignupEmail}.`
       );
     }
-    this.scratchOrgId = (result.orgId as string).slice(0, -3);
+    this.scratchOrgId = result.orgId as string;
 
     // Run SFDX: Set a Default Org
-    await this.setDefaultOrg();
+    utilities.log(`${this.testSuiteSuffixName} - selecting SFDX: Set a Default Org...`);
+
+    await utilities.setDefaultOrg(this.scratchOrgAliasName);
+
+    await utilities.pause(utilities.Duration.seconds(3));
+
+    // Warning! This only works if the item (the scratch org) is visible.
+    // If there are many scratch orgs, not all of them may be displayed.
+    // If lots of scratch orgs are created and aren't deleted, this can
+    // result in this list growing one not being able to find the org
+    // they are looking for.
+
+    // Look for the success notification.
+    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
+      'SFDX: Set a Default Org successfully ran',
+      utilities.Duration.TEN_MINUTES
+    );
+    if (!successNotificationWasFound) {
+      throw new Error(
+        'In createDefaultScratchOrg(), the notification of "SFDX: Set a Default Org successfully ran" was not found'
+      );
+    }
+
+    // Look for this.scratchOrgAliasName in the list of status bar items.
+    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(
+      this.scratchOrgAliasName
+    );
+    if (!scratchOrgStatusBarItem) {
+      throw new Error(
+        'In createDefaultScratchOrg(), getStatusBarItemWhichIncludes() returned a scratchOrgStatusBarItem with a value of null (or undefined)'
+      );
+    }
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished createDefaultScratchOrg()`);
     utilities.log('');
   }
 
-  private async setDefaultOrg(): Promise<void> {
-    const workbench = await utilities.getWorkbench();
-    const inputBox = await utilities.executeQuickPick(
-      'SFDX: Set a Default Org',
-      utilities.Duration.seconds(2)
-    );
-
-    const scratchOrgQuickPickItemWasFound = await utilities.findQuickPickItem(
-      inputBox,
-      this.scratchOrgAliasName!,
-      false,
-      true
-    );
-    if (!scratchOrgQuickPickItemWasFound) {
-      throw new Error(`In setDefaultOrg(), the scratch org's quick pick item was not found`);
-    }
-
-    await utilities.pause(utilities.Duration.seconds(3));
-
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      'SFDX: Set a Default Org successfully ran',
-      utilities.TEN_MINUTES
-    );
-    if (!successNotificationWasFound) {
-      throw new Error(
-        'In setDefaultOrg(), the notification of "SFDX: Set a Default Org successfully ran" was not found'
-      );
-    }
-
-    // Look for the org's alias name in the list of status bar items.
-    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(
-      workbench,
-      this.scratchOrgAliasName!
-    );
-    if (!scratchOrgStatusBarItem) {
-      throw new Error(
-        'In setDefaultOrg(), getStatusBarItemWhichIncludes() returned a scratchOrgStatusBarItem with a value of null (or undefined)'
-      );
-    }
-  }
-
   private setJavaHomeConfigEntry(): void {
     const vscodeSettingsPath = path.join(this.projectFolderPath!, '.vscode', 'settings.json');
-    if (!EnvironmentSettings.getInstance().javaHome) {
+    if (!Env.getInstance().javaHome) {
       return;
     }
     if (!fs.existsSync(path.dirname(vscodeSettingsPath))) {
@@ -360,7 +360,7 @@ export class TestSetup {
     }
   }
 
-  private async verifyProjectCreated(projectName: string) {
+  public async verifyProjectCreated(projectName: string) {
     utilities.log(`${this.testSuiteSuffixName} - Verifying project was created...`);
 
     // Reload the VS Code window

@@ -64,13 +64,14 @@ export async function selectQuickPickItem(
 }
 
 export async function findQuickPickItem(
-  inputBox: InputBox | QuickOpenBox,
+  inputBox: InputBox | QuickOpenBox | undefined,
   quickPickItemTitle: string,
   useExactMatch: boolean,
   selectTheQuickPickItem: boolean
 ): Promise<boolean> {
-  debug(`findQuickPickItem: ${quickPickItemTitle}`);
-  findQuickPickItem;
+  if (!inputBox) {
+    return false;
+  }
   // Type the text into the filter.  Do this in case the pick list is long and
   // the target item is not visible (and one needs to scroll down to see it).
   await inputBox.setText(quickPickItemTitle);
@@ -107,7 +108,7 @@ export async function waitForQuickPick(
   await browser.waitUntil(
     async () => {
       try {
-        await selectQuickPickItem(prompt, pickListItem);
+        await findQuickPickItem(prompt, pickListItem, false, true);
         return true;
       } catch (error) {
         return false;
@@ -116,9 +117,7 @@ export async function waitForQuickPick(
     {
       timeout: options.timeout?.milliseconds,
       interval: 500, // Check every 500 ms
-      timeoutMsg:
-        options.msg ??
-        `Expected to find option ${pickListItem} before ${options.timeout} milliseconds`
+      timeoutMsg: options.msg ?? `Expected to find option ${pickListItem} before ${options.timeout}`
     }
   );
 }
@@ -183,4 +182,9 @@ export async function clickFilePathOkButton(): Promise<void> {
     }
   }
   await pause(Duration.seconds(2));
+}
+
+export async function setDefaultOrg(targetOrg: string): Promise<void> {
+  const inputBox = await executeQuickPick('SFDX: Set a Default Org');
+  await findQuickPickItem(inputBox, targetOrg, false, true);
 }

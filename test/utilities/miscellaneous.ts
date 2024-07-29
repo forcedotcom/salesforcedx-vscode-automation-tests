@@ -20,13 +20,15 @@ export async function pause(duration: Duration = Duration.seconds(1)): Promise<v
 }
 
 export function log(message: string): void {
-  console.log(message);
+  if (EnvironmentSettings.getInstance().logLevel !== 'silent') {
+    console.log(message);
+  }
 }
 
 export function debug(message: string): void {
-  if (EnvironmentSettings.getInstance().debug) {
+  if (EnvironmentSettings.getInstance().logLevel in ['debug', 'trace']) {
     const timestamp = new Date().toISOString();
-    log(`${timestamp}:${message}`);
+    console.debug(`${timestamp}:${message}`);
   }
 }
 
@@ -63,7 +65,7 @@ export function transformedUserName(): string {
 export async function findElementByText(
   type: string,
   attribute: string,
-  labelText: string,
+  labelText: string | undefined,
   waitForClickable: boolean | undefined = false,
   waitOptions?: {
     timeout?: Duration;
@@ -72,6 +74,9 @@ export async function findElementByText(
     timeoutMsg?: string;
   }
 ): Promise<WebdriverIO.Element> {
+  if (!labelText) {
+    throw new Error('labeText must be defined');
+  }
   debug(`findElementByText ${type}[${attribute}="${labelText}"]`);
   const element = await $(`${type}[${attribute}="${labelText}"]`);
   if (!element) {
@@ -198,6 +203,10 @@ export class Duration extends DurationKit.Duration {
   public get weeks(): number {
     return super.weeks * this.scaleFactor;
   }
+
+  public static ONE_MINUTE = Duration.minutes(1);
+  public static FIVE_MINUTES = Duration.minutes(5);
+  public static TEN_MINUTES = Duration.minutes(10);
 
   // Static methods for creating new instances without specifying scaleFactor
   public static milliseconds(quantity: number): Duration {

@@ -23,15 +23,23 @@ describe('Org Browser', async () => {
     utilities.log(
       `${testSetup.testSuiteSuffixName} - Check Org Browser is connected to target org`
     );
-    await utilities.executeQuickPick('View: Show Org Browser', utilities.Duration.seconds(5));
+
+    // run org list
+    const orgList = await utilities.orgList();
+    utilities.log(`org list ${orgList.stdout}`);
+    const aliasList = await utilities.aliasList();
+    utilities.log(`alias list ${aliasList.stdout}`);
+    const orgDisplay = await utilities.orgDisplay(testSetup.scratchOrgAliasName!)
+    utilities.log(`org display ${orgDisplay.stdout}`);
+    await utilities.openOrgBrowser();
 
     const orgBrowserLabelEl = await utilities.findElementByText(
       'div',
       'aria-label',
       testSetup.scratchOrgAliasName!
     );
-    utilities.log(`${testSetup.testSuiteSuffixName} - Org Browser is connected to target org`);
     await expect(orgBrowserLabelEl).toBeTruthy();
+    utilities.log(`${testSetup.testSuiteSuffixName} - Org Browser is connected to target org`);
   });
 
   step('Check some metadata types are available', async () => {
@@ -102,7 +110,7 @@ describe('Org Browser', async () => {
     // Verify the deploy was successful
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Deploy This Source to Org successfully ran',
-      utilities.FIVE_MINUTES
+      utilities.Duration.FIVE_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -145,7 +153,7 @@ describe('Org Browser', async () => {
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Retrieve This Source from Org successfully ran',
-      utilities.FIVE_MINUTES
+      utilities.Duration.FIVE_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
   });
@@ -166,7 +174,7 @@ describe('Org Browser', async () => {
     const workbench = await utilities.getWorkbench();
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Retrieve This Source from Org successfully ran',
-      utilities.FIVE_MINUTES
+      utilities.Duration.FIVE_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
