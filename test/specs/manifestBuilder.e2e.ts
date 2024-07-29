@@ -13,7 +13,7 @@ describe('Manifest Builder', async () => {
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('ManifestBuilder', false);
+    testSetup = new TestSetup('ManifestBuilder');
     await testSetup.setUp();
   });
 

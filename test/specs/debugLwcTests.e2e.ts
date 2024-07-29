@@ -21,7 +21,7 @@ describe('Debug LWC Tests', async () => {
     const CONTINUE = 'F5';
 
     step('Set up the testing environment', async () => {
-      testSetup = new TestSetup('DebugLWCTests', false);
+      testSetup = new TestSetup('DebugLWCTests');
       await testSetup.setUp();
       projectFolderPath = testSetup.projectFolderPath!;
 

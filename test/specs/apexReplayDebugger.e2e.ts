@@ -19,7 +19,7 @@ describe('Apex Replay Debugger', async () => {
   const CONTINUE = 'F5';
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('ApexReplayDebugger', false);
+    testSetup = new TestSetup('ApexReplayDebugger');
     await testSetup.setUp();
 
     // Create Apex class file
@@ -134,10 +134,7 @@ describe('Apex Replay Debugger', async () => {
     );
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      'Getting Apex debug logs',
-      utilities.TEN_MINUTES
-    );
+    await utilities.waitForNotificationToGoAway('Getting Apex debug logs', utilities.TEN_MINUTES);
 
     // Select a log file
     const quickPicks = await prompt.getQuickPicks();

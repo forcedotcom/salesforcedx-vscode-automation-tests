@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, salesforce.com, inc.
+ * Copyright (c) 2024, salesforce.com, inc.
  * All rights reserved.
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
@@ -10,7 +10,7 @@ import { step } from 'mocha-steps';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import * as utilities from '../utilities/index.ts';
 
-describe('An Initial SetUp', async () => {
+describe('CLI Commands', async () => {
   const environmentSettings = EnvironmentSettings.getInstance();
   const devHubUserName = environmentSettings.devHubUserName;
   const devHubAliasName = environmentSettings.devHubAliasName;
@@ -60,7 +60,7 @@ describe('An Initial SetUp', async () => {
 
   after('Delete the scratch org', async () => {
     if (scratchOrg) {
-      await utilities.deleteScratchOrg('foo', false);
+      await utilities.deleteScratchOrg('foo');
     }
   });
 });

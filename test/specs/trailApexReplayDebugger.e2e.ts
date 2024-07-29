@@ -22,7 +22,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('TrailApexReplayDebugger', false);
+    testSetup = new TestSetup('TrailApexReplayDebugger');
     await testSetup.setUp();
 
     // Create Apex class AccountService
@@ -189,10 +189,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
     );
 
     // Wait for the command to execute
-    await utilities.waitForNotificationToGoAway(
-      'Getting Apex debug logs',
-      utilities.TEN_MINUTES
-    );
+    await utilities.waitForNotificationToGoAway('Getting Apex debug logs', utilities.TEN_MINUTES);
 
     // Select a log file
     const quickPicks = await prompt.getQuickPicks();

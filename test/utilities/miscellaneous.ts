@@ -48,6 +48,7 @@ export function currentOsUserName(): string {
 // becomes truncated.  An fix for this is to replace
 // the periods with an underscore.
 export function transformedUserName(): string {
+  debug('transformedUsername()');
   return currentOsUserName().replace('.', '_');
 }
 

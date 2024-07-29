@@ -50,11 +50,8 @@ export async function runCliCommand(
   });
 }
 
-export async function deleteScratchOrg(
-  orgAliasName: string | undefined,
-  reuseScratchOrg: boolean
-): Promise<void> {
-  if (orgAliasName && !reuseScratchOrg) {
+export async function deleteScratchOrg(orgAliasName: string | undefined): Promise<void> {
+  if (orgAliasName) {
     // The Terminal view can be a bit unreliable, so directly call exec() instead:
     const sfOrgDeleteResults = await runCliCommand(
       'org:delete:scratch',
@@ -70,9 +67,7 @@ export async function deleteScratchOrg(
   }
 }
 
-export async function orgLoginSfdxUrl(
-  authFilePath: string
-): Promise<SfCommandRunResults> {
+export async function orgLoginSfdxUrl(authFilePath: string): Promise<SfCommandRunResults> {
   const sfSfdxUrlStoreResult = await runCliCommand('org:login:sfdx-url', '-d', '-f', authFilePath);
   if (sfSfdxUrlStoreResult.exitCode > 0) {
     debug('sfSfdxUrlStoreResult.exitCode = ' + sfSfdxUrlStoreResult.exitCode);

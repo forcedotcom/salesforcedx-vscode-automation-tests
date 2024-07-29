@@ -69,6 +69,7 @@ export async function findQuickPickItem(
   useExactMatch: boolean,
   selectTheQuickPickItem: boolean
 ): Promise<boolean> {
+  debug(`findQuickPickItem: ${quickPickItemTitle}`);
   findQuickPickItem;
   // Type the text into the filter.  Do this in case the pick list is long and
   // the target item is not visible (and one needs to scroll down to see it).
