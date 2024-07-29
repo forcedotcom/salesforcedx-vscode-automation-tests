@@ -20,7 +20,7 @@ describe('Apex Replay Debugger', async () => {
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('ApexReplayDebugger');
-    await testSetup.setUp();
+    await testSetup.setUpWithScratchOrg();
 
     // Create Apex class file
     await utilities.createApexClassWithTest('ExampleApexClass');

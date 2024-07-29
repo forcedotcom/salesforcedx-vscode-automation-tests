@@ -36,7 +36,7 @@ describe('Push and Pull', async () => {
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('PushAndPull');
-    await testSetup.setUp();
+    await testSetup.setUpWithScratchOrg();
     projectName = testSetup.tempProjectName.toUpperCase();
   });
 

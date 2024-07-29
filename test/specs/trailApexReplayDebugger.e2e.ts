@@ -23,7 +23,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('TrailApexReplayDebugger');
-    await testSetup.setUp();
+    await testSetup.setUpWithScratchOrg();
 
     // Create Apex class AccountService
     await utilities.createApexClassWithBugs();

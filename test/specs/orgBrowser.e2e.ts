@@ -16,7 +16,7 @@ describe('Org Browser', async () => {
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('OrgBrowser');
-    await testSetup.setUp();
+    await testSetup.setUpWithScratchOrg();
   });
 
   step('Check Org Browser is connected to target org', async () => {

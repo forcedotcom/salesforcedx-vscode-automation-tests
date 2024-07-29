@@ -21,7 +21,7 @@ describe('Templates', async () => {
   // Set up
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('Templates');
-    await testSetup.setUp();
+    await testSetup.setUpWithScratchOrg();
     projectName = testSetup.tempProjectName.toUpperCase();
   });
 

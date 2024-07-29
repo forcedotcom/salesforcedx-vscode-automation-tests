@@ -13,7 +13,7 @@ describe('Miscellaneous', async () => {
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('Miscellaneous');
-    await testSetup.setUp();
+    await testSetup.setUpWithScratchOrg();
   });
 
   xstep('Use out-of-the-box Apex Snippets', async () => {

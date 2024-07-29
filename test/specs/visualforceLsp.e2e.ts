@@ -15,7 +15,7 @@ describe('Visualforce LSP', async () => {
   step('Set up the testing environment', async () => {
     utilities.log('VisualforceLsp - Set up the testing environment');
     testSetup = new TestSetup('VisualforceLsp');
-    await testSetup.setUp();
+    await testSetup.setUpWithScratchOrg();
 
     utilities.log(`${testSetup.testSuiteSuffixName} - calling createApexController()`);
     // Create Apex controller for the Visualforce Page

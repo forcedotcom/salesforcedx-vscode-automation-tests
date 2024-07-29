@@ -7,7 +7,7 @@ describe('Customize sfdx-project.json', async () => {
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('sfdxProjectJson');
-    await testSetup.setUp();
+    await testSetup.setUpWithScratchOrg();
     await utilities.createSfdxProjectJsonWithAllFields();
     await utilities.reloadAndEnableExtensions();
   });

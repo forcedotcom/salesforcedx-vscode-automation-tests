@@ -32,9 +32,9 @@ export class TestSetup {
     return 'TempProject-' + this.testSuiteSuffixName;
   }
 
-  public async setUp(scratchOrgEdition: utilities.OrgEdition = 'developer'): Promise<void> {
+  public async setUpWithScratchOrg(scratchOrgEdition: utilities.OrgEdition = 'developer'): Promise<void> {
     utilities.log('');
-    utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
+    utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUpWithScratchOrg()...`);
     await utilities.installExtensions();
     await utilities.reloadAndEnableExtensions();
     await this.setUpTestingEnvironment();
@@ -43,7 +43,20 @@ export class TestSetup {
     await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
     await this.authorizeDevHub();
     await this.createDefaultScratchOrg();
-    utilities.log(`${this.testSuiteSuffixName} - ...finished TestSetup.setUp()`);
+    utilities.log(`${this.testSuiteSuffixName} - ...finished TestSetup.setUpWithScratchOrg()`);
+    utilities.log('');
+  }
+
+  public async setUpWithoutScratchOrg(): Promise<void> {
+    utilities.log('');
+    utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUpWithoutScratchOrg()...`);
+    await utilities.installExtensions();
+    await utilities.reloadAndEnableExtensions();
+    await this.setUpTestingEnvironment();
+    await this.createProject();
+    // await utilities.reloadAndEnableExtensions();
+    // await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
+    utilities.log(`${this.testSuiteSuffixName} - ...finished TestSetup.setUpWithoutScratchOrg()`);
     utilities.log('');
   }
 
@@ -124,7 +137,7 @@ export class TestSetup {
     utilities.log('');
   }
 
-  public async createProject(scratchOrgEdition: utilities.OrgEdition, projectName?: string) {
+  public async createProject(scratchOrgEdition?: utilities.OrgEdition, projectName?: string) {
     utilities.log('');
     utilities.log(`${projectName ?? this.testSuiteSuffixName} - Starting createProject()...`);
     this.prompt = await utilities.executeQuickPick('SFDX: Create Project');
@@ -150,8 +163,9 @@ export class TestSetup {
 
     // Verify the project was created and was loaded.
     await this.verifyProjectCreated(projectName ?? this.tempProjectName);
-    this.updateScratchOrgDefWithEdition(scratchOrgEdition);
-
+    if (scratchOrgEdition) {
+      this.updateScratchOrgDefWithEdition(scratchOrgEdition);
+    }
     // Extra config needed for Apex LSP on GHA
     if (process.platform === 'darwin') {
       this.setJavaHomeConfigEntry();

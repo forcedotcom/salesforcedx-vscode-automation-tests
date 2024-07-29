@@ -15,7 +15,7 @@ describe('SObjects Definitions', async () => {
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('sObjectsDefinitions');
-    await testSetup.setUp();
+    await testSetup.setUpWithScratchOrg();
     projectName = testSetup.tempProjectName.toUpperCase();
 
     utilities.log(`${testSetup.testSuiteSuffixName} - calling createCustomObjects()`);

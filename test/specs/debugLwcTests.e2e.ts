@@ -22,7 +22,7 @@ describe('Debug LWC Tests', async () => {
 
     step('Set up the testing environment', async () => {
       testSetup = new TestSetup('DebugLWCTests');
-      await testSetup.setUp();
+      await testSetup.setUpWithScratchOrg();
       projectFolderPath = testSetup.projectFolderPath!;
 
       // Create LWC1 and test

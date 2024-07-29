@@ -14,7 +14,7 @@ describe('Debug Apex Tests', async () => {
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('DebugApexTests');
-    await testSetup.setUp();
+    await testSetup.setUpWithScratchOrg();
 
     // Create Apex class 1 and test
     await utilities.createApexClassWithTest('ExampleApexClass1');

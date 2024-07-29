@@ -17,7 +17,7 @@ describe('Aura LSP', async () => {
   step('Set up the testing environment', async () => {
     utilities.log('AuraLsp - Set up the testing environment');
     testSetup = new TestSetup('AuraLsp');
-    await testSetup.setUp();
+    await testSetup.setUpWithScratchOrg();
 
     // Create Aura Component
     await utilities.createAura('aura1');

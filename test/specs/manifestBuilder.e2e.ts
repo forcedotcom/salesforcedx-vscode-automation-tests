@@ -14,7 +14,7 @@ describe('Manifest Builder', async () => {
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('ManifestBuilder');
-    await testSetup.setUp();
+    await testSetup.setUpWithScratchOrg();
   });
 
   step('Generate Manifest File', async () => {
