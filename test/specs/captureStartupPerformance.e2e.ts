@@ -23,7 +23,12 @@ describe('Capture Startup Performance', async () => {
 
   step('Capture startup peformance data', async () => {
     // 1. Open `Developer: Startup Performance`
-    // 2. Parse the markdown to get the "Extension Activation Stats"
+    await utilities.executeQuickPick('Developer: Startup Performance',);
+    // 2. Parse the markdown to get the "Extension Activation Stats" using remark-parse
+      // a. Save the startup performance file locally (is the default directory always the home directory of the Salesforce project?)
+      // b. Read the saved startup performance file using fs.readFileSync()
+      // c. Find the "Extension Activation Stats" section
+      // d. Parse the table to get the startup performance for each Salesforce extension
   });
 
   step('Send startup performance data to AppInsights', async() => {
