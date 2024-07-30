@@ -67,7 +67,7 @@ export class TestSetup {
       const sfDataDeleteRecord = await exec(
         `sf data:delete:record --sobject ScratchOrgInfo --where ScratchOrg=${this.scratchOrgId} --target-org ${EnvironmentSettings.getInstance().devHubAliasName}`
       );
-      if (!sfDataDeleteRecord.stdout.includes('exit code 0')) {
+      if (!sfDataDeleteRecord.stdout.includes('Deleting Record... Success')) {
         throw new Error(
           `Deleting scratch org info failed with stderr: ${sfDataDeleteRecord.stderr}`
         );
