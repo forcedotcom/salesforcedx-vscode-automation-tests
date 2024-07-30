@@ -7,6 +7,7 @@
 import { step, xstep } from 'mocha-steps';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
+import { readFileSync } from 'fs';
 
 describe('Capture Startup Performance', async () => {
   let testSetup: TestSetup;
@@ -31,8 +32,11 @@ describe('Capture Startup Performance', async () => {
         // 3. `vi startupPerformance.md` -> `:set paste` -> Ctrl+V -> wait for the file to paste -> `:wq` (what is the alternative for Windows?)
     await utilities.saveStartupPerformance();
       // b. Read the saved startup performance file using fs.readFileSync()
+    const startupPerformanceFileContent = readFileSync('startupPerformance.md', 'utf-8');
       // c. Find the "Extension Activation Stats" section
+    const extensionActivationStatsContent = await findHeaderInMarkdownFile(startupPerformanceFileContent, 'Extension Activation Stats');
       // d. Parse the table to get the startup performance for each Salesforce extension
+    const result = await parseMarkdownTable(extensionActivationStatsContent);
   });
 
   step('Send startup performance data to AppInsights', async() => {
@@ -42,4 +46,12 @@ describe('Capture Startup Performance', async () => {
   after('Tear down and clean up the testing environment', async () => {
     await testSetup?.tearDown();
   });
+
+  async function findHeaderInMarkdownFile(markdownFileContent: string, header: string): Promise<string> {
+    return 'elephant';
+  }
+
+  async function parseMarkdownTable(markdownTableContent: string): Promise<string> {
+    return 'elephant';
+  }
 });
