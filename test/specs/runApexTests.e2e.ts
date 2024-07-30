@@ -14,7 +14,7 @@ describe('Run Apex Tests', async () => {
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('RunApexTests', false);
+    testSetup = new TestSetup('RunApexTests');
     await testSetup.setUp();
 
     // Create Apex class 1 and test

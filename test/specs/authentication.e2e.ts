@@ -19,7 +19,7 @@ describe('Authentication', async () => {
   let projectFolderPath: string;
   let prompt: QuickOpenBox | InputBox;
   let scratchOrgAliasName: string;
-  const testSetup = new TestSetup('Authentication', false);
+  const testSetup = new TestSetup('Authentication');
 
   step('Set up the testing environment', async () => {
     tempFolderPath = getTempFolderPath();

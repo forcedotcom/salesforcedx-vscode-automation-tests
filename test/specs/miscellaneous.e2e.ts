@@ -12,7 +12,7 @@ describe('Miscellaneous', async () => {
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('Miscellaneous', false);
+    testSetup = new TestSetup('Miscellaneous');
     await testSetup.setUp();
   });
 

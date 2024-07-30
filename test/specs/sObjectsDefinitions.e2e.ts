@@ -14,7 +14,7 @@ describe('SObjects Definitions', async () => {
   let projectName: string;
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('sObjectsDefinitions', false);
+    testSetup = new TestSetup('sObjectsDefinitions');
     await testSetup.setUp();
     projectName = testSetup.tempProjectName.toUpperCase();
 

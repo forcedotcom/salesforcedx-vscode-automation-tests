@@ -20,7 +20,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   let testSetup: TestSetup;
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('TrailApexReplayDebugger', false);
+    testSetup = new TestSetup('TrailApexReplayDebugger');
     await testSetup.setUp();
 
     // Create Apex class AccountService

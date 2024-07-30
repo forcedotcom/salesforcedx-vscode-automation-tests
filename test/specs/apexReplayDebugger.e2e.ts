@@ -17,7 +17,7 @@ describe('Apex Replay Debugger', async () => {
   const CONTINUE = 'F5';
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('ApexReplayDebugger', false);
+    testSetup = new TestSetup('ApexReplayDebugger');
     await testSetup.setUp();
 
     // Create Apex class file

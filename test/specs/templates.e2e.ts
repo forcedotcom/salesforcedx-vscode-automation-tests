@@ -20,7 +20,7 @@ describe('Templates', async () => {
 
   // Set up
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('Templates', false);
+    testSetup = new TestSetup('Templates');
     await testSetup.setUp();
     projectName = testSetup.tempProjectName.toUpperCase();
   });

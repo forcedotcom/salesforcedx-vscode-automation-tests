@@ -23,7 +23,7 @@ describe('Push and Pull', async () => {
   let adminEmailAddress = '';
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('PushAndPull', false);
+    testSetup = new TestSetup('PushAndPull');
     await testSetup.setUp();
     projectName = testSetup.tempProjectName.toUpperCase();
   });
