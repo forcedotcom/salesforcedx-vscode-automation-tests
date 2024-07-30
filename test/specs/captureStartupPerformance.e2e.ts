@@ -29,6 +29,7 @@ describe('Capture Startup Performance', async () => {
         // 1. Ctrl+A -> Ctrl+C (copy all the contents of the Startup Performance file)
         // 2. `Output: Focus on Terminal View` in command palette (Terminal should default to the home directory of the Salesforce project)
         // 3. `vi startupPerformance.md` -> `:set paste` -> Ctrl+V -> wait for the file to paste -> `:wq` (what is the alternative for Windows?)
+    await utilities.saveStartupPerformance();
       // b. Read the saved startup performance file using fs.readFileSync()
       // c. Find the "Extension Activation Stats" section
       // d. Parse the table to get the startup performance for each Salesforce extension
