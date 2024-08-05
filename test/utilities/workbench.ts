@@ -1,5 +1,5 @@
 import { Workbench } from 'wdio-vscode-service';
-import { debug, Duration, isDuration, log, pause } from './miscellaneous.ts';
+import { Duration, isDuration, log, pause } from './miscellaneous.ts';
 import { executeQuickPick } from './commandPrompt.ts';
 import { PredicateWithTimeout } from './predicates.ts';
 
@@ -55,9 +55,11 @@ export async function zoomReset(wait: Duration = Duration.seconds(1)): Promise<v
   await executeQuickPick('View: Reset Zoom', wait);
 }
 
-export async function openOrgBrowser(): Promise<void> {
-  const orgBrowser = await executeQuickPick('View: Show Org Browser', Duration.seconds(25));
-  debug(`${orgBrowser}`);
+export async function openNewTerminal(checkIfOpen = false): Promise<void> {
+  if (checkIfOpen) {
+    // TODO: do something here???
+  }
+  await executeQuickPick('Terminal: Create New Terminal', Duration.seconds(2));
 }
 
 async function handlePredicateOrWait(

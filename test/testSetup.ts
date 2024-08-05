@@ -66,7 +66,7 @@ export class TestSetup {
         '--sobject',
         'ScratchOrgInfo',
         '--where',
-        `ScratchOrg=${this.scratchOrgId}`,
+        `ScratchOrg=${this.scratchOrgId.slice(0, -3)}`,
         '--target-org',
         Env.getInstance().devHubAliasName
       );
@@ -268,12 +268,7 @@ export class TestSetup {
     utilities.log(
       `Creating ${this.scratchOrgAliasName} took ${time} ticks (${time / 1_000.0} seconds)`
     );
-    if (
-      !result.authFields ||
-      !result.authFields.accessToken ||
-      !result.orgId ||
-      !result.scratchOrgInfo.SignupEmail
-    ) {
+    if (!result?.authFields?.accessToken || !result.orgId || !result.scratchOrgInfo.SignupEmail) {
       throw new Error(
         `In createDefaultScratchOrg(), result is missing required fields.\nAuth Fields: ${result.authFields}\nOrg ID: ${result.orgId}\nSign Up Email: ${result.scratchOrgInfo.SignupEmail}.`
       );
@@ -286,12 +281,6 @@ export class TestSetup {
     await utilities.setDefaultOrg(this.scratchOrgAliasName);
 
     await utilities.pause(utilities.Duration.seconds(3));
-
-    // Warning! This only works if the item (the scratch org) is visible.
-    // If there are many scratch orgs, not all of them may be displayed.
-    // If lots of scratch orgs are created and aren't deleted, this can
-    // result in this list growing one not being able to find the org
-    // they are looking for.
 
     // Look for the success notification.
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
