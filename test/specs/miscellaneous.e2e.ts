@@ -38,10 +38,10 @@ describe('Miscellaneous', async () => {
   step('Use Custom Apex Snippets', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Use Apex Snippets`);
 
-    // Using the Command palette, run Snippets: Configure User Snippets
+    // Using the Command palette, run Snippets: Configure Snippets
     const workbench = await utilities.getWorkbench();
     await utilities.executeQuickPick(
-      'Snippets: Configure User Snippets',
+      'Snippets: Configure Snippets',
       utilities.Duration.seconds(1)
     );
     await browser.keys(['New Global Snippets file...', 'Enter']);
