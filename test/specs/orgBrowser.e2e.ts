@@ -110,7 +110,7 @@ describe('Org Browser', async () => {
   step('Refresh Org Browser and check MyClass is there', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Refresh Apex Classes`);
     // Check MyClass is present under Apex Classes section
-    await utilities.openOrgBrowser(utilities.Duration.seconds(1));
+    await utilities.openOrgBrowser();
     const refreshComponentsButton = await (
       await utilities.findTypeInOrgBrowser('Apex Classes')
     ).$('a[aria-label="SFDX: Refresh Components"]');
