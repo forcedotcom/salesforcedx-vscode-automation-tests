@@ -117,7 +117,7 @@ export async function waitForQuickPick(
     {
       timeout: options.timeout?.milliseconds,
       interval: 500, // Check every 500 ms
-      timeoutMsg: options.msg ?? `Expected to find option ${pickListItem} before ${options.timeout}`
+      timeoutMsg: options.msg ?? `Expected to find option ${pickListItem} before ${options.timeout} milliseconds`
     }
   );
 }
