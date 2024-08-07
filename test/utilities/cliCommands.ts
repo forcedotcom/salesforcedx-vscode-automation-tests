@@ -122,7 +122,7 @@ export async function orgList(): Promise<SfCommandRunResults> {
 export async function aliasList(): Promise<SfCommandRunResults> {
   const sfAliasListResult = await runCliCommand('alias:list', '--json');
   if (sfAliasListResult.exitCode > 0) {
-    const message = `org list failed with exit code ${sfAliasListResult.exitCode}\n stderr ${sfAliasListResult.stderr}`;
+    const message = `alias list failed with exit code ${sfAliasListResult.exitCode}\n stderr ${sfAliasListResult.stderr}`;
     log(message);
     throw new Error(message);
   }
