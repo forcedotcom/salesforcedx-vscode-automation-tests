@@ -11,7 +11,7 @@ export async function openOrgBrowser(wait: Duration = Duration.seconds(1)): Prom
   await executeQuickPick('View: Show Org Browser', wait);
 }
 
-export async function verifyOrgBrowerIsOpen(label: string): Promise<void> {
+export async function verifyOrgBrowserIsOpen(label: string): Promise<void> {
   const orgBrowserLabelEl = await findElementByText(
     'div',
     'aria-label',
