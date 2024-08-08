@@ -183,8 +183,3 @@ export async function clickFilePathOkButton(): Promise<void> {
   }
   await pause(Duration.seconds(2));
 }
-
-export async function setDefaultOrg(targetOrg: string): Promise<void> {
-  const inputBox = await executeQuickPick('SFDX: Set a Default Org');
-  await findQuickPickItem(inputBox, targetOrg, false, true);
-}

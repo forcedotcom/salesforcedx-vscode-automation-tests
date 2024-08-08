@@ -112,7 +112,7 @@ export class TestSetup {
       `${this.testSuiteSuffixName} - creating project files in ${this.projectFolderPath}`
     );
 
-    // Remove the project folder, just in case there are stale files there, but only if it is not an existing projet.
+    // Remove the project folder, just in case there are stale files there, but only if it is not an existing project.
     if (this.projectFolderPath && !Env.getInstance().useExistingProject) {
       if (fs.existsSync(this.projectFolderPath)) {
         utilities.removeFolder(this.projectFolderPath);

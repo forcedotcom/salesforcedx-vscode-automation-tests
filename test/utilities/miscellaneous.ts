@@ -9,7 +9,7 @@ import os from 'os';
 import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import { attemptToFindOutputPanelText, clearOutputView } from './outputView.ts';
-import { executeQuickPick } from './commandPrompt.ts';
+import { executeQuickPick, findQuickPickItem } from './commandPrompt.ts';
 import { notificationIsPresentWithTimeout } from './notifications.ts';
 import * as DurationKit from '@salesforce/kit';
 import path from 'path';
@@ -75,7 +75,7 @@ export async function findElementByText(
   }
 ): Promise<WebdriverIO.Element> {
   if (!labelText) {
-    throw new Error('labeText must be defined');
+    throw new Error('labelText must be defined');
   }
   debug(`findElementByText ${type}[${attribute}="${labelText}"]`);
   const element = await $(`${type}[${attribute}="${labelText}"]`);
@@ -150,6 +150,11 @@ export async function createCommand(
   );
   await expect(outputPanelText).toContain(`create ${metadataPath}`);
   return outputPanelText;
+}
+
+export async function setDefaultOrg(targetOrg: string): Promise<void> {
+  const inputBox = await executeQuickPick('SFDX: Set a Default Org');
+  await findQuickPickItem(inputBox, targetOrg, false, true);
 }
 
 // Type guard function to check if the argument is a Duration

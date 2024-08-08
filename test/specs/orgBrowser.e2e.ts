@@ -26,7 +26,7 @@ describe('Org Browser', async () => {
 
     await utilities.openOrgBrowser();
 
-    await utilities.verifyOrgBrowerIsOpen(
+    await utilities.verifyOrgBrowserIsOpen(
       testSetup.scratchOrgAliasName!
     );
 
