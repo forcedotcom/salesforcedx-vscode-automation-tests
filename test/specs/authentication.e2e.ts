@@ -37,23 +37,15 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Authorize a Dev Hub', async () => {
-    const workbench = await utilities.getWorkbench();
-
     // In the initial state, the org picker button should be set to "No Default Org Set".
-    let noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
-      workbench,
-      'No Default Org Set'
-    );
+    let noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes('No Default Org Set');
     await expect(noDefaultOrgSetItem).toBeDefined();
 
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
     await testSetup.authorizeDevHub();
 
     // After a dev hub has been authorized, the org should still not be set.
-    noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
-      workbench,
-      'No Default Org Set'
-    );
+    noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes('No Default Org Set');
     await expect(noDefaultOrgSetItem).toBeDefined();
   });
 
@@ -63,10 +55,8 @@ describe('Authentication', async () => {
 
     // Click on "No default Org Set" (in the bottom bar).
     const workbench = await utilities.getWorkbench();
-    const changeDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes(
-      workbench,
-      'No Default Org Set'
-    );
+    const changeDefaultOrgSetItem =
+      await utilities.getStatusBarItemWhichIncludes('No Default Org Set');
     await expect(changeDefaultOrgSetItem).toBeDefined();
     await changeDefaultOrgSetItem.click();
     await utilities.pause(utilities.Duration.seconds(5));
@@ -111,7 +101,7 @@ describe('Authentication', async () => {
     // Look for the notification that appears which says, "SFDX: Set a Default Org successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Set a Default Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -129,7 +119,6 @@ describe('Authentication', async () => {
   });
 
   step('Run SFDX: Create a Default Scratch Org', async () => {
-    const workbench = await utilities.getWorkbench();
     prompt = await utilities.executeQuickPick(
       'SFDX: Create a Default Scratch Org...',
       utilities.Duration.seconds(1)
@@ -163,12 +152,12 @@ describe('Authentication', async () => {
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Create a Default Scratch Org... successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     if (successNotificationWasFound !== true) {
       const failureNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
         'SFDX: Create a Default Scratch Org... failed to run',
-        utilities.TEN_MINUTES
+        utilities.Duration.TEN_MINUTES
       );
       if (failureNotificationWasFound === true) {
         if (
@@ -210,15 +199,12 @@ describe('Authentication', async () => {
     await expect(successNotificationWasFound).toBe(true);
 
     // Look for the org's alias name in the list of status bar items.
-    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(
-      workbench,
-      scratchOrgAliasName
-    );
+    const scratchOrgStatusBarItem =
+      await utilities.getStatusBarItemWhichIncludes(scratchOrgAliasName);
     await expect(scratchOrgStatusBarItem).toBeDefined();
   });
 
   step('Run SFDX: Set the Scratch Org As the Default Org', async () => {
-    const workbench = await utilities.getWorkbench();
     const inputBox = await utilities.executeQuickPick(
       'SFDX: Set a Default Org',
       utilities.Duration.seconds(10)
@@ -236,15 +222,13 @@ describe('Authentication', async () => {
 
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Set a Default Org successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
     // Look for the org's alias name in the list of status bar items.
-    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(
-      workbench,
-      scratchOrgAliasName
-    );
+    const scratchOrgStatusBarItem =
+      await utilities.getStatusBarItemWhichIncludes(scratchOrgAliasName);
     await expect(scratchOrgStatusBarItem).toBeDefined();
   });
 

@@ -2,6 +2,7 @@ import spawn from 'cross-spawn';
 import { SpawnOptionsWithoutStdio } from 'child_process';
 import { debug, log } from './miscellaneous.ts';
 import { OrgEdition, SfCommandRunResults } from './types.ts';
+import { EnvironmentSettings } from '../environmentSettings.ts';
 
 export type NONE = 'NONE';
 
@@ -16,9 +17,19 @@ export async function runCliCommand(
   if (options) {
     message += `\nspawn options: ${JSON.stringify(options)}`;
   }
+  const logLevel = EnvironmentSettings.getInstance().logLevel;
+
   log(message);
   // add NODE_ENV=production
-  options = { ...(options ?? {}), ...{ NODE_ENV: 'production' } };
+  options = {
+    ...(options ?? {}),
+    env: {
+      ...process.env, // Ensure existing environment variables are included
+      NODE_ENV: 'production',
+      SF_LOG_LEVEL: logLevel,
+      ...(options?.env ?? {}) // Ensure any additional env vars in options are included
+    }
+  };
 
   return new Promise((resolve, reject) => {
     const sfProcess = spawn('sf', [command, ...commandArgs] as string[], options);
@@ -106,6 +117,17 @@ export async function orgList(): Promise<SfCommandRunResults> {
   }
   debug(`orgList results ${JSON.stringify(sfOrgListResult)}`);
   return sfOrgListResult;
+}
+
+export async function aliasList(): Promise<SfCommandRunResults> {
+  const sfAliasListResult = await runCliCommand('alias:list', '--json');
+  if (sfAliasListResult.exitCode > 0) {
+    const message = `alias list failed with exit code ${sfAliasListResult.exitCode}\n stderr ${sfAliasListResult.stderr}`;
+    log(message);
+    throw new Error(message);
+  }
+  debug(`aliasList results ${JSON.stringify(sfAliasListResult)}`);
+  return sfAliasListResult;
 }
 
 export async function scratchOrgCreate(

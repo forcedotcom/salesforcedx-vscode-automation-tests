@@ -55,6 +55,13 @@ export async function zoomReset(wait: Duration = Duration.seconds(1)): Promise<v
   await executeQuickPick('View: Reset Zoom', wait);
 }
 
+export async function openNewTerminal(checkIfOpen = false): Promise<void> {
+  if (checkIfOpen) {
+    // TODO: do something here???
+  }
+  await executeQuickPick('Terminal: Create New Terminal', Duration.seconds(2));
+}
+
 async function handlePredicateOrWait(
   predicateOrWait: PredicateWithTimeout | Duration,
   prompt: unknown

@@ -35,7 +35,7 @@ describe('Run Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Ignore Conflicts successfully ran".
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successPushNotificationWasFound).toBe(true);
   });
@@ -44,9 +44,7 @@ describe('Run Apex Tests', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
 
     // Get Apex LSP Status Bar
-    const workbench = await utilities.getWorkbench();
     const statusBar = await utilities.getStatusBarItemWhichIncludes(
-      workbench,
       'Editor Language Status'
     );
     await statusBar.click();
@@ -70,7 +68,7 @@ describe('Run Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Run Apex Tests successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -108,7 +106,7 @@ describe('Run Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Run Apex Tests successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -146,7 +144,7 @@ describe('Run Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Run Apex Tests successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -186,7 +184,7 @@ describe('Run Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Run Apex Tests successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -244,7 +242,7 @@ describe('Run Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Run Apex Tests successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -302,7 +300,7 @@ describe('Run Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Run Apex Tests successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -356,7 +354,7 @@ describe('Run Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Run Apex Tests successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -401,7 +399,7 @@ describe('Run Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Ignore Conflicts successfully ran".
     const successPushNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successPushNotificationWasFound).toBe(true);
 
@@ -421,7 +419,7 @@ describe('Run Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Run Apex Tests successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
@@ -451,7 +449,7 @@ describe('Run Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Push Source to Default Org and Ignore Conflicts successfully ran".
     const successPushNotification2WasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Push Source to Default Org and Ignore Conflicts successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successPushNotification2WasFound).toBe(true);
 
@@ -471,7 +469,7 @@ describe('Run Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotification2WasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Run Apex Tests successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotification2WasFound).toBe(true);
 
@@ -508,7 +506,7 @@ describe('Run Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Build Apex Test Suite successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
   });
@@ -533,7 +531,7 @@ describe('Run Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Build Apex Test Suite successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Build Apex Test Suite successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
   });
@@ -552,7 +550,7 @@ describe('Run Apex Tests', async () => {
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
     const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
       'SFDX: Run Apex Tests successfully ran',
-      utilities.TEN_MINUTES
+      utilities.Duration.TEN_MINUTES
     );
     await expect(successNotificationWasFound).toBe(true);
 
