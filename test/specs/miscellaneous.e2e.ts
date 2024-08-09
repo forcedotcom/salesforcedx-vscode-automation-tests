@@ -42,20 +42,13 @@ describe('Miscellaneous', async () => {
 
     // Using the Command palette, run Snippets: Configure Snippets
     const workbench = await utilities.getWorkbench();
-    if (
-      EnvironmentSettings.getInstance().vscodeVersion === 'stable' ||
-      semver.gte(EnvironmentSettings.getInstance().vscodeVersion, '1.92.0')
-    ) {
-      await utilities.executeQuickPick(
-        'Snippets: Configure Snippets',
-        utilities.Duration.seconds(1)
-      );
-    } else {
-      await utilities.executeQuickPick(
-        'Snippets: Configure User Snippets',
-        utilities.Duration.seconds(1)
-      );
-    }
+  const commandName =
+    EnvironmentSettings.getInstance().vscodeVersion === 'stable' ||
+    semver.gte(EnvironmentSettings.getInstance().vscodeVersion, '1.92.0')
+      ? 'Snippets: Configure Snippets'
+      : 'Snippets: Configure User Snippets';
+
+  await utilities.executeQuickPick(commandName, utilities.Duration.seconds(1));
     await browser.keys(['New Global Snippets file...', 'Enter']);
     await utilities.pause(utilities.Duration.seconds(1));
     await browser.keys(['apex.json', 'Enter']);
