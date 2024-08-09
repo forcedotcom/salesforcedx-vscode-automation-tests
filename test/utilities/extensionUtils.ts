@@ -142,15 +142,13 @@ export async function showRunningExtensions(): Promise<void> {
   await utilities.executeQuickPick('Developer: Show Running Extensions');
   await browser.waitUntil(
     async () => {
-      let runningExtensionsTab;
+      const selector =
+        EnvironmentSettings.getInstance().vscodeVersion === 'stable' ||
+        semver.gte(EnvironmentSettings.getInstance().vscodeVersion, '1.90.0')
+          ? "//div[contains(@class, 'active') and contains(@class, 'selected') and .//*[contains(text(), 'Running Extensions')]]"
+          : "//div[contains(@class, 'monaco-list-row') and .//*[contains(text(), 'Running Extensions')]]";
 
-  const selector =
-    EnvironmentSettings.getInstance().vscodeVersion === 'stable' ||
-    semver.gte(EnvironmentSettings.getInstance().vscodeVersion, '1.90.0')
-      ? "//div[contains(@class, 'active') and contains(@class, 'selected') and .//*[contains(text(), 'Running Extensions')]]"
-      : "//div[contains(@class, 'monaco-list-row') and .//*[contains(text(), 'Running Extensions')]]";
-
-  runningExtensionsTab = await $(selector);
+      const runningExtensionsTab = await $(selector);
       return (await runningExtensionsTab.getTitle()).includes('Running Extensions');
     },
     {
