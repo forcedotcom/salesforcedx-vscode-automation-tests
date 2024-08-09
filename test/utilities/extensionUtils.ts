@@ -12,6 +12,7 @@ import FastGlob from 'fast-glob';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import { exec } from 'child_process';
 import * as utilities from './index.ts';
+import * as semver from 'semver';
 
 export type ExtensionId =
   | 'salesforcedx-vscode'
@@ -141,10 +142,14 @@ export async function showRunningExtensions(): Promise<void> {
   await utilities.executeQuickPick('Developer: Show Running Extensions');
   await browser.waitUntil(
     async () => {
-      const runningExtensionsTab = await $(
-        "//div[contains(@class, 'active') and contains(@class, 'selected') and .//*[contains(text(), 'Running Extensions')]]"
-      );
-      return runningExtensionsTab.isDisplayed();
+      const selector =
+        EnvironmentSettings.getInstance().vscodeVersion === 'stable' ||
+        semver.gte(EnvironmentSettings.getInstance().vscodeVersion, '1.90.0')
+          ? "//div[contains(@class, 'active') and contains(@class, 'selected') and .//*[contains(text(), 'Running Extensions')]]"
+          : "//div[contains(@class, 'monaco-list-row') and .//*[contains(text(), 'Running Extensions')]]";
+
+      const runningExtensionsTab = await $(selector);
+      return (await runningExtensionsTab.getTitle()).includes('Running Extensions');
     },
     {
       timeout: 5000, // Timeout after 5 seconds
