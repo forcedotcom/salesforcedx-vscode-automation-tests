@@ -32,6 +32,7 @@ describe('Manifest Builder', async () => {
     // Using the Command palette, run File: New File...
     const manifestPath = path.join('manifest', 'manifest.xml');
     await utilities.createFile(manifestPath);
+    await browser.keys(['Enter']);
 
     const textEditor = await utilities.getTextEditor(workbench, manifestPath);
     const content = [
