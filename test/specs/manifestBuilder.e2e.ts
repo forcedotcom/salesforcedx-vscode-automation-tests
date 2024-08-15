@@ -30,11 +30,10 @@ describe('Manifest Builder', async () => {
     const workbench = await browser.getWorkbench();
 
     // Using the Command palette, run File: New File...
-    const manifestPath = path.join('manifest', 'manifest.xml');
-    await utilities.createFile(manifestPath);
-    await browser.keys(['Enter']);
+    await utilities.createFile(path.join('manifest', 'manifest.xml'));
+    await browser.keys(['Enter']); // This extra step is necessary, otherwise the process to create file here doesn't finish.
 
-    const textEditor = await utilities.getTextEditor(workbench, manifestPath);
+    const textEditor = await utilities.getTextEditor(workbench, 'manifest.xml');
     const content = [
       `<?xml version="1.0" encoding="UTF-8"?>`,
       `<Package xmlns="http://soap.sforce.com/2006/04/metadata">`,
