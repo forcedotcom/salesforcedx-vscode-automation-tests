@@ -44,7 +44,7 @@ describe('Miscellaneous', async () => {
     const workbench = await utilities.getWorkbench();
     const commandName =
       EnvironmentSettings.getInstance().vscodeVersion === 'stable' ||
-      semver.gte(EnvironmentSettings.getInstance().vscodeVersion, '1.92.0')
+        semver.gte(EnvironmentSettings.getInstance().vscodeVersion, '1.92.0')
         ? 'Snippets: Configure Snippets'
         : 'Snippets: Configure User Snippets';
 
@@ -96,13 +96,7 @@ describe('Miscellaneous', async () => {
     ].join('\n');
 
     // Create simple lwc.html file
-    const inputBox = await utilities.executeQuickPick(
-      'Create: New File...',
-      utilities.Duration.seconds(1)
-    );
-    await inputBox.setText('lwc.html');
-    await browser.keys(['Enter']);
-    await browser.keys(['Enter']);
+    await utilities.createFile('lwc.html');
 
     // Type snippet "lwc-button" and check it inserted the right lwc
     const textEditor = await utilities.getTextEditor(workbench, 'lwc.html');
@@ -130,13 +124,7 @@ describe('Miscellaneous', async () => {
     const lwcSnippet = 'this.dispatchEvent(new CustomEvent("event-name"));';
 
     // Create simple lwc.js file
-    const inputBox = await utilities.executeQuickPick(
-      'Create: New File...',
-      utilities.Duration.seconds(1)
-    );
-    await inputBox.setText('lwc.js');
-    await browser.keys(['Enter']);
-    await browser.keys(['Enter']);
+    await utilities.createFile('lwc.js');
 
     // Type snippet "lwc", select "lwc-event" and check it inserted the right thing
     const textEditor = await utilities.getTextEditor(workbench, 'lwc.js');

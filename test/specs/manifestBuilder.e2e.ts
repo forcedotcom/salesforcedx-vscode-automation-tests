@@ -30,19 +30,7 @@ describe('Manifest Builder', async () => {
     const workbench = await browser.getWorkbench();
 
     // Using the Command palette, run File: New File...
-    const inputBox = await utilities.executeQuickPick(
-      'Create: New File...',
-      utilities.Duration.seconds(1)
-    );
-
-    // Set the name of the new manifest file
-    const filePath = path.join('manifest', 'manifest.xml');
-    await inputBox.setText(filePath);
-
-    // The following 3 confirms are just confirming the file creation and the folder it will belong to
-    await inputBox.confirm();
-    await inputBox.confirm();
-    await inputBox.confirm();
+    await utilities.createFile(path.join('manifest', 'manifest.xml'));
 
     const textEditor = await utilities.getTextEditor(workbench, 'manifest.xml');
     const content = [

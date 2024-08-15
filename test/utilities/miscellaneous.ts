@@ -238,3 +238,13 @@ export class Duration extends DurationKit.Duration {
     return new Duration(quantity, Unit.WEEKS);
   }
 }
+
+export async function createFile(path: string): Promise<void> {
+  // Using the Command palette, run File: New File...
+  const inputBox = await executeQuickPick('Create: New File...', Duration.seconds(1));
+
+  // Set the filepath
+  await inputBox.setText(path);
+  await browser.keys(['Enter']);
+  await browser.keys(['Enter']);
+}
