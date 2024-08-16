@@ -242,7 +242,7 @@ export class Duration extends DurationKit.Duration {
 
 /**
  * The function is not the best practice.
- * We have observed that the first time you specify the path with the command works,
+ * We have observed that after installing the extension, the first time you specify the path with the command works,
  * But it does not work for following file creation, it will ignore the path you specify but always follow the path from the first time
  */
 export async function createFile(path: string): Promise<void> {
