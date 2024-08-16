@@ -7,7 +7,7 @@
 
 import { TextEditor } from 'wdio-vscode-service';
 import { executeQuickPick } from './commandPrompt.ts';
-import { Duration, getTextEditor, pause } from './miscellaneous.ts';
+import { Duration, getTextEditor, pause, createFile } from './miscellaneous.ts';
 import { getWorkbench } from './workbench.ts';
 
 export async function createApexClass(
@@ -107,16 +107,11 @@ export async function createApexClassWithBugs(): Promise<void> {
 export async function createAnonymousApexFile(): Promise<void> {
   const workbench = await getWorkbench();
   const editorView = workbench.getEditorView();
+  const anonymousApexFileName = 'Anonymous.apex';
 
-  // Using the Command palette, run File: New File...
-  const inputBox = await executeQuickPick('Create: New File...', Duration.seconds(1));
+  await createFile(anonymousApexFileName);
 
-  // Set the name of the new Anonymous Apex file
-  await inputBox.setText('Anonymous.apex');
-  await browser.keys(['Enter']);
-  await browser.keys(['Enter']);
-
-  const textEditor = (await editorView.openEditor('Anonymous.apex')) as TextEditor;
+  const textEditor = (await editorView.openEditor(anonymousApexFileName)) as TextEditor;
   await textEditor.setText("System.debug('¡Hola mundo!');");
   await textEditor.save();
   await pause(Duration.seconds(1));

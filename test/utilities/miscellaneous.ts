@@ -238,3 +238,19 @@ export class Duration extends DurationKit.Duration {
     return new Duration(quantity, Unit.WEEKS);
   }
 }
+
+
+/**
+ * The function is not the best practice.
+ * We have observed that after installing the extension, the first time you specify the path with the command works,
+ * But it does not work for following file creation, it will ignore the path you specify but always follow the path from the first time
+ */
+export async function createFile(path: string): Promise<void> {
+  // Using the Command palette, run File: New File...
+  const inputBox = await executeQuickPick('Create: New File...', Duration.seconds(1));
+
+  // Set the filepath
+  await inputBox.setText(path);
+  await browser.keys(['Enter']);
+  await browser.keys(['Enter']);
+}
