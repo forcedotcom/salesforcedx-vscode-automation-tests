@@ -11,6 +11,7 @@ import { DefaultTreeItem, InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import { EnvironmentSettings as Env } from './environmentSettings.ts';
 import * as utilities from './utilities/index.ts';
 import { fileURLToPath } from 'url';
+import { gitClone } from './utilities/gitCommands.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,7 +19,7 @@ const __dirname = path.dirname(__filename);
 export class TestSetup {
   public testSuiteSuffixName: string;
   private static aliasAndUserNameWereVerified = false;
-  public tempFolderPath: string | undefined = undefined;
+  public tempFolderPath: string;
   public projectFolderPath: string | undefined;
   private prompt: QuickOpenBox | InputBox | undefined;
   public scratchOrgAliasName: string | undefined;
@@ -26,19 +27,21 @@ export class TestSetup {
 
   public constructor(testSuiteSuffixName: string) {
     this.testSuiteSuffixName = testSuiteSuffixName;
+    this.tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
   }
 
   public get tempProjectName(): string {
     return 'TempProject-' + this.testSuiteSuffixName;
   }
 
-  public async setUp(scratchOrgEdition: utilities.OrgEdition = 'developer'): Promise<void> {
+  public async setUp(scratchOrgEdition: utilities.OrgEdition = 'developer', repo?: utilities.repoKeywords): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
     await utilities.installExtensions();
     await utilities.reloadAndEnableExtensions();
-    await this.setUpTestingEnvironment();
-    await this.createProject(scratchOrgEdition);
+
+    await this.setUpTestingEnvironment(repo);
+    await this.createOrUseProject(scratchOrgEdition, repo);
     await utilities.reloadAndEnableExtensions();
     await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
     await this.authorizeDevHub();
@@ -99,11 +102,15 @@ export class TestSetup {
     await expect(uncaughtErrors.length).toBe(0);
   }
 
-  public async setUpTestingEnvironment(): Promise<void> {
+  public async setUpTestingEnvironment(repo?: utilities.repoKeywords): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting setUpTestingEnvironment()...`);
 
-    this.tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
+    if (repo) {
+      Env.getInstance().useExistingProject = path.join(__dirname, '..', repo); // set the existing project file path
+      utilities.log(`Env.getInstance().useExistingProject - ${Env.getInstance().useExistingProject}`)
+      await gitClone(utilities.projectMaps.get(repo) as string, Env.getInstance().useExistingProject as string); // clone the project
+    }
 
     this.projectFolderPath = Env.getInstance().useExistingProject
       ? Env.getInstance().useExistingProject
@@ -117,21 +124,20 @@ export class TestSetup {
       if (fs.existsSync(this.projectFolderPath)) {
         utilities.removeFolder(this.projectFolderPath);
       }
-    }
-
-    // Now create the temp folder.  It should exist but create the folder if it is missing.
-    if (!fs.existsSync(this.tempFolderPath)) {
-      utilities.createFolder(this.tempFolderPath);
+      // Now create the temp folder.  It should exist but create the folder if it is missing.
+      if (!fs.existsSync(this.tempFolderPath)) {
+        utilities.createFolder(this.tempFolderPath);
+      }
     }
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished setUpTestingEnvironment()`);
     utilities.log('');
   }
 
-  public async createProject(scratchOrgEdition: utilities.OrgEdition, projectName?: string) {
+  public async createOrUseProject(scratchOrgEdition: utilities.OrgEdition, projectName?: string) {
     utilities.log('');
     if (!Env.getInstance().useExistingProject) {
-      utilities.log(`${projectName ?? this.testSuiteSuffixName} - Starting createProject()...`);
+      utilities.log(`${projectName ?? this.testSuiteSuffixName} - Starting creating a project`);
       this.prompt = await utilities.executeQuickPick('SFDX: Create Project');
       // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
       // Select the "Standard" project type.
@@ -149,25 +155,28 @@ export class TestSetup {
 
       // Set the location of the project.
       const input = await this.prompt.input$;
-      await input.setValue(this.tempFolderPath!);
+      await input.setValue(this.tempFolderPath);
       await utilities.pause(utilities.Duration.seconds(2));
       await utilities.clickFilePathOkButton();
 
-      // Verify the project was created and was loaded.
-      await this.verifyProjectCreated(projectName ?? this.tempProjectName);
-      this.updateScratchOrgDefWithEdition(scratchOrgEdition);
-
-      // Extra config needed for Apex LSP on GHA
-      if (process.platform === 'darwin') {
-        this.setJavaHomeConfigEntry();
-      }
-      utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
-    } else {
-      utilities.log(
-        `${this.testSuiteSuffixName} - skipping createProject() as test is using an existing project`
-      );
+    } else { // open an existing project
+      utilities.log(`${projectName} - Starting using an existing project`); // projectName must exist since it is repo
+      this.prompt = await utilities.executeQuickPick('File: Open Folder...'); // use this cmd palette to open
+      // Set the location of the project
+      const input = await this.prompt.input$;
+      await input.setValue(Env.getInstance().useExistingProject as string);
+      await utilities.pause(utilities.Duration.seconds(2));
+      await utilities.clickFilePathOkButton();
     }
-    utilities.log('');
+    // Verify the project was created and was loaded.
+    await this.verifyProjectCreated(projectName ?? this.tempProjectName);
+    this.updateScratchOrgDefWithEdition(scratchOrgEdition);
+
+    // Extra config needed for Apex LSP on GHA
+    if (process.platform === 'darwin') {
+      this.setJavaHomeConfigEntry();
+    }
+    utilities.log(`${this.testSuiteSuffixName} - ...finished opening up a project`);
   }
 
   public async authorizeDevHub(): Promise<void> {
@@ -335,7 +344,7 @@ export class TestSetup {
   private updateScratchOrgDefWithEdition(scratchOrgEdition: utilities.OrgEdition) {
     if (scratchOrgEdition === 'enterprise') {
       const projectScratchDefPath = path.join(
-        this.tempFolderPath!,
+        this.tempFolderPath,
         this.tempProjectName,
         'config',
         'project-scratch-def.json'
