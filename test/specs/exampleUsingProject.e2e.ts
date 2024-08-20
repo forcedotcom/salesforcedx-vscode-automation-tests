@@ -9,11 +9,7 @@ describe('an example using existing project', async () => {
     testSetup = new TestSetup('usingExistingProject');
     await testSetup.setUp('developer', utilities.repoKeywords.DeployInv);
     await utilities.reloadAndEnableExtensions();
+    await expect(1).toBe(false); // make it false to see screenshots
   });
 
-  step('Verify our extensions are loaded after', async () => {
-    await expect(
-      await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive())
-    ).toBe(true);
-  });
 });

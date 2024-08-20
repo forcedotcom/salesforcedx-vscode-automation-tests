@@ -1,5 +1,4 @@
 import spawn from 'cross-spawn';
-import * as utilities from './index.ts';
 
 function runGitCommand(args: string[]) {
   return new Promise<void>((resolve, reject) => {
@@ -7,7 +6,7 @@ function runGitCommand(args: string[]) {
 
     // Listen to the output stream (stdout)
     gitProcess.stdout?.on('data', (data) => {
-      utilities.log(`runGitCommand Output: ${data}`);
+      console.log(`runGitCommand Output: ${data}`);
     });
 
     // Listen to the error stream (stderr)
