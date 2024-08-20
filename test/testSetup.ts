@@ -107,9 +107,10 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Starting setUpTestingEnvironment()...`);
 
     if (repo) {
-      Env.getInstance().useExistingProject = path.join(__dirname, '..', repo); // set the existing project file path
+      const repoPath = path.join(__dirname, '..', repo);
+      await gitClone(utilities.projectMaps.get(repo) as string, repoPath); // clone the project
+      Env.getInstance().useExistingProject = repoPath; // set the existing project file path
       utilities.log(`Env.getInstance().useExistingProject - ${Env.getInstance().useExistingProject}`)
-      await gitClone(utilities.projectMaps.get(repo) as string, Env.getInstance().useExistingProject as string); // clone the project
     }
 
     this.projectFolderPath = Env.getInstance().useExistingProject
