@@ -17,13 +17,3 @@ export const WORKSPACE_SETTING_KEYS = {
 export const LOG_LEVELS = ['trace', 'debug', 'info', 'warn', 'error', 'silent'] as const;
 
 export type LogLevel = (typeof LOG_LEVELS)[number];
-
-// the name of repos
-export enum repoKeywords {
-  DeployInv = 'DeployInv'
-}
-
-// a map from a repo name to git url
-export const projectMaps = new Map<repoKeywords, string>([
-  [repoKeywords.DeployInv, 'https://github.com/mingxuanzhangsfdx/DeployInv']
-])

@@ -10,6 +10,7 @@ import path from 'path';
 import { DefaultTreeItem, InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import { EnvironmentSettings as Env } from './environmentSettings.ts';
 import * as utilities from './utilities/index.ts';
+import * as constants from './specs/constants.ts';
 import { fileURLToPath } from 'url';
 import { gitClone } from './utilities/gitCommands.ts';
 
@@ -34,7 +35,7 @@ export class TestSetup {
     return 'TempProject-' + this.testSuiteSuffixName;
   }
 
-  public async setUp(scratchOrgEdition: utilities.OrgEdition = 'developer', repo?: utilities.repoKeywords): Promise<void> {
+  public async setUp(scratchOrgEdition: utilities.OrgEdition = 'developer', repo?: constants.repoKeywords): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
     await utilities.installExtensions();
@@ -102,13 +103,13 @@ export class TestSetup {
     await expect(uncaughtErrors.length).toBe(0);
   }
 
-  public async setUpTestingEnvironment(repo?: utilities.repoKeywords): Promise<void> {
+  public async setUpTestingEnvironment(repo?: constants.repoKeywords): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting setUpTestingEnvironment()...`);
 
     if (repo) {
       const repoPath = path.join(__dirname, '..', repo);
-      await gitClone(utilities.projectMaps.get(repo) as string, repoPath); // clone the project
+      await gitClone(constants.projectMaps.get(repo)!, repoPath); // clone the project
       Env.getInstance().useExistingProject = repoPath; // set the existing project file path
       utilities.log(`Env.getInstance().useExistingProject - ${Env.getInstance().useExistingProject}`)
     }
