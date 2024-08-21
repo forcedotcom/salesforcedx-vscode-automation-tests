@@ -110,7 +110,7 @@ export class TestSetup {
     if (repo) {
       const repoPath = path.join(__dirname, '..', repo);
       await gitClone(constants.projectMaps.get(repo)!, repoPath); // clone the project
-      Env.getInstance().useExistingProject = repoPath; // set the existing project file path
+      Env.getInstance().useExistingProject = repoPath; // set the existing project file path, value will be overriden even if USE_EXISTING_PROJECT_PATH exists
       utilities.log(`Env.getInstance().useExistingProject - ${Env.getInstance().useExistingProject}`)
     }
 
@@ -161,7 +161,7 @@ export class TestSetup {
       await utilities.pause(utilities.Duration.seconds(2));
       await utilities.clickFilePathOkButton();
 
-    } else { // open an existing project
+    } else if (Env.getInstance().useExistingProject != process.env.USE_EXISTING_PROJECT_PATH) { // open an existing project
       utilities.log(`${projectName} - Starting using an existing project`); // projectName must exist since it is repo
       this.prompt = await utilities.executeQuickPick('File: Open Folder...'); // use this cmd palette to open
       // Set the location of the project
@@ -169,6 +169,9 @@ export class TestSetup {
       await input.setValue(Env.getInstance().useExistingProject as string);
       await utilities.pause(utilities.Duration.seconds(2));
       await utilities.clickFilePathOkButton();
+    } else {
+      utilities.log(`${this.testSuiteSuffixName} - project has already been opened up when initializing the test`); // project is initialized in Github workflow
+      return;
     }
     // Verify the project was created and was loaded.
     await this.verifyProjectCreated(projectName ?? this.tempProjectName);
