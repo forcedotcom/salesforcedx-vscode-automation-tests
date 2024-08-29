@@ -11,7 +11,6 @@ import { DefaultTreeItem, InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import { EnvironmentSettings as Env } from './environmentSettings.ts';
 import * as utilities from './utilities/index.ts';
 import { fileURLToPath } from 'url';
-import { generateSfProject } from './utilities/cliCommands.ts'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -135,7 +134,7 @@ export class TestSetup {
     if (!Env.getInstance().useExistingProject) {
       utilities.log(`${projectName ?? this.testSuiteSuffixName} - Starting createProject()...`);
 
-      await generateSfProject(projectName ?? this.tempProjectName, this.tempFolderPath); // generate new sf project with cli
+      await utilities.generateSfProject(projectName ?? this.tempProjectName, this.tempFolderPath); // generate new sf project with cli
       await utilities.openFolder(this.tempFolderPath); // switch to the new VS Code workspace
 
       // Verify the project was created and was loaded.
