@@ -11,6 +11,7 @@ import { DefaultTreeItem, InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import { EnvironmentSettings as Env } from './environmentSettings.ts';
 import * as utilities from './utilities/index.ts';
 import { fileURLToPath } from 'url';
+import { generateSfProject } from './utilities/cliCommands.ts'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,7 +19,7 @@ const __dirname = path.dirname(__filename);
 export class TestSetup {
   public testSuiteSuffixName: string;
   private static aliasAndUserNameWereVerified = false;
-  public tempFolderPath: string | undefined = undefined;
+  public tempFolderPath: string;
   public projectFolderPath: string | undefined;
   private prompt: QuickOpenBox | InputBox | undefined;
   public scratchOrgAliasName: string | undefined;
@@ -26,6 +27,7 @@ export class TestSetup {
 
   public constructor(testSuiteSuffixName: string) {
     this.testSuiteSuffixName = testSuiteSuffixName;
+    this.tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
   }
 
   public get tempProjectName(): string {
@@ -103,8 +105,6 @@ export class TestSetup {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting setUpTestingEnvironment()...`);
 
-    this.tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
-
     this.projectFolderPath = Env.getInstance().useExistingProject
       ? Env.getInstance().useExistingProject
       : path.join(this.tempFolderPath, this.tempProjectName);
@@ -117,12 +117,14 @@ export class TestSetup {
       if (fs.existsSync(this.projectFolderPath)) {
         utilities.removeFolder(this.projectFolderPath);
       }
+
+      // Now create the temp folder.  It should exist but create the folder if it is missing.
+      if (!fs.existsSync(this.tempFolderPath)) {
+        utilities.createFolder(this.tempFolderPath);
+      }
     }
 
-    // Now create the temp folder.  It should exist but create the folder if it is missing.
-    if (!fs.existsSync(this.tempFolderPath)) {
-      utilities.createFolder(this.tempFolderPath);
-    }
+
 
     utilities.log(`${this.testSuiteSuffixName} - ...finished setUpTestingEnvironment()`);
     utilities.log('');
@@ -132,26 +134,9 @@ export class TestSetup {
     utilities.log('');
     if (!Env.getInstance().useExistingProject) {
       utilities.log(`${projectName ?? this.testSuiteSuffixName} - Starting createProject()...`);
-      this.prompt = await utilities.executeQuickPick('SFDX: Create Project');
-      // Selecting "SFDX: Create Project" causes the extension to be loaded, and this takes a while.
-      // Select the "Standard" project type.
-      await utilities.waitForQuickPick(this.prompt, 'Standard', {
-        msg: 'Expected extension salesforcedx-core to be available within 5 seconds',
-        timeout: utilities.Duration.seconds(5)
-      });
 
-      // Enter the project's name.
-      await this.prompt.setText(projectName ?? this.tempProjectName);
-      await utilities.pause(utilities.Duration.seconds(2));
-
-      // Press Enter/Return.
-      await this.prompt.confirm();
-
-      // Set the location of the project.
-      const input = await this.prompt.input$;
-      await input.setValue(this.tempFolderPath!);
-      await utilities.pause(utilities.Duration.seconds(2));
-      await utilities.clickFilePathOkButton();
+      await generateSfProject(projectName ?? this.tempProjectName, this.tempFolderPath); // generate new sf project with cli
+      await utilities.openFolder(this.tempFolderPath); // switch to the new VS Code workspace
 
       // Verify the project was created and was loaded.
       await this.verifyProjectCreated(projectName ?? this.tempProjectName);

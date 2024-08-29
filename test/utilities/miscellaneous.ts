@@ -9,7 +9,7 @@ import os from 'os';
 import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import { attemptToFindOutputPanelText, clearOutputView } from './outputView.ts';
-import { executeQuickPick, findQuickPickItem } from './commandPrompt.ts';
+import { executeQuickPick, findQuickPickItem, clickFilePathOkButton } from './commandPrompt.ts';
 import { notificationIsPresentWithTimeout } from './notifications.ts';
 import * as DurationKit from '@salesforce/kit';
 import path from 'path';
@@ -237,4 +237,17 @@ export class Duration extends DurationKit.Duration {
   public static weeks(quantity: number): Duration {
     return new Duration(quantity, Unit.WEEKS);
   }
+}
+
+/**
+ * @param path the path to the folder to be opened in VS Code
+ * VSCode will be working on the new workspace, and the previous one is closed.
+ */
+export async function openFolder(path: string) {
+  const prompt = await executeQuickPick('File: Open Folder...'); // use this cmd palette to open
+  // Set the location of the project
+  const input = await prompt.input$;
+  await input.setValue(path);
+  await pause(Duration.seconds(2));
+  await clickFilePathOkButton();
 }
