@@ -246,6 +246,6 @@ export async function generateSfProject(
     );
     throw new Error(sfProjectGenerateResult.stderr);
   }
-  debug(`createUser results ${JSON.stringify(sfProjectGenerateResult)}`);
+  debug(`generateSfProject results ${JSON.stringify(sfProjectGenerateResult)}`);
   return sfProjectGenerateResult;
 }
