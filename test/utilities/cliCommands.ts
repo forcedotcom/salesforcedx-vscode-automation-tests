@@ -3,7 +3,6 @@ import { SpawnOptionsWithoutStdio } from 'child_process';
 import { debug, log } from './miscellaneous.ts';
 import { OrgEdition, SfCommandRunResults } from './types.ts';
 import { EnvironmentSettings } from '../environmentSettings.ts';
-import { cwd } from 'node:process';
 
 export type NONE = 'NONE';
 
@@ -239,8 +238,7 @@ export async function generateSfProject(
     name,
     '--template',
     template ?? 'standard',
-    '-d',
-    path ?? cwd()
+    ...(path ? ['-d', path] : [])
   );
   if (sfProjectGenerateResult.exitCode > 0) {
     log(
