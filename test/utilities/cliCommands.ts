@@ -225,3 +225,27 @@ export function removeEscapedCharacters(result: string): string {
 
   return resultJson;
 }
+
+
+export async function generateSfProject(
+  name: string,
+  path?: string | undefined,
+  template?: string | undefined,
+): Promise<SfCommandRunResults> {
+  const sfProjectGenerateResult = await runCliCommand(
+    'project:generate',
+    '--name',
+    name,
+    '--template',
+    template ?? 'standard',
+    ...(path ? ['-d', path] : [])
+  );
+  if (sfProjectGenerateResult.exitCode > 0) {
+    log(
+      `project generate failed Exit code: ${sfProjectGenerateResult.exitCode}. \nRaw stderr: ${sfProjectGenerateResult.stderr}`
+    );
+    throw new Error(sfProjectGenerateResult.stderr);
+  }
+  debug(`generateSfProject results ${JSON.stringify(sfProjectGenerateResult)}`);
+  return sfProjectGenerateResult;
+}

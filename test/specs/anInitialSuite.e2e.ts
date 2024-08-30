@@ -112,7 +112,6 @@ describe('An Initial Suite', async () => {
     const commands = await Promise.all(quickPicks.map((quickPick) => quickPick.getLabel()));
 
     // Look for the first few SFDX commands.
-    await expect(commands).toContain('SFDX: Create Project');
     await expect(commands).toContain('SFDX: Authorize a Dev Hub');
     await expect(commands).toContain('SFDX: Authorize an Org');
     await expect(commands).toContain('SFDX: Authorize an Org using Session ID');
@@ -122,6 +121,7 @@ describe('An Initial Suite', async () => {
     await expect(commands).toContain('SFDX: Create and Set Up Project for ISV Debugging');
     await expect(commands).toContain('SFDX: Create Apex Class');
     await expect(commands).toContain('SFDX: Create Apex Trigger');
+    await expect(commands).toContain('SFDX: Create Apex Unit Test Class');
     // There are more, but just look for the first few commands.
 
     // Escape out of the pick list.
