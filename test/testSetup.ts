@@ -123,8 +123,6 @@ export class TestSetup {
       }
     }
 
-
-
     utilities.log(`${this.testSuiteSuffixName} - ...finished setUpTestingEnvironment()`);
     utilities.log('');
   }
@@ -135,6 +133,14 @@ export class TestSetup {
       utilities.log(`${projectName ?? this.testSuiteSuffixName} - Starting createProject()...`);
 
       await utilities.generateSfProject(projectName ?? this.tempProjectName, this.tempFolderPath); // generate new sf project with cli
+
+      if (projectName) {
+        this.projectFolderPath = path.join(this.tempFolderPath, projectName);
+        utilities.log(
+          `${this.testSuiteSuffixName} - new projectFolderPath is ${this.projectFolderPath}`
+        );
+      }
+
       await utilities.openFolder(this.projectFolderPath!); // switch to the new VS Code workspace
 
       // Verify the project was created and was loaded.
