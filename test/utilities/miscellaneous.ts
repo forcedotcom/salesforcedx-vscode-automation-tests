@@ -9,7 +9,7 @@ import os from 'os';
 import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import { attemptToFindOutputPanelText, clearOutputView } from './outputView.ts';
-import { executeQuickPick, findQuickPickItem } from './commandPrompt.ts';
+import { clickFilePathOkButton, executeQuickPick, findQuickPickItem } from './commandPrompt.ts';
 import { notificationIsPresentWithTimeout } from './notifications.ts';
 import * as DurationKit from '@salesforce/kit';
 import path from 'path';
@@ -246,7 +246,8 @@ export class Duration extends DurationKit.Duration {
 export async function openFolder(path: string) {
   const prompt = await executeQuickPick('File: Open Folder...'); // use this cmd palette to open
   // Set the location of the project
-  await prompt.setText(path);
-  await pause(Duration.seconds(2));
-  await prompt.confirm();
+  const input = await prompt.input$;
+  await input.setValue(path);
+  await pause(Duration.seconds(3));
+  await clickFilePathOkButton();
 }
