@@ -117,7 +117,9 @@ export async function waitForQuickPick(
     {
       timeout: options.timeout?.milliseconds,
       interval: 500, // Check every 500 ms
-      timeoutMsg: options.msg ?? `Expected to find option ${pickListItem} before ${options.timeout} milliseconds`
+      timeoutMsg:
+        options.msg ??
+        `Expected to find option ${pickListItem} before ${options.timeout} milliseconds`
     }
   );
 }
@@ -162,6 +164,7 @@ export async function clickFilePathOkButton(): Promise<void> {
   if (!okButton) {
     throw new Error('Ok button not found');
   }
+  await okButton.click();
 
   await browser.keys(['Tab']);
   await pause(Duration.milliseconds(500));

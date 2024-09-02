@@ -9,7 +9,7 @@ import os from 'os';
 import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import { attemptToFindOutputPanelText, clearOutputView } from './outputView.ts';
-import { executeQuickPick, findQuickPickItem, clickFilePathOkButton } from './commandPrompt.ts';
+import { clickFilePathOkButton, executeQuickPick, findQuickPickItem } from './commandPrompt.ts';
 import { notificationIsPresentWithTimeout } from './notifications.ts';
 import * as DurationKit from '@salesforce/kit';
 import path from 'path';
@@ -248,6 +248,6 @@ export async function openFolder(path: string) {
   // Set the location of the project
   const input = await prompt.input$;
   await input.setValue(path);
-  await pause(Duration.seconds(2));
+  await pause(Duration.seconds(3));
   await clickFilePathOkButton();
 }
