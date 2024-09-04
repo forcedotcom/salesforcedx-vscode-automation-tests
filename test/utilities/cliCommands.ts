@@ -1,5 +1,5 @@
 import spawn from 'cross-spawn';
-import { SpawnOptionsWithoutStdio } from 'child_process';
+import { exec, SpawnOptionsWithoutStdio } from 'child_process';
 import { debug, log } from './miscellaneous.ts';
 import { OrgEdition, SfCommandRunResults } from './types.ts';
 import { EnvironmentSettings } from '../environmentSettings.ts';
@@ -178,22 +178,26 @@ export async function setAlias(
   return setAliasResult;
 }
 
-export async function installJestUTToolsForLwc(projectFolder: string | undefined) {
+export async function installJestUTToolsForLwc(projectFolder: string | undefined): Promise<void> {
   if (!projectFolder) {
     throw new Error('cannot setup lwc tests without a project folder.');
   }
-
-  const jestInstallResult = await runCliCommand('force:lightning:lwc:test:setup', {
-    cwd: projectFolder
+  const command = 'npm install && npm install @salesforce/sfdx-lwc-jest --save-dev';
+  return new Promise((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        log(`Error with ${command}`);
+        reject(error);
+        return;
+      }
+      if (stderr) {
+        log(`Error output for ${command}`);
+      }
+      log(stdout);
+      log(`...SetUp - Finished Install @salesforce/sfdx-lwc-jest Node module`);
+      resolve();
+    });
   });
-
-  if (jestInstallResult.exitCode > 0) {
-    log(
-      `setup lwc tests failed. Exit code: ${jestInstallResult.exitCode}. \nRaw stderr: ${jestInstallResult.stderr}`
-    );
-    throw new Error(jestInstallResult.stderr);
-  }
-  return jestInstallResult;
 }
 
 export async function createUser(
@@ -226,11 +230,10 @@ export function removeEscapedCharacters(result: string): string {
   return resultJson;
 }
 
-
 export async function generateSfProject(
   name: string,
   path?: string | undefined,
-  template?: string | undefined,
+  template?: string | undefined
 ): Promise<SfCommandRunResults> {
   const sfProjectGenerateResult = await runCliCommand(
     'project:generate',
