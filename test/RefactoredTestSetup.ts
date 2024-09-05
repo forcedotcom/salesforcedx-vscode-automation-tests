@@ -9,6 +9,10 @@ import path from 'path';
 import * as utilities from './utilities/index.ts';
 import { EnvironmentSettings as Env } from './environmentSettings.ts';
 import { ProjectConfig, ProjectShapeOption } from './utilities/index.ts';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export class RefactoredTestSetup {
   public testSuiteSuffixName: string = '';

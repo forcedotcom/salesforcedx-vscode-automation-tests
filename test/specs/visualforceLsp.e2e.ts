@@ -6,16 +6,25 @@
  */
 import { step, xstep } from 'mocha-steps';
 import path from 'path';
-import { TestSetup } from '../testSetup.ts';
+import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 describe('Visualforce LSP', async () => {
-  let testSetup: TestSetup;
+  let testSetup: RefactoredTestSetup;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'VisualforceLsp'
+  }
 
   step('Set up the testing environment', async () => {
     utilities.log('VisualforceLsp - Set up the testing environment');
-    testSetup = new TestSetup('VisualforceLsp');
-    await testSetup.setUp();
+    testSetup = await RefactoredTestSetup.setUp(testReqConfig);
+
+    await utilities.reloadAndEnableExtensions();
+    await utilities.reloadAndEnableExtensions();
 
     utilities.log(`${testSetup.testSuiteSuffixName} - calling createApexController()`);
     // Create Apex controller for the Visualforce Page

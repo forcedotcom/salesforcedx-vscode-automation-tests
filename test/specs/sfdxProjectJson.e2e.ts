@@ -26,6 +26,6 @@ describe('Customize sfdx-project.json', async () => {
   });
 
   after('Tear down and clean up the testing environment', async () => {
-    await RefactoredTestSetup?.tearDown();
+    await testSetup?.tearDown();
   });
 });
