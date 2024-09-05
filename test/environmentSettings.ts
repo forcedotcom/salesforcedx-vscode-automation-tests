@@ -47,6 +47,8 @@ export class EnvironmentSettings {
   private _startTime = new Date(Date.now()).toLocaleTimeString([], { timeStyle: 'short' });
   private _throttleFactor = 1;
   private _javaHome = process.env.JAVA_HOME;
+  private _localProjectPath: string | undefined;
+  private _githubProjectUrl: string | undefined;
   private _useExistingProject: string | undefined;
   private _logLevel: LogLevel = 'info';
 
@@ -69,6 +71,8 @@ export class EnvironmentSettings {
       : this._logLevel;
     this._javaHome = process.env.JAVA_HOME || this._javaHome;
     this.useExistingProject = process.env.USE_EXISTING_PROJECT_PATH;
+    this.localProjectPath = process.env.LOCAL_PROJECT_PATH;
+    this.githubProjectUrl = process.env.GITHUB_PROJECT_URL;
   }
 
   public static getInstance(): EnvironmentSettings {
@@ -120,6 +124,36 @@ export class EnvironmentSettings {
 
   public get useExistingProject(): string | undefined {
     return this._useExistingProject;
+  }
+
+  public get localProjectPath(): string | undefined {
+    return this._localProjectPath;
+  }
+
+  public get githubProjectUrl(): string | undefined {
+    return this._githubProjectUrl;
+  }
+
+  public set localProjectPath(localPath: string | undefined) {
+    const projectPath = localPath ?? process.env.LOCAL_PROJECT_PATH;
+    if (!projectPath) {
+      this._localProjectPath = undefined;
+      return;
+    }
+    if (!fs.existsSync(projectPath)) {
+      throw new Error(`Project path for "${projectPath}" does not exist`);
+    }
+    this._localProjectPath = projectPath;
+  }
+
+  public set githubProjectUrl(githubUrl: string | undefined) {
+    const projectPath = githubUrl ?? process.env.GITHUB_PROJECT_URL;
+    if (!projectPath) {
+      this._githubProjectUrl = undefined;
+      return;
+    }
+
+    this._githubProjectUrl = projectPath;
   }
 
   public set useExistingProject(existingProject: string | undefined) {

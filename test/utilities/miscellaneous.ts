@@ -14,6 +14,7 @@ import { notificationIsPresentWithTimeout } from './notifications.ts';
 import * as DurationKit from '@salesforce/kit';
 import path from 'path';
 import { PredicateWithTimeout } from './predicates.ts';
+import { getFolderName } from './fileSystem.ts';
 
 export async function pause(duration: Duration = Duration.seconds(1)): Promise<void> {
   await sleep(duration.milliseconds);
@@ -244,6 +245,9 @@ export class Duration extends DurationKit.Duration {
  * VSCode will be working on the new workspace, and the previous one is closed.
  */
 export async function openFolder(path: string) {
+  if (!getFolderName(path)) {
+    throw new Error(`Invalid folder path: ${path}`);
+  }
   const prompt = await executeQuickPick('File: Open Folder...'); // use this cmd palette to open
   // Set the location of the project
   const input = await prompt.input$;

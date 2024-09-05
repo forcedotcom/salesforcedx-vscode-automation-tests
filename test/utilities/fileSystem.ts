@@ -64,3 +64,24 @@ export function getVsixFilesFromDir(vsixDir: string): string[] {
     path.join(vsixDir, vsixFile)
   );
 }
+
+/**
+ * Check if the given path refers to a directory
+ * @param folderPath
+ * @returns folder name
+ */
+export function getFolderName(folderPath: string): string | null {
+  try {
+    // Check if the given path exists and if it is a directory
+    const stats = fs.statSync(folderPath);
+    if (stats.isDirectory()) {
+      // Extract and return the folder name
+      return path.basename(folderPath);
+    } else {
+      return null; // It's not a directory
+    }
+  } catch (err) {
+    console.error('Error checking path:', err);
+    return null; // The path doesn't exist or isn't accessible
+  }
+}
