@@ -4,6 +4,7 @@ import * as utilities from '../utilities/index.ts';
 
 
 describe('Customize sfdx-project.json', async () => {
+  let testSetup: RefactoredTestSetup;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,
@@ -13,7 +14,7 @@ describe('Customize sfdx-project.json', async () => {
   }
 
   step('Set up the testing environment', async () => {
-    await RefactoredTestSetup.setUp(testReqConfig);
+    testSetup = await RefactoredTestSetup.setUp(testReqConfig);
     await utilities.createSfdxProjectJsonWithAllFields();
     await utilities.reloadAndEnableExtensions();
   });

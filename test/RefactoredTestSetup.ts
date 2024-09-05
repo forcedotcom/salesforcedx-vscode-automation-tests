@@ -11,38 +11,43 @@ import { EnvironmentSettings as Env } from './environmentSettings.ts';
 import { ProjectConfig, ProjectShapeOption } from './utilities/index.ts';
 
 export class RefactoredTestSetup {
-  public static testSuiteSuffixName: string = '';
-  public static tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
-  public static projectFolderPath: string | undefined;
-  private static aliasAndUserNameWereVerified = false;
-  public static scratchOrgAliasName: string | undefined;
-  public static scratchOrgId: string | undefined;
+  public testSuiteSuffixName: string = '';
+  public tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
+  public projectFolderPath: string | undefined;
+  private aliasAndUserNameWereVerified = false;
+  public scratchOrgAliasName: string | undefined;
+  public scratchOrgId: string | undefined;
+  static testSetup: RefactoredTestSetup;
 
   public constructor() {
   }
 
-  public static get tempProjectName(): string {
-    return 'TempProject-' + RefactoredTestSetup.testSuiteSuffixName;
+  public get tempProjectName(): string {
+    return 'TempProject-' + RefactoredTestSetup.testSetup.testSuiteSuffixName;
   }
 
   public static async setUp(testReqConfig: utilities.TestReqConfig): Promise<RefactoredTestSetup> {
-    this.testSuiteSuffixName = testReqConfig.testSuiteSuffixName;
+    if (!RefactoredTestSetup.testSetup) {
+      RefactoredTestSetup.testSetup = new RefactoredTestSetup();
+    }
+    this.testSetup.testSuiteSuffixName = testReqConfig.testSuiteSuffixName;
     utilities.log('');
-    utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
+    utilities.log(`${this.testSetup.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
     /* The expected workspace will be open up after setUpTestingWorkspace */
-    await this.setUpTestingWorkspace(testReqConfig.projectConfig);
+    await this.testSetup.setUpTestingWorkspace(testReqConfig.projectConfig);
     await utilities.installExtensions(testReqConfig.excludedExtensions);
     // await utilities.reloadAndEnableExtensions(); 
     if (testReqConfig.isOrgRequired && testReqConfig.projectConfig.projectShape != ProjectShapeOption.NONE) {
-      await this.setUpScratchOrg(testReqConfig.scratchOrgEdition || 'developer');
+      await this.testSetup.setUpScratchOrg(testReqConfig.scratchOrgEdition || 'developer');
     }
-    return new RefactoredTestSetup();
+
+    return RefactoredTestSetup.testSetup;
   }
 
-  public static async tearDown(): Promise<void> {
+  public async tearDown(): Promise<void> {
     await this.checkForUncaughtErrors();
     try {
-      await utilities.deleteScratchOrg(this.scratchOrgAliasName);
+      await utilities.deleteScratchOrg(RefactoredTestSetup.testSetup.scratchOrgAliasName);
       await this.deleteScratchOrgInfo();
       this.projectFolderPath = undefined;
       this.scratchOrgAliasName = undefined;
@@ -54,12 +59,12 @@ export class RefactoredTestSetup {
     }
   }
 
-  public static async setUpTestingWorkspace(projectConfig: ProjectConfig) {
-    utilities.log(`${this.testSuiteSuffixName} - Starting setUpTestingWorkspace()...`);
+  public async setUpTestingWorkspace(projectConfig: ProjectConfig) {
+    utilities.log(`${RefactoredTestSetup.testSetup.testSuiteSuffixName} - Starting setUpTestingWorkspace()...`);
     switch (projectConfig.projectShape) {
       case ProjectShapeOption.NEW:
-        if (!fs.existsSync(this.tempFolderPath)) {
-          utilities.createFolder(this.tempFolderPath);
+        if (!fs.existsSync(RefactoredTestSetup.testSetup.tempFolderPath)) {
+          utilities.createFolder(RefactoredTestSetup.testSetup.tempFolderPath);
         }
         await utilities.generateSfProject(this.tempProjectName, this.tempFolderPath); // generate a sf project for 'new'
         this.projectFolderPath = path.join(this.tempFolderPath, this.tempProjectName);
@@ -109,18 +114,18 @@ export class RefactoredTestSetup {
     await utilities.openFolder(this.projectFolderPath!);
   }
 
-  static throwError(message: string) {
+  throwError(message: string) {
     utilities.log(message);
     throw new Error(message);
   }
 
-  public static async setUpScratchOrg(scratchOrgEdition: utilities.OrgEdition) {
+  public async setUpScratchOrg(scratchOrgEdition: utilities.OrgEdition) {
     await this.authorizeDevHub();
     this.updateScratchOrgDefWithEdition(scratchOrgEdition);
     await this.createDefaultScratchOrg(scratchOrgEdition);
   }
 
-  public static async authorizeDevHub(): Promise<void> {
+  public async authorizeDevHub(): Promise<void> {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting authorizeDevHub()...`);
 
@@ -149,7 +154,7 @@ export class RefactoredTestSetup {
 
   // verifyAliasAndUserName() verifies that the alias and user name are set,
   // and also verifies there is a corresponding match in the org list.
-  private static async verifyAliasAndUserName() {
+  private async verifyAliasAndUserName() {
     const environmentSettings = Env.getInstance();
 
     const devHubAliasName = environmentSettings.devHubAliasName;
@@ -179,7 +184,7 @@ export class RefactoredTestSetup {
     );
   }
 
-  private static async createDefaultScratchOrg(
+  private async createDefaultScratchOrg(
     edition: utilities.OrgEdition = 'developer'
   ): Promise<void> {
     utilities.log('');
@@ -257,7 +262,7 @@ export class RefactoredTestSetup {
     utilities.log('');
   }
 
-  private static async checkForUncaughtErrors(): Promise<void> {
+  private async checkForUncaughtErrors(): Promise<void> {
     await utilities.showRunningExtensions();
 
     // Zoom out so all the extensions are visible
@@ -278,7 +283,7 @@ export class RefactoredTestSetup {
     await expect(uncaughtErrors.length).toBe(0);
   }
 
-  private static async deleteScratchOrgInfo(): Promise<void> {
+  private async deleteScratchOrgInfo(): Promise<void> {
     if (this.scratchOrgId) {
       const sfDataDeleteRecord = await utilities.runCliCommand(
         'data:delete:record',
@@ -297,7 +302,7 @@ export class RefactoredTestSetup {
     }
   }
 
-  private static updateScratchOrgDefWithEdition(scratchOrgEdition: utilities.OrgEdition) {
+  private updateScratchOrgDefWithEdition(scratchOrgEdition: utilities.OrgEdition) {
     if (scratchOrgEdition === 'enterprise') {
       const projectScratchDefPath = path.join(
         this.projectFolderPath!,
