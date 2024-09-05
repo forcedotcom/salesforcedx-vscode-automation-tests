@@ -184,7 +184,7 @@ export async function installJestUTToolsForLwc(projectFolder: string | undefined
   }
   const command = 'npm install && npm install @salesforce/sfdx-lwc-jest --save-dev';
   return new Promise((resolve, reject) => {
-    exec(command, (error, stdout, stderr) => {
+    exec(command, { cwd: projectFolder }, (error, stdout, stderr) => {
       if (error) {
         log(`Error with ${command}`);
         reject(error);
