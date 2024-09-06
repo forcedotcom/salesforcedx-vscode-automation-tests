@@ -20,15 +20,21 @@ export async function pause(duration: Duration = Duration.seconds(1)): Promise<v
 }
 
 export function log(message: string): void {
-  if (EnvironmentSettings.getInstance().logLevel !== 'silent') {
+  if (EnvironmentSettings.getInstance().logLevel in ['warn', 'error']) {
     console.log(message);
   }
 }
 
 export function debug(message: string): void {
-  if (EnvironmentSettings.getInstance().logLevel in ['debug', 'info', 'trace', 'warn']) {
+  if (EnvironmentSettings.getInstance().logLevel in ['trace', 'debug', 'info', 'warn']) {
     const timestamp = new Date().toISOString();
     console.debug(`${timestamp}:${message}`);
+  }
+}
+
+export function error(message: string): void {
+  if (EnvironmentSettings.getInstance().logLevel === 'error') {
+    console.error(`Error: ${message}`);
   }
 }
 
