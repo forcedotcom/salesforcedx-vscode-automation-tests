@@ -23,9 +23,6 @@ describe('Visualforce LSP', async () => {
     utilities.log('VisualforceLsp - Set up the testing environment');
     testSetup = await RefactoredTestSetup.setUp(testReqConfig);
 
-    await utilities.reloadAndEnableExtensions();
-    await utilities.reloadAndEnableExtensions();
-
     utilities.log(`${testSetup.testSuiteSuffixName} - calling createApexController()`);
     // Create Apex controller for the Visualforce Page
     await utilities.createApexController();

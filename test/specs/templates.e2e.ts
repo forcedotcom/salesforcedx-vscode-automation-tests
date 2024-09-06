@@ -8,20 +8,27 @@ import child_process from 'child_process';
 import { step, xstep } from 'mocha-steps';
 import path from 'path';
 import util from 'util';
-import { TestSetup } from '../testSetup.ts';
+import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import * as analyticsTemplate from '../testData/sampleAnalyticsTemplateData.ts';
 
 const exec = util.promisify(child_process.exec);
 
 describe('Templates', async () => {
-  let testSetup: TestSetup;
+  let testSetup: RefactoredTestSetup;
   let projectName: string;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'Templates'
+  }
+
 
   // Set up
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('Templates');
-    await testSetup.setUp();
+    testSetup = await RefactoredTestSetup.setUp(testReqConfig);
     projectName = testSetup.tempProjectName.toUpperCase();
   });
 

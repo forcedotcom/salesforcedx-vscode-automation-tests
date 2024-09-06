@@ -37,10 +37,11 @@ export class RefactoredTestSetup {
     this.testSetup.testSuiteSuffixName = testReqConfig.testSuiteSuffixName;
     utilities.log('');
     utilities.log(`${this.testSetup.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
+    await utilities.installExtensions();
+    await utilities.reloadAndEnableExtensions();
     /* The expected workspace will be open up after setUpTestingWorkspace */
     await this.testSetup.setUpTestingWorkspace(testReqConfig.projectConfig);
-    await utilities.installExtensions(testReqConfig.excludedExtensions);
-    // await utilities.reloadAndEnableExtensions(); 
+    await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
     if (testReqConfig.isOrgRequired && testReqConfig.projectConfig.projectShape != ProjectShapeOption.NONE) {
       await this.testSetup.setUpScratchOrg(testReqConfig.scratchOrgEdition || 'developer');
     }
