@@ -119,7 +119,7 @@ describe('Debug LWC Tests', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Debug Single Test via the Test Sidebar`);
     const workbench = await utilities.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
-
+    await expect(testingView).not.toBeUndefined();
     // Open the Test Sidebar
     const testingSideBarView = await testingView?.openView();
     await expect(testingSideBarView).toBeInstanceOf(SideBarView);
