@@ -50,7 +50,7 @@ export class EnvironmentSettings {
   private _throttleFactor = 1;
   private _javaHome = process.env.JAVA_HOME;
   private _useExistingProject: string | undefined;
-  private _logLevel: LogLevel = 'debug';
+  private _logLevel: LogLevel = 'warn';
 
   private constructor() {
     this._vscodeVersion = process.env.VSCODE_VERSION || this._vscodeVersion;
