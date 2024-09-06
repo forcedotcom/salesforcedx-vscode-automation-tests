@@ -20,7 +20,7 @@ export async function pause(duration: Duration = Duration.seconds(1)): Promise<v
 }
 
 export function log(message: string): void {
-  if (EnvironmentSettings.getInstance().logLevel in ['warn', 'error']) {
+  if (EnvironmentSettings.getInstance().logLevel !== 'silent') {
     console.log(message);
   }
 }
