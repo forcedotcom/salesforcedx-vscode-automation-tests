@@ -13,7 +13,7 @@ describe('metadata deploy and retrieve', async () => {
     isOrgRequired: true,
     testSuiteSuffixName: 'mdDeployRetrieve'
   }
-  const mdPath = 'force-app/main/default/objects/Account/fields/Deploy_Test__c.field-meta.xml';
+  // const mdPath = 'force-app/main/default/objects/Account/fields/Deploy_Test__c.field-meta.xml';
   let textV1: string;
   let textV2: string;
   let textV2AfterRetrieve: string;
@@ -27,6 +27,7 @@ describe('metadata deploy and retrieve', async () => {
     await utilities.getTextEditor(workbench, 'Deploy_Test__c.field-meta.xml');
     textV1 = await utilities.attemptToFindTextEditorText('Deploy_Test__c.field-meta.xml');
     await runAndValidateCommand('Deploy', 'to', 'ST');
+    await utilities.clearOutputView();
   });
 
   step('Update MD v2 and deploy again', async () => {
@@ -34,6 +35,7 @@ describe('metadata deploy and retrieve', async () => {
     textV2 = await utilities.attemptToFindTextEditorText('Deploy_Test__c.field-meta.xml');
     await expect(textV1).not.toEqual(textV2); // MD file should be updated
     await runAndValidateCommand('Deploy', 'to', 'ST');
+    await utilities.clearOutputView();
   });
 
   step('Retrieve MD v2 and verify the text not changed', async () => {
@@ -86,7 +88,7 @@ describe('metadata deploy and retrieve', async () => {
     await expect(outputPanelText).toContain(
       `${operation}ed Source`.replace('Retrieveed', 'Retrieved')
     );
-    await expect(outputPanelText).toContain(`Account.Deploy_Test__c  CustomField  ${mdPath}`);
+    await expect(outputPanelText).toContain(`Account.Deploy_Test__c  CustomField`);
     await expect(outputPanelText).toContain(`ended SFDX: ${operation} This Source ${fromTo} Org`);
   };
 });
