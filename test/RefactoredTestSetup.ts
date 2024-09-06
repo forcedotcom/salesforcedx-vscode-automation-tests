@@ -110,6 +110,10 @@ export class RefactoredTestSetup {
 
       case ProjectShapeOption.NONE:
         // NONE: blank project by default
+        /* create the e2e-temp folder to benefit further testing */
+        if (!fs.existsSync(this.tempFolderPath)) {
+          utilities.createFolder(this.tempFolderPath);
+        }
         this.projectFolderPath = path.join(this.tempFolderPath, this.tempProjectName);
         return;
 
