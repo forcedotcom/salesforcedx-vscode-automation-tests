@@ -50,7 +50,7 @@ describe('Run LWC Tests', async () => {
     );
     await expect(terminalText).not.toBeUndefined();
     await expect(terminalText).toContain(
-      `PASS  ${path.join(
+      `PASS ${path.join(
         'force-app',
         'main',
         'default',
@@ -61,7 +61,7 @@ describe('Run LWC Tests', async () => {
       )}`
     );
     await expect(terminalText).toContain(
-      `PASS  ${path.join(
+      `PASS ${path.join(
         'force-app',
         'main',
         'default',
@@ -182,7 +182,7 @@ describe('Run LWC Tests', async () => {
     );
     await expect(terminalText).not.toBeUndefined();
     await expect(terminalText).toContain(
-      `PASS  ${path.join(
+      `PASS ${path.join(
         'force-app',
         'main',
         'default',
@@ -193,7 +193,7 @@ describe('Run LWC Tests', async () => {
       )}`
     );
     await expect(terminalText).toContain(
-      `PASS  ${path.join(
+      `PASS ${path.join(
         'force-app',
         'main',
         'default',
@@ -250,7 +250,7 @@ describe('Run LWC Tests', async () => {
     );
     await expect(terminalText).not.toBeUndefined();
     await expect(terminalText).toContain(
-      `PASS  ${path.join(
+      `PASS ${path.join(
         'force-app',
         'main',
         'default',
@@ -316,7 +316,7 @@ describe('Run LWC Tests', async () => {
     );
     await expect(terminalText).not.toBeUndefined();
     await expect(terminalText).toContain(
-      `PASS  ${path.join(
+      `PASS ${path.join(
         'force-app',
         'main',
         'default',
@@ -380,7 +380,7 @@ describe('Run LWC Tests', async () => {
     );
     await expect(terminalText).not.toBeUndefined();
     await expect(terminalText).toContain(
-      `PASS  ${path.join(
+      `PASS ${path.join(
         'force-app',
         'main',
         'default',
@@ -430,7 +430,7 @@ describe('Run LWC Tests', async () => {
     );
     await expect(terminalText).not.toBeUndefined();
     await expect(terminalText).toContain(
-      `PASS  ${path.join(
+      `PASS ${path.join(
         'force-app',
         'main',
         'default',
@@ -479,7 +479,7 @@ describe('Run LWC Tests', async () => {
     );
     await expect(terminalText).not.toBeUndefined();
     await expect(terminalText).toContain(
-      `PASS  ${path.join(
+      `PASS ${path.join(
         'force-app',
         'main',
         'default',
@@ -528,7 +528,7 @@ describe('Run LWC Tests', async () => {
     );
     await expect(terminalText).not.toBeUndefined();
     await expect(terminalText).toContain(
-      `PASS  ${path.join(
+      `PASS ${path.join(
         'force-app',
         'main',
         'default',

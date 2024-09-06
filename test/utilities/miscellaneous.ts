@@ -26,7 +26,7 @@ export function log(message: string): void {
 }
 
 export function debug(message: string): void {
-  if (EnvironmentSettings.getInstance().logLevel in ['debug', 'trace']) {
+  if (EnvironmentSettings.getInstance().logLevel in ['debug', 'trace', 'warn']) {
     const timestamp = new Date().toISOString();
     console.debug(`${timestamp}:${message}`);
   }
