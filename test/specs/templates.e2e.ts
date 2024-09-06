@@ -15,7 +15,7 @@ import * as analyticsTemplate from '../testData/sampleAnalyticsTemplateData.ts';
 const exec = util.promisify(child_process.exec);
 
 describe('Templates', async () => {
-  let testSetup: RefactoredTestSetup;
+  const testSetup = new RefactoredTestSetup();
   let projectName: string;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
@@ -28,7 +28,7 @@ describe('Templates', async () => {
 
   // Set up
   step('Set up the testing environment', async () => {
-    testSetup = await RefactoredTestSetup.setUp(testReqConfig);
+    await testSetup.setUp(testReqConfig);
     projectName = testSetup.tempProjectName.toUpperCase();
   });
 

@@ -15,6 +15,6 @@ describe('Use existing project', async () => {
     testSetup = new TestSetup('UseExisProject');
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify existing project open`);
     await testSetup.setUpTestingEnvironment();
-    await testSetup.verifyProjectCreated('dreamhouse-lwc-testing');
+    await utilities.verifyProjectCreated('dreamhouse-lwc-testing');
   });
 });

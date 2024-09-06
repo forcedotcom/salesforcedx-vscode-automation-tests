@@ -21,38 +21,34 @@ export class RefactoredTestSetup {
   private aliasAndUserNameWereVerified = false;
   public scratchOrgAliasName: string | undefined;
   public scratchOrgId: string | undefined;
-  static testSetup: RefactoredTestSetup;
 
   public constructor() {
   }
 
   public get tempProjectName(): string {
-    return 'TempProject-' + RefactoredTestSetup.testSetup.testSuiteSuffixName;
+    return 'TempProject-' + this.testSuiteSuffixName;
   }
 
-  public static async setUp(testReqConfig: utilities.TestReqConfig): Promise<RefactoredTestSetup> {
-    if (!RefactoredTestSetup.testSetup) {
-      RefactoredTestSetup.testSetup = new RefactoredTestSetup();
-    }
-    this.testSetup.testSuiteSuffixName = testReqConfig.testSuiteSuffixName;
+  public async setUp(testReqConfig: utilities.TestReqConfig): Promise<void> {
+    this.testSuiteSuffixName = testReqConfig.testSuiteSuffixName;
     utilities.log('');
-    utilities.log(`${this.testSetup.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
+    utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
     await utilities.installExtensions();
     await utilities.reloadAndEnableExtensions();
     /* The expected workspace will be open up after setUpTestingWorkspace */
-    await this.testSetup.setUpTestingWorkspace(testReqConfig.projectConfig);
-    await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
-    if (testReqConfig.isOrgRequired && testReqConfig.projectConfig.projectShape != ProjectShapeOption.NONE) {
-      await this.testSetup.setUpScratchOrg(testReqConfig.scratchOrgEdition || 'developer');
+    await this.setUpTestingWorkspace(testReqConfig.projectConfig);
+    if (testReqConfig.projectConfig.projectShape != ProjectShapeOption.NONE) {
+      await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
+      // Extra config needed for Apex LSP on GHA
+      if (process.platform === 'darwin') this.setJavaHomeConfigEntry();
+      if (testReqConfig.isOrgRequired) await this.setUpScratchOrg(testReqConfig.scratchOrgEdition || 'developer');
     }
-
-    return RefactoredTestSetup.testSetup;
   }
 
   public async tearDown(): Promise<void> {
     await this.checkForUncaughtErrors();
     try {
-      await utilities.deleteScratchOrg(RefactoredTestSetup.testSetup.scratchOrgAliasName);
+      await utilities.deleteScratchOrg(this.scratchOrgAliasName);
       await this.deleteScratchOrgInfo();
       this.projectFolderPath = undefined;
       this.scratchOrgAliasName = undefined;
@@ -65,11 +61,12 @@ export class RefactoredTestSetup {
   }
 
   public async setUpTestingWorkspace(projectConfig: ProjectConfig) {
-    utilities.log(`${RefactoredTestSetup.testSetup.testSuiteSuffixName} - Starting setUpTestingWorkspace()...`);
+    utilities.log(`${this.testSuiteSuffixName} - Starting setUpTestingWorkspace()...`);
+    let projectName;
     switch (projectConfig.projectShape) {
       case ProjectShapeOption.NEW:
-        if (!fs.existsSync(RefactoredTestSetup.testSetup.tempFolderPath)) {
-          utilities.createFolder(RefactoredTestSetup.testSetup.tempFolderPath);
+        if (!fs.existsSync(this.tempFolderPath)) {
+          utilities.createFolder(this.tempFolderPath);
         }
         await utilities.generateSfProject(this.tempProjectName, this.tempFolderPath); // generate a sf project for 'new'
         this.projectFolderPath = path.join(this.tempFolderPath, this.tempProjectName);
@@ -83,6 +80,7 @@ export class RefactoredTestSetup {
             this.throwError(`Repository does not exist or is inaccessible: ${projectConfig.githubRepoUrl}`);
           }
           const repoName = utilities.getRepoNameFromUrl(projectConfig.githubRepoUrl);
+          projectName = repoName;
           if (projectConfig.folderPath) {
             const localProjName = utilities.getFolderName(projectConfig.folderPath);
             if (localProjName != repoName) {
@@ -103,12 +101,16 @@ export class RefactoredTestSetup {
         break;
 
       case ProjectShapeOption.ANY:
+        // ANY: workspace is designated to open when wdio is initialized
         if (projectConfig.folderPath) {
           this.projectFolderPath = projectConfig.folderPath;
+          projectName = utilities.getFolderName(projectConfig.folderPath);
         } else this.throwError('folder path is required for named project!');
+        return;
+
       case ProjectShapeOption.NONE:
-        // ANY: workspace is designated to open when wdio is initialized
         // NONE: blank project by default
+        this.projectFolderPath = path.join(this.tempFolderPath, this.tempProjectName);
         return;
 
       default:
@@ -117,6 +119,8 @@ export class RefactoredTestSetup {
     }
     utilities.log(`Project folder to open: ${this.projectFolderPath}`);
     await utilities.openFolder(this.projectFolderPath!);
+    // Verify the project was created and was loaded.
+    await utilities.verifyProjectCreated(projectName ?? this.tempProjectName);
   }
 
   throwError(message: string) {
@@ -321,5 +325,30 @@ export class RefactoredTestSetup {
       );
       fs.writeFileSync(projectScratchDefPath, projectScratchDef, 'utf8');
     }
+  }
+
+  private setJavaHomeConfigEntry(): void {
+    const vscodeSettingsPath = path.join(this.projectFolderPath!, '.vscode', 'settings.json');
+    if (!Env.getInstance().javaHome) {
+      return;
+    }
+    if (!fs.existsSync(path.dirname(vscodeSettingsPath))) {
+      fs.mkdirSync(path.dirname(vscodeSettingsPath), { recursive: true });
+    }
+
+    let settings = fs.existsSync(vscodeSettingsPath)
+      ? JSON.parse(fs.readFileSync(vscodeSettingsPath, 'utf8'))
+      : {};
+
+    settings = {
+      ...settings,
+      ...(process.env.JAVA_HOME
+        ? { 'salesforcedx-vscode-apex.java.home': process.env.JAVA_HOME }
+        : {})
+    };
+    fs.writeFileSync(vscodeSettingsPath, JSON.stringify(settings, null, 2), 'utf8');
+    utilities.log(
+      `${this.testSuiteSuffixName} - Set 'salesforcedx-vscode-apex.java.home' to '${process.env.JAVA_HOME}' in ${vscodeSettingsPath}`
+    );
   }
 }

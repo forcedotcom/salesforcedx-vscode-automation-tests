@@ -7,7 +7,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { DefaultTreeItem, InputBox, QuickOpenBox } from 'wdio-vscode-service';
+import { InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import { EnvironmentSettings as Env } from './environmentSettings.ts';
 import * as utilities from './utilities/index.ts';
 import { fileURLToPath } from 'url';
@@ -144,7 +144,7 @@ export class TestSetup {
       await utilities.openFolder(this.projectFolderPath!); // switch to the new VS Code workspace
 
       // Verify the project was created and was loaded.
-      await this.verifyProjectCreated(projectName ?? this.tempProjectName);
+      await utilities.verifyProjectCreated(projectName ?? this.tempProjectName);
       this.updateScratchOrgDefWithEdition(scratchOrgEdition);
 
       // Extra config needed for Apex LSP on GHA
@@ -337,33 +337,5 @@ export class TestSetup {
       );
       fs.writeFileSync(projectScratchDefPath, projectScratchDef, 'utf8');
     }
-  }
-
-  public async verifyProjectCreated(projectName: string) {
-    utilities.log(`${this.testSuiteSuffixName} - Verifying project was created...`);
-
-    // Reload the VS Code window
-    const workbench = await utilities.getWorkbench();
-    await utilities.reloadWindow();
-    await utilities.showExplorerView();
-
-    const sidebar = await workbench.getSideBar().wait();
-    const content = await sidebar.getContent().wait();
-    const treeViewSection = await (await content.getSection(projectName.toUpperCase())).wait();
-    if (!treeViewSection) {
-      throw new Error(
-        'In verifyProjectCreated(), getSection() returned a treeViewSection with a value of null (or undefined)'
-      );
-    }
-
-    const forceAppTreeItem = (await treeViewSection.findItem('force-app')) as DefaultTreeItem;
-    if (!forceAppTreeItem) {
-      throw new Error(
-        'In verifyProjectCreated(), findItem() returned a forceAppTreeItem with a value of null (or undefined)'
-      );
-    }
-
-    await (await forceAppTreeItem.wait()).expand();
-    utilities.log(`${this.testSuiteSuffixName} - Verifying project complete`);
   }
 }
