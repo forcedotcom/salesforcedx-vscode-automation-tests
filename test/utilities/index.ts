@@ -27,3 +27,4 @@ export * from './types.ts';
 export * from './jsonUtils.ts';
 export * from './orgBrowser.ts';
 export * from './gitCommands.ts';
+export * from './textEditorView.ts';

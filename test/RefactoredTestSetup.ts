@@ -91,8 +91,8 @@ export class RefactoredTestSetup {
             }
           } else {
             // clone the project from Github URL directly
-            await utilities.gitClone(projectConfig.githubRepoUrl, this.tempFolderPath);
             this.projectFolderPath = path.join(this.tempFolderPath, repoName!);
+            await utilities.gitClone(projectConfig.githubRepoUrl, this.projectFolderPath);
           }
         } else {
           // missing info, throw an error

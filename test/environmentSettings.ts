@@ -37,10 +37,11 @@ export class EnvironmentSettings {
     // './specs/**/trailApexReplayDebugger.e2e.ts',
     // './specs/**/visualforceLsp.e2e.ts',
     // './specs/**/sfdxProjectJson.e2e.ts',
-    './specs/createProjectTest.e2e.ts'
+    // './specs/createProjectTest.e2e.ts',
+    './specs/metadataDeployRetrieve.e2e.ts',
   ];
   private _devHubAliasName = 'vscodeOrg';
-  private _devHubUserName = 'mingxuanzhang@dev.org';
+  private _devHubUserName = 'svcideebot@salesforce.com';
   private _sfdxAuthUrl = process.env.SFDX_AUTH_URL;
   private _orgId = process.env.ORG_ID;
   private _extensionPath = join(__dirname, '..', '..', 'salesforcedx-vscode', 'extensions');

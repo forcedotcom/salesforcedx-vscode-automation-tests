@@ -1,9 +1,10 @@
 import spawn from 'cross-spawn';
 import path from 'path';
 
-function runGitCommand(args: string[]) {
+function runGitCommand(args: string[], workingDir?: string) {
   return new Promise<void>((resolve, reject) => {
-    const gitProcess = spawn('git', args);
+    const options = workingDir ? { cwd: workingDir } : {};
+    const gitProcess = spawn('git', args, options);
 
     // Listen to the output stream (stdout)
     gitProcess.stdout?.on('data', (data) => {
@@ -28,9 +29,18 @@ function runGitCommand(args: string[]) {
 
 export async function gitClone(url: string, targetPath: string) {
   try {
-    await runGitCommand(['clone', url, targetPath])
+    await runGitCommand(['clone', url, targetPath]);
   } catch (err) {
     console.error('Failed to run git clone:', err);
+  }
+}
+
+export async function gitCheckout(branch: string, targetPath?: string) {
+  try {
+    // Pass the targetPath as the working directory
+    await runGitCommand(['checkout', branch], targetPath);
+  } catch (err) {
+    console.error('Failed to run git checkout:', err);
   }
 }
 
