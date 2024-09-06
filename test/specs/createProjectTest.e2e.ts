@@ -35,7 +35,6 @@ describe('SFDX: Create Project', async () => {
     // Set the location of the project.
     const input = await prompt.input$;
     await input.setValue(testSetup.tempFolderPath!);
-    await expect(true).toBe(false);
     await utilities.pause(utilities.Duration.seconds(2));
     await utilities.clickFilePathOkButton();
   });
