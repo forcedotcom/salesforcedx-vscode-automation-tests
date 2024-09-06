@@ -5,7 +5,14 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import { DefaultTreeItem, TreeItem, ViewItem, Workbench, ViewSection } from 'wdio-vscode-service';
+import {
+  DefaultTreeItem,
+  TreeItem,
+  ViewItem,
+  Workbench,
+  ViewSection,
+  SideBarView
+} from 'wdio-vscode-service';
 import { Duration, pause } from './miscellaneous.ts';
 import { fail } from 'assert';
 
@@ -170,4 +177,27 @@ export async function getTestsSection(workbench: Workbench, type: string) {
   const testsSection = await sidebarView.getSection(type);
   await expect(testsSection.elem).toBePresent();
   return testsSection;
+}
+
+export async function runTestCase(
+  workbench: Workbench,
+  testSuite: string,
+  testName: string,
+  actionLabel: string
+): Promise<TreeItem> {
+  const testingView = await workbench.getActivityBar().getViewControl('Testing');
+  await expect(testingView).not.toBeUndefined();
+
+  // Open the Test Sidebar
+  const testingSideBarView = await testingView?.openView();
+  await expect(testingSideBarView).toBeInstanceOf(SideBarView);
+  const testSection = await getTestsSection(workbench, testSuite);
+  const testItem = (await testSection.findItem(testName)) as TreeItem;
+  await expect(testItem).toBePresent();
+  await testItem.select();
+
+  const actionButton = await testItem.getActionButton(actionLabel);
+  await expect(actionButton).toBePresent();
+  await actionButton?.elem.click();
+  return testItem;
 }

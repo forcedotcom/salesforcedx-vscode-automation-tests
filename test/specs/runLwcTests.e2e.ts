@@ -224,23 +224,14 @@ describe('Run LWC Tests', async () => {
   step('Run All Tests on a LWC via the Test Sidebar', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Run All Tests on a LWC via the Test Sidebar`);
     const workbench = await utilities.getWorkbench();
-    const testingView = await workbench.getActivityBar().getViewControl('Testing');
-    await expect(testingView).not.toBeUndefined();
-    // Open the Test Sidebar
-    const testingSideBarView = await testingView?.openView();
-    await expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
     // Click the run test button that is shown to the right when you hover a test class name on the Test sidebar
-    const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
-    const lwcTestItem = (await lwcTestsSection.findItem('lwc1')) as TreeItem;
-    await lwcTestItem.select();
-    const runTestsAction = await lwcTestItem.getActionButton(
+    const lwcTestItem = await utilities.runTestCase(
+      workbench,
+      'LWC TESTS',
+      'lwc1',
       'SFDX: Run Lightning Web Component Test File'
     );
-    if (!runTestsAction) {
-      fail('Could not find run tests action button');
-    }
-    await runTestsAction.elem.click();
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -290,23 +281,14 @@ describe('Run LWC Tests', async () => {
   step('Run Single Test via the Test Sidebar', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Run Single Test via the Test Sidebar`);
     const workbench = await utilities.getWorkbench();
-    const testingView = await workbench.getActivityBar().getViewControl('Testing');
-    await expect(testingView).not.toBeUndefined();
-    // Open the Test Sidebar
-    const testingSideBarView = await testingView?.openView();
-    await expect(testingSideBarView).toBeInstanceOf(SideBarView);
 
     // Hover a test name under one of the test lwc sections and click the run button that is shown to the right of the test name on the Test sidebar
-    const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
-    const lwcTestItem = (await lwcTestsSection.findItem('displays greeting')) as TreeItem;
-    await lwcTestItem.select();
-    const runTestAction = await lwcTestItem.getActionButton(
+    const lwcTestItem = await utilities.runTestCase(
+      workbench,
+      'LWC TESTS',
+      'displays greeting',
       'SFDX: Run Lightning Web Component Test Case'
     );
-    if (!runTestAction) {
-      fail('Could not find run test action button');
-    }
-    await runTestAction.elem.click();
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass

@@ -44,9 +44,7 @@ describe('Run Apex Tests', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
 
     // Get Apex LSP Status Bar
-    const statusBar = await utilities.getStatusBarItemWhichIncludes(
-      'Editor Language Status'
-    );
+    const statusBar = await utilities.getStatusBarItemWhichIncludes('Editor Language Status');
     await statusBar.click();
     await expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
   });
@@ -208,7 +206,7 @@ describe('Run Apex Tests', async () => {
   step('Run All tests via Test Sidebar', async () => {
     const workbench = await utilities.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
-
+    await expect(testingView).not.toBeUndefined();
     // Open the Test Sidebar
     const testingSideBarView = await testingView?.openView();
     await expect(testingSideBarView).toBeInstanceOf(SideBarView);
@@ -280,7 +278,7 @@ describe('Run Apex Tests', async () => {
   step('Run All Tests on a Class via the Test Sidebar', async () => {
     const workbench = await utilities.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
-
+    await expect(testingView).not.toBeUndefined();
     // Open the Test Sidebar
     const testingSideBarView = await testingView?.openView();
     await expect(testingSideBarView).toBeInstanceOf(SideBarView);
@@ -334,7 +332,7 @@ describe('Run Apex Tests', async () => {
   step('Run Single Test via the Test Sidebar', async () => {
     const workbench = await utilities.getWorkbench();
     const testingView = await workbench.getActivityBar().getViewControl('Testing');
-
+    await expect(testingView).not.toBeUndefined();
     // Open the Test Sidebar
     const testingSideBarView = await testingView?.openView();
     await expect(testingSideBarView).toBeInstanceOf(SideBarView);
