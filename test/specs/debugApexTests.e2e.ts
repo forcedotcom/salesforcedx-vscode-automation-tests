@@ -42,9 +42,7 @@ describe('Debug Apex Tests', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Verify LSP finished indexing`);
 
     // Get Apex LSP Status Bar
-    const statusBar = await utilities.getStatusBarItemWhichIncludes(
-      'Editor Language Status'
-    );
+    const statusBar = await utilities.getStatusBarItemWhichIncludes('Editor Language Status');
     await statusBar.click();
     await expect(await statusBar.getAttribute('aria-label')).toContain('Indexing complete');
   });
@@ -106,19 +104,15 @@ describe('Debug Apex Tests', async () => {
 
     // Open the Test Sidebar
     const apexTestsSection = await utilities.getTestsSection(workbench, 'APEX TESTS');
+    const expectedItems = ['ExampleApexClass1Test', 'ExampleApexClass2Test'];
 
-    const apexTestsItems = await utilities.retrieveExpectedNumTestsFromSidebar(
-      4,
+    await utilities.verifyTestItemsInSideBar(
       apexTestsSection,
-      'Refresh Tests'
+      'Refresh Tests',
+      expectedItems,
+      4,
+      2
     );
-
-    // Make sure all the tests are present in the sidebar
-    await expect(apexTestsItems.length).toBe(4);
-    await expect(await apexTestsSection.findItem('ExampleApexClass1Test')).toBeTruthy();
-    await expect(await apexTestsSection.findItem('ExampleApexClass2Test')).toBeTruthy();
-    await expect(await apexTestsItems[0].getLabel()).toBe('ExampleApexClass1Test');
-    await expect(await apexTestsItems[2].getLabel()).toBe('ExampleApexClass2Test');
 
     // Click the debug tests button that is shown to the right when you hover a test class name on the Test sidebar
     await apexTestsSection.elem.click();

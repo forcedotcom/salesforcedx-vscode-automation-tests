@@ -26,12 +26,14 @@ export class EnvironmentSettings {
     // './specs/**/auraLsp.e2e.ts',
     './specs/**/authentication.e2e.ts',
     // './specs/**/debugApexTests.e2e.ts',
+    // './specs/**/debugLwcTests.e2e.ts',
     // './specs/**/deployAndRetrieve.e2e.ts',
     // './specs/**/lwcLsp.e2e.ts',
     // './specs/**/manifestBuilder.e2e.ts',
     // './specs/**/orgBrowser.e2e.ts',
     // './specs/**/pushAndPull.e2e.ts',
     // './specs/**/runApexTests.e2e.ts',
+    // './specs/**/runLwcTests.e2e.ts'
     // './specs/**/sObjectsDefinitions.e2e.ts',
     // './specs/**/templates.e2e.ts',
     // './specs/**/trailApexReplayDebugger.e2e.ts',
@@ -52,7 +54,7 @@ export class EnvironmentSettings {
   private _localProjectPath: string | undefined;
   private _githubProjectUrl: string | undefined;
   private _useExistingProject: string | undefined;
-  private _logLevel: LogLevel = 'info';
+  private _logLevel: LogLevel = 'warn';
 
   private constructor() {
     this._vscodeVersion = process.env.VSCODE_VERSION || this._vscodeVersion;
