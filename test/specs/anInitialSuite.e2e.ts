@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step } from 'mocha-steps';
-import { TestSetup } from '../testSetup.ts';
+import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 /*
@@ -23,7 +23,7 @@ suite does run, it needs to run first.
 */
 
 describe('An Initial Suite', async () => {
-  let testSetup: TestSetup;
+  const testSetup = new RefactoredTestSetup();
 
   step('Install extensions', async () => {
     await utilities.installExtensions();
@@ -83,16 +83,19 @@ describe('An Initial Suite', async () => {
     await prompt.cancel();
   });
 
-  step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('AnInitialSuite');
-    // Don't call testSetup.setUp() b/c we don't need to authorize a scratch org,
-    // just call setUpTestingEnvironment() and createProject().
-    await testSetup.setUpTestingEnvironment();
-    await testSetup.createProject('developer');
-    await utilities.reloadAndEnableExtensions();
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'AnInitialSuite'
+  }
+
+  step('Set up the testing environment and verify our extensions are loaded after creating an SFDX project', async () => {
+    await testSetup.setUp(testReqConfig);
   });
 
-  step('Verify our extensions are loaded after creating an SFDX project', async () => {
+  step('', async () => {
     await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
     await browser.keys(['Escape']);
     await utilities.pause(utilities.Duration.seconds(1));

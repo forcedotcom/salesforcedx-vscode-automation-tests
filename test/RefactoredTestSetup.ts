@@ -33,7 +33,7 @@ export class RefactoredTestSetup {
     this.testSuiteSuffixName = testReqConfig.testSuiteSuffixName;
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
-    await utilities.installExtensions();
+    await utilities.installExtensions(testReqConfig.excludedExtensions);
     await utilities.reloadAndEnableExtensions();
     /* The expected workspace will be open up after setUpTestingWorkspace */
     await this.setUpTestingWorkspace(testReqConfig.projectConfig);
