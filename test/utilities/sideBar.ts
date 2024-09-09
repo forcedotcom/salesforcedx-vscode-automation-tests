@@ -5,16 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import {
-  DefaultTreeItem,
-  TreeItem,
-  ViewItem,
-  Workbench,
-  ViewSection,
-  SideBarView
-} from 'wdio-vscode-service';
-import { Duration, pause } from './miscellaneous.ts';
-import { fail } from 'assert';
+import { DefaultTreeItem, TreeItem, ViewItem, Workbench, ViewSection } from 'wdio-vscode-service';
 
 export async function expandSideBar(
   workbench: Workbench,
@@ -142,62 +133,4 @@ export async function getVisibleItems(
   const rows = await treeItem.parent.$$(locator);
 
   return [...rows.values()];
-}
-
-export async function retrieveExpectedNumTestsFromSidebar(
-  expectedNumTests: number,
-  testsSection: ViewSection,
-  actionLabel: string
-): Promise<TreeItem[]> {
-  let testsItems = (await testsSection.getVisibleItems()) as TreeItem[];
-  await browser.keys(['Escape']);
-
-  // If the tests did not show up, click the refresh button on the top right corner of the Test sidebar
-  for (let x = 0; x < 3; x++) {
-    if (testsItems.length === 1) {
-      await testsSection.elem.click();
-      const refreshAction = await testsSection.getAction(actionLabel);
-      if (!refreshAction) {
-        fail('Could not find debug tests action button');
-      }
-      await refreshAction.elem.click();
-      await pause(Duration.seconds(10));
-      testsItems = (await testsSection.getVisibleItems()) as TreeItem[];
-    } else if (testsItems.length === expectedNumTests) {
-      break;
-    }
-  }
-
-  return testsItems;
-}
-
-export async function getTestsSection(workbench: Workbench, type: string) {
-  const sidebar = workbench.getSideBar();
-  const sidebarView = sidebar.getContent();
-  const testsSection = await sidebarView.getSection(type);
-  await expect(testsSection.elem).toBePresent();
-  return testsSection;
-}
-
-export async function runTestCase(
-  workbench: Workbench,
-  testSuite: string,
-  testName: string,
-  actionLabel: string
-): Promise<TreeItem> {
-  const testingView = await workbench.getActivityBar().getViewControl('Testing');
-  await expect(testingView).not.toBeUndefined();
-
-  // Open the Test Sidebar
-  const testingSideBarView = await testingView?.openView();
-  await expect(testingSideBarView).toBeInstanceOf(SideBarView);
-  const testSection = await getTestsSection(workbench, testSuite);
-  const testItem = (await testSection.findItem(testName)) as TreeItem;
-  await expect(testItem).toBePresent();
-  await testItem.select();
-
-  const actionButton = await testItem.getActionButton(actionLabel);
-  await expect(actionButton).toBePresent();
-  await actionButton?.elem.click();
-  return testItem;
 }
