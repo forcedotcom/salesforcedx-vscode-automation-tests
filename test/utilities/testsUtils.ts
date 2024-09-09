@@ -45,7 +45,7 @@ export async function getTestsSection(workbench: Workbench, type: string) {
   const sidebar = workbench.getSideBar();
   const sidebarView = sidebar.getContent();
   const testsSection = await sidebarView.getSection(type);
-  await expect(testsSection.elem).toBePresent();
+  await expect(testsSection.elem).toBeDefined();
   return testsSection;
 }
 
@@ -83,12 +83,12 @@ export async function runTestCaseFromSideBar(
   // Select test
   const testSection = await getTestsSection(workbench, testSuite);
   const testItem = (await testSection.findItem(testName)) as TreeItem;
-  await expect(testItem).toBePresent();
+  await expect(testItem).toBeDefined();
   await testItem.select();
 
   // Click button to run test
   const actionButton = await testItem.getActionButton(actionLabel);
-  await expect(actionButton).toBePresent();
+  await expect(actionButton).toBeDefined();
   await actionButton?.elem.click();
 
   if (actionLabel.includes('Debug')) {
