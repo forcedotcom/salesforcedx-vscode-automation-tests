@@ -6,7 +6,7 @@
  */
 import { step, xstep } from 'mocha-steps';
 import { SideBarView, TreeItem } from 'wdio-vscode-service';
-import { TestSetup } from '../testSetup.ts';
+import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import path from 'path';
 import { fail } from 'assert';
@@ -15,12 +15,18 @@ import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Debug LWC Tests', async () => {
-  let testSetup: TestSetup;
+  const testSetup = new RefactoredTestSetup();
   let projectFolderPath: string;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'DebugLWCTests'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('DebugLWCTests');
-    await testSetup.setUp();
+    await testSetup.setUp(testReqConfig);
     projectFolderPath = testSetup.projectFolderPath!;
 
     // Create LWC1 and test
