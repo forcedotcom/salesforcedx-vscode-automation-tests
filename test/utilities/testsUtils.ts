@@ -132,7 +132,7 @@ export async function verifyTestIconColor(testItem: TreeItem, colorLabel: string
   try {
     await expect(iconStyle).toContain(colorLabel);
   } catch {
-    log('ERROR: icon did not turn green after test successfully ran');
+    log(`ERROR: icon color label not ${colorLabel}`);
   }
 }
 
