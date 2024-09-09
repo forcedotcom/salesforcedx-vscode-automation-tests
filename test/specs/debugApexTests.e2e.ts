@@ -5,16 +5,22 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step } from 'mocha-steps';
-import { TestSetup } from '../testSetup.ts';
+import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import { TreeItem } from 'wdio-vscode-service';
 
 describe('Debug Apex Tests', async () => {
-  let testSetup: TestSetup;
+  const testSetup = new RefactoredTestSetup();
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: true,
+    testSuiteSuffixName: 'DebugApexTests'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('DebugApexTests');
-    await testSetup.setUp();
+    await testSetup.setUp(testReqConfig);
 
     // Create Apex class 1 and test
     await utilities.createApexClassWithTest('ExampleApexClass1');
