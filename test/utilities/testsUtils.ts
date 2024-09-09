@@ -28,7 +28,7 @@ export async function retrieveExpectedNumTestsFromSidebar(
       await testsSection.elem.click();
       const refreshAction = await testsSection.getAction(actionLabel);
       if (!refreshAction) {
-        fail('Could not find test action button');
+        fail('Could not find refresh tests action button');
       }
       await refreshAction.elem.click();
       await pause(Duration.seconds(10));
@@ -168,10 +168,8 @@ export async function verifyTestResult(testResult: string, expectedTexts: string
  * @param {ViewSection} testsSection - An instance of the view section representing the sidebar where test items are displayed.
  * @param {string} refreshCommand - The command used to refresh the sidebar to ensure it displays up-to-date information.
  * @param {string[]} expectedItems - An array of strings representing the expected test items that should be present in the sidebar.
- * @param {number} expectedTests - The expected number of tests to be displayed in the sidebar.
- * @param {number} expectedClasses - The expected number of test classes to be present in the sidebar.
- *
- * @returns {Promise<void>} A promise that resolves when the verification is complete.
+ * @param {number} expectedNumTests - The expected number of tests to be displayed in the sidebar.
+ * @param {number} expectedNumClasses - The expected number of test classes to be present in the sidebar.
  *
  * @example
  * await verifyTestItemsInSideBar(
@@ -186,26 +184,26 @@ export async function verifyTestItemsInSideBar(
   testsSection: ViewSection,
   refreshCommand: string,
   expectedItems: string[],
-  expectedTests: number,
-  expectedClasses: number
-) {
+  expectedNumTests: number,
+  expectedNumClasses: number
+): Promise<TreeItem[]> {
   log('Starting verifyTestItemsInSideBar()');
   const testsItems = await retrieveExpectedNumTestsFromSidebar(
-    expectedTests,
+    expectedNumTests,
     testsSection,
     refreshCommand
   );
   const isLWCSection = refreshCommand.includes('Lightning');
   if (isLWCSection) {
-    log('Running LWC Tests');
+    log('Expanding LWC Tests');
     // Expand tests
-    for (let x = 0; x < expectedClasses; x++) {
+    for (let x = 0; x < expectedNumClasses; x++) {
       await testsItems[x].expand();
     }
   }
 
   // Make sure all the tests are present in the sidebar
-  await expect(testsItems.length).toBe(isLWCSection ? expectedClasses : expectedTests);
+  await expect(testsItems.length).toBe(isLWCSection ? expectedNumClasses : expectedNumTests);
   for (const item of expectedItems) {
     await expect(await testsSection.findItem(item)).toBeTruthy();
   }
