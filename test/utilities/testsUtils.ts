@@ -91,13 +91,6 @@ export async function runTestCaseFromSideBar(
   await expect(actionButton).toBeDefined();
   await actionButton?.elem.click();
 
-  if (actionLabel.includes('Debug')) {
-    await pause(Duration.seconds(10));
-
-    // Continue with the debug session
-    await continueDebugging();
-  }
-
   let testResult: string | undefined;
   if (testSuite === 'APEX TESTS') {
     // Look for the success notification that appears which says, "SFDX: Run Apex Tests successfully ran".
