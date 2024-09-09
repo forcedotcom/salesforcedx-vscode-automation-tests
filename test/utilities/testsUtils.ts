@@ -55,14 +55,14 @@ export async function getTestsSection(workbench: Workbench, type: string) {
  * @param {Workbench} workbench - The workbench instance used to interact with the sidebar and views.
  * @param {string} testSuite - The name of the test suite from which to run the test (e.g., 'APEX TESTS', 'LWC TESTS').
  * @param {string} testName - The name of the specific test case to run.
- * @param {string} actionLabel - The label of the action button to click (e.g., 'SFDX: Run Apex Tests', 'Debug').
+ * @param {string} actionLabel - The label of the action button to click (e.g., 'SFDX: Run Lightning Web Component Test File', 'Run Single Test').
  *
  * @example
  * const result = await runTestCaseFromSideBar(
  *   myWorkbench,
  *   'APEX TESTS',
  *   'MyApexTestCase',
- *   'SFDX: Run Apex Tests'
+ *   'Run Single Test'
  * );
  * console.log(result); // Outputs the result from the Apex test run
  */
