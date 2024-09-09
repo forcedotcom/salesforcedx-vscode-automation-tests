@@ -20,6 +20,7 @@ export * from './sideBar.ts';
 export * from './settings.ts';
 export * from './statusBar.ts';
 export * from './terminalView.ts';
+export * from './testsUtils.ts';
 export * from './screenshot.ts';
 export * from './visualforceUtils.ts';
 export * from './workbench.ts';

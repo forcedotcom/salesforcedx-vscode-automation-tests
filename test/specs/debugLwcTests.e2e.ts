@@ -17,7 +17,6 @@ const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 describe('Debug LWC Tests', async () => {
   let testSetup: TestSetup;
   let projectFolderPath: string;
-  const CONTINUE = 'F5';
 
   step('Set up the testing environment', async () => {
     testSetup = new TestSetup('DebugLWCTests');
@@ -59,29 +58,26 @@ describe('Debug LWC Tests', async () => {
 
     // Open the Test Sidebar
     const lwcTestsSection = await utilities.getTestsSection(workbench, 'LWC TESTS');
-    const lwcTestsItems = await utilities.retrieveExpectedNumTestsFromSidebar(
-      6,
+    const expectedItems = ['lwc1', 'lwc2', 'displays greeting', 'is defined'];
+    const lwcTestsItems = await utilities.verifyTestItemsInSideBar(
       lwcTestsSection,
-      'SFDX: Refresh Lightning Web Component Test Explorer'
+      'SFDX: Refresh Lightning Web Component Test Explorer',
+      expectedItems,
+      6,
+      2
     );
-    // Expand LWC tests
-    await lwcTestsItems[0].expand();
-    await lwcTestsItems[1].expand();
 
     // Click the debug test button that is shown to the right when you hover a test class name on the Test sidebar
-    const lwcTestItem = (await lwcTestsSection.findItem('lwc1')) as TreeItem;
-    await lwcTestItem.select();
-    const debugTestsAction = await lwcTestItem.getActionButton(
+    await lwcTestsItems[0].select();
+    const debugTestsAction = await lwcTestsItems[0].getActionButton(
       'SFDX: Debug Lightning Web Component Test File'
     );
-    if (!debugTestsAction) {
-      fail('Could not find debug tests action button');
-    }
-    await debugTestsAction.elem.click();
+    await expect(debugTestsAction).toBeDefined();
+    await debugTestsAction!.elem.click();
     await utilities.pause(utilities.Duration.seconds(10));
 
     // Continue with the debug session
-    await continueDebugging();
+    await utilities.continueDebugging();
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -89,30 +85,22 @@ describe('Debug LWC Tests', async () => {
       workbench,
       utilities.Duration.seconds(10)
     );
-    await expect(terminalText).not.toBeUndefined();
-    await expect(terminalText).toContain(
-      `PASS ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
-    );
-    await expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
-    await expect(terminalText).toContain('Tests:       2 passed, 2 total');
-    await expect(terminalText).toContain('Snapshots:   0 total');
-    await expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
-    );
+    const expectedTexts = [
+      'PASS force-app/main/default/lwc/lwc1/__tests__/lwc1.test.js',
+      'Test Suites: 1 passed, 1 total',
+      'Tests:       2 passed, 2 total',
+      'Snapshots:   0 total',
+      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}"`
+    ];
+    await expect(terminalText).toBeDefined();
+    await utilities.verifyTestResult(terminalText!, expectedTexts);
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
     await utilities.executeQuickPick(
       'Testing: Focus on LWC Tests View',
       utilities.Duration.seconds(3)
     );
-    const icon = await (await lwcTestItem.elem).$('.custom-view-tree-node-item-icon');
-    const iconStyle = await icon.getAttribute('style');
-    // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
-    try {
-      await expect(iconStyle).toContain('testPass');
-    } catch {
-      utilities.log('ERROR: icon did not turn green after test successfully ran');
-    }
+    await utilities.verifyTestIconColor(lwcTestsItems[0], 'testPass');
   });
 
   step('Debug Single Test via the Test Sidebar', async () => {
@@ -131,14 +119,12 @@ describe('Debug LWC Tests', async () => {
     const debugTestAction = await lwcTestItem.getActionButton(
       'SFDX: Debug Lightning Web Component Test Case'
     );
-    if (!debugTestAction) {
-      fail('Could not find debug test action button');
-    }
-    await debugTestAction.elem.click();
+    await expect(debugTestAction).toBeDefined();
+    await debugTestAction!.elem.click();
     await utilities.pause(utilities.Duration.seconds(10));
 
     // Continue with the debug session
-    await continueDebugging();
+    await utilities.continueDebugging();
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -146,16 +132,24 @@ describe('Debug LWC Tests', async () => {
       workbench,
       utilities.Duration.seconds(10)
     );
-    await expect(terminalText).not.toBeUndefined();
-    await expect(terminalText).toContain(
-      `PASS ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
-    );
-    await expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
-    await expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
-    await expect(terminalText).toContain('Snapshots:   0 total');
-    await expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
-    );
+    const expectedTexts = [
+      `PASS ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`,
+      'Test Suites: 1 passed, 1 total',
+      'Tests:       1 skipped, 1 passed, 2 total',
+      'Snapshots:   0 total',
+      `Ran all test suites within paths "${path.join(
+        projectFolderPath,
+        'force-app',
+        'main',
+        'default',
+        'lwc',
+        'lwc2',
+        '__tests__',
+        'lwc2.test.js'
+      )}"`
+    ];
+    await expect(terminalText).toBeDefined();
+    await utilities.verifyTestResult(terminalText!, expectedTexts);
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
     await utilities.runCommandFromCommandPrompt(
@@ -163,14 +157,7 @@ describe('Debug LWC Tests', async () => {
       'Testing: Focus on LWC Tests View',
       utilities.Duration.seconds(3)
     );
-    const icon = await (await lwcTestItem.elem).$('.custom-view-tree-node-item-icon');
-    const iconStyle = await icon.getAttribute('style');
-    // Try/catch used to get around arbitrary flaky failure on Ubuntu in remote
-    try {
-      await expect(iconStyle).toContain('testPass');
-    } catch {
-      utilities.log('ERROR: icon did not turn green after test successfully ran');
-    }
+    await utilities.verifyTestIconColor(lwcTestItem, 'testPass');
   });
 
   step('SFDX: Debug Current Lightning Web Component Test File from Command Palette', async () => {
@@ -186,7 +173,7 @@ describe('Debug LWC Tests', async () => {
     );
 
     // Continue with the debug session
-    await continueDebugging();
+    await utilities.continueDebugging();
 
     // Verify test results are listed on vscode's Output section
     // Also verify that all tests pass
@@ -194,16 +181,15 @@ describe('Debug LWC Tests', async () => {
       workbench,
       utilities.Duration.seconds(10)
     );
-    await expect(terminalText).not.toBeUndefined();
-    await expect(terminalText).toContain(
-      `PASS ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
-    );
-    await expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
-    await expect(terminalText).toContain('Tests:       2 passed, 2 total');
-    await expect(terminalText).toContain('Snapshots:   0 total');
-    await expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
-    );
+    const expectedTexts = [
+      `PASS ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`,
+      'Test Suites: 1 passed, 1 total',
+      'Tests:       2 passed, 2 total',
+      'Snapshots:   0 total',
+      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}"`
+    ];
+    await expect(terminalText).toBeDefined();
+    await utilities.verifyTestResult(terminalText!, expectedTexts);
   });
 
   xstep('Debug All Tests via Code Lens action', async () => {
@@ -221,7 +207,7 @@ describe('Debug LWC Tests', async () => {
     await utilities.pause(utilities.Duration.seconds(10));
 
     // Continue with the debug session
-    await continueDebugging();
+    await utilities.continueDebugging();
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -229,16 +215,15 @@ describe('Debug LWC Tests', async () => {
       workbench,
       utilities.Duration.seconds(10)
     );
-    await expect(terminalText).not.toBeUndefined();
-    await expect(terminalText).toContain(
-      `PASS ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
-    );
-    await expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
-    await expect(terminalText).toContain('Tests:       2 passed, 2 total');
-    await expect(terminalText).toContain('Snapshots:   0 total');
-    await expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`
-    );
+    const expectedTexts = [
+      `PASS ${path.join('force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}`,
+      'Test Suites: 1 passed, 1 total',
+      'Tests:       2 passed, 2 total',
+      'Snapshots:   0 total',
+      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}"`
+    ];
+    await expect(terminalText).toBeDefined();
+    await utilities.verifyTestResult(terminalText!, expectedTexts);
   });
 
   step('Debug Single Test via Code Lens action', async () => {
@@ -258,7 +243,7 @@ describe('Debug LWC Tests', async () => {
     await utilities.pause(utilities.Duration.seconds(10));
 
     // Continue with the debug session
-    await continueDebugging();
+    await utilities.continueDebugging();
 
     // Verify test results are listed on the terminal
     // Also verify that all tests pass
@@ -266,16 +251,15 @@ describe('Debug LWC Tests', async () => {
       workbench,
       utilities.Duration.seconds(10)
     );
-    await expect(terminalText).not.toBeUndefined();
-    await expect(terminalText).toContain(
-      `PASS ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
-    );
-    await expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
-    await expect(terminalText).toContain('Tests:       1 skipped, 1 passed, 2 total');
-    await expect(terminalText).toContain('Snapshots:   0 total');
-    await expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
-    );
+    const expectedTexts = [
+      `PASS ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`,
+      'Test Suites: 1 passed, 1 total',
+      'Tests:       1 skipped, 1 passed, 2 total',
+      'Snapshots:   0 total',
+      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}"`
+    ];
+    await expect(terminalText).toBeDefined();
+    await utilities.verifyTestResult(terminalText!, expectedTexts);
   });
 
   step('SFDX: Debug Current Lightning Web Component Test File from main toolbar', async () => {
@@ -293,7 +277,7 @@ describe('Debug LWC Tests', async () => {
     await utilities.pause(utilities.Duration.seconds(10));
 
     // Continue with the debug session
-    await continueDebugging();
+    await utilities.continueDebugging();
 
     // Verify test results are listed on vscode's Output section
     // Also verify that all tests pass
@@ -302,30 +286,18 @@ describe('Debug LWC Tests', async () => {
       workbench,
       utilities.Duration.seconds(10)
     );
-    await expect(terminalText).not.toBeUndefined();
-    await expect(terminalText).toContain(
-      `PASS ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
-    );
-    await expect(terminalText).toContain('Test Suites: 1 passed, 1 total');
-    await expect(terminalText).toContain('Tests:       2 passed, 2 total');
-    await expect(terminalText).toContain('Snapshots:   0 total');
-    await expect(terminalText).toContain(
-      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`
-    );
+    const expectedTexts = [
+      `PASS ${path.join('force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}`,
+      'Test Suites: 1 passed, 1 total',
+      'Tests:       2 passed, 2 total',
+      'Snapshots:   0 total',
+      `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}"`
+    ];
+    await expect(terminalText).toBeDefined();
+    await utilities.verifyTestResult(terminalText!, expectedTexts);
   });
 
   after('Tear down and clean up the testing environment', async () => {
     await testSetup?.tearDown();
   });
-
-  const continueDebugging = async (): Promise<void> => {
-    // Continue with the debug session
-    await browser.keys(CONTINUE);
-    await utilities.pause(utilities.Duration.seconds(3));
-    await browser.keys(CONTINUE);
-    await utilities.pause(utilities.Duration.seconds(3));
-    await browser.keys(CONTINUE);
-    await utilities.pause(utilities.Duration.seconds(1));
-    await browser.keys('Escape');
-  };
 });
