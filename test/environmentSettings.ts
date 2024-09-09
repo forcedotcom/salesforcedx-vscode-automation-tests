@@ -21,8 +21,8 @@ export class EnvironmentSettings {
     // './specs/**/*.e2e.ts'
     // OR
     // './specs/**/anInitialSuite.e2e.ts',
-    './specs/**/apexLsp.e2e.ts',
-    // './specs/**/apexReplayDebugger.e2e.ts',
+    // './specs/**/apexLsp.e2e.ts',
+    './specs/**/apexReplayDebugger.e2e.ts',
     // './specs/**/auraLsp.e2e.ts',
     // './specs/**/authentication.e2e.ts',
     // './specs/**/debugApexTests.e2e.ts',
@@ -40,8 +40,8 @@ export class EnvironmentSettings {
     // './specs/createProjectTest.e2e.ts',
     // './specs/metadataDeployRetrieve.e2e.ts',
   ];
-  private _devHubAliasName = 'vscodeOrg';
-  private _devHubUserName = 'svcideebot@salesforce.com';
+  private _devHubAliasName = 'MINGXUAN2024';
+  private _devHubUserName = 'mingxuanzhang2024@dev.org';
   private _sfdxAuthUrl = process.env.SFDX_AUTH_URL;
   private _orgId = process.env.ORG_ID;
   private _extensionPath = join(__dirname, '..', '..', 'salesforcedx-vscode', 'extensions');
