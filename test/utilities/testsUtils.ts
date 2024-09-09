@@ -189,13 +189,15 @@ export async function verifyTestItemsInSideBar(
   expectedTests: number,
   expectedClasses: number
 ) {
+  log('Starting verifyTestItemsInSideBar()');
   const testsItems = await retrieveExpectedNumTestsFromSidebar(
     expectedTests,
     testsSection,
     refreshCommand
   );
-  const isLWCSection = (await testsSection.getTitle()) === 'LWC TESTS';
+  const isLWCSection = refreshCommand.includes('Lightning');
   if (isLWCSection) {
+    log('Running LWC Tests');
     // Expand tests
     for (let x = 0; x < expectedClasses; x++) {
       await testsItems[x].expand();
