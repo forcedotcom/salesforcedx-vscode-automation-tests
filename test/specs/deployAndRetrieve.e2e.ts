@@ -6,19 +6,24 @@
  */
 import { step } from 'mocha-steps';
 import path from 'path';
-import { TestSetup } from '../testSetup.ts';
+import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import { Workbench } from 'wdio-vscode-service';
 import { WORKSPACE_SETTING_KEYS as WSK } from '../utilities/index.ts';
 
 describe('Deploy and Retrieve', async () => {
-  let testSetup: TestSetup;
   let projectName: string;
   const pathToClass = path.join('force-app', 'main', 'default', 'classes', 'MyClass');
-
+  const testSetup = new RefactoredTestSetup();
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: true,
+    testSuiteSuffixName: 'DeployAndRetrieve'
+  }
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('DeployAndRetrieve');
-    await testSetup.setUp();
+    await testSetup.setUp(testReqConfig);
     projectName = testSetup.tempProjectName.toUpperCase();
 
     // Create Apex Class
