@@ -5,19 +5,25 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step, xstep } from 'mocha-steps';
-import { TestSetup } from '../testSetup.ts';
+import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('LWC LSP', async () => {
-  let testSetup: TestSetup;
+  const testSetup = new RefactoredTestSetup();
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'LwcLsp'
+  }
 
   step('Set up the testing environment', async () => {
     utilities.log('LwcLsp - Set up the testing environment');
-    testSetup = new TestSetup('LwcLsp');
-    await testSetup.setUp();
+    await testSetup.setUp(testReqConfig);
 
     // Create Lightning Web Component
     await utilities.createLwc('lwc1');
