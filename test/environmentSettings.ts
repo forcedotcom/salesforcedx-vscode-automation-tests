@@ -42,8 +42,8 @@ export class EnvironmentSettings {
     // './specs/createProjectTest.e2e.ts',
     // './specs/metadataDeployRetrieve.e2e.ts',
   ];
-  private _devHubAliasName = 'MINGXUAN2024';
-  private _devHubUserName = 'mingxuanzhang2024@dev.org';
+  private _devHubAliasName = 'vscodeOrg';
+  private _devHubUserName = 'svcideebot@salesforce.com';
   private _sfdxAuthUrl = process.env.SFDX_AUTH_URL;
   private _orgId = process.env.ORG_ID;
   private _extensionPath = join(__dirname, '..', '..', 'salesforcedx-vscode', 'extensions');
