@@ -5,18 +5,24 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step, xstep } from 'mocha-steps';
-import { TestSetup } from '../testSetup.ts';
+import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Org Browser', async () => {
-  let testSetup: TestSetup;
+  const testSetup = new RefactoredTestSetup();
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: true,
+    testSuiteSuffixName: 'OrgBrowser'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('OrgBrowser');
-    await testSetup.setUp();
+    await testSetup.setUp(testReqConfig);
   });
 
   step('Check Org Browser is connected to target org', async () => {
