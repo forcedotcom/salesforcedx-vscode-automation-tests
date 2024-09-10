@@ -5,17 +5,23 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step, xstep } from 'mocha-steps';
-import { TestSetup } from '../testSetup.ts';
+import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import * as semver from 'semver';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 
 describe('Miscellaneous', async () => {
-  let testSetup: TestSetup;
+  const testSetup = new RefactoredTestSetup();
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'Miscellaneous'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('Miscellaneous');
-    await testSetup.setUp();
+    await testSetup.setUp(testReqConfig);
   });
 
   xstep('Use out-of-the-box Apex Snippets', async () => {
@@ -44,7 +50,7 @@ describe('Miscellaneous', async () => {
     const workbench = await utilities.getWorkbench();
     const commandName =
       EnvironmentSettings.getInstance().vscodeVersion === 'stable' ||
-      semver.gte(EnvironmentSettings.getInstance().vscodeVersion, '1.92.0')
+        semver.gte(EnvironmentSettings.getInstance().vscodeVersion, '1.92.0')
         ? 'Snippets: Configure Snippets'
         : 'Snippets: Configure User Snippets';
 
