@@ -6,15 +6,21 @@
  */
 import { step } from 'mocha-steps';
 import path from 'path';
-import { TestSetup } from '../testSetup.ts';
+import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 describe('Manifest Builder', async () => {
-  let testSetup: TestSetup;
+  const testSetup = new RefactoredTestSetup();
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: true,
+    testSuiteSuffixName: 'ManifestBuilder'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('ManifestBuilder');
-    await testSetup.setUp();
+    await testSetup.setUp(testReqConfig);
   });
 
   step('Generate Manifest File', async () => {
