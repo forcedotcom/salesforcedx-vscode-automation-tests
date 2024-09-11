@@ -40,7 +40,6 @@ export class RefactoredTestSetup {
     if (testReqConfig.projectConfig.projectShape != ProjectShapeOption.NONE) {
       await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
       // Extra config needed for Apex LSP on GHA
-      if (process.platform === 'darwin') this.setJavaHomeConfigEntry();
       if (testReqConfig.isOrgRequired) await this.setUpScratchOrg(testReqConfig.scratchOrgEdition || 'developer');
     }
   }
@@ -133,8 +132,9 @@ export class RefactoredTestSetup {
   }
 
   public async setUpScratchOrg(scratchOrgEdition: utilities.OrgEdition) {
-    await this.authorizeDevHub();
     this.updateScratchOrgDefWithEdition(scratchOrgEdition);
+    if (process.platform === 'darwin') this.setJavaHomeConfigEntry();
+    await this.authorizeDevHub();
     await this.createDefaultScratchOrg(scratchOrgEdition);
   }
 
