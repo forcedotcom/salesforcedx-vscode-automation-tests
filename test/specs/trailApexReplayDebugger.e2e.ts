@@ -6,7 +6,7 @@
  */
 import { step } from 'mocha-steps';
 import { InputBox, QuickOpenBox, TextEditor } from 'wdio-vscode-service';
-import { TestSetup } from '../testSetup.ts';
+import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 import { Key } from 'webdriverio';
@@ -19,11 +19,17 @@ const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
  */
 describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async () => {
   let prompt: QuickOpenBox | InputBox;
-  let testSetup: TestSetup;
+  const testSetup = new RefactoredTestSetup();
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: true,
+    testSuiteSuffixName: 'TrailApexReplayDebugger'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('TrailApexReplayDebugger');
-    await testSetup.setUp();
+    await testSetup.setUp(testReqConfig);
 
     // Create Apex class AccountService
     await utilities.createApexClassWithBugs();

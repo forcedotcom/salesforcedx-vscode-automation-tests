@@ -6,16 +6,22 @@
  */
 import { step } from 'mocha-steps';
 import { DefaultTreeItem, TreeItem } from 'wdio-vscode-service';
-import { TestSetup } from '../testSetup.ts';
+import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 describe('SObjects Definitions', async () => {
-  let testSetup: TestSetup;
+  const testSetup = new RefactoredTestSetup();
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: true,
+    testSuiteSuffixName: 'sObjectsDefinitions'
+  }
   let projectName: string;
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('sObjectsDefinitions');
-    await testSetup.setUp();
+    await testSetup.setUp(testReqConfig);
     projectName = testSetup.tempProjectName.toUpperCase();
 
     utilities.log(`${testSetup.testSuiteSuffixName} - calling createCustomObjects()`);
