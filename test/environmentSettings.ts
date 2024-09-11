@@ -33,8 +33,8 @@ export class EnvironmentSettings {
     // './specs/**/miscellaneous.e2e.ts',
     // './specs/**/orgBrowser.e2e.ts',
     // './specs/**/pushAndPull.e2e.ts',
-    './specs/**/runApexTests.e2e.ts',
-    // './specs/**/runLwcTests.e2e.ts'
+    // './specs/**/runApexTests.e2e.ts',
+    './specs/**/runLwcTests.e2e.ts'
     // './specs/**/sObjectsDefinitions.e2e.ts',
     // './specs/**/templates.e2e.ts',
     // './specs/**/trailApexReplayDebugger.e2e.ts',

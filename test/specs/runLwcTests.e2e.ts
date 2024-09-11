@@ -6,18 +6,24 @@
  */
 import { step, xstep } from 'mocha-steps';
 import { TreeItem } from 'wdio-vscode-service';
-import { TestSetup } from '../testSetup.ts';
+import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import path from 'path';
 import { fail } from 'assert';
 
 describe('Run LWC Tests', async () => {
-  let testSetup: TestSetup;
   let projectFolderPath: string;
+  const testSetup = new RefactoredTestSetup();
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'RunLWCTests'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('RunLWCTests');
-    await testSetup.setUp();
+    await testSetup.setUp(testReqConfig);
     projectFolderPath = testSetup.projectFolderPath!;
 
     // Create LWC1 and test
