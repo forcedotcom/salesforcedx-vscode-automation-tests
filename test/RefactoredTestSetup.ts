@@ -34,7 +34,7 @@ export class RefactoredTestSetup {
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
     await utilities.installExtensions(testReqConfig.excludedExtensions);
-    await utilities.reloadAndEnableExtensions();
+    // await utilities.reloadAndEnableExtensions();
     /* The expected workspace will be open up after setUpTestingWorkspace */
     await this.setUpTestingWorkspace(testReqConfig.projectConfig);
     if (testReqConfig.projectConfig.projectShape != ProjectShapeOption.NONE) {
@@ -44,6 +44,7 @@ export class RefactoredTestSetup {
       if (process.platform === 'darwin') this.setJavaHomeConfigEntry();
       // Extra config needed for Apex LSP on GHA
       if (testReqConfig.isOrgRequired) await this.setUpScratchOrg(scratchOrgEdition);
+      await utilities.reloadAndEnableExtensions(); // This is necesssary in order to update JAVA home path
     }
   }
 
