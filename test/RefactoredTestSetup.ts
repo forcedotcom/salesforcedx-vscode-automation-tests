@@ -315,7 +315,7 @@ export class RefactoredTestSetup {
     }
   }
 
-  private updateScratchOrgDefWithEdition(scratchOrgEdition: utilities.OrgEdition) {
+  public updateScratchOrgDefWithEdition(scratchOrgEdition: utilities.OrgEdition) {
     if (scratchOrgEdition === 'enterprise') {
       const projectScratchDefPath = path.join(
         this.projectFolderPath!,

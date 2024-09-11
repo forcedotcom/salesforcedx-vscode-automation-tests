@@ -8,7 +8,7 @@
 import fs from 'fs';
 import { step, xstep } from 'mocha-steps';
 import path from 'path';
-import { TestSetup } from '../testSetup.ts';
+import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import { Workbench } from 'wdio-vscode-service';
 
@@ -29,14 +29,20 @@ async function verifyPullSuccess(workbench: Workbench, wait = utilities.Duration
 }
 
 describe('Push and Pull', async () => {
-  let testSetup: TestSetup;
   let projectName = '';
   let adminName = '';
   let adminEmailAddress = '';
+  const testSetup = new RefactoredTestSetup();
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: true,
+    testSuiteSuffixName: 'PushAndPull'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('PushAndPull');
-    await testSetup.setUp();
+    await testSetup.setUp(testReqConfig);
     projectName = testSetup.tempProjectName.toUpperCase();
   });
 
@@ -263,10 +269,18 @@ describe('Push and Pull', async () => {
     await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
   });
 
+  const testReqConfig2: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'ViewChanges'
+  }
   step('SFDX: View Changes in Default Org', async () => {
     // Create second Project to then view Remote Changes
-    await testSetup.createProject('developer', 'ViewChanges');
-
+    // The new project will connect to the scratch org automatically on GHA, but does not work locally
+    await testSetup.setUp(testReqConfig2);
+    testSetup.updateScratchOrgDefWithEdition('developer');
     // Verify CLI Integration Extension is present and running.
     await utilities.reloadAndEnableExtensions();
     await utilities.showRunningExtensions();

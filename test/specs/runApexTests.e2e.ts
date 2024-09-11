@@ -6,16 +6,22 @@
  */
 import { step } from 'mocha-steps';
 import { InputBox, QuickOpenBox, SideBarView } from 'wdio-vscode-service';
-import { TestSetup } from '../testSetup.ts';
+import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 describe('Run Apex Tests', async () => {
   let prompt: QuickOpenBox | InputBox;
-  let testSetup: TestSetup;
+  const testSetup = new RefactoredTestSetup();
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: true,
+    testSuiteSuffixName: 'RunApexTests'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('RunApexTests');
-    await testSetup.setUp();
+    await testSetup.setUp(testReqConfig);
 
     // Create Apex class 1 and test
     await utilities.createApexClassWithTest('ExampleApexClass1');

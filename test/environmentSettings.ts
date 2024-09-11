@@ -31,9 +31,9 @@ export class EnvironmentSettings {
     // './specs/**/lwcLsp.e2e.ts',
     // './specs/**/manifestBuilder.e2e.ts',
     // './specs/**/miscellaneous.e2e.ts',
-    './specs/**/orgBrowser.e2e.ts',
+    // './specs/**/orgBrowser.e2e.ts',
     // './specs/**/pushAndPull.e2e.ts',
-    // './specs/**/runApexTests.e2e.ts',
+    './specs/**/runApexTests.e2e.ts',
     // './specs/**/runLwcTests.e2e.ts'
     // './specs/**/sObjectsDefinitions.e2e.ts',
     // './specs/**/templates.e2e.ts',
@@ -44,7 +44,7 @@ export class EnvironmentSettings {
     // './specs/metadataDeployRetrieve.e2e.ts',
   ];
   private _devHubAliasName = 'vscodeOrg';
-  private _devHubUserName = 'mingxuanzhang@dev.org';
+  private _devHubUserName = 'svcideebot@salesforce.com';
   private _sfdxAuthUrl = process.env.SFDX_AUTH_URL;
   private _orgId = process.env.ORG_ID;
   private _extensionPath = join(__dirname, '..', '..', 'salesforcedx-vscode', 'extensions');
