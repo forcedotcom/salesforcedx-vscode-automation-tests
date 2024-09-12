@@ -1,8 +1,9 @@
 import spawn from 'cross-spawn';
 import { exec, SpawnOptionsWithoutStdio } from 'child_process';
-import { debug, log } from './miscellaneous.ts';
+import { debug, getTextEditor, log } from './miscellaneous.ts';
 import { OrgEdition, SfCommandRunResults } from './types.ts';
 import { EnvironmentSettings } from '../environmentSettings.ts';
+import { getWorkbench } from './workbench.ts';
 
 export type NONE = 'NONE';
 
@@ -182,8 +183,10 @@ export async function installJestUTToolsForLwc(projectFolder: string | undefined
   if (!projectFolder) {
     throw new Error('cannot setup lwc tests without a project folder.');
   }
+  const workbench = await getWorkbench();
+  void getTextEditor(workbench, 'package.json');
   const command =
-    'npm uninstall husky && npm install && npm install eslint@^8 --save-dev && npm install @salesforce/sfdx-lwc-jest --save-dev';
+    'npm uninstall husky && npm install @lwc/eslint-plugin-lwc@latest && npm install --save-dev && npm install @salesforce/sfdx-lwc-jest --save-dev';
   return new Promise((resolve, reject) => {
     exec(command, { cwd: projectFolder }, (error, stdout, stderr) => {
       if (error) {
