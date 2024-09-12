@@ -22,13 +22,13 @@ export async function createApexClass(
 
   // Set the name of the new Apex Class
   await inputBox.setText(name);
-  await pause(Duration.seconds(1));
+  await pause(Duration.seconds(2));
   await browser.keys(['Enter']);
-  await pause(Duration.seconds(1));
+  await pause(Duration.seconds(2));
 
   // Select the default directory (press Enter/Return).
   await browser.keys(['Enter']);
-  await pause(Duration.seconds(1));
+  await pause(Duration.seconds(2));
 
   // Modify class content
   const textEditor = await getTextEditor(workbench, name + '.cls');
@@ -37,7 +37,7 @@ export async function createApexClass(
   if (breakpoint) {
     await textEditor.toggleBreakpoint(breakpoint);
   }
-  await pause(Duration.seconds(1));
+  await pause(Duration.seconds(2));
 }
 
 export async function createApexClassWithTest(name: string): Promise<void> {

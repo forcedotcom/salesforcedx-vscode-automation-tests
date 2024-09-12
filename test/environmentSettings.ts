@@ -21,7 +21,7 @@ export class EnvironmentSettings {
     // './specs/**/*.e2e.ts'
     // OR
     // './specs/**/anInitialSuite.e2e.ts',
-    // './specs/**/apexLsp.e2e.ts',
+    './specs/**/apexLsp.e2e.ts',
     // './specs/**/apexReplayDebugger.e2e.ts',
     // './specs/**/auraLsp.e2e.ts',
     // './specs/**/authentication.e2e.ts',
@@ -34,7 +34,7 @@ export class EnvironmentSettings {
     // './specs/**/orgBrowser.e2e.ts',
     // './specs/**/pushAndPull.e2e.ts',
     // './specs/**/runApexTests.e2e.ts',
-    './specs/**/runLwcTests.e2e.ts',
+    // './specs/**/runLwcTests.e2e.ts',
     // './specs/**/sfdxProjectJson.e2e.ts',
     // './specs/**/sObjectsDefinitions.e2e.ts',
     // './specs/**/templates.e2e.ts',
