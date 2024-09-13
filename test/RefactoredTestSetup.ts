@@ -127,7 +127,7 @@ export class refactoredTestSetup {
     await utilities.verifyProjectCreated(projectName ?? this.tempProjectName);
   }
 
-  throwError(message: string) {
+  private throwError(message: string) {
     utilities.log(message);
     throw new Error(message);
   }
