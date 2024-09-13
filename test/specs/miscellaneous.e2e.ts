@@ -5,13 +5,13 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step, xstep } from 'mocha-steps';
-import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
+import { refactoredTestSetup } from '../refactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import * as semver from 'semver';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 
 describe('Miscellaneous', async () => {
-  const testSetup = new RefactoredTestSetup();
+  const testSetup = new refactoredTestSetup();
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,

@@ -1,10 +1,10 @@
 import { step } from 'mocha-steps';
-import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
+import { refactoredTestSetup } from '../refactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 
 describe('Customize sfdx-project.json', async () => {
-  const testSetup = new RefactoredTestSetup();
+  const testSetup = new refactoredTestSetup();
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,

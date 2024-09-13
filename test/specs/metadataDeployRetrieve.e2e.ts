@@ -1,10 +1,10 @@
 import { step } from 'mocha-steps';
-import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
+import { refactoredTestSetup } from '../refactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 // In future we will merge the test together with deployAndRetrieve
 describe('metadata deploy and retrieve', async () => {
-  const testSetup = new RefactoredTestSetup();
+  const testSetup = new refactoredTestSetup();
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NAMED,

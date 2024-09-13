@@ -8,7 +8,7 @@
 import fs from 'fs';
 import { step, xstep } from 'mocha-steps';
 import path from 'path';
-import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
+import { refactoredTestSetup } from '../refactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import { Workbench } from 'wdio-vscode-service';
 
@@ -32,7 +32,7 @@ describe('Push and Pull', async () => {
   let projectName = '';
   let adminName = '';
   let adminEmailAddress = '';
-  const testSetup = new RefactoredTestSetup();
+  const testSetup = new refactoredTestSetup();
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,

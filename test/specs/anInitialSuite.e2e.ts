@@ -5,7 +5,7 @@
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import { step } from 'mocha-steps';
-import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
+import { refactoredTestSetup } from '../refactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 /*
@@ -23,7 +23,7 @@ suite does run, it needs to run first.
 */
 
 describe('An Initial Suite', async () => {
-  const testSetup = new RefactoredTestSetup();
+  const testSetup = new refactoredTestSetup();
 
   step('Install extensions', async () => {
     await utilities.installExtensions();

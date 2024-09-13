@@ -6,7 +6,7 @@
  */
 import { step, xstep } from 'mocha-steps';
 import { SideBarView, TreeItem } from 'wdio-vscode-service';
-import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
+import { refactoredTestSetup } from '../refactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import path from 'path';
 import { fail } from 'assert';
@@ -15,7 +15,7 @@ import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Debug LWC Tests', async () => {
-  const testSetup = new RefactoredTestSetup();
+  const testSetup = new refactoredTestSetup();
   let projectFolderPath: string;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {

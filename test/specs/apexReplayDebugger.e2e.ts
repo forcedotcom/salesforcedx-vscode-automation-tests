@@ -7,7 +7,7 @@
 import { step } from 'mocha-steps';
 import path from 'path';
 import { InputBox, QuickOpenBox, TextEditor } from 'wdio-vscode-service';
-import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
+import { refactoredTestSetup } from '../refactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 import { Key } from 'webdriverio';
@@ -15,7 +15,7 @@ const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Apex Replay Debugger', async () => {
   let prompt: QuickOpenBox | InputBox;
-  const testSetup = new RefactoredTestSetup();
+  const testSetup = new refactoredTestSetup();
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,

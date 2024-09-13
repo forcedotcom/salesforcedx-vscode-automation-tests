@@ -8,14 +8,14 @@ import child_process from 'child_process';
 import { step, xstep } from 'mocha-steps';
 import path from 'path';
 import util from 'util';
-import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
+import { refactoredTestSetup } from '../refactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import * as analyticsTemplate from '../testData/sampleAnalyticsTemplateData.ts';
 
 const exec = util.promisify(child_process.exec);
 
 describe('Templates', async () => {
-  const testSetup = new RefactoredTestSetup();
+  const testSetup = new refactoredTestSetup();
   let projectName: string;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {

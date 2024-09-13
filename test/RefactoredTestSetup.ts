@@ -14,7 +14,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export class RefactoredTestSetup {
+export class refactoredTestSetup {
   public testSuiteSuffixName: string = '';
   public tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
   public projectFolderPath: string | undefined;

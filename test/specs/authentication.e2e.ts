@@ -8,7 +8,7 @@
 import { step } from 'mocha-steps';
 import { InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings.ts';
-import { RefactoredTestSetup } from '../RefactoredTestSetup.ts';
+import { refactoredTestSetup } from '../refactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 
@@ -17,7 +17,7 @@ describe('Authentication', async () => {
   let projectFolderPath: string;
   let prompt: QuickOpenBox | InputBox;
   let scratchOrgAliasName: string;
-  const testSetup = new RefactoredTestSetup();
+  const testSetup = new refactoredTestSetup();
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,
