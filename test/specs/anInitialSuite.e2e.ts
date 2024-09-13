@@ -91,11 +91,11 @@ describe('An Initial Suite', async () => {
     testSuiteSuffixName: 'AnInitialSuite'
   }
 
-  step('Set up the testing environment and verify our extensions are loaded after creating an SFDX project', async () => {
+  step('Set up the testing environment', async () => {
     await testSetup.setUp(testReqConfig);
   });
 
-  step('', async () => {
+  step('Verify our extensions are loaded after creating an SFDX project', async () => {
     await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
     await browser.keys(['Escape']);
     await utilities.pause(utilities.Duration.seconds(1));
