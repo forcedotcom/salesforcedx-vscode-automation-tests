@@ -53,9 +53,6 @@ export class refactoredTestSetup {
     try {
       await utilities.deleteScratchOrg(this.scratchOrgAliasName);
       await this.deleteScratchOrgInfo();
-      this.projectFolderPath = undefined;
-      this.scratchOrgAliasName = undefined;
-      this.scratchOrgId = undefined;
     } catch (error) {
       utilities.log(
         `Deleting scratch org (or info) failed with Error: ${(error as Error).message}`
