@@ -13,7 +13,6 @@ import { EnvironmentSettings } from '../environmentSettings.ts';
 import { exec } from 'child_process';
 import * as utilities from './index.ts';
 import * as semver from 'semver';
-import { DefaultTreeItem } from 'wdio-vscode-service';
 
 export type ExtensionId =
   | 'salesforcedx-vscode'
@@ -425,34 +424,6 @@ export async function findExtensionsInRunningExtensionsList(
 
   // limit runningExtensions to those whose property extensionId is in the list of extensionIds
   return runningExtensions.filter((extension) => extensionIds.includes(extension.extensionId));
-}
-
-export async function verifyProjectCreated(projectName: string) {
-  utilities.log(`${projectName} - Verifying project was created...`);
-
-  // Reload the VS Code window
-  const workbench = await utilities.getWorkbench();
-  await utilities.reloadWindow();
-  await utilities.showExplorerView();
-
-  const sidebar = await workbench.getSideBar().wait();
-  const content = await sidebar.getContent().wait();
-  const treeViewSection = await (await content.getSection(projectName.toUpperCase())).wait();
-  if (!treeViewSection) {
-    throw new Error(
-      'In verifyProjectCreated(), getSection() returned a treeViewSection with a value of null (or undefined)'
-    );
-  }
-
-  const forceAppTreeItem = (await treeViewSection.findItem('force-app')) as DefaultTreeItem;
-  if (!forceAppTreeItem) {
-    throw new Error(
-      'In verifyProjectCreated(), findItem() returned a forceAppTreeItem with a value of null (or undefined)'
-    );
-  }
-
-  await (await forceAppTreeItem.wait()).expand();
-  utilities.log(`${projectName} - Verifying project complete`);
 }
 
 export async function checkForUncaughtErrors(): Promise<void> {
