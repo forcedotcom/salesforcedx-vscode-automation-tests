@@ -19,7 +19,7 @@ export enum ProjectShapeOption {
   NONE,
   ANY,
   NEW,
-  NAMED // tests will be run on a well-know test project once wdio is initialized
+  NAMED // tests will be run on a well-known test project once wdio is initialized
 }
 
 export type ProjectConfig = {
