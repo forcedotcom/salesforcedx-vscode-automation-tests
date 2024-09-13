@@ -454,3 +454,24 @@ export async function verifyProjectCreated(projectName: string) {
   await (await forceAppTreeItem.wait()).expand();
   utilities.log(`${projectName} - Verifying project complete`);
 }
+
+export async function checkForUncaughtErrors(): Promise<void> {
+  await utilities.showRunningExtensions();
+
+  // Zoom out so all the extensions are visible
+  await utilities.zoom('Out', 4, utilities.Duration.seconds(1));
+
+  const uncaughtErrors = (
+    await utilities.findExtensionsInRunningExtensionsList(
+      utilities.getExtensionsToVerifyActive().map((ext) => ext.extensionId)
+    )
+  ).filter((ext) => ext.hasBug);
+
+  await utilities.zoomReset();
+
+  uncaughtErrors.forEach((ext) => {
+    utilities.log(`Extension ${ext.extensionId}:${ext.version ?? 'unknown'} has a bug`);
+  });
+
+  await expect(uncaughtErrors.length).toBe(0);
+}
