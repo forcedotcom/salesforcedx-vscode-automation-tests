@@ -6,7 +6,7 @@
  */
 
 import os from 'os';
-import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
+import { sleep } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import { attemptToFindOutputPanelText, clearOutputView } from './outputView.ts';
 import { clickFilePathOkButton, executeQuickPick, findQuickPickItem } from './commandPrompt.ts';
@@ -99,21 +99,6 @@ export async function findElementByText(
   }
 
   return element;
-}
-
-/**
- * @param workbench page object representing the custom VSCode title bar
- * @param fileName name of the file we want to open and use
- * @returns editor for the given file name
- */
-export async function getTextEditor(workbench: Workbench, fileName: string): Promise<TextEditor> {
-  const inputBox = await executeQuickPick('Go to File...', Duration.seconds(1));
-  await inputBox.setText(fileName);
-  await inputBox.confirm();
-  await pause(Duration.seconds(1));
-  const editorView = workbench.getEditorView();
-  const textEditor = (await editorView.openEditor(fileName)) as TextEditor;
-  return textEditor;
 }
 
 export async function createCommand(
