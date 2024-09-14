@@ -40,7 +40,7 @@ export type TestReqConfig = {
   isOrgRequired: boolean, //
   /* The edition of the scratch org to be created, only specified when isOrgRequired is true*/
   scratchOrgEdition?: OrgEdition,
-  /* The required extensions */
+  /* The extensions that do not need to be installed */
   excludedExtensions?: ExtensionId[],
   /* The test suite suffix name */
   testSuiteSuffixName: string,
