@@ -1,4 +1,5 @@
-import { getTextEditor, pause } from './miscellaneous.ts';
+import { pause } from './miscellaneous.ts';
+import { getTextEditor } from './textEditorView.ts';
 
 export async function createSfdxProjectJsonWithAllFields(): Promise<void> {
   const workbench = await (await browser.getWorkbench()).wait();

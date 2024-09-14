@@ -6,7 +6,8 @@
  */
 
 import { executeQuickPick } from './commandPrompt.ts';
-import { Duration, getTextEditor, log, pause } from './miscellaneous.ts';
+import { Duration, log, pause } from './miscellaneous.ts';
+import { getTextEditor } from './textEditorView.ts';
 import { getWorkbench } from './workbench.ts';
 
 import { Key } from 'webdriverio';
