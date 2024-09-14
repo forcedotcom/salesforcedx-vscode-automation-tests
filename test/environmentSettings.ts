@@ -21,7 +21,7 @@ export class EnvironmentSettings {
     // './specs/**/*.e2e.ts'
     // OR
     // './specs/**/anInitialSuite.e2e.ts',
-    './specs/**/apexLsp.e2e.ts',
+    // './specs/**/apexLsp.e2e.ts',
     // './specs/**/apexReplayDebugger.e2e.ts',
     // './specs/**/auraLsp.e2e.ts',
     // './specs/**/authentication.e2e.ts',
