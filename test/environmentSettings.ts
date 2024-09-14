@@ -40,8 +40,8 @@ export class EnvironmentSettings {
     // './specs/**/templates.e2e.ts',
     // './specs/**/trailApexReplayDebugger.e2e.ts',
     // './specs/**/visualforceLsp.e2e.ts',
-    // './specs/createProjectTest.e2e.ts',
-    // './specs/metadataDeployRetrieve.e2e.ts',
+    // './specs/**/createProjectTest.e2e.ts',
+    // './specs/**/metadataDeployRetrieve.e2e.ts',
   ];
   private _devHubAliasName = 'vscodeOrg';
   private _devHubUserName = 'svcideebot@salesforce.com';
