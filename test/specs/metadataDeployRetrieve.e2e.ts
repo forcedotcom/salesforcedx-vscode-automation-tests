@@ -29,10 +29,12 @@ describe('metadata deploy and retrieve', async () => {
     textV1 = await utilities.attemptToFindTextEditorText(mdPath);
     await runAndValidateCommand('Deploy', 'to', 'ST');
     await utilities.clearOutputView();
+    await utilities.closeAllEditors();
   });
 
   step('Update MD v2 and deploy again', async () => {
     await utilities.gitCheckout('updated-md', testSetup.projectFolderPath);
+    await utilities.openFile(mdPath);
     textV2 = await utilities.attemptToFindTextEditorText(mdPath);
     await expect(textV1).not.toEqual(textV2); // MD file should be updated
     await runAndValidateCommand('Deploy', 'to', 'ST');
@@ -44,7 +46,7 @@ describe('metadata deploy and retrieve', async () => {
     await runAndValidateCommand('Retrieve', 'from', 'ST');
     textV2AfterRetrieve = await utilities.attemptToFindTextEditorText(mdPath);
 
-    await expect(textV2).toContain(textV2AfterRetrieve); // should be same
+    await expect(textV2AfterRetrieve).toContain(textV2); // should be same
   });
 
   after('Tear down and clean up the testing environment', async () => {

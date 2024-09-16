@@ -29,3 +29,7 @@ export async function getTextEditor(workbench: Workbench, fileName: string): Pro
   const textEditor = (await editorView.openEditor(fileName)) as TextEditor;
   return textEditor;
 }
+
+export async function closeAllEditors() {
+  await utilities.executeQuickPick('View: Close All Editors', utilities.Duration.seconds(1));
+}
