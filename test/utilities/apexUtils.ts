@@ -28,7 +28,7 @@ export async function createApexClass(
 
   // Select the default directory (press Enter/Return).
   await inputBox.confirm();
-
+  await pause(Duration.seconds(2)); // have to hard pause for text editor to be ready
   // Modify class content
   const textEditor = await getTextEditor(workbench, name + '.cls');
   await textEditor.setText(classText);
