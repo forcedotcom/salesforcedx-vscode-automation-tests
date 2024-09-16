@@ -19,7 +19,7 @@ export async function createApexClass(
   const workbench = await getWorkbench();
 
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
-  const inputBox = await executeQuickPick('SFDX: Create Apex Class', Duration.seconds(1));
+  const inputBox = await executeQuickPick('SFDX: Create Apex Class', Duration.seconds(3)); // have to increase it otherwise it keeps failing on macos
 
   // Set the name of the new Apex Class
   await inputBox.setText(name);
