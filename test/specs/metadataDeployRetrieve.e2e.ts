@@ -24,7 +24,7 @@ describe('metadata deploy and retrieve', async () => {
 
   step('Open and deploy MD v1', async () => {
     const workbench = await utilities.getWorkbench();
-    await utilities.getTextEditor(workbench, 'Deploy_Test__c.field-meta.xml');
+    await utilities.getTextEditor(workbench, 'force-app/main/default/objects/Account/Deploy_Test__c.field-meta.xml');
     textV1 = await utilities.attemptToFindTextEditorText('Deploy_Test__c.field-meta.xml');
     await runAndValidateCommand('Deploy', 'to', 'ST');
     await utilities.clearOutputView();
