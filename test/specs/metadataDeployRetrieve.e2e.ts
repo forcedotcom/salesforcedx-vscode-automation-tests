@@ -29,7 +29,7 @@ describe('metadata deploy and retrieve', async () => {
     textV1 = await utilities.attemptToFindTextEditorText(mdPath);
     await runAndValidateCommand('Deploy', 'to', 'ST');
     await utilities.clearOutputView();
-    await utilities.closeAllEditors();
+    await utilities.closeAllEditors(); // close editor to make sure editor is up to date
   });
 
   step('Update MD v2 and deploy again', async () => {
