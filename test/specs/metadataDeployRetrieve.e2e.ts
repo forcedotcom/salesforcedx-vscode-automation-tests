@@ -1,6 +1,7 @@
 import { step } from 'mocha-steps';
 import { refactoredTestSetup } from '../refactoredTestSetup.ts';
 import * as utilities from '../utilities/index.ts';
+import path from 'path';
 
 // In future we will merge the test together with deployAndRetrieve
 describe('metadata deploy and retrieve', async () => {
@@ -13,41 +14,41 @@ describe('metadata deploy and retrieve', async () => {
     isOrgRequired: true,
     testSuiteSuffixName: 'mdDeployRetrieve'
   }
-  // const mdPath = 'force-app/main/default/objects/Account/fields/Deploy_Test__c.field-meta.xml';
+  let mdPath: string;
   let textV1: string;
   let textV2: string;
   let textV2AfterRetrieve: string;
 
   step('Set up the testing environment', async () => {
     await testSetup.setUp(testReqConfig);
+    mdPath = path.join(testSetup.projectFolderPath!, 'force-app/main/default/objects/Account/fields/Deploy_Test__c.field-meta.xml')
   });
 
   step('Open and deploy MD v1', async () => {
-    const workbench = await utilities.getWorkbench();
-    await utilities.getTextEditor(workbench, 'force-app/main/default/objects/Account/Deploy_Test__c.field-meta.xml');
-    textV1 = await utilities.attemptToFindTextEditorText('Deploy_Test__c.field-meta.xml');
+    await utilities.openFile(mdPath);
+    textV1 = await utilities.attemptToFindTextEditorText(mdPath);
     await runAndValidateCommand('Deploy', 'to', 'ST');
     await utilities.clearOutputView();
   });
 
   step('Update MD v2 and deploy again', async () => {
     await utilities.gitCheckout('updated-md', testSetup.projectFolderPath);
-    textV2 = await utilities.attemptToFindTextEditorText('Deploy_Test__c.field-meta.xml');
+    textV2 = await utilities.attemptToFindTextEditorText(mdPath);
     await expect(textV1).not.toEqual(textV2); // MD file should be updated
     await runAndValidateCommand('Deploy', 'to', 'ST');
     await utilities.clearOutputView();
   });
 
   step('Retrieve MD v2 and verify the text not changed', async () => {
-    const workbench = await utilities.getWorkbench();
-    await utilities.getTextEditor(workbench, 'Deploy_Test__c.field-meta.xml');
+    await utilities.openFile(mdPath);
     await runAndValidateCommand('Retrieve', 'from', 'ST');
-    textV2AfterRetrieve = await utilities.attemptToFindTextEditorText('Deploy_Test__c.field-meta.xml');
+    textV2AfterRetrieve = await utilities.attemptToFindTextEditorText(mdPath);
 
     await expect(textV2).toContain(textV2AfterRetrieve); // should be same
   });
 
   after('Tear down and clean up the testing environment', async () => {
+    await utilities.gitCheckout('main', testSetup.projectFolderPath);
     await testSetup?.tearDown();
   });
 

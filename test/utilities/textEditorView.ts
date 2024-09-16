@@ -7,16 +7,15 @@ import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 
-export async function attemptToFindTextEditorText(fileName: string): Promise<string> {
-  // error handler to be implemented
-  const workbench = await utilities.getWorkbench();
-
-  await utilities.getTextEditor(workbench, fileName);
+export async function attemptToFindTextEditorText(filePath: string): Promise<string> {
+  await utilities.openFile(filePath);
   await browser.keys([CMD_KEY, 'a', 'c']);
   return await clipboard.read();
 }
 
 /**
+ * WARN: The func does not work properly on Windows for a large project because of long indexing time! Use openFile instead
+ * open a file in the text editor by file name
  * @param workbench page object representing the custom VSCode title bar
  * @param fileName name of the file we want to open and use
  * @returns editor for the given file name

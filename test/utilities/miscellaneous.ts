@@ -246,3 +246,16 @@ export async function openFolder(path: string) {
   await pause(Duration.seconds(3));
   await clickFilePathOkButton();
 }
+
+/**
+ * An definite alternative of getTextEditor to open a file in text editor
+ * @param path 
+ */
+export async function openFile(path: string) {
+  const prompt = await executeQuickPick('File: Open File...'); // use this cmd palette to open
+  // Set the location of the project
+  const input = await prompt.input$;
+  await input.setValue(path);
+  await pause(Duration.seconds(2));
+  await clickFilePathOkButton();
+}
