@@ -37,7 +37,7 @@ export class refactoredTestSetup {
     await utilities.reloadAndEnableExtensions();
     /* The expected workspace will be open up after setUpTestingWorkspace */
     await this.setUpTestingWorkspace(testReqConfig.projectConfig);
-    if (testReqConfig.projectConfig.projectShape != ProjectShapeOption.NONE) {
+    if (testReqConfig.projectConfig.projectShape !== ProjectShapeOption.NONE) {
       await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
       const scratchOrgEdition = testReqConfig.scratchOrgEdition || 'developer';
       this.updateScratchOrgDefWithEdition(scratchOrgEdition);
