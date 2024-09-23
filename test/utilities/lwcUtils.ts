@@ -21,7 +21,7 @@ export async function createLwc(name: string): Promise<void> {
   // Using the Command palette, run SFDX: Create Lightning Web Component.
   const inputBox = await executeQuickPick(
     'SFDX: Create Lightning Web Component',
-    Duration.seconds(1)
+    Duration.seconds(3)
   );
 
   log('createLwc() - Set the name of the new component');
