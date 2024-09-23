@@ -41,8 +41,7 @@ export class refactoredTestSetup {
       await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
       const scratchOrgEdition = testReqConfig.scratchOrgEdition || 'developer';
       this.updateScratchOrgDefWithEdition(scratchOrgEdition);
-      if (process.platform === 'darwin') this.setJavaHomeConfigEntry();
-      // Extra config needed for Apex LSP on GHA
+      if (process.platform === 'darwin') this.setJavaHomeConfigEntry(); // Extra config needed for Apex LSP on GHA
       if (testReqConfig.isOrgRequired) await this.setUpScratchOrg(scratchOrgEdition);
       await utilities.reloadAndEnableExtensions(); // This is necesssary in order to update JAVA home path
     }
