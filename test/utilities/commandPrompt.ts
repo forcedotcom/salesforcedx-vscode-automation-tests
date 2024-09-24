@@ -6,7 +6,7 @@
  */
 
 import { InputBox, QuickOpenBox, Workbench } from 'wdio-vscode-service';
-import { debug, Duration, log, pause } from './miscellaneous.ts';
+import { Duration, log, pause } from './miscellaneous.ts';
 import { getWorkbench } from './workbench.ts';
 
 export async function openCommandPromptWithCommand(
@@ -133,7 +133,7 @@ export async function executeQuickPick(
   command: string,
   wait: Duration = Duration.seconds(1)
 ): Promise<InputBox | QuickOpenBox> {
-  debug(`executeQuickPick command: ${command}`);
+  log(`executeQuickPick command: ${command}`);
   try {
     const workbench = await getWorkbench();
     const prompt = await workbench.executeQuickPick(command);

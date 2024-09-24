@@ -23,6 +23,9 @@ describe('SObjects Definitions', async () => {
   });
 
   step('Check Custom Objects Customer and Product are within objects folder', async () => {
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - Check Custom Objects Customer and Product are within objects folder`
+    );
     const workbench = await utilities.getWorkbench();
     const sidebar = workbench.getSideBar();
     const content = sidebar.getContent();
@@ -64,6 +67,7 @@ describe('SObjects Definitions', async () => {
   });
 
   step('Push Source to Org', async () => {
+    utilities.log(`${testSetup.testSuiteSuffixName} - Push Source to Org`);
     await utilities.executeQuickPick(
       'SFDX: Push Source to Default Org',
       utilities.Duration.seconds(5)
@@ -86,6 +90,9 @@ describe('SObjects Definitions', async () => {
   });
 
   step('Refresh SObject Definitions for Custom SObjects', async () => {
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - Refresh SObject Definitions for Custom SObjects`
+    );
     const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView(utilities.Duration.seconds(2));
     const prompt = await utilities.executeQuickPick(
@@ -165,6 +172,9 @@ describe('SObjects Definitions', async () => {
   });
 
   step('Refresh SObject Definitions for Standard SObjects', async () => {
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - Refresh SObject Definitions for Standard SObjects`
+    );
     const workbench = await utilities.getWorkbench();
     await utilities.clearOutputView(utilities.Duration.seconds(2));
     const prompt = await utilities.executeQuickPick(
@@ -203,17 +213,34 @@ describe('SObjects Definitions', async () => {
     const treeViewSection = await content.getSection(projectName);
     await expect(treeViewSection).not.toEqual(undefined);
 
-    // Verify if 'sobjects' folder is in side panel
-    const sobjectsTreeItem = (await treeViewSection.findItem('sobjects')) as DefaultTreeItem;
-    await expect(sobjectsTreeItem).not.toEqual(undefined);
-    await sobjectsTreeItem.expand();
+    // Verify if '.sfdx' folder is in side panel
+    const sfdxTreeItem = (await treeViewSection.findItem('.sfdx')) as DefaultTreeItem;
+    await expect(sfdxTreeItem).not.toEqual(undefined);
+    await sfdxTreeItem.expand();
+    await expect(await sfdxTreeItem.isExpanded()).toBe(true);
     await utilities.pause(utilities.Duration.seconds(1));
 
-    // Verify if 'standardObjects' folder is in side panel
-    const standardObjectsTreeItem = (await treeViewSection.findItem(
-      'standardObjects'
-    )) as DefaultTreeItem;
+    // Verify if 'tools' folder is within '.sfdx'
+    const toolsTreeItem = (await sfdxTreeItem.findChildItem('tools')) as TreeItem;
+    await expect(toolsTreeItem).not.toEqual(undefined);
+    await toolsTreeItem.expand();
+    await expect(await toolsTreeItem.isExpanded()).toBe(true);
+    await utilities.pause(utilities.Duration.seconds(1));
+
+    // Verify if 'sobjects' folder is within 'tools'
+    let sobjectsTreeItem = await utilities.getVisibleChild(sfdxTreeItem, 'sobjects');
+    await expect(sobjectsTreeItem).not.toEqual(undefined);
+    sobjectsTreeItem = sobjectsTreeItem!;
+
+    await sobjectsTreeItem.expand();
+    await expect(await sobjectsTreeItem.isExpanded()).toBe(true);
+    await utilities.pause(utilities.Duration.seconds(1));
+
+    // Verify if 'standardObjects' folder is within 'sobjects'
+    let standardObjectsTreeItem = await utilities.getVisibleChild(sfdxTreeItem, 'standardObjects');
     await expect(standardObjectsTreeItem).not.toEqual(undefined);
+    standardObjectsTreeItem = standardObjectsTreeItem!;
+
     await standardObjectsTreeItem.expand();
     await expect(await standardObjectsTreeItem.isExpanded()).toBe(true);
     await utilities.pause(utilities.Duration.seconds(1));
@@ -231,6 +258,9 @@ describe('SObjects Definitions', async () => {
   });
 
   step('Refresh SObject Definitions for All SObjects', async () => {
+    utilities.log(
+      `${testSetup.testSuiteSuffixName} - Refresh SObject Definitions for All SObjects`
+    );
     // Clear the output for correct test validation.
     await utilities.clearOutputView(utilities.Duration.seconds(2));
 
