@@ -54,7 +54,6 @@ export class EnvironmentSettings {
   private _javaHome = process.env.JAVA_HOME;
   private _localProjectPath: string | undefined;
   private _githubProjectUrl: string | undefined;
-  private _useExistingProject: string | undefined;
   private _logLevel: LogLevel = 'warn';
 
   private constructor() {
@@ -75,7 +74,6 @@ export class EnvironmentSettings {
       ? (process.env.E2E_LOG_LEVEL as LogLevel)
       : this._logLevel;
     this._javaHome = process.env.JAVA_HOME || this._javaHome;
-    this.useExistingProject = process.env.USE_EXISTING_PROJECT_PATH;
     this.localProjectPath = process.env.LOCAL_PROJECT_PATH;
     this.githubProjectUrl = process.env.GITHUB_PROJECT_URL;
   }
@@ -127,10 +125,6 @@ export class EnvironmentSettings {
     return this._javaHome;
   }
 
-  public get useExistingProject(): string | undefined {
-    return this._useExistingProject;
-  }
-
   public get localProjectPath(): string | undefined {
     return this._localProjectPath;
   }
@@ -159,19 +153,6 @@ export class EnvironmentSettings {
     }
 
     this._githubProjectUrl = projectPath;
-  }
-
-  public set useExistingProject(existingProject: string | undefined) {
-    const projectPath = existingProject ?? process.env.USE_EXISTING_PROJECT_PATH;
-    if (!projectPath) {
-      this._useExistingProject = undefined;
-      return;
-    }
-    if (!fs.existsSync(projectPath)) {
-      throw new Error(`Project path for "${projectPath}" does not exist`);
-    }
-
-    this._useExistingProject = projectPath;
   }
 
   public get logLevel(): LogLevel {
