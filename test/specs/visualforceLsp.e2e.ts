@@ -6,11 +6,11 @@
  */
 import { step, xstep } from 'mocha-steps';
 import path from 'path';
-import { refactoredTestSetup } from '../refactoredTestSetup.ts';
+import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 describe('Visualforce LSP', async () => {
-  const testSetup = new refactoredTestSetup();
+  const testSetup = new TestSetup();
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,

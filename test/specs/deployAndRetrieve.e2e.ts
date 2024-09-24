@@ -6,7 +6,7 @@
  */
 import { step } from 'mocha-steps';
 import path from 'path';
-import { refactoredTestSetup } from '../refactoredTestSetup.ts';
+import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import { Workbench } from 'wdio-vscode-service';
 import { WORKSPACE_SETTING_KEYS as WSK } from '../utilities/index.ts';
@@ -14,7 +14,7 @@ import { WORKSPACE_SETTING_KEYS as WSK } from '../utilities/index.ts';
 describe('Deploy and Retrieve', async () => {
   let projectName: string;
   const pathToClass = path.join('force-app', 'main', 'default', 'classes', 'MyClass');
-  const testSetup = new refactoredTestSetup();
+  const testSetup = new TestSetup();
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,

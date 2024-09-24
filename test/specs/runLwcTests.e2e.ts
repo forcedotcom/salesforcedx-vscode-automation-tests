@@ -6,14 +6,14 @@
  */
 import { step, xstep } from 'mocha-steps';
 import { TreeItem } from 'wdio-vscode-service';
-import { refactoredTestSetup } from '../refactoredTestSetup.ts';
+import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 import path from 'path';
 import { fail } from 'assert';
 
 describe('Run LWC Tests', async () => {
   let projectFolderPath: string;
-  const testSetup = new refactoredTestSetup();
+  const testSetup = new TestSetup();
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,

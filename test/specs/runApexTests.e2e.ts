@@ -6,12 +6,12 @@
  */
 import { step } from 'mocha-steps';
 import { InputBox, QuickOpenBox, SideBarView } from 'wdio-vscode-service';
-import { refactoredTestSetup } from '../refactoredTestSetup.ts';
+import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 describe('Run Apex Tests', async () => {
   let prompt: QuickOpenBox | InputBox;
-  const testSetup = new refactoredTestSetup();
+  const testSetup = new TestSetup();
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,

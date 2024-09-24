@@ -30,7 +30,7 @@ const capabilities: VSCodeCapabilities = {
       'extensions.autoUpdate': false,
       'window.commandCenter': false
     },
-    workspacePath: EnvironmentSettings.getInstance().useExistingProject
+    workspacePath: EnvironmentSettings.getInstance().localProjectPath
   } as VSCodeOptions,
 
   acceptInsecureCerts: true

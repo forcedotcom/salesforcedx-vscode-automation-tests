@@ -9,7 +9,6 @@ import path from 'path';
 import { TestSetup } from '../testSetup.ts';
 import { log } from './miscellaneous.ts';
 import FastGlob from 'fast-glob';
-import { refactoredTestSetup } from '../refactoredTestSetup.ts';
 
 export function createFolder(folderPath: string): void {
   fs.mkdirSync(folderPath, { recursive: true });
@@ -19,7 +18,7 @@ export function removeFolder(folderPath: string): void {
   fs.rmdirSync(folderPath, { recursive: true });
 }
 
-export async function createCustomObjects(testSetup: TestSetup | refactoredTestSetup): Promise<void> {
+export async function createCustomObjects(testSetup: TestSetup): Promise<void> {
   const projectPath = testSetup.projectFolderPath;
   const tempFolderPath = testSetup.tempFolderPath;
   if (!tempFolderPath) {

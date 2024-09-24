@@ -1,55 +1,54 @@
 /*
- * Copyright (c) 2023, salesforce.com, inc.
+ * Copyright (c) 2024, salesforce.com, inc.
  * All rights reserved.
  * Licensed under the BSD 3-Clause license.
  * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-
 import fs from 'fs';
 import path from 'path';
-import { InputBox, QuickOpenBox } from 'wdio-vscode-service';
-import { EnvironmentSettings as Env } from './environmentSettings.ts';
 import * as utilities from './utilities/index.ts';
+import { EnvironmentSettings as Env } from './environmentSettings.ts';
+import { ProjectConfig, ProjectShapeOption } from './utilities/index.ts';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export class TestSetup {
-  public testSuiteSuffixName: string;
-  private static aliasAndUserNameWereVerified = false;
-  public tempFolderPath: string;
+  public testSuiteSuffixName: string = '';
+  public tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
   public projectFolderPath: string | undefined;
-  private prompt: QuickOpenBox | InputBox | undefined;
+  private aliasAndUserNameWereVerified = false;
   public scratchOrgAliasName: string | undefined;
   public scratchOrgId: string | undefined;
 
-  public constructor(testSuiteSuffixName: string) {
-    this.testSuiteSuffixName = testSuiteSuffixName;
-    this.tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
+  public constructor() {
   }
 
   public get tempProjectName(): string {
     return 'TempProject-' + this.testSuiteSuffixName;
   }
 
-  public async setUp(scratchOrgEdition: utilities.OrgEdition = 'developer'): Promise<void> {
+  public async setUp(testReqConfig: utilities.TestReqConfig): Promise<void> {
+    this.testSuiteSuffixName = testReqConfig.testSuiteSuffixName;
     utilities.log('');
     utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
-    await utilities.installExtensions();
+    await utilities.installExtensions(testReqConfig.excludedExtensions);
     await utilities.reloadAndEnableExtensions();
-    await this.setUpTestingEnvironment();
-    await this.createProject(scratchOrgEdition);
-    await utilities.reloadAndEnableExtensions();
-    await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
-    await this.authorizeDevHub();
-    await this.createDefaultScratchOrg();
-    utilities.log(`${this.testSuiteSuffixName} - ...finished TestSetup.setUp()`);
-    utilities.log('');
+    /* The expected workspace will be open up after setUpTestingWorkspace */
+    await this.setUpTestingWorkspace(testReqConfig.projectConfig);
+    if (testReqConfig.projectConfig.projectShape !== ProjectShapeOption.NONE) {
+      await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
+      const scratchOrgEdition = testReqConfig.scratchOrgEdition || 'developer';
+      this.updateScratchOrgDefWithEdition(scratchOrgEdition);
+      if (process.platform === 'darwin') this.setJavaHomeConfigEntry(); // Extra config needed for Apex LSP on GHA
+      if (testReqConfig.isOrgRequired) await this.setUpScratchOrg(scratchOrgEdition);
+      await utilities.reloadAndEnableExtensions(); // This is necesssary in order to update JAVA home path
+    }
   }
 
   public async tearDown(): Promise<void> {
-    await this.checkForUncaughtErrors();
+    await utilities.checkForUncaughtErrors();
     try {
       await utilities.deleteScratchOrg(this.scratchOrgAliasName);
       await this.deleteScratchOrgInfo();
@@ -60,104 +59,91 @@ export class TestSetup {
     }
   }
 
-  private async deleteScratchOrgInfo(): Promise<void> {
-    if (this.scratchOrgId) {
-      const sfDataDeleteRecord = await utilities.runCliCommand(
-        'data:delete:record',
-        '--sobject',
-        'ScratchOrgInfo',
-        '--where',
-        `ScratchOrg=${this.scratchOrgId.slice(0, -3)}`,
-        '--target-org',
-        Env.getInstance().devHubAliasName
-      );
-      if (sfDataDeleteRecord.exitCode > 0) {
-        const message = `data delete record failed with exit code ${sfDataDeleteRecord.exitCode}\n stderr ${sfDataDeleteRecord.stderr}`;
-        utilities.log(message);
-        throw new Error(message);
-      }
+  private async initializeNewSfProject() {
+    if (!fs.existsSync(this.tempFolderPath)) {
+      utilities.createFolder(this.tempFolderPath);
     }
+    await utilities.generateSfProject(this.tempProjectName, this.tempFolderPath); // generate a sf project for 'new'
+    this.projectFolderPath = path.join(this.tempFolderPath, this.tempProjectName);
   }
 
-  private async checkForUncaughtErrors(): Promise<void> {
-    await utilities.showRunningExtensions();
+  public async setUpTestingWorkspace(projectConfig: ProjectConfig) {
+    utilities.log(`${this.testSuiteSuffixName} - Starting setUpTestingWorkspace()...`);
+    let projectName;
+    switch (projectConfig.projectShape) {
+      case ProjectShapeOption.NEW:
+        await this.initializeNewSfProject();
+        break;
 
-    // Zoom out so all the extensions are visible
-    await utilities.zoom('Out', 4, utilities.Duration.seconds(1));
+      case ProjectShapeOption.NAMED:
+        if (projectConfig.githubRepoUrl) {
+          // verify if folder matches the github repo url
+          const repoExists = await utilities.gitRepoExists(projectConfig.githubRepoUrl);
+          if (!repoExists) {
+            this.throwError(`Repository does not exist or is inaccessible: ${projectConfig.githubRepoUrl}`);
+          }
+          const repoName = utilities.getRepoNameFromUrl(projectConfig.githubRepoUrl);
+          if (!repoName) {
+            this.throwError(`Unable to determine repository name from URL: ${projectConfig.githubRepoUrl}`);
+          } else {
+            projectName = repoName;
+            if (projectConfig.folderPath) {
+              const localProjName = utilities.getFolderName(projectConfig.folderPath);
+              if (localProjName !== repoName) {
+                this.throwError(`The local project ${localProjName} does not match the required Github repo ${repoName}`);
+              } else {
+                // If it is a match, use the local folder directly. Local dev use only.
+                this.projectFolderPath = projectConfig.folderPath;
+              }
+            } else {
+              // Clone the project from Github URL directly
+              this.projectFolderPath = path.join(this.tempFolderPath, repoName);
+              await utilities.gitClone(projectConfig.githubRepoUrl, this.projectFolderPath);
+            }
+          }
+        } else {
+          // missing info, throw an error
+          this.throwError(`githubRepoUrl is required for named project shape`);
+        }
+        break;
 
-    const uncaughtErrors = (
-      await utilities.findExtensionsInRunningExtensionsList(
-        utilities.getExtensionsToVerifyActive().map((ext) => ext.extensionId)
-      )
-    ).filter((ext) => ext.hasBug);
+      case ProjectShapeOption.ANY:
+        // ANY: workspace is designated to open when wdio is initialized
+        if (projectConfig.folderPath) {
+          this.projectFolderPath = projectConfig.folderPath;
+          projectName = utilities.getFolderName(projectConfig.folderPath);
+        } else {
+          // Fallback: if no folder specified, create a new sf project instead
+          await this.initializeNewSfProject();
+        }
+        return;
 
-    await utilities.zoomReset();
+      case ProjectShapeOption.NONE:
+        // NONE: no project open in the workspace by default
+        /* create the e2e-temp folder to benefit further testing */
+        if (!fs.existsSync(this.tempFolderPath)) {
+          utilities.createFolder(this.tempFolderPath);
+        }
+        return;
 
-    uncaughtErrors.forEach((ext) => {
-      utilities.log(`Extension ${ext.extensionId}:${ext.version ?? 'unknown'} has a bug`);
-    });
-
-    await expect(uncaughtErrors.length).toBe(0);
+      default:
+        this.throwError(`Invalid project shape: ${projectConfig.projectShape}`);
+        break;
+    }
+    utilities.log(`Project folder to open: ${this.projectFolderPath}`);
+    await utilities.openFolder(this.projectFolderPath!);
+    // Verify the project was created and was loaded.
+    await utilities.verifyProjectCreated(projectName ?? this.tempProjectName);
   }
 
-  public async setUpTestingEnvironment(): Promise<void> {
-    utilities.log('');
-    utilities.log(`${this.testSuiteSuffixName} - Starting setUpTestingEnvironment()...`);
-
-    this.projectFolderPath = Env.getInstance().useExistingProject
-      ? Env.getInstance().useExistingProject
-      : path.join(this.tempFolderPath, this.tempProjectName);
-    utilities.log(
-      `${this.testSuiteSuffixName} - creating project files in ${this.projectFolderPath}`
-    );
-
-    // Remove the project folder, just in case there are stale files there, but only if it is not an existing project.
-    if (this.projectFolderPath && !Env.getInstance().useExistingProject) {
-      if (fs.existsSync(this.projectFolderPath)) {
-        utilities.removeFolder(this.projectFolderPath);
-      }
-
-      // Now create the temp folder.  It should exist but create the folder if it is missing.
-      if (!fs.existsSync(this.tempFolderPath)) {
-        utilities.createFolder(this.tempFolderPath);
-      }
-    }
-
-    utilities.log(`${this.testSuiteSuffixName} - ...finished setUpTestingEnvironment()`);
-    utilities.log('');
+  private throwError(message: string) {
+    utilities.log(message);
+    throw new Error(message);
   }
 
-  public async createProject(scratchOrgEdition: utilities.OrgEdition, projectName?: string) {
-    utilities.log('');
-    if (!Env.getInstance().useExistingProject) {
-      utilities.log(`${projectName ?? this.testSuiteSuffixName} - Starting createProject()...`);
-
-      await utilities.generateSfProject(projectName ?? this.tempProjectName, this.tempFolderPath); // generate new sf project with cli
-
-      if (projectName) {
-        this.projectFolderPath = path.join(this.tempFolderPath, projectName);
-        utilities.log(
-          `${this.testSuiteSuffixName} - new projectFolderPath is ${this.projectFolderPath}`
-        );
-      }
-
-      await utilities.openFolder(this.projectFolderPath!); // switch to the new VS Code workspace
-
-      // Verify the project was created and was loaded.
-      await utilities.verifyProjectCreated(projectName ?? this.tempProjectName);
-      this.updateScratchOrgDefWithEdition(scratchOrgEdition);
-
-      // Extra config needed for Apex LSP on GHA
-      if (process.platform === 'darwin') {
-        this.setJavaHomeConfigEntry();
-      }
-      utilities.log(`${this.testSuiteSuffixName} - ...finished createProject()`);
-    } else {
-      utilities.log(
-        `${this.testSuiteSuffixName} - skipping createProject() as test is using an existing project`
-      );
-    }
-    utilities.log('');
+  public async setUpScratchOrg(scratchOrgEdition: utilities.OrgEdition) {
+    await this.authorizeDevHub();
+    await this.createDefaultScratchOrg(scratchOrgEdition);
   }
 
   public async authorizeDevHub(): Promise<void> {
@@ -165,9 +151,9 @@ export class TestSetup {
     utilities.log(`${this.testSuiteSuffixName} - Starting authorizeDevHub()...`);
 
     // Only need to check this once.
-    if (!TestSetup.aliasAndUserNameWereVerified) {
+    if (!this.aliasAndUserNameWereVerified) {
       await this.verifyAliasAndUserName();
-      TestSetup.aliasAndUserNameWereVerified = true;
+      this.aliasAndUserNameWereVerified = true;
     }
 
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
@@ -297,6 +283,41 @@ export class TestSetup {
     utilities.log('');
   }
 
+  private async deleteScratchOrgInfo(): Promise<void> {
+    if (this.scratchOrgId) {
+      const sfDataDeleteRecord = await utilities.runCliCommand(
+        'data:delete:record',
+        '--sobject',
+        'ScratchOrgInfo',
+        '--where',
+        `ScratchOrg=${this.scratchOrgId.slice(0, -3)}`,
+        '--target-org',
+        Env.getInstance().devHubAliasName
+      );
+      if (sfDataDeleteRecord.exitCode > 0) {
+        const message = `data delete record failed with exit code ${sfDataDeleteRecord.exitCode}\n stderr ${sfDataDeleteRecord.stderr}`;
+        utilities.log(message);
+        throw new Error(message);
+      }
+    }
+  }
+
+  public updateScratchOrgDefWithEdition(scratchOrgEdition: utilities.OrgEdition) {
+    if (scratchOrgEdition === 'enterprise') {
+      const projectScratchDefPath = path.join(
+        this.projectFolderPath!,
+        'config',
+        'project-scratch-def.json'
+      );
+      let projectScratchDef = fs.readFileSync(projectScratchDefPath, 'utf8');
+      projectScratchDef = projectScratchDef.replace(
+        `"edition": "Developer"`,
+        `"edition": "Enterprise"`
+      );
+      fs.writeFileSync(projectScratchDefPath, projectScratchDef, 'utf8');
+    }
+  }
+
   private setJavaHomeConfigEntry(): void {
     const vscodeSettingsPath = path.join(this.projectFolderPath!, '.vscode', 'settings.json');
     if (!Env.getInstance().javaHome) {
@@ -320,22 +341,5 @@ export class TestSetup {
     utilities.log(
       `${this.testSuiteSuffixName} - Set 'salesforcedx-vscode-apex.java.home' to '${process.env.JAVA_HOME}' in ${vscodeSettingsPath}`
     );
-  }
-
-  private updateScratchOrgDefWithEdition(scratchOrgEdition: utilities.OrgEdition) {
-    if (scratchOrgEdition === 'enterprise') {
-      const projectScratchDefPath = path.join(
-        this.tempFolderPath!,
-        this.tempProjectName,
-        'config',
-        'project-scratch-def.json'
-      );
-      let projectScratchDef = fs.readFileSync(projectScratchDefPath, 'utf8');
-      projectScratchDef = projectScratchDef.replace(
-        `"edition": "Developer"`,
-        `"edition": "Enterprise"`
-      );
-      fs.writeFileSync(projectScratchDefPath, projectScratchDef, 'utf8');
-    }
   }
 }
