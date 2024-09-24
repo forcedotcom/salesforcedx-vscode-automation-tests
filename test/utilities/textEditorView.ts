@@ -56,7 +56,7 @@ export async function checkFileOpen(
       interval: 500, // Check every 500 ms
       timeoutMsg:
         options.msg ??
-        `Expected to find file ${name} open in TextEditor before ${options.timeout} milliseconds`
+        `Expected to find file ${name} open in TextEditor before ${options.timeout}`
     }
   )
 }
