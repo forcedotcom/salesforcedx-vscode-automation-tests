@@ -203,6 +203,12 @@ describe('SObjects Definitions', async () => {
     const treeViewSection = await content.getSection(projectName);
     await expect(treeViewSection).not.toEqual(undefined);
 
+    // Verify if 'sobjects' folder is in side panel
+    const sobjectsTreeItem = (await treeViewSection.findItem('sobjects')) as DefaultTreeItem;
+    await expect(sobjectsTreeItem).not.toEqual(undefined);
+    await sobjectsTreeItem.expand();
+    await utilities.pause(utilities.Duration.seconds(1));
+
     // Verify if 'standardObjects' folder is in side panel
     const standardObjectsTreeItem = (await treeViewSection.findItem(
       'standardObjects'
