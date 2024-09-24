@@ -59,16 +59,20 @@ export class refactoredTestSetup {
     }
   }
 
+  private async initializeNewSfProject() {
+    if (!fs.existsSync(this.tempFolderPath)) {
+      utilities.createFolder(this.tempFolderPath);
+    }
+    await utilities.generateSfProject(this.tempProjectName, this.tempFolderPath); // generate a sf project for 'new'
+    this.projectFolderPath = path.join(this.tempFolderPath, this.tempProjectName);
+  }
+
   public async setUpTestingWorkspace(projectConfig: ProjectConfig) {
     utilities.log(`${this.testSuiteSuffixName} - Starting setUpTestingWorkspace()...`);
     let projectName;
     switch (projectConfig.projectShape) {
       case ProjectShapeOption.NEW:
-        if (!fs.existsSync(this.tempFolderPath)) {
-          utilities.createFolder(this.tempFolderPath);
-        }
-        await utilities.generateSfProject(this.tempProjectName, this.tempFolderPath); // generate a sf project for 'new'
-        this.projectFolderPath = path.join(this.tempFolderPath, this.tempProjectName);
+        await this.initializeNewSfProject();
         break;
 
       case ProjectShapeOption.NAMED:
@@ -79,19 +83,23 @@ export class refactoredTestSetup {
             this.throwError(`Repository does not exist or is inaccessible: ${projectConfig.githubRepoUrl}`);
           }
           const repoName = utilities.getRepoNameFromUrl(projectConfig.githubRepoUrl);
-          projectName = repoName;
-          if (projectConfig.folderPath) {
-            const localProjName = utilities.getFolderName(projectConfig.folderPath);
-            if (localProjName != repoName) {
-              this.throwError(`the local project ${projectConfig.githubRepoUrl} does not match the required Github repo ${projectConfig.githubRepoUrl}`);
-            } else {
-              // if it is a match, use the local folder directly. Local dev use only.
-              this.projectFolderPath = projectConfig.folderPath;
-            }
+          if (!repoName) {
+            this.throwError(`Unable to determine repository name from URL: ${projectConfig.githubRepoUrl}`);
           } else {
-            // clone the project from Github URL directly
-            this.projectFolderPath = path.join(this.tempFolderPath, repoName!);
-            await utilities.gitClone(projectConfig.githubRepoUrl, this.projectFolderPath);
+            projectName = repoName;
+            if (projectConfig.folderPath) {
+              const localProjName = utilities.getFolderName(projectConfig.folderPath);
+              if (localProjName !== repoName) {
+                this.throwError(`The local project ${localProjName} does not match the required Github repo ${repoName}`);
+              } else {
+                // If it is a match, use the local folder directly. Local dev use only.
+                this.projectFolderPath = projectConfig.folderPath;
+              }
+            } else {
+              // Clone the project from Github URL directly
+              this.projectFolderPath = path.join(this.tempFolderPath, repoName);
+              await utilities.gitClone(projectConfig.githubRepoUrl, this.projectFolderPath);
+            }
           }
         } else {
           // missing info, throw an error
@@ -104,16 +112,18 @@ export class refactoredTestSetup {
         if (projectConfig.folderPath) {
           this.projectFolderPath = projectConfig.folderPath;
           projectName = utilities.getFolderName(projectConfig.folderPath);
-        } else this.throwError('folder path is required for named project!');
+        } else {
+          // Fallback: if no folder specified, create a new sf project instead
+          await this.initializeNewSfProject();
+        }
         return;
 
       case ProjectShapeOption.NONE:
-        // NONE: blank project by default
+        // NONE: no project open in the workspace by default
         /* create the e2e-temp folder to benefit further testing */
         if (!fs.existsSync(this.tempFolderPath)) {
           utilities.createFolder(this.tempFolderPath);
         }
-        this.projectFolderPath = path.join(this.tempFolderPath, this.tempProjectName);
         return;
 
       default:

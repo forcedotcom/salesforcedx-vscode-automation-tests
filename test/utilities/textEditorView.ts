@@ -33,3 +33,31 @@ export async function getTextEditor(workbench: Workbench, fileName: string): Pro
 export async function closeAllEditors() {
   await utilities.executeQuickPick('View: Close All Editors', utilities.Duration.seconds(1));
 }
+
+export async function checkFileOpen(
+  workbench: Workbench,
+  name: string,
+  options: { msg?: string; timeout?: utilities.Duration } = { timeout: utilities.Duration.milliseconds(10_000) }
+) {
+  await browser.waitUntil(
+    async () => {
+      try {
+        const editorView = workbench.getEditorView();
+        const activeTab = await editorView.getActiveTab();
+        if (activeTab != undefined && name == await activeTab.getTitle()) {
+          return true;
+        } else return false;
+      } catch (error) {
+        return false;
+      }
+    },
+    {
+      timeout: options.timeout?.milliseconds,
+      interval: 500, // Check every 500 ms
+      timeoutMsg:
+        options.msg ??
+        `Expected to find file ${name} open in TextEditor before ${options.timeout} milliseconds`
+    }
+  )
+}
+

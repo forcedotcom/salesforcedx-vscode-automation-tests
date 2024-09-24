@@ -8,7 +8,7 @@
 import { TextEditor } from 'wdio-vscode-service';
 import { executeQuickPick } from './commandPrompt.ts';
 import { Duration, pause } from './miscellaneous.ts';
-import { getTextEditor } from './textEditorView.ts';
+import { getTextEditor, checkFileOpen } from './textEditorView.ts';
 import { getWorkbench } from './workbench.ts';
 
 export async function createApexClass(
@@ -28,7 +28,10 @@ export async function createApexClass(
 
   // Select the default directory (press Enter/Return).
   await inputBox.confirm();
-  await pause(Duration.seconds(2)); // have to hard pause for text editor to be ready
+  await checkFileOpen(workbench,
+    name + '.cls',
+    { timeout: Duration.seconds(5) }
+  )
   // Modify class content
   const textEditor = await getTextEditor(workbench, name + '.cls');
   await textEditor.setText(classText);

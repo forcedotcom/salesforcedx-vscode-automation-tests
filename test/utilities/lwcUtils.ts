@@ -7,7 +7,7 @@
 
 import { executeQuickPick } from './commandPrompt.ts';
 import { Duration, log, pause } from './miscellaneous.ts';
-import { getTextEditor } from './textEditorView.ts';
+import { getTextEditor, checkFileOpen } from './textEditorView.ts';
 import { getWorkbench } from './workbench.ts';
 
 import { Key } from 'webdriverio';
@@ -33,7 +33,10 @@ export async function createLwc(name: string): Promise<void> {
   log('createLwc() - Select the default directory');
   // Select the default directory (press Enter/Return).
   await inputBox.confirm();
-  await pause(Duration.seconds(3));
+  await checkFileOpen(workbench,
+    name + '.js',
+    { timeout: Duration.seconds(5) }
+  )
 
   log('createLwc() - Modify js content');
   // Modify js content
