@@ -66,7 +66,7 @@ export function getVsixFilesFromDir(vsixDir: string): string[] {
 }
 
 /**
- * Check if the given path refers to a directory
+ * Return folder name if given path is a directory, otherwise return null
  * @param folderPath
  * @returns folder name
  */
