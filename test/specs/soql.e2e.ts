@@ -10,10 +10,16 @@ import * as utilities from '../utilities/index.ts';
 
 describe('SOQL', async () => {
   let testSetup: TestSetup;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'SOQL'
+  };
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('SOQL');
-    await testSetup.setUp();
+    testSetup = await TestSetup.setUp(testReqConfig);
   });
 
   step('SFDX: Create Query in SOQL Builder', async () => {
