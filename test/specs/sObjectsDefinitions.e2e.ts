@@ -22,7 +22,7 @@ describe('SObjects Definitions', async () => {
     await utilities.createCustomObjects(testSetup);
   });
 
-  step(`Check Custom Objects 'Customer__c' and 'Product__c' are within objects folder`, async () => {
+  step(`Check Custom Objects 'Customer__c' and 'Product__c' are within objects folder`,async () => {
       utilities.log(
         `${testSetup.testSuiteSuffixName} - Check Custom Objects 'Customer__c' and 'Product__c' are within objects folder`
       );
@@ -164,7 +164,7 @@ async function verifyOutputPanelText(qty: number, type: string): Promise<void> {
   await expect(outputPanelText).toBeDefined();
   const expectedTexts = [
     `Starting SFDX: Refresh SObject Definitions`,
-    `sf object definitions refresh`,
+    `sf sobject definitions refresh`,
     `Processed ${qty} ${type}`,
     `ended with exit code 0`
   ];
