@@ -22,49 +22,50 @@ describe('SObjects Definitions', async () => {
     await utilities.createCustomObjects(testSetup);
   });
 
-  step('Check Custom Objects Customer and Product are within objects folder', async () => {
-    utilities.log(
-      `${testSetup.testSuiteSuffixName} - Check Custom Objects Customer and Product are within objects folder`
-    );
-    const workbench = await utilities.getWorkbench();
-    const sidebar = workbench.getSideBar();
-    const content = sidebar.getContent();
+  step(`Check Custom Objects 'Customer__c' and 'Product__c' are within objects folder`, async () => {
+      utilities.log(
+        `${testSetup.testSuiteSuffixName} - Check Custom Objects 'Customer__c' and 'Product__c' are within objects folder`
+      );
+      const workbench = await utilities.getWorkbench();
+      const sidebar = workbench.getSideBar();
+      const content = sidebar.getContent();
 
-    const treeViewSection = await content.getSection(projectName);
-    await expect(treeViewSection).not.toEqual(undefined);
+      const treeViewSection = await content.getSection(projectName);
+      await expect(treeViewSection).not.toEqual(undefined);
 
-    const objectTreeItem = (await treeViewSection.findItem('objects')) as DefaultTreeItem;
-    await expect(objectTreeItem).not.toEqual(undefined);
-    await objectTreeItem.select();
+      const objectTreeItem = (await treeViewSection.findItem('objects')) as DefaultTreeItem;
+      await expect(objectTreeItem).not.toEqual(undefined);
+      await objectTreeItem.select();
 
-    const customerObjectFolder = (await objectTreeItem.findChildItem(
-      'Customer__c'
-    )) as DefaultTreeItem;
-    await expect(customerObjectFolder).not.toEqual(undefined);
+      const customerObjectFolder = (await objectTreeItem.findChildItem(
+        'Customer__c'
+      )) as DefaultTreeItem;
+      await expect(customerObjectFolder).not.toEqual(undefined);
 
-    await customerObjectFolder?.expand();
-    await expect(await customerObjectFolder?.isExpanded()).toBe(true);
+      await customerObjectFolder?.expand();
+      await expect(await customerObjectFolder?.isExpanded()).toBe(true);
 
-    const customerCustomObject = await utilities.getVisibleChild(
-      customerObjectFolder,
-      'Customer__c.object-meta.xml'
-    );
-    await expect(customerCustomObject).not.toEqual(undefined);
+      const customerCustomObject = await utilities.getVisibleChild(
+        customerObjectFolder,
+        'Customer__c.object-meta.xml'
+      );
+      await expect(customerCustomObject).not.toEqual(undefined);
 
-    const productObjectFolder = (await objectTreeItem.findChildItem(
-      'Product__c'
-    )) as DefaultTreeItem;
-    await expect(productObjectFolder).not.toEqual(undefined);
+      const productObjectFolder = (await objectTreeItem.findChildItem(
+        'Product__c'
+      )) as DefaultTreeItem;
+      await expect(productObjectFolder).not.toEqual(undefined);
 
-    await productObjectFolder?.expand();
-    await expect(await productObjectFolder?.isExpanded()).toBe(true);
+      await productObjectFolder?.expand();
+      await expect(await productObjectFolder?.isExpanded()).toBe(true);
 
-    const productCustomObject = await utilities.getVisibleChild(
-      productObjectFolder,
-      'Product__c.object-meta.xml'
-    );
-    await expect(productCustomObject).not.toEqual(undefined);
-  });
+      const productCustomObject = await utilities.getVisibleChild(
+        productObjectFolder,
+        'Product__c.object-meta.xml'
+      );
+      await expect(productCustomObject).not.toEqual(undefined);
+    }
+  );
 
   step('Push Source to Org', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - Push Source to Org`);
