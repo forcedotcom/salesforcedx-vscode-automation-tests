@@ -43,6 +43,35 @@ export async function getOutputViewText(outputChannelName: string = ''): Promise
   return outputPanelText;
 }
 
+/**
+ * Verifies that the output panel contains all expected text snippets.
+ *
+ * @param {string} outputPanelText - The output panel text as a string that needs to be verified.
+ * @param {string[]} expectedTexts - An array of strings representing the expected text snippets that should be present in the output panel.
+ *
+ * @example
+ * await verifyOutputPanelText(
+ *   testResult,
+ *   [
+ *     '=== Test Summary',
+ *     'Outcome              Passed',
+ *     'Tests Ran            1',
+ *     'Pass Rate            100%',
+ *     'TEST NAME',
+ *     'ExampleTest1  Pass',
+ *     'ended SFDX: Run Apex Tests'
+ *   ]
+ * );
+ */
+export async function verifyOutputPanelText(
+  outputPanelText: string,
+  expectedTexts: string[]
+): Promise<void> {
+  for (const expectedText of expectedTexts) {
+    await expect(outputPanelText).toContain(expectedText);
+  }
+}
+
 // If found, this function returns the entire text that's in the Output panel.
 export async function attemptToFindOutputPanelText(
   outputChannelName: string,

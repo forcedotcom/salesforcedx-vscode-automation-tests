@@ -130,32 +130,6 @@ export async function verifyTestIconColor(testItem: TreeItem, colorLabel: string
 }
 
 /**
- * Verifies that the test result contains all expected text snippets.
- *
- * @param {string} testResult - The actual test result as a string that needs to be verified.
- * @param {string[]} expectedTexts - An array of strings representing the expected text snippets that should be present in the test result.
- *
- * @example
- * await verifyTestResult(
- *   testResult,
- *   [
- *     '=== Test Summary',
- *     'Outcome              Passed',
- *     'Tests Ran            1',
- *     'Pass Rate            100%',
- *     'TEST NAME',
- *     'ExampleTest1  Pass',
- *     'ended SFDX: Run Apex Tests'
- *   ]
- * );
- */
-export async function verifyTestResult(testResult: string, expectedTexts: string[]): Promise<void> {
-  for (const expectedText of expectedTexts) {
-    await expect(testResult).toContain(expectedText);
-  }
-}
-
-/**
  * Verifies the presence of test items in the sidebar.
  * *
  * @param {ViewSection} testsSection - An instance of the view section representing the sidebar where test items are displayed.

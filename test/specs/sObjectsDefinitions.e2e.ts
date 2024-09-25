@@ -96,7 +96,7 @@ describe('SObjects Definitions', async () => {
     );
     await refreshSObjectDefinitions('Custom SObjects');
 
-    await verifyOutputPanelText('Custom');
+    await verifyOutputPanelText(2, 'Custom sObjects');
 
     const workbench = await utilities.getWorkbench();
     const treeViewSection = await verifySObjectFolders(
@@ -118,7 +118,7 @@ describe('SObjects Definitions', async () => {
     );
     await refreshSObjectDefinitions('Standard SObjects');
 
-    await verifyOutputPanelText('Standard');
+    await verifyOutputPanelText(656, 'Standard sObjects');
 
     const workbench = await utilities.getWorkbench();
     const treeViewSection = await verifySObjectFolders(
@@ -145,8 +145,8 @@ describe('SObjects Definitions', async () => {
     );
     await refreshSObjectDefinitions('All SObjects');
 
-    await verifyOutputPanelText('Standard');
-    await verifyOutputPanelText('Custom');
+    await verifyOutputPanelText(656, 'Standard sObjects');
+    await verifyOutputPanelText(2, 'Custom sObjects');
   });
 
   after('Tear down and clean up the testing environment', async () => {
@@ -154,25 +154,25 @@ describe('SObjects Definitions', async () => {
   });
 });
 
-async function verifyOutputPanelText(type: string): Promise<void> {
-  const outputPanelText = await utilities.attemptToFindOutputPanelText(
+async function verifyOutputPanelText(qty: number, type: string): Promise<void> {
+  utilities.log(`calling verifyOutputPanelText(${type})`);
+  const outputPanelText = (await utilities.attemptToFindOutputPanelText(
     'Salesforce CLI',
     'sObjects',
     10
-  );
+  )) as string;
   await expect(outputPanelText).toBeDefined();
-  const regex =
-    type === 'Custom'
-      ? '/Processed [0-9]{1,} Custom sObjects/gm'
-      : '/Processed [0-9]{1,} Standard sObjects/gm';
-  const matchedCustomResults = outputPanelText?.match(regex);
-  await expect(matchedCustomResults).toBeDefined();
-  await expect(matchedCustomResults!.length).toBe(1);
-  const customObjectCount = parseInt(matchedCustomResults![0].match(/[0-9]{1,}/)![0]);
-  await expect(customObjectCount).toBe(2);
+  const expectedTexts = [
+    `Starting SFDX: Refresh SObject Definitions`,
+    `sf object definitions refresh`,
+    `Processed ${qty} ${type}`,
+    `ended with exit code 0`
+  ];
+  await utilities.verifyOutputPanelText(outputPanelText, expectedTexts);
 }
 
 async function refreshSObjectDefinitions(type: string): Promise<void> {
+  utilities.log(`calling refreshSObjectDefinitions(${type})`);
   await utilities.clearOutputView(utilities.Duration.seconds(2));
   const prompt = await utilities.executeQuickPick(
     'SFDX: Refresh SObject Definitions',
@@ -194,6 +194,7 @@ async function verifySObjectFolders(
   projectName: string,
   folder: string
 ): Promise<ViewSection> {
+  utilities.log(`calling verifySObjectFolders(workbench, ${projectName}, ${folder})`);
   const sidebar = workbench.getSideBar();
   const content = sidebar.getContent();
   const treeViewSection = await content.getSection(projectName);

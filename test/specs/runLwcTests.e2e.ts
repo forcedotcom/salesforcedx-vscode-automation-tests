@@ -57,7 +57,7 @@ describe('Run LWC Tests', async () => {
       'Ran all test suites.'
     ];
     await expect(terminalText).toBeDefined();
-    await utilities.verifyTestResult(terminalText!, expectedTexts);
+    await utilities.verifyOutputPanelText(terminalText!, expectedTexts);
   });
 
   step('SFDX: Refresh Lightning Web Component Test Explorer', async () => {
@@ -143,7 +143,7 @@ describe('Run LWC Tests', async () => {
       'Ran all test suites.'
     ];
     await expect(terminalText).toBeDefined();
-    await utilities.verifyTestResult(terminalText!, expectedTexts);
+    await utilities.verifyOutputPanelText(terminalText!, expectedTexts);
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
     for (const item of lwcTestsItems) {
@@ -179,7 +179,7 @@ describe('Run LWC Tests', async () => {
       )}"`
     ];
     await expect(terminalText).toBeDefined();
-    await utilities.verifyTestResult(terminalText!, expectedTexts);
+    await utilities.verifyOutputPanelText(terminalText!, expectedTexts);
   });
 
   step('Run Single Test via the Test Sidebar', async () => {
@@ -210,7 +210,7 @@ describe('Run LWC Tests', async () => {
       )}"`
     ];
     await expect(terminalText).toBeDefined();
-    await utilities.verifyTestResult(terminalText!, expectedTexts);
+    await utilities.verifyOutputPanelText(terminalText!, expectedTexts);
   });
 
   step('SFDX: Navigate to Lightning Web Component Test', async () => {
@@ -257,7 +257,7 @@ describe('Run LWC Tests', async () => {
       )}"`
     ];
     await expect(terminalText).toBeDefined();
-    await utilities.verifyTestResult(terminalText!, expectedTexts);
+    await utilities.verifyOutputPanelText(terminalText!, expectedTexts);
   });
 
   xstep('Run All Tests via Code Lens action', async () => {
@@ -298,7 +298,7 @@ describe('Run LWC Tests', async () => {
       )}"`
     ];
     await expect(terminalText).toBeDefined();
-    await utilities.verifyTestResult(terminalText!, expectedTexts);
+    await utilities.verifyOutputPanelText(terminalText!, expectedTexts);
   });
 
   step('Run Single Test via Code Lens action', async () => {
@@ -338,7 +338,7 @@ describe('Run LWC Tests', async () => {
       )}"`
     ];
     await expect(terminalText).toBeDefined();
-    await utilities.verifyTestResult(terminalText!, expectedTexts);
+    await utilities.verifyOutputPanelText(terminalText!, expectedTexts);
   });
 
   step('SFDX: Run Current Lightning Web Component Test File from main toolbar', async () => {
@@ -378,7 +378,7 @@ describe('Run LWC Tests', async () => {
       )}"`
     ];
     await expect(terminalText).toBeDefined();
-    await utilities.verifyTestResult(terminalText!, expectedTexts);
+    await utilities.verifyOutputPanelText(terminalText!, expectedTexts);
   });
 
   after('Tear down and clean up the testing environment', async () => {
