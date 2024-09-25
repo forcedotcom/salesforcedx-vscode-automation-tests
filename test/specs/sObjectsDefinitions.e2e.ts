@@ -22,7 +22,7 @@ describe('SObjects Definitions', async () => {
     await utilities.createCustomObjects(testSetup);
   });
 
-  step(`Check Custom Objects 'Customer__c' and 'Product__c' are within objects folder`,async () => {
+  step(`Check Custom Objects 'Customer__c' and 'Product__c' are within objects folder`, async () => {
       utilities.log(
         `${testSetup.testSuiteSuffixName} - Check Custom Objects 'Customer__c' and 'Product__c' are within objects folder`
       );
@@ -99,11 +99,7 @@ describe('SObjects Definitions', async () => {
     await verifyOutputPanelText(2, 'Custom sObjects');
 
     const workbench = await utilities.getWorkbench();
-    const treeViewSection = await verifySObjectFolders(
-      workbench,
-      'Custom SObjects',
-      'customObjects'
-    );
+    const treeViewSection = await verifySObjectFolders(workbench, projectName, 'customObjects');
 
     // Verify if custom Objects Customer__c and Product__c are within 'customObjects' folder
     const customerCustomObject = await treeViewSection.findItem('Customer__c.cls');
@@ -121,11 +117,7 @@ describe('SObjects Definitions', async () => {
     await verifyOutputPanelText(656, 'Standard sObjects');
 
     const workbench = await utilities.getWorkbench();
-    const treeViewSection = await verifySObjectFolders(
-      workbench,
-      'Standard SObjects',
-      'standardObjects'
-    );
+    const treeViewSection = await verifySObjectFolders(workbench, projectName, 'standardObjects');
 
     const accountSObject = await treeViewSection.findItem('Account.cls');
     await expect(accountSObject).toBeDefined();
