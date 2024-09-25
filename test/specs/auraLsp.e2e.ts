@@ -19,7 +19,7 @@ describe('Aura LSP', async () => {
       projectShape: utilities.ProjectShapeOption.NEW,
     },
     isOrgRequired: false,
-    testSuiteSuffixName: 'auraLsp'
+    testSuiteSuffixName: 'AuraLsp'
   }
 
   step('Set up the testing environment', async () => {
