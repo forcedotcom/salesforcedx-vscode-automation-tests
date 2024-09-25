@@ -36,7 +36,7 @@ export async function createLwc(name: string): Promise<void> {
   await checkFileOpen(workbench,
     name + '.js',
     { timeout: Duration.seconds(5) }
-  )
+  );
 
   log('createLwc() - Modify js content');
   // Modify js content
