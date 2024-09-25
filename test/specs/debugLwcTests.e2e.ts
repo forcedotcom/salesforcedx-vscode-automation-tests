@@ -93,7 +93,7 @@ describe('Debug LWC Tests', async () => {
       `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}"`
     ];
     await expect(terminalText).toBeDefined();
-    await utilities.verifyTestResult(terminalText!, expectedTexts);
+    await utilities.verifyOutputPanelText(terminalText!, expectedTexts);
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
     await utilities.executeQuickPick(
@@ -149,7 +149,7 @@ describe('Debug LWC Tests', async () => {
       )}"`
     ];
     await expect(terminalText).toBeDefined();
-    await utilities.verifyTestResult(terminalText!, expectedTexts);
+    await utilities.verifyOutputPanelText(terminalText!, expectedTexts);
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
     await utilities.runCommandFromCommandPrompt(
@@ -189,7 +189,7 @@ describe('Debug LWC Tests', async () => {
       `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}"`
     ];
     await expect(terminalText).toBeDefined();
-    await utilities.verifyTestResult(terminalText!, expectedTexts);
+    await utilities.verifyOutputPanelText(terminalText!, expectedTexts);
   });
 
   xstep('Debug All Tests via Code Lens action', async () => {
@@ -223,7 +223,7 @@ describe('Debug LWC Tests', async () => {
       `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc1', '__tests__', 'lwc1.test.js')}"`
     ];
     await expect(terminalText).toBeDefined();
-    await utilities.verifyTestResult(terminalText!, expectedTexts);
+    await utilities.verifyOutputPanelText(terminalText!, expectedTexts);
   });
 
   step('Debug Single Test via Code Lens action', async () => {
@@ -259,7 +259,7 @@ describe('Debug LWC Tests', async () => {
       `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}"`
     ];
     await expect(terminalText).toBeDefined();
-    await utilities.verifyTestResult(terminalText!, expectedTexts);
+    await utilities.verifyOutputPanelText(terminalText!, expectedTexts);
   });
 
   step('SFDX: Debug Current Lightning Web Component Test File from main toolbar', async () => {
@@ -294,7 +294,7 @@ describe('Debug LWC Tests', async () => {
       `Ran all test suites within paths "${path.join(projectFolderPath, 'force-app', 'main', 'default', 'lwc', 'lwc2', '__tests__', 'lwc2.test.js')}"`
     ];
     await expect(terminalText).toBeDefined();
-    await utilities.verifyTestResult(terminalText!, expectedTexts);
+    await utilities.verifyOutputPanelText(terminalText!, expectedTexts);
   });
 
   after('Tear down and clean up the testing environment', async () => {

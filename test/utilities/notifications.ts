@@ -6,7 +6,7 @@
  */
 
 import { Notification } from 'wdio-vscode-service';
-import { Duration } from './miscellaneous.ts';
+import { Duration, log } from './miscellaneous.ts';
 import { getWorkbench } from './workbench.ts';
 import { executeQuickPick } from './commandPrompt.ts';
 
@@ -31,6 +31,7 @@ export async function notificationIsPresentWithTimeout(
   notificationMessage: string,
   durationInSeconds: Duration
 ): Promise<boolean> {
+  log(`notificationIsPresentWithTimeout notificationMessage: ${notificationMessage}`);
   const notification = await findNotification(notificationMessage, true, durationInSeconds);
 
   return notification ? true : false;

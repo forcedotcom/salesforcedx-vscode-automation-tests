@@ -88,7 +88,7 @@ describe('Run Apex Tests', async () => {
     ];
 
     await expect(outputPanelText).toBeDefined();
-    await utilities.verifyTestResult(outputPanelText!, expectedTexts);
+    await utilities.verifyOutputPanelText(outputPanelText!, expectedTexts);
   });
 
   step('Run Single Test via Apex Class', async () => {
@@ -130,7 +130,7 @@ describe('Run Apex Tests', async () => {
     ];
 
     await expect(outputPanelText).toBeDefined();
-    await utilities.verifyTestResult(outputPanelText!, expectedTexts);
+    await utilities.verifyOutputPanelText(outputPanelText!, expectedTexts);
   });
 
   step('Run All Tests via Command Palette', async () => {
@@ -174,7 +174,7 @@ describe('Run Apex Tests', async () => {
     ];
 
     await expect(outputPanelText).toBeDefined();
-    await utilities.verifyTestResult(outputPanelText!, expectedTexts);
+    await utilities.verifyOutputPanelText(outputPanelText!, expectedTexts);
   });
 
   step('Run Single Class via Command Palette', async () => {
@@ -215,7 +215,7 @@ describe('Run Apex Tests', async () => {
       'ended SFDX: Run Apex Tests'
     ];
     await expect(outputPanelText).toBeDefined();
-    await utilities.verifyTestResult(outputPanelText!, expectedTexts);
+    await utilities.verifyOutputPanelText(outputPanelText!, expectedTexts);
   });
 
   step('Run All tests via Test Sidebar', async () => {
@@ -275,7 +275,7 @@ describe('Run Apex Tests', async () => {
       'ended SFDX: Run Apex Tests'
     ];
     await expect(outputPanelText).toBeDefined();
-    await utilities.verifyTestResult(outputPanelText!, expectedTexts);
+    await utilities.verifyOutputPanelText(outputPanelText!, expectedTexts);
 
     // Verify the tests that are passing are labeled with a green dot on the Test sidebar
     for (const item of apexTestsItems) {
@@ -304,7 +304,7 @@ describe('Run Apex Tests', async () => {
       'ended SFDX: Run Apex Tests'
     ];
     await expect(outputPanelText).toBeDefined();
-    await utilities.verifyTestResult(outputPanelText!, expectedTexts);
+    await utilities.verifyOutputPanelText(outputPanelText!, expectedTexts);
   });
 
   step('Run Single Test via the Test Sidebar', async () => {
@@ -328,7 +328,7 @@ describe('Run Apex Tests', async () => {
       'ended SFDX: Run Apex Tests'
     ];
     await expect(outputPanelText).toBeDefined();
-    await utilities.verifyTestResult(outputPanelText!, expectedTexts);
+    await utilities.verifyOutputPanelText(outputPanelText!, expectedTexts);
   });
 
   step('Run a test that fails and fix it', async () => {
@@ -382,7 +382,7 @@ describe('Run Apex Tests', async () => {
     ];
 
     await expect(outputPanelText).toBeDefined();
-    await utilities.verifyTestResult(outputPanelText!, expectedTexts);
+    await utilities.verifyOutputPanelText(outputPanelText!, expectedTexts);
 
     // Fix test
     const textEditor = await utilities.getTextEditor(workbench, 'AccountService.cls');
@@ -436,7 +436,7 @@ describe('Run Apex Tests', async () => {
     ];
 
     await expect(outputPanelText).toBeDefined();
-    await utilities.verifyTestResult(outputPanelText!, expectedTexts);
+    await utilities.verifyOutputPanelText(outputPanelText!, expectedTexts);
   });
 
   step('Create Apex Test Suite', async () => {
@@ -528,7 +528,7 @@ describe('Run Apex Tests', async () => {
       'ended SFDX: Run Apex Tests'
     ];
     await expect(outputPanelText).toBeDefined();
-    await utilities.verifyTestResult(outputPanelText!, expectedTexts);
+    await utilities.verifyOutputPanelText(outputPanelText!, expectedTexts);
   });
 
   after('Tear down and clean up the testing environment', async () => {
