@@ -6,7 +6,8 @@
  */
 
 import { executeQuickPick } from './commandPrompt.ts';
-import { Duration, getTextEditor, log, pause } from './miscellaneous.ts';
+import { Duration, log, pause } from './miscellaneous.ts';
+import { getTextEditor, checkFileOpen } from './textEditorView.ts';
 import { getWorkbench } from './workbench.ts';
 
 import { Key } from 'webdriverio';
@@ -20,7 +21,7 @@ export async function createLwc(name: string): Promise<void> {
   // Using the Command palette, run SFDX: Create Lightning Web Component.
   const inputBox = await executeQuickPick(
     'SFDX: Create Lightning Web Component',
-    Duration.seconds(1)
+    Duration.seconds(3)
   );
 
   log('createLwc() - Set the name of the new component');
@@ -32,7 +33,10 @@ export async function createLwc(name: string): Promise<void> {
   log('createLwc() - Select the default directory');
   // Select the default directory (press Enter/Return).
   await inputBox.confirm();
-  await pause(Duration.seconds(3));
+  await checkFileOpen(workbench,
+    name + '.js',
+    { timeout: Duration.seconds(5) }
+  );
 
   log('createLwc() - Modify js content');
   // Modify js content

@@ -12,10 +12,16 @@ import * as utilities from '../utilities/index.ts';
 describe('Run Apex Tests', async () => {
   let prompt: QuickOpenBox | InputBox;
   let testSetup: TestSetup;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: true,
+    testSuiteSuffixName: 'RunApexTests'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('RunApexTests');
-    await testSetup.setUp();
+    testSetup = await TestSetup.setUp(testReqConfig);
 
     // Create Apex class 1 and test
     await utilities.createApexClassWithTest('ExampleApexClass1');

@@ -14,10 +14,17 @@ const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 describe('Aura LSP', async () => {
   let testSetup: TestSetup;
 
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'AuraLsp'
+  }
+
   step('Set up the testing environment', async () => {
     utilities.log('AuraLsp - Set up the testing environment');
-    testSetup = new TestSetup('AuraLsp');
-    await testSetup.setUp();
+    testSetup = await TestSetup.setUp(testReqConfig);
 
     // Create Aura Component
     await utilities.createAura('aura1');

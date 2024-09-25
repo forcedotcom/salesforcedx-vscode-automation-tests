@@ -13,11 +13,17 @@ const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('LWC LSP', async () => {
   let testSetup: TestSetup;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'LwcLsp'
+  }
 
   step('Set up the testing environment', async () => {
     utilities.log('LwcLsp - Set up the testing environment');
-    testSetup = new TestSetup('LwcLsp');
-    await testSetup.setUp();
+    testSetup = await TestSetup.setUp(testReqConfig);
 
     // Create Lightning Web Component
     await utilities.createLwc('lwc1');

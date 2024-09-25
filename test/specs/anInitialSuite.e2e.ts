@@ -23,6 +23,14 @@ suite does run, it needs to run first.
 */
 
 describe('An Initial Suite', async () => {
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'AnInitialSuite'
+  }
+
   let testSetup: TestSetup;
 
   step('Install extensions', async () => {
@@ -84,12 +92,7 @@ describe('An Initial Suite', async () => {
   });
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('AnInitialSuite');
-    // Don't call testSetup.setUp() b/c we don't need to authorize a scratch org,
-    // just call setUpTestingEnvironment() and createProject().
-    await testSetup.setUpTestingEnvironment();
-    await testSetup.createProject('developer');
-    await utilities.reloadAndEnableExtensions();
+    testSetup = await TestSetup.setUp(testReqConfig);
   });
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {

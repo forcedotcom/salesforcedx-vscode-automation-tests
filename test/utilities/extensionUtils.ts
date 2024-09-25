@@ -144,7 +144,7 @@ export async function showRunningExtensions(): Promise<void> {
     async () => {
       const selector =
         EnvironmentSettings.getInstance().vscodeVersion === 'stable' ||
-        semver.gte(EnvironmentSettings.getInstance().vscodeVersion, '1.90.0')
+          semver.gte(EnvironmentSettings.getInstance().vscodeVersion, '1.90.0')
           ? "//div[contains(@class, 'active') and contains(@class, 'selected') and .//*[contains(text(), 'Running Extensions')]]"
           : "//div[contains(@class, 'monaco-list-row') and .//*[contains(text(), 'Running Extensions')]]";
 
@@ -424,4 +424,25 @@ export async function findExtensionsInRunningExtensionsList(
 
   // limit runningExtensions to those whose property extensionId is in the list of extensionIds
   return runningExtensions.filter((extension) => extensionIds.includes(extension.extensionId));
+}
+
+export async function checkForUncaughtErrors(): Promise<void> {
+  await utilities.showRunningExtensions();
+
+  // Zoom out so all the extensions are visible
+  await utilities.zoom('Out', 4, utilities.Duration.seconds(1));
+
+  const uncaughtErrors = (
+    await utilities.findExtensionsInRunningExtensionsList(
+      utilities.getExtensionsToVerifyActive().map((ext) => ext.extensionId)
+    )
+  ).filter((ext) => ext.hasBug);
+
+  await utilities.zoomReset();
+
+  uncaughtErrors.forEach((ext) => {
+    utilities.log(`Extension ${ext.extensionId}:${ext.version ?? 'unknown'} has a bug`);
+  });
+
+  await expect(uncaughtErrors.length).toBe(0);
 }

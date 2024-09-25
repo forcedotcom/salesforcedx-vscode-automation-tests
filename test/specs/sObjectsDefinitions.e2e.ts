@@ -11,11 +11,17 @@ import * as utilities from '../utilities/index.ts';
 
 describe('SObjects Definitions', async () => {
   let testSetup: TestSetup;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: true,
+    testSuiteSuffixName: 'sObjectsDefinitions'
+  }
   let projectName: string;
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('sObjectsDefinitions');
-    await testSetup.setUp();
+    testSetup = await TestSetup.setUp(testReqConfig);
     projectName = testSetup.tempProjectName.toUpperCase();
 
     utilities.log(`${testSetup.testSuiteSuffixName} - calling createCustomObjects()`);
