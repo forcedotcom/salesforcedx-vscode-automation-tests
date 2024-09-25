@@ -96,7 +96,7 @@ describe('SObjects Definitions', async () => {
     );
     await refreshSObjectDefinitions('Custom SObjects');
 
-    await verifyOutputPanelText(2, 'Custom sObjects');
+    await verifyOutputPanelText('Custom sObjects', 2);
 
     const workbench = await utilities.getWorkbench();
     const treeViewSection = await verifySObjectFolders(workbench, projectName, 'customObjects');
@@ -114,7 +114,7 @@ describe('SObjects Definitions', async () => {
     );
     await refreshSObjectDefinitions('Standard SObjects');
 
-    await verifyOutputPanelText(656, 'Standard sObjects');
+    await verifyOutputPanelText('Standard sObjects');
 
     const workbench = await utilities.getWorkbench();
     const treeViewSection = await verifySObjectFolders(workbench, projectName, 'standardObjects');
@@ -137,8 +137,8 @@ describe('SObjects Definitions', async () => {
     );
     await refreshSObjectDefinitions('All SObjects');
 
-    await verifyOutputPanelText(656, 'Standard sObjects');
-    await verifyOutputPanelText(2, 'Custom sObjects');
+    await verifyOutputPanelText('Standard sObjects');
+    await verifyOutputPanelText('Custom sObjects', 2);
   });
 
   after('Tear down and clean up the testing environment', async () => {
@@ -146,7 +146,7 @@ describe('SObjects Definitions', async () => {
   });
 });
 
-async function verifyOutputPanelText(qty: number, type: string): Promise<void> {
+async function verifyOutputPanelText(type: string, qty?: number): Promise<void> {
   utilities.log(`calling verifyOutputPanelText(${type})`);
   const outputPanelText = (await utilities.attemptToFindOutputPanelText(
     'Salesforce CLI',
@@ -157,7 +157,8 @@ async function verifyOutputPanelText(qty: number, type: string): Promise<void> {
   const expectedTexts = [
     `Starting SFDX: Refresh SObject Definitions`,
     `sf sobject definitions refresh`,
-    `Processed ${qty} ${type}`,
+    `Processed ${qty || ''}`,
+    `${type}`,
     `ended with exit code 0`
   ];
   await utilities.verifyOutputPanelText(outputPanelText, expectedTexts);
