@@ -12,7 +12,7 @@ import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Aura LSP', async () => {
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
 
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
@@ -24,7 +24,7 @@ describe('Aura LSP', async () => {
 
   step('Set up the testing environment', async () => {
     utilities.log('AuraLsp - Set up the testing environment');
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
 
     // Create Aura Component
     await utilities.createAura('aura1');

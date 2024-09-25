@@ -17,7 +17,7 @@ describe('Authentication', async () => {
   let projectFolderPath: string;
   let prompt: QuickOpenBox | InputBox;
   let scratchOrgAliasName: string;
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,
@@ -28,7 +28,7 @@ describe('Authentication', async () => {
 
 
   step('Set up the testing environment', async () => {
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
     projectFolderPath = testSetup.projectFolderPath!;
   });
 
@@ -38,7 +38,7 @@ describe('Authentication', async () => {
     await expect(noDefaultOrgSetItem).toBeDefined();
 
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
-    await testSetup.authorizeDevHub();
+    await utilities.authorizeDevHub(testSetup);
 
     // After a dev hub has been authorized, the org should still not be set.
     noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes('No Default Org Set');

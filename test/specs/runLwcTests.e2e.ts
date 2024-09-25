@@ -13,7 +13,7 @@ import { fail } from 'assert';
 
 describe('Run LWC Tests', async () => {
   let projectFolderPath: string;
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,
@@ -23,7 +23,7 @@ describe('Run LWC Tests', async () => {
   }
 
   step('Set up the testing environment', async () => {
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
     projectFolderPath = testSetup.projectFolderPath!;
 
     // Create LWC1 and test

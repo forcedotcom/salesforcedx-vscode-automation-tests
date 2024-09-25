@@ -5,7 +5,7 @@ import path from 'path';
 
 // In future we will merge the test together with deployAndRetrieve
 describe('metadata deploy and retrieve', async () => {
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NAMED,
@@ -20,7 +20,7 @@ describe('metadata deploy and retrieve', async () => {
   let textV2AfterRetrieve: string;
 
   step('Set up the testing environment', async () => {
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
     mdPath = path.join(testSetup.projectFolderPath!, 'force-app/main/default/objects/Account/fields/Deploy_Test__c.field-meta.xml')
   });
 

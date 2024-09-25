@@ -12,7 +12,7 @@ import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Org Browser', async () => {
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,
@@ -22,7 +22,7 @@ describe('Org Browser', async () => {
   }
 
   step('Set up the testing environment', async () => {
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
   });
 
   step('Check Org Browser is connected to target org', async () => {

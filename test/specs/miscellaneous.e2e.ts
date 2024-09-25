@@ -11,7 +11,7 @@ import * as semver from 'semver';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 
 describe('Miscellaneous', async () => {
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,
@@ -21,7 +21,7 @@ describe('Miscellaneous', async () => {
   }
 
   step('Set up the testing environment', async () => {
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
   });
 
   xstep('Use out-of-the-box Apex Snippets', async () => {

@@ -13,7 +13,7 @@ import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Apex LSP', async () => {
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,
@@ -22,10 +22,10 @@ describe('Apex LSP', async () => {
     testSuiteSuffixName: 'ApexLsp'
   }
 
-  step('Set up the testing environment', async () => {
+  before('Set up the testing environment', async () => {
     utilities.log('ApexLsp - Set up the testing environment');
     utilities.log(`ApexLsp - JAVA_HOME: ${EnvironmentSettings.getInstance().javaHome}`);
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
     // Create Apex Class
     await utilities.createApexClassWithTest('ExampleClass');
   });

@@ -10,7 +10,7 @@ import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 describe('SObjects Definitions', async () => {
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,
@@ -21,7 +21,7 @@ describe('SObjects Definitions', async () => {
   let projectName: string;
 
   step('Set up the testing environment', async () => {
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
     projectName = testSetup.tempProjectName.toUpperCase();
 
     utilities.log(`${testSetup.testSuiteSuffixName} - calling createCustomObjects()`);

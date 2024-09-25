@@ -18,40 +18,43 @@ export class TestSetup {
   public testSuiteSuffixName: string = '';
   public tempFolderPath = path.join(__dirname, '..', 'e2e-temp');
   public projectFolderPath: string | undefined;
-  private aliasAndUserNameWereVerified = false;
+  public aliasAndUserNameWereVerified = false;
   public scratchOrgAliasName: string | undefined;
   public scratchOrgId: string | undefined;
 
-  public constructor() {
+  private constructor() {
   }
 
   public get tempProjectName(): string {
     return 'TempProject-' + this.testSuiteSuffixName;
   }
 
-  public async setUp(testReqConfig: utilities.TestReqConfig): Promise<void> {
-    this.testSuiteSuffixName = testReqConfig.testSuiteSuffixName;
+  public static async setUp(testReqConfig: utilities.TestReqConfig): Promise<TestSetup> {
+    const testSetup = new TestSetup();
+    testSetup.testSuiteSuffixName = testReqConfig.testSuiteSuffixName;
     utilities.log('');
-    utilities.log(`${this.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
+    utilities.log(`${testSetup.testSuiteSuffixName} - Starting TestSetup.setUp()...`);
     await utilities.installExtensions(testReqConfig.excludedExtensions);
     await utilities.reloadAndEnableExtensions();
     /* The expected workspace will be open up after setUpTestingWorkspace */
-    await this.setUpTestingWorkspace(testReqConfig.projectConfig);
+    await testSetup.setUpTestingWorkspace(testReqConfig.projectConfig);
     if (testReqConfig.projectConfig.projectShape !== ProjectShapeOption.NONE) {
       await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
       const scratchOrgEdition = testReqConfig.scratchOrgEdition || 'developer';
-      this.updateScratchOrgDefWithEdition(scratchOrgEdition);
-      if (process.platform === 'darwin') this.setJavaHomeConfigEntry(); // Extra config needed for Apex LSP on GHA
-      if (testReqConfig.isOrgRequired) await this.setUpScratchOrg(scratchOrgEdition);
+      testSetup.updateScratchOrgDefWithEdition(scratchOrgEdition);
+      if (process.platform === 'darwin') testSetup.setJavaHomeConfigEntry(); // Extra config needed for Apex LSP on GHA
+      if (testReqConfig.isOrgRequired) await utilities.setUpScratchOrg(testSetup, scratchOrgEdition);
       await utilities.reloadAndEnableExtensions(); // This is necesssary in order to update JAVA home path
     }
+    utilities.log(`${testSetup.testSuiteSuffixName} - ...finished TestSetup.setUp()`);
+    return testSetup;
   }
 
   public async tearDown(): Promise<void> {
     await utilities.checkForUncaughtErrors();
     try {
       await utilities.deleteScratchOrg(this.scratchOrgAliasName);
-      await this.deleteScratchOrgInfo();
+      await utilities.deleteScratchOrgInfo(this);
     } catch (error) {
       utilities.log(
         `Deleting scratch org (or info) failed with Error: ${(error as Error).message}`
@@ -128,178 +131,16 @@ export class TestSetup {
 
       default:
         this.throwError(`Invalid project shape: ${projectConfig.projectShape}`);
-        break;
     }
     utilities.log(`Project folder to open: ${this.projectFolderPath}`);
     await utilities.openFolder(this.projectFolderPath!);
-    // Verify the project was created and was loaded.
-    await utilities.verifyProjectCreated(projectName ?? this.tempProjectName);
+    // Verify the project was loaded.
+    await utilities.verifyProjectLoaded(projectName ?? this.tempProjectName);
   }
 
   private throwError(message: string) {
     utilities.log(message);
     throw new Error(message);
-  }
-
-  public async setUpScratchOrg(scratchOrgEdition: utilities.OrgEdition) {
-    await this.authorizeDevHub();
-    await this.createDefaultScratchOrg(scratchOrgEdition);
-  }
-
-  public async authorizeDevHub(): Promise<void> {
-    utilities.log('');
-    utilities.log(`${this.testSuiteSuffixName} - Starting authorizeDevHub()...`);
-
-    // Only need to check this once.
-    if (!this.aliasAndUserNameWereVerified) {
-      await this.verifyAliasAndUserName();
-      this.aliasAndUserNameWereVerified = true;
-    }
-
-    // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
-    const authFilePath = path.join(this.projectFolderPath!, 'authFile.json');
-    utilities.log(`${this.testSuiteSuffixName} - calling sf org:display...`);
-    const sfOrgDisplayResult = await utilities.orgDisplay(Env.getInstance().devHubUserName);
-
-    // Now write the file.
-    fs.writeFileSync(authFilePath, sfOrgDisplayResult.stdout);
-    utilities.log(`${this.testSuiteSuffixName} - finished writing the file...`);
-
-    // Call org:login:sfdx-url and read in the JSON that was just created.
-    utilities.log(`${this.testSuiteSuffixName} - calling sf org:login:sfdx-url...`);
-    await utilities.orgLoginSfdxUrl(authFilePath);
-
-    utilities.log(`${this.testSuiteSuffixName} - ...finished authorizeDevHub()`);
-    utilities.log('');
-  }
-
-  // verifyAliasAndUserName() verifies that the alias and user name are set,
-  // and also verifies there is a corresponding match in the org list.
-  private async verifyAliasAndUserName() {
-    const environmentSettings = Env.getInstance();
-
-    const devHubAliasName = environmentSettings.devHubAliasName;
-    if (!devHubAliasName) {
-      throw new Error('Error: devHubAliasName was not set.');
-    }
-
-    const devHubUserName = environmentSettings.devHubUserName;
-    if (!devHubUserName) {
-      throw new Error('Error: devHubUserName was not set.');
-    }
-
-    const execResult = await utilities.orgList();
-    const sfOrgListResult = JSON.parse(execResult.stdout).result;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const nonScratchOrgs = sfOrgListResult.nonScratchOrgs as any[];
-
-    for (let i = 0; i < nonScratchOrgs.length; i++) {
-      const nonScratchOrg = nonScratchOrgs[i];
-      if (nonScratchOrg.alias === devHubAliasName && nonScratchOrg.username === devHubUserName) {
-        return;
-      }
-    }
-
-    throw new Error(
-      `Error: matching devHub alias '${devHubAliasName}' and devHub user name '${devHubUserName}' was not found.\nPlease consult README.md and make sure DEV_HUB_ALIAS_NAME and DEV_HUB_USER_NAME are set correctly.`
-    );
-  }
-
-  private async createDefaultScratchOrg(
-    edition: utilities.OrgEdition = 'developer'
-  ): Promise<void> {
-    utilities.log('');
-    utilities.log(`${this.testSuiteSuffixName} - Starting createDefaultScratchOrg()...`);
-
-    const definitionFile = path.join(this.projectFolderPath!, 'config', 'project-scratch-def.json');
-
-    utilities.debug(`${this.testSuiteSuffixName} - constructing scratchOrgAliasName...`);
-    // Org alias format: TempScratchOrg_yyyy_mm_dd_username_ticks_testSuiteSuffixName
-    const currentDate = new Date();
-    const day = currentDate.getDate().toString().padStart(2, '0');
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-    const year = currentDate.getFullYear();
-
-    const currentOsUserName = utilities.transformedUserName();
-
-    this.scratchOrgAliasName = `TempScratchOrg_${year}_${month}_${day}_${currentOsUserName}_${currentDate.getTime()}_${this.testSuiteSuffixName}`;
-    utilities.log(
-      `${this.testSuiteSuffixName} - temporary scratch org name is ${this.scratchOrgAliasName}...`
-    );
-
-    const startHr = process.hrtime();
-
-    const sfOrgCreateResult = await utilities.scratchOrgCreate(
-      edition,
-      definitionFile,
-      this.scratchOrgAliasName,
-      1
-    );
-    utilities.debug(`${this.testSuiteSuffixName} - calling JSON.parse()...`);
-    const result = JSON.parse(sfOrgCreateResult.stdout).result;
-
-    const endHr = process.hrtime(startHr);
-    const time = endHr[0] * 1_000_000_000 + endHr[1] - (startHr[0] * 1_000_000_000 + startHr[1]);
-
-    utilities.log(
-      `Creating ${this.scratchOrgAliasName} took ${time} ticks (${time / 1_000.0} seconds)`
-    );
-    if (!result?.authFields?.accessToken || !result.orgId || !result.scratchOrgInfo.SignupEmail) {
-      throw new Error(
-        `In createDefaultScratchOrg(), result is missing required fields.\nAuth Fields: ${result.authFields}\nOrg ID: ${result.orgId}\nSign Up Email: ${result.scratchOrgInfo.SignupEmail}.`
-      );
-    }
-    this.scratchOrgId = result.orgId as string;
-
-    // Run SFDX: Set a Default Org
-    utilities.log(`${this.testSuiteSuffixName} - selecting SFDX: Set a Default Org...`);
-
-    await utilities.setDefaultOrg(this.scratchOrgAliasName);
-
-    await utilities.pause(utilities.Duration.seconds(3));
-
-    // Look for the success notification.
-    const successNotificationWasFound = await utilities.notificationIsPresentWithTimeout(
-      'SFDX: Set a Default Org successfully ran',
-      utilities.Duration.TEN_MINUTES
-    );
-    if (!successNotificationWasFound) {
-      throw new Error(
-        'In createDefaultScratchOrg(), the notification of "SFDX: Set a Default Org successfully ran" was not found'
-      );
-    }
-
-    // Look for this.scratchOrgAliasName in the list of status bar items.
-    const scratchOrgStatusBarItem = await utilities.getStatusBarItemWhichIncludes(
-      this.scratchOrgAliasName
-    );
-    if (!scratchOrgStatusBarItem) {
-      throw new Error(
-        'In createDefaultScratchOrg(), getStatusBarItemWhichIncludes() returned a scratchOrgStatusBarItem with a value of null (or undefined)'
-      );
-    }
-
-    utilities.log(`${this.testSuiteSuffixName} - ...finished createDefaultScratchOrg()`);
-    utilities.log('');
-  }
-
-  private async deleteScratchOrgInfo(): Promise<void> {
-    if (this.scratchOrgId) {
-      const sfDataDeleteRecord = await utilities.runCliCommand(
-        'data:delete:record',
-        '--sobject',
-        'ScratchOrgInfo',
-        '--where',
-        `ScratchOrg=${this.scratchOrgId.slice(0, -3)}`,
-        '--target-org',
-        Env.getInstance().devHubAliasName
-      );
-      if (sfDataDeleteRecord.exitCode > 0) {
-        const message = `data delete record failed with exit code ${sfDataDeleteRecord.exitCode}\n stderr ${sfDataDeleteRecord.stderr}`;
-        utilities.log(message);
-        throw new Error(message);
-      }
-    }
   }
 
   public updateScratchOrgDefWithEdition(scratchOrgEdition: utilities.OrgEdition) {

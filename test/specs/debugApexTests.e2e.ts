@@ -10,7 +10,7 @@ import * as utilities from '../utilities/index.ts';
 import { TreeItem } from 'wdio-vscode-service';
 
 describe('Debug Apex Tests', async () => {
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,
@@ -20,7 +20,7 @@ describe('Debug Apex Tests', async () => {
   }
 
   step('Set up the testing environment', async () => {
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
 
     // Create Apex class 1 and test
     await utilities.createApexClassWithTest('ExampleApexClass1');

@@ -10,7 +10,7 @@ import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 describe('Manifest Builder', async () => {
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,
@@ -20,7 +20,7 @@ describe('Manifest Builder', async () => {
   }
 
   step('Set up the testing environment', async () => {
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
   });
 
   step('Generate Manifest File', async () => {

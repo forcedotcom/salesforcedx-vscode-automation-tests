@@ -15,7 +15,7 @@ import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Debug LWC Tests', async () => {
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
   let projectFolderPath: string;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
@@ -26,7 +26,7 @@ describe('Debug LWC Tests', async () => {
   }
 
   step('Set up the testing environment', async () => {
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
     projectFolderPath = testSetup.projectFolderPath!;
 
     // Create LWC1 and test

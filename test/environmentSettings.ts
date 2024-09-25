@@ -146,13 +146,13 @@ export class EnvironmentSettings {
   }
 
   public set githubProjectUrl(githubUrl: string | undefined) {
-    const projectPath = githubUrl ?? process.env.GITHUB_PROJECT_URL;
-    if (!projectPath) {
+    const repoUrl = githubUrl ?? process.env.GITHUB_PROJECT_URL;
+    if (!repoUrl) {
       this._githubProjectUrl = undefined;
       return;
     }
 
-    this._githubProjectUrl = projectPath;
+    this._githubProjectUrl = repoUrl;
   }
 
   public get logLevel(): LogLevel {

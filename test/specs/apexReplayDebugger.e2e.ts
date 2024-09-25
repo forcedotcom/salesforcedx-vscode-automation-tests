@@ -15,7 +15,7 @@ const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Apex Replay Debugger', async () => {
   let prompt: QuickOpenBox | InputBox;
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,
@@ -26,7 +26,7 @@ describe('Apex Replay Debugger', async () => {
   const CONTINUE = 'F5';
 
   step('Set up the testing environment', async () => {
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
 
     // Create Apex class file
     await utilities.createApexClassWithTest('ExampleApexClass');

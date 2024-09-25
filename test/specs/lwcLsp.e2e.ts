@@ -12,7 +12,7 @@ import { Key } from 'webdriverio';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('LWC LSP', async () => {
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,
@@ -23,7 +23,7 @@ describe('LWC LSP', async () => {
 
   step('Set up the testing environment', async () => {
     utilities.log('LwcLsp - Set up the testing environment');
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
 
     // Create Lightning Web Component
     await utilities.createLwc('lwc1');

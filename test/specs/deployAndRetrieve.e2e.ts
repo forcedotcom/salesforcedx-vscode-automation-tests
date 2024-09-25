@@ -14,7 +14,7 @@ import { WORKSPACE_SETTING_KEYS as WSK } from '../utilities/index.ts';
 describe('Deploy and Retrieve', async () => {
   let projectName: string;
   const pathToClass = path.join('force-app', 'main', 'default', 'classes', 'MyClass');
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,
@@ -23,7 +23,7 @@ describe('Deploy and Retrieve', async () => {
     testSuiteSuffixName: 'DeployAndRetrieve'
   }
   step('Set up the testing environment', async () => {
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
     projectName = testSetup.tempProjectName.toUpperCase();
 
     // Create Apex Class

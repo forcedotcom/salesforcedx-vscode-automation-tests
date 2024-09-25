@@ -23,7 +23,15 @@ suite does run, it needs to run first.
 */
 
 describe('An Initial Suite', async () => {
-  const testSetup = new TestSetup();
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'AnInitialSuite'
+  }
+
+  let testSetup: TestSetup;
 
   step('Install extensions', async () => {
     await utilities.installExtensions();
@@ -83,16 +91,8 @@ describe('An Initial Suite', async () => {
     await prompt.cancel();
   });
 
-  const testReqConfig: utilities.TestReqConfig = {
-    projectConfig: {
-      projectShape: utilities.ProjectShapeOption.NEW
-    },
-    isOrgRequired: false,
-    testSuiteSuffixName: 'AnInitialSuite'
-  }
-
   step('Set up the testing environment', async () => {
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
   });
 
   step('Verify our extensions are loaded after creating an SFDX project', async () => {

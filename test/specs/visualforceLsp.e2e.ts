@@ -10,7 +10,7 @@ import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 describe('Visualforce LSP', async () => {
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,
@@ -21,7 +21,7 @@ describe('Visualforce LSP', async () => {
 
   step('Set up the testing environment', async () => {
     utilities.log('VisualforceLsp - Set up the testing environment');
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
 
     utilities.log(`${testSetup.testSuiteSuffixName} - calling createApexController()`);
     // Create Apex controller for the Visualforce Page

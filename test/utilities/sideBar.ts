@@ -136,7 +136,7 @@ export async function getVisibleItems(
   return [...rows.values()];
 }
 
-export async function verifyProjectCreated(projectName: string) {
+export async function verifyProjectLoaded(projectName: string) {
   utilities.log(`${projectName} - Verifying project was created...`);
 
   // Reload the VS Code window
@@ -149,14 +149,14 @@ export async function verifyProjectCreated(projectName: string) {
   const treeViewSection = await (await content.getSection(projectName.toUpperCase())).wait();
   if (!treeViewSection) {
     throw new Error(
-      'In verifyProjectCreated(), getSection() returned a treeViewSection with a value of null (or undefined)'
+      'In verifyProjectLoaded(), getSection() returned a treeViewSection with a value of null (or undefined)'
     );
   }
 
   const forceAppTreeItem = (await treeViewSection.findItem('force-app')) as DefaultTreeItem;
   if (!forceAppTreeItem) {
     throw new Error(
-      'In verifyProjectCreated(), findItem() returned a forceAppTreeItem with a value of null (or undefined)'
+      'In verifyProjectLoaded(), findItem() returned a forceAppTreeItem with a value of null (or undefined)'
     );
   }
 

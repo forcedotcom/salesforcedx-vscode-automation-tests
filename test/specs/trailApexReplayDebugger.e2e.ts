@@ -19,7 +19,7 @@ const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
  */
 describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async () => {
   let prompt: QuickOpenBox | InputBox;
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW,
@@ -29,7 +29,7 @@ describe('"Find and Fix Bugs with Apex Replay Debugger" Trailhead Module', async
   }
 
   step('Set up the testing environment', async () => {
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
 
     // Create Apex class AccountService
     await utilities.createApexClassWithBugs();

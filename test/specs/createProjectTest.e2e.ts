@@ -3,7 +3,7 @@ import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 describe('SFDX: Create Project', async () => {
-  const testSetup = new TestSetup();
+  let testSetup: TestSetup;
 
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
@@ -14,7 +14,7 @@ describe('SFDX: Create Project', async () => {
   }
 
   step('Set up testing environment', async () => {
-    await testSetup.setUp(testReqConfig);
+    testSetup = await TestSetup.setUp(testReqConfig);
   });
 
   step('Execute command SFDX: Create Project', async () => {
@@ -41,7 +41,7 @@ describe('SFDX: Create Project', async () => {
 
   step('Verify the project is created and open in the workspace', async () => {
     // Verify the project was created and was loaded.
-    await utilities.verifyProjectCreated(testSetup.tempProjectName);
+    await utilities.verifyProjectLoaded(testSetup.tempProjectName);
   });
 
   after('Tear down and clean up the testing environment', async () => {
