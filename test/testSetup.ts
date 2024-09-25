@@ -119,7 +119,7 @@ export class TestSetup {
           // Fallback: if no folder specified, create a new sf project instead
           await this.initializeNewSfProject();
         }
-        return;
+        break;
 
       case ProjectShapeOption.NONE:
         // NONE: no project open in the workspace by default
@@ -127,15 +127,18 @@ export class TestSetup {
         if (!fs.existsSync(this.tempFolderPath)) {
           utilities.createFolder(this.tempFolderPath);
         }
-        return;
+        break;
 
       default:
         this.throwError(`Invalid project shape: ${projectConfig.projectShape}`);
     }
-    utilities.log(`Project folder to open: ${this.projectFolderPath}`);
-    await utilities.openFolder(this.projectFolderPath!);
-    // Verify the project was loaded.
-    await utilities.verifyProjectLoaded(projectName ?? this.tempProjectName);
+
+    if ([ProjectShapeOption.NAMED, ProjectShapeOption.NEW].includes(projectConfig.projectShape)) {
+      utilities.log(`Project folder to open: ${this.projectFolderPath}`);
+      await utilities.openFolder(this.projectFolderPath!);
+      // Verify the project was loaded.
+      await utilities.verifyProjectLoaded(projectName ?? this.tempProjectName);
+    }
   }
 
   private throwError(message: string) {
