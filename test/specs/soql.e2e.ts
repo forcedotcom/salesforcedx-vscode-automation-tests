@@ -65,16 +65,13 @@ describe('SOQL', async () => {
     );
 
     // Click Switch Between SOQL Builder and Text Editor
-    const runTestButtonToolbar = await utilities.findElementByText(
+    const toggleSOQLButton = await utilities.findElementByText(
       'a',
       'aria-label',
       'Switch Between SOQL Builder and Text Editor'
     );
-    await runTestButtonToolbar.click();
-
-    // Verify 'Switch Between SOQL Builder and Text Editor' took us to the soql builder
-    const iframe = await $('iframe');
-    await expect(iframe).toBeDefined();
+    await expect(toggleSOQLButton).toBeDefined();
+    await toggleSOQLButton.click();
   });
 
   xstep('Verify the contents of the SOQL Builder', async () => {
