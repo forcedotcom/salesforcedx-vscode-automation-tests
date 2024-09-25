@@ -29,15 +29,22 @@ async function verifyPullSuccess(workbench: Workbench, wait = utilities.Duration
 }
 
 describe('Push and Pull', async () => {
-  let testSetup: TestSetup;
   let projectName = '';
   let adminName = '';
   let adminEmailAddress = '';
+  let testSetup1: TestSetup;
+  let testSetup2: TestSetup;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: true,
+    testSuiteSuffixName: 'PushAndPull'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('PushAndPull');
-    await testSetup.setUp();
-    projectName = testSetup.tempProjectName.toUpperCase();
+    testSetup1 = await TestSetup.setUp(testReqConfig);
+    projectName = testSetup1.tempProjectName.toUpperCase();
   });
 
   step('SFDX: View All Changes (Local and in Default Org)', async () => {
@@ -263,10 +270,18 @@ describe('Push and Pull', async () => {
     await verifyPushAndPullOutputText(workbench, 'Pull', 'from');
   });
 
+  const testReqConfig2: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'ViewChanges'
+  }
   step('SFDX: View Changes in Default Org', async () => {
     // Create second Project to then view Remote Changes
-    await testSetup.createProject('developer', 'ViewChanges');
-
+    // The new project will connect to the scratch org automatically on GHA, but does not work locally
+    testSetup2 = await TestSetup.setUp(testReqConfig2);
+    testSetup2.updateScratchOrgDefWithEdition('developer');
     // Verify CLI Integration Extension is present and running.
     await utilities.reloadAndEnableExtensions();
     await utilities.showRunningExtensions();
@@ -316,13 +331,13 @@ describe('Push and Pull', async () => {
     };
 
     const systemAdminUserDefPath = path.join(
-      testSetup.projectFolderPath!,
+      testSetup2.projectFolderPath!,
       'config',
       'system-admin-user-def.json'
     );
     fs.writeFileSync(systemAdminUserDefPath, JSON.stringify(systemAdminUserDef), 'utf8');
 
-    await utilities.createUser(systemAdminUserDefPath, testSetup.scratchOrgAliasName);
+    await utilities.createUser(systemAdminUserDefPath, testSetup1.scratchOrgAliasName);
   });
 
   xstep('Set the 2nd user as the default user', async () => {
@@ -370,7 +385,8 @@ describe('Push and Pull', async () => {
   // be fixed with the check in of his PR this week.
 
   after('Tear down and clean up the testing environment', async () => {
-    await testSetup?.tearDown();
+    await testSetup1?.tearDown();
+    await testSetup2?.tearDown();
   });
 
   /**

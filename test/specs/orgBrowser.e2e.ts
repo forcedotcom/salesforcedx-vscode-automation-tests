@@ -13,10 +13,16 @@ const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Org Browser', async () => {
   let testSetup: TestSetup;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: true,
+    testSuiteSuffixName: 'OrgBrowser'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('OrgBrowser');
-    await testSetup.setUp();
+    testSetup = await TestSetup.setUp(testReqConfig);
   });
 
   step('Check Org Browser is connected to target org', async () => {

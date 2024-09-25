@@ -11,8 +11,15 @@
     "node": true
   },
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "import"],
-  "extends": ["plugin:@typescript-eslint/recommended", "prettier"],
+  "plugins": [
+    "@typescript-eslint",
+    "import",
+    "header"
+  ],
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
   "rules": {
     "import/extensions": [
       "error",
@@ -25,16 +32,44 @@
       }
     ],
     "@typescript-eslint/no-misused-promises": "off",
-    "@typescript-eslint/no-floating-promises": "warn"
+    "@typescript-eslint/no-floating-promises": "warn",
+    "header/header": [
+      "error",
+      "block",
+      [
+        "",
+        {
+          "pattern": " \\* Copyright \\(c\\) \\d{4}, salesforce\\.com, inc\\.",
+          "template": " * Copyright (c) 2024, salesforce.com, inc."
+        },
+        " * All rights reserved.",
+        " * Licensed under the BSD 3-Clause license.",
+        " * For full license text, see LICENSE.txt file in the repo root or https://opensource.org/licenses/BSD-3-Clause",
+        " "
+      ]
+    ]
   },
   "settings": {
-    "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
+    "import/extensions": [
+      ".js",
+      ".jsx",
+      ".ts",
+      ".tsx"
+    ],
     "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
+      "@typescript-eslint/parser": [
+        ".ts",
+        ".tsx"
+      ]
     },
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
       },
       "typescript": {} // This line is required if you're using TypeScript
     }

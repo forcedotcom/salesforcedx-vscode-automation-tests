@@ -11,10 +11,16 @@ import * as utilities from '../utilities/index.ts';
 
 describe('Manifest Builder', async () => {
   let testSetup: TestSetup;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: true,
+    testSuiteSuffixName: 'ManifestBuilder'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('ManifestBuilder');
-    await testSetup.setUp();
+    testSetup = await TestSetup.setUp(testReqConfig);
   });
 
   step('Generate Manifest File', async () => {

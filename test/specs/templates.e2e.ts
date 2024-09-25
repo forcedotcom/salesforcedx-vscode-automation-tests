@@ -17,11 +17,18 @@ const exec = util.promisify(child_process.exec);
 describe('Templates', async () => {
   let testSetup: TestSetup;
   let projectName: string;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'Templates'
+  }
+
 
   // Set up
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('Templates');
-    await testSetup.setUp();
+    testSetup = await TestSetup.setUp(testReqConfig);
     projectName = testSetup.tempProjectName.toUpperCase();
   });
 

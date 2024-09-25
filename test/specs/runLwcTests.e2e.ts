@@ -12,12 +12,18 @@ import path from 'path';
 import { fail } from 'assert';
 
 describe('Run LWC Tests', async () => {
-  let testSetup: TestSetup;
   let projectFolderPath: string;
+  let testSetup: TestSetup;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'RunLWCTests'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('RunLWCTests');
-    await testSetup.setUp();
+    testSetup = await TestSetup.setUp(testReqConfig);
     projectFolderPath = testSetup.projectFolderPath!;
 
     // Create LWC1 and test

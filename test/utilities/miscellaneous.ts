@@ -6,7 +6,7 @@
  */
 
 import os from 'os';
-import { TextEditor, Workbench, sleep } from 'wdio-vscode-service';
+import { sleep } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import { attemptToFindOutputPanelText, clearOutputView } from './outputView.ts';
 import { clickFilePathOkButton, executeQuickPick, findQuickPickItem } from './commandPrompt.ts';
@@ -14,6 +14,7 @@ import { notificationIsPresentWithTimeout } from './notifications.ts';
 import * as DurationKit from '@salesforce/kit';
 import path from 'path';
 import { PredicateWithTimeout } from './predicates.ts';
+import { getFolderName } from './fileSystem.ts';
 
 export async function pause(duration: Duration = Duration.seconds(1)): Promise<void> {
   await sleep(duration.milliseconds);
@@ -98,21 +99,6 @@ export async function findElementByText(
   }
 
   return element;
-}
-
-/**
- * @param workbench page object representing the custom VSCode title bar
- * @param fileName name of the file we want to open and use
- * @returns editor for the given file name
- */
-export async function getTextEditor(workbench: Workbench, fileName: string): Promise<TextEditor> {
-  const inputBox = await executeQuickPick('Go to File...', Duration.seconds(1));
-  await inputBox.setText(fileName);
-  await inputBox.confirm();
-  await pause(Duration.seconds(1));
-  const editorView = workbench.getEditorView();
-  const textEditor = (await editorView.openEditor(fileName)) as TextEditor;
-  return textEditor;
 }
 
 export async function createCommand(
@@ -250,10 +236,26 @@ export class Duration extends DurationKit.Duration {
  * VSCode will be working on the new workspace, and the previous one is closed.
  */
 export async function openFolder(path: string) {
+  if (!getFolderName(path)) {
+    throw new Error(`Invalid folder path: ${path}`);
+  }
   const prompt = await executeQuickPick('File: Open Folder...'); // use this cmd palette to open
   // Set the location of the project
   const input = await prompt.input$;
   await input.setValue(path);
   await pause(Duration.seconds(3));
+  await clickFilePathOkButton();
+}
+
+/**
+ * An definite alternative of getTextEditor to open a file in text editor
+ * @param path 
+ */
+export async function openFile(path: string) {
+  const prompt = await executeQuickPick('File: Open File...'); // use this cmd palette to open
+  // Set the location of the project
+  const input = await prompt.input$;
+  await input.setValue(path);
+  await pause(Duration.seconds(2));
   await clickFilePathOkButton();
 }

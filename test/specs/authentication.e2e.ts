@@ -6,34 +6,30 @@
  */
 
 import { step } from 'mocha-steps';
-import path from 'path';
 import { InputBox, QuickOpenBox } from 'wdio-vscode-service';
 import { EnvironmentSettings } from '../environmentSettings.ts';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 describe('Authentication', async () => {
-  const tempProjectName = 'TempProject-Authentication';
-  let tempFolderPath: string;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let projectFolderPath: string;
   let prompt: QuickOpenBox | InputBox;
   let scratchOrgAliasName: string;
-  const testSetup = new TestSetup('Authentication');
+  let testSetup: TestSetup;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'Authentication'
+  }
+
 
   step('Set up the testing environment', async () => {
-    tempFolderPath = getTempFolderPath();
-    projectFolderPath = path.join(tempFolderPath, tempProjectName);
-    await utilities.installExtensions();
-    await utilities.reloadAndEnableExtensions();
-    await testSetup.setUpTestingEnvironment();
-    await testSetup.createProject('developer');
-    await utilities.reloadAndEnableExtensions();
-    await utilities.verifyExtensionsAreRunning(utilities.getExtensionsToVerifyActive());
+    testSetup = await TestSetup.setUp(testReqConfig);
+    projectFolderPath = testSetup.projectFolderPath!;
   });
 
   step('Run SFDX: Authorize a Dev Hub', async () => {
@@ -42,7 +38,7 @@ describe('Authentication', async () => {
     await expect(noDefaultOrgSetItem).toBeDefined();
 
     // This is essentially the "SFDX: Authorize a Dev Hub" command, but using the CLI and an auth file instead of the UI.
-    await testSetup.authorizeDevHub();
+    await utilities.authorizeDevHub(testSetup);
 
     // After a dev hub has been authorized, the org should still not be set.
     noDefaultOrgSetItem = await utilities.getStatusBarItemWhichIncludes('No Default Org Set');
@@ -235,8 +231,4 @@ describe('Authentication', async () => {
   after('Tear down and clean up the testing environment', async () => {
     await testSetup?.tearDown();
   });
-
-  function getTempFolderPath(): string {
-    return path.join(__dirname, '..', '..', 'e2e-temp');
-  }
 });

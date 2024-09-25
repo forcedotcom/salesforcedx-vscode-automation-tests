@@ -6,6 +6,7 @@
  */
 
 import { DefaultTreeItem, TreeItem, ViewItem, Workbench, ViewSection } from 'wdio-vscode-service';
+import * as utilities from './index.ts';
 
 export async function expandSideBar(
   workbench: Workbench,
@@ -133,4 +134,32 @@ export async function getVisibleItems(
   const rows = await treeItem.parent.$$(locator);
 
   return [...rows.values()];
+}
+
+export async function verifyProjectLoaded(projectName: string) {
+  utilities.log(`${projectName} - Verifying project was created...`);
+
+  // Reload the VS Code window
+  const workbench = await utilities.getWorkbench();
+  await utilities.reloadWindow();
+  await utilities.showExplorerView();
+
+  const sidebar = await workbench.getSideBar().wait();
+  const content = await sidebar.getContent().wait();
+  const treeViewSection = await (await content.getSection(projectName.toUpperCase())).wait();
+  if (!treeViewSection) {
+    throw new Error(
+      'In verifyProjectLoaded(), getSection() returned a treeViewSection with a value of null (or undefined)'
+    );
+  }
+
+  const forceAppTreeItem = (await treeViewSection.findItem('force-app')) as DefaultTreeItem;
+  if (!forceAppTreeItem) {
+    throw new Error(
+      'In verifyProjectLoaded(), findItem() returned a forceAppTreeItem with a value of null (or undefined)'
+    );
+  }
+
+  await (await forceAppTreeItem.wait()).expand();
+  utilities.log(`${projectName} - Verifying project complete`);
 }

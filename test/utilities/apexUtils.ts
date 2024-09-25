@@ -7,7 +7,8 @@
 
 import { TextEditor } from 'wdio-vscode-service';
 import { executeQuickPick } from './commandPrompt.ts';
-import { Duration, getTextEditor, pause } from './miscellaneous.ts';
+import { Duration, pause } from './miscellaneous.ts';
+import { getTextEditor, checkFileOpen } from './textEditorView.ts';
 import { getWorkbench } from './workbench.ts';
 
 export async function createApexClass(
@@ -18,18 +19,19 @@ export async function createApexClass(
   const workbench = await getWorkbench();
 
   // Using the Command palette, run SFDX: Create Apex Class to create the main class
-  const inputBox = await executeQuickPick('SFDX: Create Apex Class', Duration.seconds(1));
+  const inputBox = await executeQuickPick('SFDX: Create Apex Class', Duration.seconds(3)); // have to increase it otherwise it keeps failing on macos
 
   // Set the name of the new Apex Class
   await inputBox.setText(name);
-  await pause(Duration.seconds(1));
-  await browser.keys(['Enter']);
-  await pause(Duration.seconds(1));
+  await inputBox.confirm();
+  await pause(Duration.seconds(2));
 
   // Select the default directory (press Enter/Return).
-  await browser.keys(['Enter']);
-  await pause(Duration.seconds(1));
-
+  await inputBox.confirm();
+  await checkFileOpen(workbench,
+    name + '.cls',
+    { timeout: Duration.seconds(5) }
+  )
   // Modify class content
   const textEditor = await getTextEditor(workbench, name + '.cls');
   await textEditor.setText(classText);
@@ -37,7 +39,7 @@ export async function createApexClass(
   if (breakpoint) {
     await textEditor.toggleBreakpoint(breakpoint);
   }
-  await pause(Duration.seconds(1));
+  await pause(Duration.seconds(2));
 }
 
 export async function createApexClassWithTest(name: string): Promise<void> {

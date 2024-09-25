@@ -6,7 +6,8 @@
  */
 
 import { runCommandFromCommandPrompt } from './commandPrompt.ts';
-import { Duration, getTextEditor, pause } from './miscellaneous.ts';
+import { Duration, pause } from './miscellaneous.ts';
+import { getTextEditor } from './textEditorView.ts';
 
 export async function createVisualforcePage(): Promise<void> {
   const workbench = await browser.getWorkbench();

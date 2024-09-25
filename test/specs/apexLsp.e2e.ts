@@ -14,13 +14,18 @@ const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('Apex LSP', async () => {
   let testSetup: TestSetup;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'ApexLsp'
+  }
 
-  step('Set up the testing environment', async () => {
+  before('Set up the testing environment', async () => {
     utilities.log('ApexLsp - Set up the testing environment');
     utilities.log(`ApexLsp - JAVA_HOME: ${EnvironmentSettings.getInstance().javaHome}`);
-    testSetup = new TestSetup('ApexLsp');
-    await testSetup.setUp();
-
+    testSetup = await TestSetup.setUp(testReqConfig);
     // Create Apex Class
     await utilities.createApexClassWithTest('ExampleClass');
   });

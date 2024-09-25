@@ -30,15 +30,18 @@ export class EnvironmentSettings {
     // './specs/**/deployAndRetrieve.e2e.ts',
     // './specs/**/lwcLsp.e2e.ts',
     // './specs/**/manifestBuilder.e2e.ts',
+    // './specs/**/miscellaneous.e2e.ts',
     // './specs/**/orgBrowser.e2e.ts',
     // './specs/**/pushAndPull.e2e.ts',
     // './specs/**/runApexTests.e2e.ts',
-    // './specs/**/runLwcTests.e2e.ts'
+    // './specs/**/runLwcTests.e2e.ts',
+    // './specs/**/sfdxProjectJson.e2e.ts',
     // './specs/**/sObjectsDefinitions.e2e.ts',
     // './specs/**/templates.e2e.ts',
     // './specs/**/trailApexReplayDebugger.e2e.ts',
     // './specs/**/visualforceLsp.e2e.ts',
-    // './specs/**/sfdxProjectJson.e2e.ts'
+    // './specs/**/createProjectTest.e2e.ts',
+    // './specs/**/metadataDeployRetrieve.e2e.ts',
   ];
   private _devHubAliasName = 'vscodeOrg';
   private _devHubUserName = 'svcideebot@salesforce.com';
@@ -49,7 +52,8 @@ export class EnvironmentSettings {
   private _startTime = new Date(Date.now()).toLocaleTimeString([], { timeStyle: 'short' });
   private _throttleFactor = 1;
   private _javaHome = process.env.JAVA_HOME;
-  private _useExistingProject: string | undefined;
+  private _localProjectPath: string | undefined;
+  private _githubProjectUrl: string | undefined;
   private _logLevel: LogLevel = 'warn';
 
   private constructor() {
@@ -70,7 +74,8 @@ export class EnvironmentSettings {
       ? (process.env.E2E_LOG_LEVEL as LogLevel)
       : this._logLevel;
     this._javaHome = process.env.JAVA_HOME || this._javaHome;
-    this.useExistingProject = process.env.USE_EXISTING_PROJECT_PATH;
+    this.localProjectPath = process.env.LOCAL_PROJECT_PATH;
+    this.githubProjectUrl = process.env.GITHUB_PROJECT_URL;
   }
 
   public static getInstance(): EnvironmentSettings {
@@ -120,21 +125,34 @@ export class EnvironmentSettings {
     return this._javaHome;
   }
 
-  public get useExistingProject(): string | undefined {
-    return this._useExistingProject;
+  public get localProjectPath(): string | undefined {
+    return this._localProjectPath;
   }
 
-  public set useExistingProject(existingProject: string | undefined) {
-    const projectPath = existingProject ?? process.env.USE_EXISTING_PROJECT_PATH;
+  public get githubProjectUrl(): string | undefined {
+    return this._githubProjectUrl;
+  }
+
+  public set localProjectPath(localPath: string | undefined) {
+    const projectPath = localPath ?? process.env.LOCAL_PROJECT_PATH;
     if (!projectPath) {
-      this._useExistingProject = undefined;
+      this._localProjectPath = undefined;
       return;
     }
     if (!fs.existsSync(projectPath)) {
       throw new Error(`Project path for "${projectPath}" does not exist`);
     }
+    this._localProjectPath = projectPath;
+  }
 
-    this._useExistingProject = projectPath;
+  public set githubProjectUrl(githubUrl: string | undefined) {
+    const repoUrl = githubUrl ?? process.env.GITHUB_PROJECT_URL;
+    if (!repoUrl) {
+      this._githubProjectUrl = undefined;
+      return;
+    }
+
+    this._githubProjectUrl = repoUrl;
   }
 
   public get logLevel(): LogLevel {

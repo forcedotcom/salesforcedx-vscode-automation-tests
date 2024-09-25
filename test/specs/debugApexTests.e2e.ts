@@ -11,10 +11,16 @@ import { TreeItem } from 'wdio-vscode-service';
 
 describe('Debug Apex Tests', async () => {
   let testSetup: TestSetup;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: true,
+    testSuiteSuffixName: 'DebugApexTests'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('DebugApexTests');
-    await testSetup.setUp();
+    testSetup = await TestSetup.setUp(testReqConfig);
 
     // Create Apex class 1 and test
     await utilities.createApexClassWithTest('ExampleApexClass1');

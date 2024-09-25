@@ -12,10 +12,16 @@ import { EnvironmentSettings } from '../environmentSettings.ts';
 
 describe('Miscellaneous', async () => {
   let testSetup: TestSetup;
+  const testReqConfig: utilities.TestReqConfig = {
+    projectConfig: {
+      projectShape: utilities.ProjectShapeOption.NEW,
+    },
+    isOrgRequired: false,
+    testSuiteSuffixName: 'Miscellaneous'
+  }
 
   step('Set up the testing environment', async () => {
-    testSetup = new TestSetup('Miscellaneous');
-    await testSetup.setUp();
+    testSetup = await TestSetup.setUp(testReqConfig);
   });
 
   xstep('Use out-of-the-box Apex Snippets', async () => {
@@ -44,7 +50,7 @@ describe('Miscellaneous', async () => {
     const workbench = await utilities.getWorkbench();
     const commandName =
       EnvironmentSettings.getInstance().vscodeVersion === 'stable' ||
-      semver.gte(EnvironmentSettings.getInstance().vscodeVersion, '1.92.0')
+        semver.gte(EnvironmentSettings.getInstance().vscodeVersion, '1.92.0')
         ? 'Snippets: Configure Snippets'
         : 'Snippets: Configure User Snippets';
 
