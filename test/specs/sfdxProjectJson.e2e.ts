@@ -2,7 +2,6 @@ import { step } from 'mocha-steps';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
-
 describe('Customize sfdx-project.json', async () => {
   let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
