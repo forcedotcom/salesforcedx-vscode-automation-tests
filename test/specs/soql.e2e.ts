@@ -104,7 +104,7 @@ describe('SOQL', async () => {
       `${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`
     );
 
-    await browser.keys([CMD_KEY, 'Shift', 'p']);
+    await expect(1).toBe(2);
     await testSetup?.tearDown();
   });
 });
