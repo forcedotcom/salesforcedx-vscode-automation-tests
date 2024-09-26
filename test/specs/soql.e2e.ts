@@ -14,7 +14,7 @@ describe('SOQL', async () => {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW
     },
-    isOrgRequired: false,
+    isOrgRequired: true,
     testSuiteSuffixName: 'SOQL'
   };
 
