@@ -95,7 +95,7 @@ describe('SOQL', async () => {
     await expect(textGeneratedFromTemplate).toEqual(expectedText);
   });
 
-  step('Tear down and clean up the testing environment', async () => {
+  after('Tear down and clean up the testing environment', async () => {
     utilities.log(
       `${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`
     );
