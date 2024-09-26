@@ -8,9 +8,6 @@ import { step, xstep } from 'mocha-steps';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
-import { Key } from 'webdriverio';
-const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
-
 describe('SOQL', async () => {
   let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
