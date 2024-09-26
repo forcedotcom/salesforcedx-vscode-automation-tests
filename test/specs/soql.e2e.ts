@@ -14,7 +14,7 @@ describe('SOQL', async () => {
     projectConfig: {
       projectShape: utilities.ProjectShapeOption.NEW
     },
-    isOrgRequired: true,
+    isOrgRequired: false,
     testSuiteSuffixName: 'SOQL'
   };
 
@@ -24,7 +24,7 @@ describe('SOQL', async () => {
 
   step('SFDX: Create Query in SOQL Builder', async () => {
     utilities.log(`${testSetup.testSuiteSuffixName} - SFDX: Create Query in SOQL Builder`);
-
+    await utilities.pause(utilities.Duration.seconds(5));
     // Run SFDX: Create Query in SOQL Builder
     await utilities.executeQuickPick(
       'SFDX: Create Query in SOQL Builder',
