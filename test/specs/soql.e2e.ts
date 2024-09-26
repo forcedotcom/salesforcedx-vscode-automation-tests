@@ -78,6 +78,7 @@ describe('SOQL', async () => {
     );
     await expect(toggleSOQLButton).toBeDefined();
     await toggleSOQLButton.click();
+    await expect(1).toBe(2);
   });
 
   xstep('Verify the contents of the SOQL Builder', async () => {
@@ -100,8 +101,6 @@ describe('SOQL', async () => {
     utilities.log(
       `${testSetup.testSuiteSuffixName} - Tear down and clean up the testing environment`
     );
-
-    await expect(1).toBe(2);
     await testSetup?.tearDown();
   });
 });
