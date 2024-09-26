@@ -9,7 +9,6 @@ import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
 import { Key } from 'webdriverio';
-import { Duration } from '@salesforce/kit';
 const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
 
 describe('SOQL', async () => {
