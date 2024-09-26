@@ -7,6 +7,9 @@
 import { step } from 'mocha-steps';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
+import path from 'path';
+import { TextEditor } from 'wdio-vscode-service';
+
 
 describe('Customize sfdx-project.json', async () => {
   let testSetup: TestSetup;
@@ -20,7 +23,7 @@ describe('Customize sfdx-project.json', async () => {
 
   step('Set up the testing environment', async () => {
     testSetup = await TestSetup.setUp(testReqConfig);
-    await utilities.createSfdxProjectJsonWithAllFields();
+    await createSfdxProjectJsonWithAllFields(testSetup);
     await utilities.reloadAndEnableExtensions();
   });
 
@@ -34,3 +37,26 @@ describe('Customize sfdx-project.json', async () => {
     await testSetup?.tearDown();
   });
 });
+
+async function createSfdxProjectJsonWithAllFields(testSetup: TestSetup): Promise<void> {
+  const workbench = await (await browser.getWorkbench()).wait();
+  const sfdxConfig = [
+    `{`,
+    `\t"packageDirectories": [`,
+    `\t\t{`,
+    `\t\t\t"path": "force-app",`,
+    `\t\t\t"default": true`,
+    `\t\t}`,
+    `\t],`,
+    `\t"namespace": "",`,
+    `\t"sourceApiVersion": "61.0",`,
+    `\t"sourceBehaviorOptions": ["decomposeCustomLabelsBeta", "decomposePermissionSetBeta", "decomposeWorkflowBeta", "decomposeSharingRulesBeta"]`,
+    `}`
+  ].join('\n');
+  await utilities.openFile(path.join(testSetup.projectFolderPath!, 'sfdx-project.json'));
+  const editorView = workbench.getEditorView();
+  const textEditor = (await editorView.openEditor('sfdx-project.json')) as TextEditor;
+  await textEditor.setText(sfdxConfig);
+  await textEditor.save();
+  await utilities.pause();
+}
