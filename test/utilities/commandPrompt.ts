@@ -164,25 +164,25 @@ export async function clickFilePathOkButton(): Promise<void> {
   if (!okButton) {
     throw new Error('Ok button not found');
   }
-  await okButton.click();
+  // await okButton.click();
 
-  // await browser.keys(['Tab']);
-  // await pause(Duration.milliseconds(500));
-  // await browser.keys(['Enter']);
+  await browser.keys(['Tab']);
+  await pause(Duration.milliseconds(500));
+  await browser.keys(['Enter']);
 
-  // await pause(Duration.seconds(1));
-  // const buttons = await $$('a.monaco-button.monaco-text-button');
-  // for (const item of buttons) {
-  //   const text = await item.getText();
-  //   if (text.includes('Overwrite')) {
-  //     log('clickFilePathOkButton() - folder already exists');
-  //     await item.waitForClickable({
-  //       timeout: Duration.seconds(5).milliseconds,
-  //       interval: Duration.milliseconds(500).milliseconds,
-  //       timeoutMsg: `Overwrite button not clickable within 5 seconds`
-  //     });
-  //     await item.click();
-  //   }
-  // }
+  await pause(Duration.seconds(1));
+  const buttons = await $$('a.monaco-button.monaco-text-button');
+  for (const item of buttons) {
+    const text = await item.getText();
+    if (text.includes('Overwrite')) {
+      log('clickFilePathOkButton() - folder already exists');
+      await item.waitForClickable({
+        timeout: Duration.seconds(5).milliseconds,
+        interval: Duration.milliseconds(500).milliseconds,
+        timeoutMsg: `Overwrite button not clickable within 5 seconds`
+      });
+      await item.click();
+    }
+  }
   await pause(Duration.seconds(2));
 }
