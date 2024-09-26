@@ -35,6 +35,7 @@ export class EnvironmentSettings {
     // './specs/**/pushAndPull.e2e.ts',
     // './specs/**/runApexTests.e2e.ts',
     // './specs/**/runLwcTests.e2e.ts',
+    // './specs/**/soql.e2e.ts',
     // './specs/**/sfdxProjectJson.e2e.ts',
     // './specs/**/sObjectsDefinitions.e2e.ts',
     // './specs/**/templates.e2e.ts',

@@ -144,7 +144,7 @@ export async function showRunningExtensions(): Promise<void> {
     async () => {
       const selector =
         EnvironmentSettings.getInstance().vscodeVersion === 'stable' ||
-          semver.gte(EnvironmentSettings.getInstance().vscodeVersion, '1.90.0')
+        semver.gte(EnvironmentSettings.getInstance().vscodeVersion, '1.90.0')
           ? "//div[contains(@class, 'active') and contains(@class, 'selected') and .//*[contains(text(), 'Running Extensions')]]"
           : "//div[contains(@class, 'monaco-list-row') and .//*[contains(text(), 'Running Extensions')]]";
 
@@ -251,7 +251,7 @@ export async function installExtensions(excludeExtensions: ExtensionId[] = []): 
       const foundExtension = extensions.find((e) => e.extensionId === extension);
       if (foundExtension) {
         foundExtension.vsixPath = vsix;
-        // assign 'never' to this extension if its id is included in excluedExtensions
+        // assign 'never' to this extension if its id is included in excludedExtensions
         foundExtension.shouldInstall = mergeExcluded.includes(foundExtension.extensionId)
           ? 'never'
           : 'always';
