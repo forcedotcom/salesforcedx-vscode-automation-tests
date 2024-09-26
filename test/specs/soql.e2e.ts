@@ -8,6 +8,10 @@ import { step, xstep } from 'mocha-steps';
 import { TestSetup } from '../testSetup.ts';
 import * as utilities from '../utilities/index.ts';
 
+import { Key } from 'webdriverio';
+import { Duration } from '@salesforce/kit';
+const CMD_KEY = process.platform === 'darwin' ? Key.Command : Key.Control;
+
 describe('SOQL', async () => {
   let testSetup: TestSetup;
   const testReqConfig: utilities.TestReqConfig = {
@@ -78,7 +82,8 @@ describe('SOQL', async () => {
     );
     await expect(toggleSOQLButton).toBeDefined();
     await toggleSOQLButton.click();
-    await expect(1).toBe(2);
+    await utilities.pause(utilities.Duration.seconds(2));
+    await browser.keys([CMD_KEY, 'Shift', 'p']);
   });
 
   xstep('Verify the contents of the SOQL Builder', async () => {
