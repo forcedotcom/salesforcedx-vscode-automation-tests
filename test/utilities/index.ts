@@ -25,7 +25,6 @@ export * from './screenshot.ts';
 export * from './visualforceUtils.ts';
 export * from './workbench.ts';
 export * from './types.ts';
-export * from './jsonUtils.ts';
 export * from './orgBrowser.ts';
 export * from './gitCommands.ts';
 export * from './textEditorView.ts';

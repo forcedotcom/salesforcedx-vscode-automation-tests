@@ -166,6 +166,8 @@ export async function clickFilePathOkButton(): Promise<void> {
   }
   await okButton.click();
 
+  // WARN: The following action will cause a side effect in the file open in the text editor
+  // We however leave it as is since removing the following line will cause more flappers
   await browser.keys(['Tab']);
   await pause(Duration.milliseconds(500));
   await browser.keys(['Enter']);
