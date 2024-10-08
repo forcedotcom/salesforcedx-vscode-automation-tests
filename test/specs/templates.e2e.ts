@@ -19,12 +19,11 @@ describe('Templates', async () => {
   let projectName: string;
   const testReqConfig: utilities.TestReqConfig = {
     projectConfig: {
-      projectShape: utilities.ProjectShapeOption.NEW,
+      projectShape: utilities.ProjectShapeOption.NEW
     },
     isOrgRequired: false,
     testSuiteSuffixName: 'Templates'
-  }
-
+  };
 
   // Set up
   step('Set up the testing environment', async () => {
@@ -251,7 +250,7 @@ describe('Templates', async () => {
   });
 
   step('Verify the contents of the Aura Event', async () => {
-    const expectedText = ['<aura:event type="APPLICATION" description="Event template"/>'].join(
+    const expectedText = ['<aura:event type="APPLICATION" description="Event template" />'].join(
       '\n'
     );
     const workbench = await utilities.getWorkbench();
