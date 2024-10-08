@@ -434,7 +434,7 @@ describe('Templates', async () => {
   step('Verify the contents of the Visualforce Component', async () => {
     // Verify the default code for a Visualforce Component.
     const expectedText = [
-      '<apex:component>',
+      '<apex:component >',
       '<!-- Begin Default Content REMOVE THIS -->',
       '<h1>Congratulations</h1>',
       'This is your new Component',
@@ -466,7 +466,7 @@ describe('Templates', async () => {
   step('Verify the contents of the Visualforce Page', async () => {
     // Verify the default code for a Visualforce Page.
     const expectedText = [
-      '<apex:page>',
+      '<apex:page >',
       '<!-- Begin Default Content REMOVE THIS -->',
       '<h1>Congratulations</h1>',
       'This is your new Page',
