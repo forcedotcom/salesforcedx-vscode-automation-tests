@@ -17,8 +17,8 @@ export async function reloadWindow(
   predicateOrWait: PredicateWithTimeout | Duration = Duration.milliseconds(0)
 ): Promise<void> {
   log(`Reloading window`);
-  const prompt = await executeQuickPick('Developer: Reload Window');
-  await handlePredicateOrWait(predicateOrWait, prompt);
+  await browser.reloadSession();
+  await handlePredicateOrWait(predicateOrWait);
 }
 
 export async function enableAllExtensions(): Promise<void> {
@@ -70,7 +70,7 @@ export async function openNewTerminal(checkIfOpen = false): Promise<void> {
 
 async function handlePredicateOrWait(
   predicateOrWait: PredicateWithTimeout | Duration,
-  prompt: unknown
+  prompt?: undefined
 ) {
   log('handlePredicateOrWait');
   if (isDuration(predicateOrWait)) {
